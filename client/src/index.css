@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ant-carousel .slick-prev,
+.ant-carousel .slick-next {
+  color: #1d4ed8; 
+}
+.ant-carousel .slick-arrow {
+    margin: -20px -40px; 
+  }
+  .card-no-border {
+    border: none!important;
+    padding: 0; 
+  }

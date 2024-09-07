@@ -1,0 +1,16 @@
+{
+  "name": "apigrab",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000a\u0000p\u0000i\u0000G\u0000r\u0000a\u0000b\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "server": "npm run watch --prefix server",
+    "client": "npm start --prefix client",
+    "watch": "npm run client & npm run server",
+    "deploy":"npm run build --prefix client && npm start --prefix server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -2,51 +2,50 @@
 const signUpService = require("../../services/services");
 const services = require("../../services/services");
 const axios = require("axios");
-
+const { Owner, Admin } = require("../../models/signUp.model");
 const signUpOwner = async (req, res) => {
+  const { name, passWord, email, birthDate, phoneNum, address } = req.body;
+
+  if (!name || !passWord || !email || !birthDate || !phoneNum || !address) {
+    return res.status(403).json({ message: "Input is required" });
+  } else if (!validateEmail(email)) {
+    return res.status(400).json({ message: "Invalid email" });
+  } else if (!validateBirthDate(birthDate)) {
+    return res.status(400).json({ message: "Not enough age" });
+  }
+
   try {
-    const {
+    // Check if the account already exists
+    const checkAccountExisted = await Owner.findOne({ email });
+    const isAdmin = await Admin.findOne({ email });
+
+    if (checkAccountExisted !== null || isAdmin !== null) {
+      return res.status(400).json({
+        status: "BAD",
+        message: "Email existed",
+      });
+    }
+
+    // Create the new owner account
+    const createdOwner = await Account.Account.create({
       name,
       passWord,
       email,
       birthDate,
       phoneNum,
       address,
-      dueDatePCCC,
-      dueDateKD,
-    } = req.body;
+    });
 
-    if (
-      !name ||
-      !passWord ||
-      !email ||
-      !birthDate ||
-      !phoneNum ||
-      !address ||
-      !dueDatePCCC ||
-      !dueDateKD
-    ) {
-      return res.status(403).json({ message: "Input is required" });
-    } else if (!validateEmail(email)) {
-      //email
-      return res.status(400).json({ message: "Invalid email" });
-    } else if (!validateBirthDate(birthDate)) {
-      return res.status(400).json({ message: "Not enough age" });
-    } else {
-      const currentDate = new Date();
-      const validDueDatePCCC =
-        new Date(dueDatePCCC).getFullYear - currentDate.getFullYear();
-      const validDueDateKD =
-        new Date(dueDateKD).getFullYear - currentDate.getFullYear();
-
-      if (validDueDateKD <= 1 || validDueDatePCCC <= 1) {
-        return res.status(400).json({ message: "Invalid due date" });
-      }
-    }
-    const result = await signUpService.signUpOwner(req.body);
-    return res.status(201).json(result);
+    // Respond with success
+    return res.status(201).json({
+      status: "OK",
+      message: "Succ",
+      data: createdOwner,
+    });
   } catch (e) {
-    return res.status(500).json({ message: e });
+    return res
+      .status(500)
+      .json({ message: e.message || "Internal Server Error" });
   }
 };
 

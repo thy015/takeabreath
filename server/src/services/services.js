@@ -8,53 +8,7 @@ const { Invoice, Receipt } = require("../models/invoice.model");
 const { reqCancel, refundMoney } = require("../models/reqCancel.model");
 const mongoose = require("mongoose");
 
-async function signUpOwner(newOwner) {
-  return new Promise(async (resolve, rejects) => {
-    const {
-      name,
-      passWord,
-      email,
-      birthDate,
-      phoneNum,
-      address,
-      dueDatePCCC,
-      dueDateKD,
-    } = newOwner;
-    try {
-      const checkAccountExisted = await Account.Account.findOne({
-        email: email,
-      });
-      const isAdmin = await Account.Admin.findOne({
-        email: email,
-      });
-      if (checkAccountExisted !== null || isAdmin != null) {
-        rejects({
-          status: "BAD",
-          message: "Email existed",
-        });
-      }
-      const createdOwner = await Account.Account.create({
-        name,
-        passWord,
-        email,
-        birthDate,
-        phoneNum,
-        address,
-        dueDatePCCC,
-        dueDateKD,
-      });
-      if (createdOwner) {
-        resolve({
-          status: "OK",
-          message: "Succ",
-          data: createdOwner,
-        });
-      }
-    } catch (e) {
-      rejects(e);
-    }
-  });
-}
+
 //chung của owner và admin
 async function signInOwner(existedOwner) {
   return new Promise(async (resolve, reject) => {
@@ -585,7 +539,6 @@ const searchHotel = async (req, res) => {
 };
 
 module.exports = {
-  signUpOwner,
   createHotel,
   signInOwner,
   signInCustomer,

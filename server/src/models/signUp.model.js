@@ -1,23 +1,19 @@
-const mongoose=require('mongoose')
-const ownerSchema=new mongoose.Schema(
-    {
-        name:{type:String,required:true},
-        passWord:{type:String,required:true},
-        isUse:{type:String,required:true,default:'owner'},
-        email:{type:String,required:true,unique:true},
-        birthDate:{type:String,required:true},
-        phoneNum:{type:String,required:true},
-        address:{type:String,required:true},
-        dueDateKD:{type:Date,required:true},
-        dueDatePCCC:{type:Date,required:true},
-    }
-)
+const mongoose = require("mongoose");
+const ownerSchema = new mongoose.Schema({
+  ownerName: { type: String, required: true },
+  password: { type: String, required: true },
+  isUse: { type: String, required: true, default: "owner" },
+  email: { type: String, required: true, unique: true },
+  birthday: { type: String, required: true },
+  phoneNum: { type: String, required: true },
+  avatarLink: { type: String, required: false },
+});
 
-const Account=mongoose.model('Account',ownerSchema)
+const Owner = mongoose.model("Owner", ownerSchema);
 
 //kết nối với db có sẵn chứ ko cho tạo
-const Admin=mongoose.connection.collection('Admin')
-module.exports={
-    Account,
-    Admin
-}
+const Admin = mongoose.connection.collection("Admin");
+module.exports = {
+  Owner,
+  Admin,
+};

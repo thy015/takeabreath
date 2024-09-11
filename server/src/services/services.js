@@ -5,7 +5,7 @@ dotenv.config();
 const axios = require("axios");
 const { generalAccessTokens, refreshAccessTokens } = require("./jwt");
 const { Invoice, Receipt } = require("../models/invoice.model");
-const { reqCancel, refundMoney } = require("../models/cancelReq");
+const { reqCancel, refundMoney } = require("../models/cancelReq.model");
 const mongoose = require("mongoose");
 
 //chung của owner và admin

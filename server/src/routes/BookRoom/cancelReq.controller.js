@@ -1,5 +1,5 @@
 const services = require("../../services/services");
-const { reqCancel } = require("../../models/cancelReq");
+const { reqCancel } = require("../../models/cancelReq.model");
 const reqCancelRoom = async (req, res) => {
   const { receiptID } = req.body;
   const cusID = req.cusID;
@@ -26,11 +26,9 @@ const getReqCancelRoomAccepted = async (req, res) => {
     });
   } catch (e) {
     console.error("Error in getReqCancelRoomAccepted:", e);
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching the cancellation requests",
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching the cancellation requests",
+    });
   }
 };
 const getReqCancelRoomRejected = async (req, res) => {
@@ -42,11 +40,9 @@ const getReqCancelRoomRejected = async (req, res) => {
     });
   } catch (e) {
     console.error("Error in getReqCancelRoomRejected:", e);
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching the cancellation requests",
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching the cancellation requests",
+    });
   }
 };
 const getReqCancelRoomProcess = async (req, res) => {
@@ -60,11 +56,9 @@ const getReqCancelRoomProcess = async (req, res) => {
     });
   } catch (e) {
     console.error("Error in getReqCancelRoomProcess:", e);
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching the cancellation requests",
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching the cancellation requests",
+    });
   }
 };
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const reqCancelRouter = express.Router();
-const reqCancelController=require('./reqCancel.controller');
+const reqCancelController=require('./cancelReq.controller');
 const { authenCusToken, authenAdminToken } = require('../../services/jwt');
 const services=require('../../services/services')
 reqCancelRouter.get('/processing',reqCancelController.getReqCancelRoomProcess)

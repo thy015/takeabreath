@@ -14,7 +14,7 @@ const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 const signUpRouter = require("./src/routes/signUp/signUp.route");
 const bookRouter = require("./src/routes/BookRoom/book.route");
 
-const reqCancelRouter = require("./src/routes/BookRoom/reqCancel.route");
+const reqCancelRouter = require("./src/routes/BookRoom/cancelReq.route");
 //always put first
 
 const videoRoutes = require("./src/routes/Upload/video");

@@ -5,9 +5,8 @@ dotenv.config();
 const axios = require("axios");
 const { generalAccessTokens, refreshAccessTokens } = require("./jwt");
 const { Invoice, Receipt } = require("../models/invoice.model");
-const { reqCancel, refundMoney } = require("../models/reqCancel.model");
+const { reqCancel, refundMoney } = require("../models/cancelReq");
 const mongoose = require("mongoose");
-
 
 //chung của owner và admin
 async function signInOwner(existedOwner) {

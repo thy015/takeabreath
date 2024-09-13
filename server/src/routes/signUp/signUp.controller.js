@@ -1,8 +1,7 @@
-//signUp,signIn
-const signUpService = require("../../services/services");
-const services = require("../../services/services");
+
 const axios = require("axios");
 const { Owner, Admin } = require("../../models/signUp.model");
+//owner
 const signUpOwner = async (req, res) => {
   const { name, passWord, email, birthDate, phoneNum, address } = req.body;
 
@@ -49,6 +48,7 @@ const signUpOwner = async (req, res) => {
   }
 };
 
+//chung của owner và admin
 const signInOwner = async (req, res) => {
   console.log(req.body);
   const { email, passWord } = req.body;
@@ -56,25 +56,59 @@ const signInOwner = async (req, res) => {
   if (!email || !passWord) {
     return res.status(400).json({ message: "Email and password are required" });
   }
-  try {
-    const result = await signUpService.signInOwner({ email, passWord });
 
-    if (result.status === "OK") {
+  try {
+    // Check for owner
+    const foundOwner = await Account.Account.findOne({ email: email });
+
+    if (foundOwner) {
+      if (foundOwner.passWord !== passWord) {
+        return res.json({
+          status: "BAD",
+          message: "Wrong password",
+        });
+      }
+      const access_token = await generalAccessTokens({
+        id: foundOwner._id,
+        isUse: foundOwner.isUse,
+      });
+
       return res.json({
         status: "OK",
-        message: "Đăng nhập thành công",
-        ownerID: result.ownerID,
-        access_token: result.access_token,
-        redirect: result.redirect,
-      });
-    } else {
-      return res.json({
-        status: "BAD",
-        message: result.message,
+        message: "Success log in",
+        ownerID: foundOwner._id,
+        access_token: access_token,
+        redirect: "/",
       });
     }
+
+    // Check for admin if owner not found
+    const foundAdmin = await Account.Admin.findOne({
+      email: email,
+      passWord: passWord,
+    });
+
+    if (foundAdmin) {
+      const access_token = await generalAccessTokens({
+        id: foundAdmin._id,
+        isUse: foundAdmin.isUse,
+      });
+
+      return res.json({
+        status: "OK",
+        message: "Admin logged in",
+        access_token,
+        redirect: "/Admin",
+      });
+    }
+
+    // If neither owner nor admin found
+    return res.status(404).json({
+      status: "BAD",
+      message: "You haven’t registered yet",
+    });
   } catch (error) {
-    console.error("Error in signInOwner:", error);
+    console.error("Error in signInUser:", error);
     return res.status(500).json({
       status: "ERROR",
       message: "Lỗi hệ thống",
@@ -113,11 +147,7 @@ const signUpCustomer = async (req, res) => {
 
     console.log("Response from third-party service:", response.data);
 
-    if (
-      response.status === 200 ||
-      response.status === 201 ||
-      response.status === "OK"
-    ) {
+    if (response.status === 200) {
       return res.status(201).json({
         status: "OK",
         message: "Successfully created customer",
@@ -150,18 +180,44 @@ const signUpCustomer = async (req, res) => {
 
 const signInCustomer = async (req, res) => {
   const { username, password } = req.body;
+
   try {
-    if (!password || !username) {
+    // Validate input
+    if (!username || !password) {
       return res.status(403).json({ message: "Input is required" });
     }
-    const result = await services.signInCustomer(req.body);
-    if (result.status === "OK") {
-      return res.status(200).json(result);
+
+    // Authenticate with the third-party service
+    const response = await axios.post(
+      "https://api.htilssu.com/api/v1/auth/login",
+      {
+        username: username,
+        password: password,
+      }
+    );
+
+    // Check response status
+    if (response.status === 200) {
+      const access_token = await generalAccessTokens({
+        id: response.data.user.id,
+        isUse: "customer",
+      });
+
+      return res.status(200).json({
+        status: "OK",
+        message: "Successfully signed in as customer",
+        userID: response.data.user.id,
+        access_token: access_token,
+      });
     } else {
-      return res.status(400).json(result);
+      return res.status(400).json({
+        status: "BAD",
+        message: "Third-party service auth failed",
+      });
     }
   } catch (e) {
-    return res.status(500).json(e);
+    console.log(e);
+    return res.status(500).json({ message: "Internal server error", error: e });
   }
 };
 

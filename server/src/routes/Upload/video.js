@@ -1,9 +1,9 @@
-const express = require('express');
-const {createVideo} = require("./video.container")
+// const express = require('express');
+// const {createVideo} = require("./video.container")
 
 
-const router = express.Router()
+// const router = express.Router()
 
-router.post("/",createVideo)
+// router.post("/",createVideo)
 
-module.exports = router
+// module.exports = router

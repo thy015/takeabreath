@@ -1,4 +1,3 @@
-
 const { Invoice, Receipt } = require("../../models/invoice.model");
 const { Hotel, Room } = require("../../models/hotel.model");
 
@@ -18,7 +17,7 @@ const bookRoom = async (req, res) => {
   try {
     console.log(`Customer ID extracted from token: ${cusID}`);
 
-    const foundRoom = await Hotel.Room.findById(roomID);
+    const foundRoom = await Hotel.findById(roomID);
     if (!foundRoom) {
       return res.status(404).json({
         status: "BAD",
@@ -26,7 +25,7 @@ const bookRoom = async (req, res) => {
       });
     }
 
-    const fromHotel = await Hotel.Hotel.findById(foundRoom.hotelID);
+    const fromHotel = await Hotel.findById(foundRoom.hotelID);
     const hotelName = fromHotel.companyName;
 
     if (!foundRoom.isAvailable) {
@@ -110,7 +109,7 @@ const completedTran = async (req, res) => {
     invoice.isPaid = true;
     await invoice.save();
 
-    const foundRoom = await Hotel.Room.findById(invoice.roomID);
+    const foundRoom = await Hotel.findById(invoice.roomID);
     if (foundRoom) {
       foundRoom.isAvailable = false;
       await foundRoom.save();
@@ -156,7 +155,7 @@ const getRoomsBookedCustomer = async (req, res) => {
 
 const getInvoicesWithReceipts = async (req, res) => {
   try {
-    const receipt = await Receipt.find().populate("invoiceID");
+    const receipt = await Invoice.find().populate("invoiceID");
     res.status(200).json(receipt);
   } catch (e) {
     console.error("Error fetching invoices with receipts:", e);

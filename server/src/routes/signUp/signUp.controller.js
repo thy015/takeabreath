@@ -1,5 +1,7 @@
 const axios = require("axios");
+const bcrypt = require('bcrypt')
 const { Owner, Admin } = require("../../models/signUp.model");
+const Customer = require('../../models/customer.model')
 const {generalAccessTokens}=require('../../services/jwt')
 //owner
 const signUpOwner = async (req, res) => {
@@ -125,108 +127,62 @@ const signInOwner = async (req, res) => {
 
 // cus
 
-const signUpCustomer = async (req, res) => {
-  const { firstName, password, dob, phoneNumber, email, lastName } = req.body;
-  try {
-    console.log("Request body:", req.body);
-    if (
-      !firstName ||
-      !phoneNumber ||
-      !dob ||
-      !password ||
-      !lastName ||
-      !email
-    ) {
-      return res.status(403).json({ message: "Input is required" });
-    }
 
-    const response = await axios.post(
-      "https://api.htilssu.com/api/v1/auth/register",
-      {
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        password: password,
-        dob: dob,
-        phoneNumber: phoneNumber,
-      }
-    );
 
-    console.log("Response from third-party service:", response.data);
+const loginCustomer = async (req,res)=>{
+  const {email, password} = req.body
 
-    if (response.status === 200) {
-      return res.status(201).json({
-        status: "OK",
-        message: "Successfully created customer",
-        data: response.data,
-      });
-    } else {
-      return res.status(400).json({
-        status: "BAD",
-        message: "Third-party service auth failed",
-        data: response.data,
-      });
-    }
-  } catch (e) {
-    console.error(
-      "Error during sign-up:",
-      e.response ? e.response.data : e.message
-    );
-    return res.status(500).json({
-      status: "BAD",
-      message: "Internal server error in controller",
-      error: {
-        status: e.response ? e.response.status : "UNKNOWN",
-        message: e.response
-          ? e.response.data
-          : e.message || "Unknown error occurred",
-      },
-    });
+  if(!email || !password){
+    return res.status(400).json({login:false, message:"Not found data !"})
   }
-};
 
-const signInCustomer = async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    // Validate input
-    if (!username || !password) {
-      return res.status(403).json({ message: "Input is required" });
-    }
-
-    // Authenticate with the third-party service
-    const response = await axios.post(
-      "https://api.htilssu.com/api/v1/auth/login",
-      {
-        username: username,
-        password: password,
-      }
-    );
-
-    // Check response status
-    if (response.status === 200) {
-      const access_token = await generalAccessTokens({
-        id: response.data.user.id,
-        isUse: "customer",
-      });
-
-      return res.status(200).json({
-        status: "OK",
-        message: "Successfully signed in as customer",
-        userID: response.data.user.id,
-        access_token: access_token,
-      });
-    } else {
-      return res.status(400).json({
-        status: "BAD",
-        message: "Third-party service auth failed",
-      });
-    }
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ message: "Internal server error", error: e });
+  const customer = await Customer.findOne({email:email})
+  if(!customer){
+    return res.status(404).json({login:false, message:"Customer not found !"})
   }
-};
+
+  const isCorretPass = await bcrypt.compare(password,customer.password)
+  if(!isCorretPass){
+    return res.status(401).json({login:false,message:"Pasword incorret"})
+  }
+
+  const token = await generalAccessTokens({
+    userId: customer._id,
+    role:customer.role
+  })
+
+  return res.cookie('token',token,{httpOnly: true, secure:true}).json({login:true,role:`${customer.role}`})
+
+}
+
+const registerCustomer = async(req,res)=>{
+  const {email, password } = req.body
+  const role = 'Customer'
+  if(!email || !password){
+    return res.status(204).json({register: "Not found email or password !"})
+  }
+  
+  const customerExsisted = await Customer.findOne({email: email})
+
+  if(customerExsisted){
+    return res.status(409).json({register:"Customer exsisted !"})
+    
+  }
+
+  const hashPassword = await bcrypt.hash(password,10)
+  const customer = new Customer({
+    email: email,
+    password:hashPassword,
+    role:role
+  })
+                  
+
+  customer.save().then(()=>{
+    res.status(200).json({register: true})
+  })
+
+
+}
 
 function validateBirthDate(birthday) {
   const currentDay = new Date();
@@ -255,6 +211,7 @@ module.exports = {
   signInOwner,
   validateEmail,
   validateBirthDate,
-  signUpCustomer,
-  signInCustomer,
+  //phuc
+  loginCustomer,
+  registerCustomer
 };

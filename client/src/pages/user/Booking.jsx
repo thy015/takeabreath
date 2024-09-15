@@ -105,7 +105,8 @@ const Booking = () => {
           city.toLowerCase().includes(selectedCity.toLowerCase())
         );
       setFilteredCities(filteredCity);
-    } else if (data) { //no input yet, show all
+    } else if (data) {
+      //no input yet, show all
       setFilteredCities(data.map((h) => h.city));
     } else {
       setFilteredCities([]);
@@ -145,23 +146,19 @@ const Booking = () => {
 
   return (
     <div
-      className="flex absolute top-[73%] left-[20%] w-[60%] 
+      className="flex absolute top-[58%] left-[20%] w-[60%] 
      bg-gray-100 border-4 border-yellow-400 rounded-lg 
      overflow-hidden h-20 items-center"
     >
       <Row gutter={0} className="w-full items-center">
         <Col span={6}>
           <Dropdown
-           menu={{
-            items: filteredCities.map((city, index) => ({
-              key: index,
-              label: (
-                <div onClick={() => handleCitySelect(city)}>
-                  {city}
-                </div>
-              ),
-            })),
-          }}
+            menu={{
+              items: filteredCities.map((city, index) => ({
+                key: index,
+                label: <div onClick={() => handleCitySelect(city)}>{city}</div>,
+              })),
+            }}
             trigger={["click"]}
             open={showCities}
             onOpenChange={(flag) => setShowCities(flag)}

@@ -12,7 +12,8 @@ const ownerSchema = new mongoose.Schema({
 const Owner = mongoose.model("Owner", ownerSchema);
 
 //kết nối với db có sẵn chứ ko cho tạo
-const Admin = mongoose.connection.collection("Admin");
+const Admin = mongoose.connection.collection("admin");
+
 module.exports = {
   Owner,
   Admin,

@@ -5,7 +5,7 @@ const bookRouter = express.Router();
 
 bookRouter.get("/invoice", bookController.getInvoicesWithReceipts);
 
-bookRouter.post("/", authenCusToken, bookController.bookRoom);
+bookRouter.post("/:id", authenCusToken, bookController.bookRoom);
 bookRouter.post("/transferCompleted/:id", bookController.completedTran);
 
 bookRouter.get(

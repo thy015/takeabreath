@@ -1,22 +1,23 @@
-
 const axios = require("axios");
 const { Owner, Admin } = require("../../models/signUp.model");
+const {generalAccessTokens}=require('../../services/jwt')
 //owner
 const signUpOwner = async (req, res) => {
-  const { name, passWord, email, birthDate, phoneNum, address } = req.body;
+  const { ownerName, password, email, birthday, phoneNum, avatarLink } =
+    req.body;
 
-  if (!name || !passWord || !email || !birthDate || !phoneNum || !address) {
+  if (!ownerName || !password || !email || !birthday || !phoneNum) {
     return res.status(403).json({ message: "Input is required" });
   } else if (!validateEmail(email)) {
     return res.status(400).json({ message: "Invalid email" });
-  } else if (!validateBirthDate(birthDate)) {
+  } else if (!validateBirthDate(birthday)) {
     return res.status(400).json({ message: "Not enough age" });
   }
 
   try {
     // Check if the account already exists
-    const checkAccountExisted = await Owner.findOne({ email });
-    const isAdmin = await Admin.findOne({ email });
+    const checkAccountExisted = await Owner.findOne({ email:email });
+    const isAdmin = await Admin.findOne({ adminLogName: email});
 
     if (checkAccountExisted !== null || isAdmin !== null) {
       return res.status(400).json({
@@ -26,13 +27,13 @@ const signUpOwner = async (req, res) => {
     }
 
     // Create the new owner account
-    const createdOwner = await Account.Account.create({
-      name,
-      passWord,
+    const createdOwner = await Owner.create({
+      ownerName,
+      password,
       email,
-      birthDate,
+      birthday,
       phoneNum,
-      address,
+      avatarLink,
     });
 
     // Respond with success
@@ -51,18 +52,18 @@ const signUpOwner = async (req, res) => {
 //chung của owner và admin
 const signInOwner = async (req, res) => {
   console.log(req.body);
-  const { email, passWord } = req.body;
+  const { email, password } = req.body;
 
-  if (!email || !passWord) {
-    return res.status(400).json({ message: "Email and password are required" });
+  if (!email || !password) {
+    return res.status(403).json({ message: "Email and password are required" });
   }
 
   try {
     // Check for owner
-    const foundOwner = await Account.Account.findOne({ email: email });
+    const foundOwner = await Owner.findOne({ email: email });
 
     if (foundOwner) {
-      if (foundOwner.passWord !== passWord) {
+      if (foundOwner.password !== password) {
         return res.json({
           status: "BAD",
           message: "Wrong password",
@@ -70,7 +71,12 @@ const signInOwner = async (req, res) => {
       }
       const access_token = await generalAccessTokens({
         id: foundOwner._id,
-        isUse: foundOwner.isUse,
+        email: foundOwner.email,
+        password: foundOwner.password,
+        birthday: foundOwner.birthday,
+        phoneNum: foundOwner.phoneNum,
+        avatarLink: foundOwner.avatarLink,
+        regDay: foundOwner.regDay,
       });
 
       return res.json({
@@ -81,23 +87,24 @@ const signInOwner = async (req, res) => {
         redirect: "/",
       });
     }
-
+    
     // Check for admin if owner not found
-    const foundAdmin = await Account.Admin.findOne({
+    const foundAdmin = await Admin.findOne({
       email: email,
-      passWord: passWord,
+      password: password,
     });
+    console.log("Found Admin:", foundAdmin);
 
     if (foundAdmin) {
       const access_token = await generalAccessTokens({
         id: foundAdmin._id,
-        isUse: foundAdmin.isUse,
+        adminName: foundAdmin.adminName,
       });
 
       return res.json({
         status: "OK",
         message: "Admin logged in",
-        access_token,
+        access_token:access_token,
         redirect: "/Admin",
       });
     }
@@ -108,7 +115,7 @@ const signInOwner = async (req, res) => {
       message: "You haven’t registered yet",
     });
   } catch (error) {
-    console.error("Error in signInUser:", error);
+    console.error("Error in signInOwner and admin:", error);
     return res.status(500).json({
       status: "ERROR",
       message: "Lỗi hệ thống",
@@ -221,9 +228,9 @@ const signInCustomer = async (req, res) => {
   }
 };
 
-function validateBirthDate(birthDate) {
+function validateBirthDate(birthday) {
   const currentDay = new Date();
-  const dob = new Date(birthDate);
+  const dob = new Date(birthday);
   const age = currentDay.getFullYear() - dob.getFullYear();
   const monthDiff = currentDay.getMonth() - dob.getMonth();
   if (

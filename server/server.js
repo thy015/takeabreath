@@ -24,7 +24,8 @@ app.use(bodyParser.json());
 app.use(morgan("combined"));
 
 // app.use("/videos", videoRoutes);
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = ["http://localhost:3000",
+  "https://wowo.htilssu.id.vn/assets/remoteEntry.js"];
 
 app.use(
   cors({

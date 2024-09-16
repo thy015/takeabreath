@@ -4,9 +4,10 @@ import { Card } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; // Ensure you have antd's CSS
 import { useGet } from "../../hooks/hooks";
-
+import { Link } from "react-router-dom";
 const PropertyCard = ({ property }) => {
   return (
+    <Link to={`/Admin/Hotel/${property._id}`} className="no-underline">
     <Card className="shadow-sm h-full" style={{ borderRadius: "12px" }}>
       <Card.Img
         variant="top"
@@ -41,6 +42,7 @@ const PropertyCard = ({ property }) => {
         </div>
       </Card.Body>
     </Card>
+    </Link>
   );
 };
 

@@ -4,12 +4,30 @@
 
 .ant-carousel .slick-prev,
 .ant-carousel .slick-next {
-  color: #1d4ed8; 
+  color: #1d4ed8;
 }
+
 .ant-carousel .slick-arrow {
-    margin: -20px -40px; 
-  }
-  .card-no-border {
-    border: none!important;
-    padding: 0; 
-  }
+  margin: -20px -40px;
+}
+
+.card-no-border {
+  border: none !important;
+  padding: 0;
+}
+
+.anticon svg{
+  color:white;
+}
+
+.ant-input::placeholder{
+  color: white;
+}
+:where(.css-dev-only-do-not-override-11lehqq).ant-form-item .ant-form-item-label >label {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  min-width: 150px;
+  margin-left: 5px;
+  width: 42px;
+}

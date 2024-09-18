@@ -54,10 +54,8 @@ const Sidebar = () => {
                 <Link to="Calendar" className='no-underline flex items-center gap-[10px] py-[5px]  cursor-pointer'>
                     <FaCalendar color='white' /> <p className='text-[14px] leading-[20px] pt-[10px] font-normal text-white'>Calendar</p>
                 </Link>
-                <div className='flex items-center gap-[10px] py-[5px] cursor-pointer'>
-                    <FaRegCalendarAlt color='white' /> <p className='text-[14px] leading-[20px] pt-[10px] font-normal text-white'>Tables</p>
-                </div>
-                <Link to="Settings" className='flex items-center gap-[10px] py-[5px] cursor-pointer'>
+               
+                <Link to="Settings" className='no-underline flex items-center gap-[10px] py-[5px] cursor-pointer'>
                     <FaRegSun color='white' /> <p className='text-[14px] leading-[20px]  pt-[10px] font-normal text-white'>Settings</p>
                 </Link>
             </div>

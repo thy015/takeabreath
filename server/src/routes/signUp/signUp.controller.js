@@ -1,8 +1,6 @@
-const axios = require("axios");
-const bcrypt = require('bcrypt')
-const { Owner, Admin } = require("../../models/signUp.model");
-const Customer = require('../../models/customer.model')
-const {generalAccessTokens}=require('../../services/jwt')
+const bcrypt = require("bcrypt");
+const { Owner, Admin, Customer } = require("../../models/signUp.model");
+const { generalAccessTokens } = require("../../services/jwt");
 //owner
 const signUpOwner = async (req, res) => {
   const { ownerName, password, email, birthday, phoneNum, avatarLink } =
@@ -18,8 +16,8 @@ const signUpOwner = async (req, res) => {
 
   try {
     // Check if the account already exists
-    const checkAccountExisted = await Owner.findOne({ email:email });
-    const isAdmin = await Admin.findOne({ adminLogName: email});
+    const checkAccountExisted = await Owner.findOne({ email: email });
+    const isAdmin = await Admin.findOne({ adminLogName: email });
 
     if (checkAccountExisted !== null || isAdmin !== null) {
       return res.status(400).json({
@@ -86,10 +84,10 @@ const signInOwner = async (req, res) => {
         message: "Success log in",
         ownerID: foundOwner._id,
         access_token: access_token,
-        redirect: "/",
+        redirect: "/Owner",
       });
     }
-    
+
     // Check for admin if owner not found
     const foundAdmin = await Admin.findOne({
       email: email,
@@ -106,7 +104,7 @@ const signInOwner = async (req, res) => {
       return res.json({
         status: "OK",
         message: "Admin logged in",
-        access_token:access_token,
+        access_token: access_token,
         redirect: "/Admin",
       });
     }
@@ -127,62 +125,70 @@ const signInOwner = async (req, res) => {
 
 // cus
 
+const loginCustomer = async (req, res) => {
+  const { email, password } = req.body;
 
-
-const loginCustomer = async (req,res)=>{
-  const {email, password} = req.body
-
-  if(!email || !password){
-    return res.status(400).json({login:false, message:"Not found data !"})
+  if (!email || !password) {
+    return res.status(403).json({ login: false, message: "Not found data !" });
   }
 
-  const customer = await Customer.findOne({email:email})
-  if(!customer){
-    return res.status(404).json({login:false, message:"Customer not found !"})
+  const customer = await Customer.findOne({ email: email });
+  if (!customer) {
+    return res
+      .status(404)
+      .json({ login: false, message: "Customer not found !" });
   }
 
-  const isCorretPass = await bcrypt.compare(password,customer.password)
-  if(!isCorretPass){
-    return res.status(401).json({login:false,message:"Pasword incorret"})
+  const isCorrectPass = await bcrypt.compare(password, customer.password);
+  if (!isCorrectPass) {
+    return res.status(401).json({ login: false, message: "Pasword incorret" });
   }
 
   const token = await generalAccessTokens({
-    userId: customer._id,
-    role:customer.role
-  })
+    userID: customer._id,
+    role: customer.role,
+  });
 
-  return res.cookie('token',token,{httpOnly: true, secure:true}).json({login:true,role:`${customer.role}`})
+  return res
+    .cookie("token", token, { httpOnly: true, secure: true })
+    .json({ login: true, role: `${customer.role}` });
+};
 
-}
+const registerCustomer = async (req, res) => {
+  const { email, password, cusName, phoneNum, avatarLink, birthday } = req.body;
 
-const registerCustomer = async(req,res)=>{
-  const {email, password } = req.body
-  const role = 'Customer'
-  if(!email || !password){
-    return res.status(204).json({register: "Not found email or password !"})
+  if (!email || !password || !cusName || !phoneNum) {
+    return res.status(403).json({message:'missing required input'});
   }
-  
-  const customerExsisted = await Customer.findOne({email: email})
+  try {
+    const customerExsisted = await Customer.findOne({ email: email });
 
-  if(customerExsisted){
-    return res.status(409).json({register:"Customer exsisted !"})
-    
+    if (customerExsisted) {
+      return res.status(400).json({message:'existed customer, please sign in'});
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+    const customer = await Customer.create({
+      email:email,
+      password: hashPassword,
+      cusName:cusName,
+      phoneNum:phoneNum,
+      avatarLink:avatarLink,
+      birthday:birthday,
+    });
+
+    return res.status(201).json({
+      status: "OK",
+      message: "Succ",
+      data: customer,
+      redirect:'/Customer'
+    });
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ message: e.message || "Internal Server Error" });
   }
-
-  const hashPassword = await bcrypt.hash(password,10)
-  const customer = new Customer({
-    email: email,
-    password:hashPassword,
-    role:role
-  })
-                  
-
-  customer.save().then(()=>{
-    res.status(200).json({register: true})
-  })
-
-
-}
+};
 
 function validateBirthDate(birthday) {
   const currentDay = new Date();
@@ -213,5 +219,5 @@ module.exports = {
   validateBirthDate,
   //phuc
   loginCustomer,
-  registerCustomer
+  registerCustomer,
 };

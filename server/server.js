@@ -52,8 +52,7 @@ app.use("/api/cancelReq", reqCancelRouter);
 
 mongoose
   .connect(
-    // `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
-    "mongodb+srv://phantanphuc282004:tanphuc123456789@cluster0.barjw8t.mongodb.net/testCNPM?retryWrites=true&w=majority&appName=Cluster0"
+    `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
   )
   .then(() => {
     console.log("Connect successfully");

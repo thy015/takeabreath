@@ -1,12 +1,38 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
  import { FaSearch, FaEnvelope, FaRegBell } from "react-icons/fa";
+import { AuthContext } from "../../hooks/auth.context";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const DashboardView = () => {
+  const {auth,setAuth} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate()
 
+  console.log("[Admin Page] ",auth)
+  axios.defaults.withCredentials = true
   const showProfile = () => {
     setOpen(!open);
   };
+  const hanldeLogout = ()=>{
+    axios.get("http://localhost:4000/api/auth/logout")
+    .then(res => {
+      if (res.data.logout) {
+        setAuth({
+          isAuthenticated: false,
+          user: {
+            id: "",
+            email: '',
+            name: '',
+          }
+        })
+        navigate('/login')
+
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   return (
     <div className="">
@@ -30,7 +56,7 @@ const DashboardView = () => {
             className="flex items-center gap-[15px] relative"
             onClick={showProfile}
           >
-            <p className="pt-[10px]">Dame dane</p>
+            <p className="pt-[10px]">{auth?.user?.name}</p>
             <div className="h-[50px] w-[50px] bg-[#4E73DF] cursor-pointer flex items-center justify-center relative z-40">
               <img src="/img/profile.png" alt="" />
             </div>
@@ -43,7 +69,7 @@ const DashboardView = () => {
                 <p className="cursor-pointer hover:text-[blue] font-semibold">
                   Settings
                 </p>
-                <p className="cursor-pointer hover:text-[blue] font-semibold">
+                <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={hanldeLogout}>
                   Log out
                 </p>
               </div>

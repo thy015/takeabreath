@@ -1,12 +1,14 @@
 import { Link,useNavigate } from "react-router-dom";
-import React from 'react'
+import React, { useContext } from 'react'
 import axios from 'axios'
 import { useState } from "react";
 import { Input, Form,Typography } from "antd";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { AuthContext } from "../../hooks/auth.context";
 function Login() {
+  const {auth,setAuth} = useContext(AuthContext)
   const [formLogin] = Form.useForm()
   const email = Form.useWatch('email',formLogin)
   const password = Form.useWatch('password',formLogin)
@@ -31,8 +33,18 @@ function Login() {
 
     axios.post("http://localhost:4000/api/auth/signInCus",{email,password})
       .then(res=>{
+        console.log(res)
         if(res.data.login){
-          navigate('/')
+          setErrMessage('')
+          setAuth({
+            isAuthenticated: true,
+            user:{
+              id: res?.data?.id ?? "",
+              name:res?.data?.name ?? ""
+            }
+          })
+          console.log(auth)
+          navigate(res.data.redirect)
         }
       }).catch(err=>{
         setErrMessage(err.response.data.message)

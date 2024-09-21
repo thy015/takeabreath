@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser')
 dotenv.config();
 const app = express();
 const mongoose = require("mongoose");
@@ -20,6 +21,7 @@ const reqCancelRouter = require("./src/routes/BookRoom/cancelReq.route");
 // Cấu hình middleware
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(morgan("combined"));
 

@@ -163,7 +163,8 @@ const loginCustomer = async (req, res) => {
               login: true,
               redirect: "/",
               name: customer.cusName,
-              id: customer._id
+              id: customer._id,
+              email:customer.email
             });
   } else {
     signInOwner(email, password, res)
@@ -171,9 +172,9 @@ const loginCustomer = async (req, res) => {
 };
 
 const registerCustomer = async (req, res) => {
-  const { email, password, cusName, phoneNum, avatarLink, birthday } = req.body;
+  const { email, password } = req.body;
 
-  if (!email || !password || !cusName || !phoneNum) {
+  if (!email || !password) {
     return res.status(403).json({ message: 'missing required input' });
   }
   try {
@@ -184,17 +185,16 @@ const registerCustomer = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const customer = await Customer.create({
+    const customer = new Customer({
       email: email,
-      password: hashPassword,
-      cusName: cusName,
-      phoneNum: phoneNum,
-      avatarLink: avatarLink,
-      birthday: birthday,
+      password: hashPassword
     });
 
+    customer.save()
+    console.log(customer)
     return res.status(201).json({
       status: "OK",
+      register:true,
       message: "Succ",
       data: customer,
       redirect: '/Customer'

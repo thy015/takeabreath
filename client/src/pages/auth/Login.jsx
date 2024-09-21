@@ -40,10 +40,11 @@ function Login() {
             isAuthenticated: true,
             user:{
               id: res?.data?.id ?? "",
+              email:res?.data?.email ?? "",
               name:res?.data?.name ?? ""
             }
           })
-          console.log(auth)
+          console.log("[LOGIN]",auth)
           navigate(res.data.redirect)
         }
       }).catch(err=>{

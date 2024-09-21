@@ -12,6 +12,21 @@ const Header = ({ children }) => {
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
 
+  const setText =()=>{
+    if(auth.isAuthenticated){
+      if(auth.user.name === '' || !auth.user.name){
+        return auth?.user?.email 
+      }else{
+        return auth?.user?.name 
+        
+      }
+    
+    }else{
+      return "Log In"
+    }
+  }
+
+  console.log(setText())
   const Logout = () => {
     axios.get("http://localhost:4000/api/auth/logout")
       .then(res => {
@@ -31,10 +46,7 @@ const Header = ({ children }) => {
   }
 
   const handleClickMenuItem = (e) => {
-    console.log('click', e);
     const key = e.key
-    console.log('KEY', typeof (key));
-
     switch (key) {
       case "1":
         console.log("Key 1");
@@ -157,7 +169,7 @@ const Header = ({ children }) => {
             <ul class="flex space-x-5 pt-3">
               <li>
                 <Link to="/login" className="no-underline">
-                  <Button>{auth?.user?.name === '' ? 'Log in' : auth.user.name}</Button>
+                  <Button>{setText()}</Button>
                 </Link>
               </li>
               <li>

@@ -1,8 +1,9 @@
 import React from 'react'
-import PropertyGrid from "../user/HotelDisplay";
+import PropertyGrid from '../user/Home_HotelDisplay'
+
 const HotelsAdmin = () => {
   return (
-    <PropertyGrid/>
+   <PropertyGrid></PropertyGrid>
   )
 }
 

@@ -13,7 +13,7 @@ import {
 import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useCount, useGet } from "../../hooks/hooks";
+import { useCount, useGet } from "../hooks/hooks";
 
 const { RangePicker } = DatePicker;
 
@@ -132,6 +132,7 @@ const Booking = () => {
   if (error) {
     return (
       <Alert
+          className={'mt-12'}
         message="Error"
         description="Failed to load properties."
         type="error"
@@ -146,9 +147,9 @@ const Booking = () => {
 
   return (
     <div
-      className="flex absolute top-[58%] left-[20%] w-[60%] 
-     bg-gray-100 border-4 border-yellow-400 rounded-lg 
-     overflow-hidden h-20 items-center"
+      className="flex w-[60%] 
+     bg-white border-4 border-yellow-400 rounded-lg 
+     overflow-hidden h-20 items-center shadow-md"
     >
       <Row gutter={0} className="w-full items-center">
         <Col span={6}>
@@ -185,7 +186,7 @@ const Booking = () => {
         <Col span={6}>
           <Dropdown
             menu={{
-              items,
+              items
             }}
             trigger={["click"]}
             arrow

@@ -16,7 +16,7 @@ signUpRouter.get("/owner", async (req, res) => {
 signUpRouter.post("/signUpOwner", signUpController.signUpOwner);
 signUpRouter.post("/signInOwner", signUpController.signInOwner);
 // Cus
-signUpRouter.post("/signInCus", signUpController.signInCustomer);
-signUpRouter.post("/signUpCus", signUpController.signUpCustomer);
+signUpRouter.post("/signInCus", signUpController.loginCustomer);
+signUpRouter.post("/signUpCus", signUpController.registerCustomer);
 
 module.exports = signUpRouter;

@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser')
 dotenv.config();
 const app = express();
 const mongoose = require("mongoose");
@@ -20,6 +21,7 @@ const reqCancelRouter = require("./src/routes/BookRoom/cancelReq.route");
 // Cấu hình middleware
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(morgan("combined"));
 
@@ -50,7 +52,8 @@ app.use("/api/cancelReq", reqCancelRouter);
 
 mongoose
   .connect(
-    `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
+    // `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
+    "mongodb+srv://phantanphuc282004:tanphuc123456789@cluster0.barjw8t.mongodb.net/testCNPM?retryWrites=true&w=majority&appName=Cluster0"
   )
   .then(() => {
     console.log("Connect successfully");

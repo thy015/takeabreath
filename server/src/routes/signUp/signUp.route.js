@@ -1,7 +1,8 @@
 const express = require("express");
 const signUpController = require("./signUp.controller");
 const signUpRouter = express.Router();
-const {Owner,Customer}=require('../../models/signUp.model')
+const {Owner,Customer}=require('../../models/signUp.model');
+const { verifyLogin, verifyAdmin } = require("../../services/verify");
 // Owner
 signUpRouter.get("/owner", async (req, res) => {
   try {
@@ -25,5 +26,14 @@ signUpRouter.get("/customer", async (req, res) => {
 });
 signUpRouter.post("/signInCus", signUpController.loginCustomer);
 signUpRouter.post("/signUpCus", signUpController.registerCustomer);
+signUpRouter.get('/logout',signUpController.logout)
+
+signUpRouter.get('/verifyAdmin',verifyAdmin,(req,res)=>{
+  return res.json(req.user)
+})
+
+signUpRouter.get('/verify',verifyLogin,(req,res)=>{
+  return res.json(req.user)
+})
 
 module.exports = signUpRouter;

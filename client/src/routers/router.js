@@ -1,15 +1,14 @@
 // src/routers/router.js
 import DashboardView from "../pages/admin/DashboardView";
 import HomePage from "../pages/user/HomePage";
-
-import Login from "../pages/login_register/Login";
-import Register from "../pages/login_register/Register";
-
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
 import HotelsAdmin from "../pages/admin/HotelsAdmin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import Calendar from "../pages/admin/Calendar";
 import HotelDetails from "../pages/admin/HotelDetails";
 import Settings from "../pages/admin/Settings";
+import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 export const routers = [
   {
     path: "/",
@@ -45,5 +44,10 @@ export const routers = [
     isShowHeader: false,
     isShowFooter: false,
   },
-
+  {
+    path: "/booking",
+    page: HotelDisplayCompre,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
 ];

@@ -26,9 +26,9 @@ const Register= ()=> {
   
 
   axios.defaults.withCredentials=true
+
   const handleRegister=(e)=>{
     e.preventDefault()
-
     if(!matchPass_Repass){
         setErrMessage("Password and repassword dont match!")
         return
@@ -43,6 +43,7 @@ const Register= ()=> {
     axios.post('http://localhost:4000/api/auth/signUpCus',{
       email,password,repassword
     }).then(res=>{
+      console.log(res)
       if(res.data.register){
         navigate('/login')
       }else{

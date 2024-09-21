@@ -15,7 +15,6 @@ function App() {
     const fetchUser = ()=>{
       axios.get("http://localhost:4000/api/auth/verify")
         .then(res=>{
-          console.log("[App]",res)
           const userRes = res.data
           setAuth({
             isAuthenticated:true,
@@ -26,7 +25,6 @@ function App() {
             }
            
           })
-          console.log("[App]",auth)
         }).catch(err =>{
           console.log("[APP]",err)
         })

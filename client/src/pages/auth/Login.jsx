@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useState } from "react";
 import { Input, Form,Typography } from "antd";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import { openNotification } from "../../hooks/notification";
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { AuthContext } from "../../hooks/auth.context";
 function Login() {
@@ -30,7 +30,6 @@ function Login() {
       setErrMessage('Email is incorret !')
       return 
     }
-
     axios.post("http://localhost:4000/api/auth/signInCus",{email,password})
       .then(res=>{
         console.log(res)
@@ -44,11 +43,12 @@ function Login() {
               name:res?.data?.name ?? ""
             }
           })
+          openNotification(true,"Login Successful","")
           console.log("[LOGIN]",auth)
           navigate(res.data.redirect)
         }
       }).catch(err=>{
-        setErrMessage(err.response.data.message)
+        openNotification(false,"Login Failed",err.response.data.message)
       })
 
   }
@@ -92,8 +92,8 @@ function Login() {
           />
         </Form.Item>
 
-        {errMessage!=='' && <Typography className="text-red-500 text-[18px] font-bold ">{errMessage}</Typography>}
-
+        {/* {errMessage!=='' && <Typography className="text-red-500 text-[18px] font-bold ">{errMessage}</Typography>}
+ */}
 
         <div>
           <button 

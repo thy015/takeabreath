@@ -99,15 +99,16 @@ const Booking = () => {
   );
   useEffect(() => {
     if (data && selectedCity) {
-      const filteredCity = data
+      const filteredCity = Array.from(new Set(data
         .map((hotel) => hotel.city)
         .filter((city) =>
-          city.toLowerCase().includes(selectedCity.toLowerCase())
-        );
+          city.toLowerCase().includes(selectedCity.toLowerCase())))
+        ).slice(0,5)
       setFilteredCities(filteredCity);
     } else if (data) {
       //no input yet, show all
-      setFilteredCities(data.map((h) => h.city));
+      const allCities = Array.from(new Set(data.map((h) => h.city))).slice(0, 5);
+      setFilteredCities(allCities);
     } else {
       setFilteredCities([]);
     }

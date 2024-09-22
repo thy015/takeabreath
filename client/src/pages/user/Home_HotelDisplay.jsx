@@ -5,7 +5,7 @@ import "antd/dist/reset.css"; // Ensure you have antd's CSS
 import { useGet } from "../../hooks/hooks";
 import { PropertyCard } from "../../component/AccomodationCard";
 
-{/* <Link to={`/Admin/Hotel/${property._id}`} className="no-underline"> */}
+
 const PropertyGrid = () => {
   const slides = [];
 

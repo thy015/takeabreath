@@ -3,10 +3,12 @@ const { Owner, Admin, Customer } = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../services/jwt");
 //owner
 const signUpOwner = async (req, res) => {
-  const { ownerName, password, email, birthday, phoneNum, avatarLink } =
+  const { ownerName, password, email, birthday, phone } =
     req.body;
 
-  if (!ownerName || !password || !email || !birthday || !phoneNum) {
+  console.log("[body]", { ownerName, password, email, birthday, phone })
+
+  if (!ownerName || !password || !email || !birthday || !phone) {
     return res.status(403).json({ message: "Input is required" });
   } else if (!validateEmail(email)) {
     return res.status(400).json({ message: "Invalid email" });
@@ -17,35 +19,36 @@ const signUpOwner = async (req, res) => {
   try {
     // Check if the account already exists
     const checkAccountExisted = await Owner.findOne({ email: email });
-    const isAdmin = await Admin.findOne({ adminLogName: email });
-
-    if (checkAccountExisted !== null || isAdmin !== null) {
+    const isAdmin = await Admin.findOne({ email: email });
+    const isCustomer = await Customer.findOne({ email: email });
+    if (checkAccountExisted !== null || isAdmin !== null || isCustomer!== null) {
       return res.status(400).json({
         status: "BAD",
         message: "Email existed",
       });
     }
-
+    const hashPassword = await bcrypt.hash(password, 10);
     // Create the new owner account
-    const createdOwner = await Owner.create({
-      ownerName,
-      password,
-      email,
-      birthday,
-      phoneNum,
-      avatarLink,
+    const createdOwner = new Owner({
+      ownerName:ownerName,
+      password:hashPassword,
+      email:email,
+      birthday:birthday,
+      phoneNum:phone,
     });
 
+    await createdOwner.save()
     // Respond with success
     return res.status(201).json({
       status: "OK",
+      register:true,
       message: "Succ",
       data: createdOwner,
     });
   } catch (e) {
     return res
       .status(500)
-      .json({ message: e.message || "Internal Server Error" });
+      .json({message: "Internal Server Error" });
   }
 };
 
@@ -214,6 +217,7 @@ const logout = async (req,res)=>{
 function validateBirthDate(birthday) {
   const currentDay = new Date();
   const dob = new Date(birthday);
+  console.log(dob)
   const age = currentDay.getFullYear() - dob.getFullYear();
   const monthDiff = currentDay.getMonth() - dob.getMonth();
   if (

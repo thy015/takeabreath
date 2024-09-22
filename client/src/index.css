@@ -31,3 +31,29 @@
   margin-left: 5px;
   width: 42px;
 }
+
+.register-owner label{
+  color: black !important;
+  font-size: large;
+  min-width: 200px  !important ;
+  font-size: 20px !important ;
+}
+
+.ant-form-item-feedback-icon svg{
+  color: green !important;
+}
+
+.ant-form-item-feedback-icon-error svg{
+  color: red !important;
+}
+
+.register-owner svg{
+  color: black;
+}
+
+.ant-notification-notice-close svg{
+  color: black !important;
+}
+.ant-notification-notice{
+  color: red !important;
+}

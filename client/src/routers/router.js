@@ -9,6 +9,7 @@ import Calendar from "../pages/admin/Calendar";
 import HotelDetails from "../pages/admin/HotelDetails";
 import Settings from "../pages/admin/Settings";
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
+import RegisterOwner from "../pages/auth/RegisterOwner";
 export const routers = [
   {
     path: "/",
@@ -41,6 +42,12 @@ export const routers = [
   {
     path: "/register",
     page: Register,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+    path: "/registerOwner",
+    page: RegisterOwner,
     isShowHeader: false,
     isShowFooter: false,
   },

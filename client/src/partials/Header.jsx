@@ -6,11 +6,25 @@ import { faShoppingCart, faBars, faArrowLeft } from "@fortawesome/free-solid-svg
 import ".././index.css";
 import { AuthContext } from "../hooks/auth.context";
 import axios from "axios";
+import { openNotification } from "../hooks/notification";
 
 const Header = ({ children }) => {
 
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
+
+  const setLogout = ()=>{
+    if(auth.isAuthenticated){
+      items.push({
+        label: "Log Out",
+        key: "4",
+        onClick: handleClickMenuItem,
+        icon: (
+          <FontAwesomeIcon icon={faArrowLeft} />
+        ),
+      })
+    }
+  }
 
   const setText =()=>{
     if(auth.isAuthenticated){
@@ -31,6 +45,7 @@ const Header = ({ children }) => {
     axios.get("http://localhost:4000/api/auth/logout")
       .then(res => {
         if (res.data.logout) {
+          openNotification(true,"Logout Successful !")
           setAuth({
             isAuthenticated: false,
             user: {
@@ -90,7 +105,7 @@ const Header = ({ children }) => {
           className="no-underline"
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.aliyun.com"
+          href="http://localhost:3000/registerOwner"
         >
           Register Owner!
         </a>
@@ -123,15 +138,11 @@ const Header = ({ children }) => {
           style={{ width: "16px", marginRight: "8px" }}
         />
       ),
-    }, {
-      label: "Log Out",
-      key: "4",
-      onClick: handleClickMenuItem,
-      icon: (
-        <FontAwesomeIcon icon={faArrowLeft} />
-      ),
     }
   ];
+
+
+  setLogout()
   return (
     <div>
       <Row justify={"center"} className="bg-[#114098]">

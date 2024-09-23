@@ -5,7 +5,7 @@ const Settings = () => {
   return (
     <>
       <div className="mx-auto max-w-270">
-        <h1>Settings</h1>
+      <h1 className='text-[28px] my-6 leading-[34px] font-normal text-[#5a5c69] cursor-pointer'>Settings</h1>
 
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
@@ -32,8 +32,8 @@ const Settings = () => {
                           type="text"
                           name="fullName"
                           id="fullName"
-                          placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
+                          placeholder="ehe"
+                          defaultValue="ehe"
                         />
                       </div>
                     </div>
@@ -70,8 +70,8 @@ const Settings = () => {
                         type="email"
                         name="emailAddress"
                         id="emailAddress"
-                        placeholder="devidjond45@gmail.com"
-                        defaultValue="devidjond45@gmail.com"
+                        placeholder="ehe@gmail.com"
+                        defaultValue="ehe@gmail.com"
                       />
                     </div>
                   </div>
@@ -88,8 +88,8 @@ const Settings = () => {
                       type="text"
                       name="Username"
                       id="Username"
-                      placeholder="devidjhon24"
-                      defaultValue="devidjhon24"
+                      placeholder="ehe"
+                      defaultValue="ehe"
                     />
                   </div>
 
@@ -108,7 +108,7 @@ const Settings = () => {
                         id="bio"
                         rows={6}
                         placeholder="Write your bio here"
-                        defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet."
+                        defaultValue="ehe"
                       ></textarea>
                     </div>
                   </div>

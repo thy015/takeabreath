@@ -20,8 +20,7 @@ const signUpOwner = async (req, res) => {
     // Check if the account already exists
     const checkAccountExisted = await Owner.findOne({ email: email });
     const isAdmin = await Admin.findOne({ email: email });
-    const isCustomer = await Customer.findOne({ email: email });
-    if (checkAccountExisted !== null || isAdmin !== null || isCustomer!== null) {
+    if (checkAccountExisted !== null || isAdmin !== null) {
       return res.status(400).json({
         status: "BAD",
         message: "Email existed",

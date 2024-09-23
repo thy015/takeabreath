@@ -21,10 +21,10 @@ const hotelSchema = new mongoose.Schema({
 
 const roomSchema = new mongoose.Schema({
   roomName: { type: String, required: true },
-  roomType: { type: String, required: true },
+  typeOfRoom: { type: String, required: true },
   capacity: { type: Number, required: true },
   numberOfBeds: { type: Number, required: true },
-  price: { type: Number, required: true },
+  money: { type: Number, required: true },
   imgLink: { type: String, required: false },
   revenue: { type: Number, required: false, default: 0 },
   hotelID: {

@@ -2,7 +2,7 @@ import React from 'react'
 const Calendar = () => {
   return (
     <>
-      <div className="w-full max-w-full rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="w-full max-w-full rounded-sm border border-stroke mt-2 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <table className="w-full">
           <thead>
             <tr className="grid grid-cols-7 rounded-t-sm bg-primary text-white">

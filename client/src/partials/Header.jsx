@@ -1,11 +1,87 @@
 import { Button, Dropdown, Row, Col } from "antd";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ".././index.css";
+import { AuthContext } from "../hooks/auth.context";
+import axios from "axios";
+import { openNotification } from "../hooks/notification";
 
 const Header = ({ children }) => {
+
+  const { auth, setAuth } = useContext(AuthContext)
+  axios.defaults.withCredentials = true
+
+  const setLogout = ()=>{
+    if(auth.isAuthenticated){
+      items.push({
+        label: "Log Out",
+        key: "4",
+        onClick: handleClickMenuItem,
+        icon: (
+          <FontAwesomeIcon icon={faArrowLeft} />
+        ),
+      })
+    }
+  }
+
+  const setText =()=>{
+    if(auth.isAuthenticated){
+      if(auth.user.name === '' || !auth.user.name){
+        return auth?.user?.email 
+      }else{
+        return auth?.user?.name 
+        
+      }
+    
+    }else{
+      return "Log In"
+    }
+  }
+
+  console.log(setText())
+  const Logout = () => {
+    axios.get("http://localhost:4000/api/auth/logout")
+      .then(res => {
+        if (res.data.logout) {
+          openNotification(true,"Logout Successful !")
+          setAuth({
+            isAuthenticated: false,
+            user: {
+              id: "",
+              email: '',
+              name: '',
+            }
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+  }
+
+  const handleClickMenuItem = (e) => {
+    const key = e.key
+    switch (key) {
+      case "1":
+        console.log("Key 1");
+        break;
+      case "2":
+        console.log("Key 2");
+        break;
+      case "3":
+        console.log("Key 3");
+        break;
+      case "4":
+        Logout();
+        break;
+      default:
+        console.log("Default");
+        break;
+    }
+
+  }
+
   const hoverEffect =
     "text-white text-[18px] pl-5 font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
 
@@ -29,7 +105,7 @@ const Header = ({ children }) => {
           className="no-underline"
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.aliyun.com"
+          href="http://localhost:3000/registerOwner"
         >
           Register Owner!
         </a>
@@ -62,8 +138,11 @@ const Header = ({ children }) => {
           style={{ width: "16px", marginRight: "8px" }}
         />
       ),
-    },
+    }
   ];
+
+
+  setLogout()
   return (
     <div>
       <Row justify={"center"} className="bg-[#114098]">
@@ -101,7 +180,7 @@ const Header = ({ children }) => {
             <ul class="flex space-x-5 pt-3">
               <li>
                 <Link to="/login" className="no-underline">
-                  <Button>Log In</Button>
+                  <Button>{setText()}</Button>
                 </Link>
               </li>
               <li>
@@ -122,10 +201,12 @@ const Header = ({ children }) => {
                 <Dropdown
                   menu={{
                     items,
+                    onClick: handleClickMenuItem
                   }}
                   trigger={["click"]}
                   arrow
                   placement="bottomRight"
+
                 >
                   <FontAwesomeIcon
                     icon={faBars}

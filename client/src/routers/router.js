@@ -5,13 +5,11 @@ import HomePage from "../pages/user/HomePage";
 import Login from "../pages/login_register/Login";
 import Register from "../pages/login_register/Register";
 
-import HotelsAdmin from "../pages/admin/Hotels/HotelsAdmin";
+import HotelsAdmin from "../pages/admin/HotelsAdmin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import Calendar from "../pages/admin/Calendar";
 import HotelDetails from "../pages/admin/Hotels/HotelDetails";
 import Settings from "../pages/admin/Settings";
-import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin"
-import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
 export const routers = [
   {
     path: "/",
@@ -49,5 +47,16 @@ export const routers = [
     isShowHeader: false,
     isShowFooter: false,
   },
-
+  {
+    path: "/registerOwner",
+    page: RegisterOwner,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+    path: "/booking",
+    page: HotelDisplayCompre,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
 ];

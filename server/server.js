@@ -1,14 +1,13 @@
-  const PORT = process.env.PORT || 4000;
-  const express = require("express");
-  const cors = require("cors");
-  const dotenv = require("dotenv");
-  const bodyParser = require("body-parser");
-  dotenv.config();
-  const app = express();
-  const mongoose = require("mongoose");
-  const morgan = require("morgan");
-  const http = require("http");
-
+const PORT = process.env.PORT || 4000;
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
+dotenv.config();
+const app = express();
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const http = require("http");
 
   const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
   const RoomListRouter = require("./src/routes/RoomList/roomList.route");
@@ -19,7 +18,7 @@
 
   // Cấu hình middleware
 
-  app.use(bodyParser.json());
+app.use(bodyParser.json());
 
   app.use(morgan("combined"));
 
@@ -49,16 +48,16 @@
   app.use("/api/cancelReq", reqCancelRouter);
   //mongo connect
 
-  mongoose
-    .connect(
-      `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
-    )
-    .then(() => {
-      console.log("Connect successfully");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+mongoose
+  .connect(
+    `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
+  )
+  .then(() => {
+    console.log("Connect successfully");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
   app.use(express.static("public"));
 

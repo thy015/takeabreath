@@ -19,12 +19,12 @@ const AccommodationCard = ({ hotel }) => {
             <div className="d-flex justify-content-between">
               <Card.Title as="h5" className="font-semibold">
                 {hotel.hotelName} - {hotel.hotelType}
-                {/* need to handle this **convert 5=> 5start, 3.5=> 3star... */}
-                <div className="flex mt-2">
+              </Card.Title>
+              {/* need to handle this **convert 5=> 5start, 3.5=> 3star... */}
+              <div>
+              <div className="flex mt-2">
                   <Rate></Rate>
                 </div>
-              </Card.Title>
-              <div>
                 <span className="text-success font-weight-bold mr-2">
                   {hotel.numberOfRates} people have rated
                 </span>

@@ -7,7 +7,7 @@ const Settings = () => {
       <div className="mx-auto max-w-270">
       <h1 className='text-[28px] my-6 leading-[34px] font-normal text-[#5a5c69] cursor-pointer'>Settings</h1>
 
-        <div className="grid grid-cols-5 gap-8">
+        <div className="grid grid-cols-5 gagit config pull.rebase falsep-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">

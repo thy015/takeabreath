@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import { routers } from "./routers/router";
@@ -11,6 +10,7 @@ import { AuthContext } from "./hooks/auth.context";
 function App() {
   const { auth, setAuth } = useContext(AuthContext);
   axios.defaults.withCredentials = true;
+
   useEffect(() => {
     const fetchUser = () => {
       axios
@@ -38,30 +38,34 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          {routers.map((r) => {
-            if (r.isAdmin) {
+          {routers.map((route) => {
+            // Admin routes
+            if (route.isAdmin) {
               return (
-                <Route key={r.path} path={r.path} element={r.element}>
-                  {r.children &&
-                    r.children.map((child) => (
+                <Route key={route.path} path={route.path} element={<route.page />}>
+                  {route.children &&
+                    route.children.map((child) => (
                       <Route
                         key={child.path}
                         path={child.path}
-                        element={child.element}
+                        element={<child.page />}
                       />
                     ))}
                 </Route>
               );
             }
-            const Layout = r.isShowHeader ? Header : Fragment;
-            const FooterLayout = r.isShowFooter ? Footer : Fragment;
+
+            // Non-admin routes
+            const Layout = route.isShowHeader ? Header : Fragment;
+            const FooterLayout = route.isShowFooter ? Footer : Fragment;
+
             return (
               <Route
-                key={r.path}
-                path={r.path}
+                key={route.path}
+                path={route.path}
                 element={
                   <Layout>
-                    <r.page />
+                    <route.page />
                     <FooterLayout />
                   </Layout>
                 }

@@ -12,7 +12,7 @@ const PropertyCard = ({ property }) => {
       <Card className="shadow-sm h-full mt-1" style={{ borderRadius: "12px" }}>
         <Card.Img
           variant="top"
-          src={property.hotelImg}
+          src={property.imgLink}
           style={{
             borderRadius: "12px 12px 0 0",
             height: "180px",

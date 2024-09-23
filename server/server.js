@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 dotenv.config();
 const app = express();
+const cookieParser = require('cookie-parser');
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const http = require("http");
@@ -19,7 +20,7 @@ const http = require("http");
   // Cấu hình middleware
 
 app.use(bodyParser.json());
-
+app.use(cookieParser());
   app.use(morgan("combined"));
 
   // app.use("/videos", videoRoutes);

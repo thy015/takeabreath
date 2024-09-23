@@ -25,7 +25,7 @@ const roomSchema = new mongoose.Schema({
   capacity: { type: Number, required: true },
   numberOfBeds: { type: Number, required: true },
   money: { type: Number, required: true },
-  imgLink: { type: String, required: false },
+  roomImages: { type: String, required: false },
   revenue: { type: Number, required: false, default: 0 },
   hotelID: {
     type: mongoose.Schema.Types.ObjectId,

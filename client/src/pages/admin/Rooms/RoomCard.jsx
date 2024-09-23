@@ -8,7 +8,7 @@ const RoomCard = ({ room }) => {
       <Card className="shadow-sm h-full mt-1" style={{ borderRadius: "12px" }}>
         <Card.Img
           variant="top"
-          src={room.imgLink || 'default-image.jpg'} 
+          src={room.roomImages} 
           style={{
             borderRadius: "12px 12px 0 0",
             height: "180px",

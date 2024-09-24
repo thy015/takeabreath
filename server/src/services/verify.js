@@ -18,6 +18,25 @@ const verifyAdmin = async (req,res,next)=>{
     next()
 }
 
+const verifyOwner = async (req,res,next)=>{
+    const token = req.cookies.token
+    if(!token)
+        return res.status(401).json({message:"Unauthorized"})
+    const decode = await jwt.verify(token,process.env.ACCESS_TOKEN)
+  
+    const emailOwner = decode.payload.email
+    const adminExsisted = await Owner.findOne({
+        email:emailOwner
+    })
+
+    if(!adminExsisted)
+        return res.status(401).json({message:"You aren't an owner !"})
+    const userPayload = decode.payload
+    req.ownerID=userPayload.id
+    next()
+}
+
+
 const verifyLogin = async (req,res,next)=>{
    const token = req.cookies.token
     if(!token){
@@ -35,5 +54,6 @@ const verifyLogin = async (req,res,next)=>{
 
 module.exports = {
     verifyAdmin, 
-    verifyLogin
+    verifyLogin,
+    verifyOwner
 }

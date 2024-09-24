@@ -50,16 +50,18 @@ const HotelDisplayCompre = () => {
         <Col span={2} />
         <Col span={20}>
           <div className="h-32">
-            <div className="absolute flex left-[20%] mt-8 w-full">
+            <div className="absolute flex left-[21%] mt-8 w-full">
               <Booking />
             </div>
           </div>
           <Row gutter={16} className="mt-8">
             <Col span={5}>
             <Breadcrumb>
-
             </Breadcrumb>
-
+            {/* need map API */}
+            <div className="w-[228px] h-[169px mb-4">
+                <img src="https://th.bing.com/th/id/OIP.Xl33AAWnwUNysT_nFRsUEgHaHa?rs=1&pid=ImgDetMain"/> 
+            </div>
               <Collapse defaultActiveKey={["1"]}>
                 <Panel header="Chọn lọc theo:" key="1">
                   <Checkbox.Group onChange={handleFilterChange}>
@@ -72,14 +74,13 @@ const HotelDisplayCompre = () => {
                 </Panel>
               </Collapse>
             </Col>
-            <Col span={14}>
-              <div className="">
+            <Col span={19}>
+              <div className="pt-3">
                 {filteredHotels.map((hotel, index) => (
                   <AccommodationCard key={index} hotel={hotel} />
                 ))}
               </div>
             </Col>
-            <Col span={5} />
           </Row>
         </Col>
         <Col span={2} />

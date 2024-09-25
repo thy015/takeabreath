@@ -41,7 +41,7 @@ ListRouter.get("/room", async (req, res) => {
       return res.status(400).json({ message: "hotelID is required" });
     }
 
-    const rooms = await Hotel.Room.find({ hotelID: hotelID });
+    const rooms = await Room.find({ hotelID: hotelID });
     res.status(200).json(rooms);
   } catch (e) {
     res.status(500).json(e);

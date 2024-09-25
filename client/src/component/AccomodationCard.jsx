@@ -2,9 +2,11 @@ import { Rate } from "antd";
 import React from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import { MdRoom } from "react-icons/md";
+import { Link } from "react-router-dom";
 // hotel display page
 const AccommodationCard = ({ hotel }) => {
   return (
+    <Link to={`/hotel/${hotel._id}`} className="link-property">
     <Card className="mb-4 rounded-[10px]">
       <Row noGutters>
         <Col md={4}>
@@ -19,12 +21,12 @@ const AccommodationCard = ({ hotel }) => {
             <div className="d-flex justify-content-between">
               <Card.Title as="h5" className="font-semibold">
                 {hotel.hotelName} - {hotel.hotelType}
-              </Card.Title>
-              {/* need to handle this **convert 5=> 5start, 3.5=> 3star... */}
-              <div>
-              <div className="flex mt-2">
+                {/* need to handle this **convert 5=> 5start, 3.5=> 3star... */}
+                <div className="flex mt-2">
                   <Rate></Rate>
                 </div>
+              </Card.Title>
+              <div>
                 <span className="text-success font-weight-bold mr-2">
                   {hotel.numberOfRates} people have rated
                 </span>
@@ -68,11 +70,13 @@ const AccommodationCard = ({ hotel }) => {
         </Col>
       </Row>
     </Card>
+    </Link>
   );
 };
 // homepage display
 const PropertyCard = ({ property }) => {
   return (
+    <Link to={`/hotel/${property._id}`} className="link-property">
     <Card className="shadow-sm h-full" style={{ borderRadius: "12px" }}>
       <Card.Img
         variant="top"
@@ -107,6 +111,7 @@ const PropertyCard = ({ property }) => {
         </div>
       </Card.Body>
     </Card>
+    </Link>
   );
 };
 

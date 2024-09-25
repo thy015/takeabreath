@@ -2,7 +2,7 @@ const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
 const Hotel = require("../../models/hotel.model");
-const { authenToken } = require("../../services/jwt");
+const { verifyOwner } = require("../../services/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
   try {
@@ -25,7 +25,7 @@ ListRouter.get("/hotel/:_id", async (req, res) => {
   }
 });
 
-ListRouter.post("/createHotel", authenToken, hotelListController.createHotel);
+ListRouter.post("/createHotel", verifyOwner, hotelListController.createHotel);
 ListRouter.get("/criteriaSearch", hotelListController.searchHotel);
 // all hotel from owner that logged in
 ListRouter.get(

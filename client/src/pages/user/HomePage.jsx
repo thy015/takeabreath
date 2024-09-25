@@ -1,6 +1,6 @@
 import React from "react";
 import Booking from "../../component/Booking";
-import { Row, Col, Carousel } from "antd";
+import { Row, Col, Carousel} from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
 import { cardData } from "../../localData/localData";
@@ -32,8 +32,9 @@ const HomePage = () => {
           Search deals on hotels, homes, and much more...
         </div>
       </div>
-      <div className="absolute flex left-[20%] mt-[-35px] w-full">
-        <Booking></Booking>
+      <div className="absolute flex left-[25%] mt-[-35px] w-[55%]">
+
+        <Booking tailwind_prop="w-full h-20 flex"></Booking>
       </div>
       <div className="mt-24">
         <Row className="pl-8">
@@ -41,7 +42,6 @@ const HomePage = () => {
 
           <Col span={20} >
           <div className="h-[800px]">
-
             <h4 className={h4Design}>Search by type of accomodation</h4>
             {/* Carousel with card groups */}
             <div className="h-72">

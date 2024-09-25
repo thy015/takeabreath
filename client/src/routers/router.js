@@ -17,6 +17,8 @@ import LoginOwner from "../pages/auth/LoginOwner"
 import Register from "../pages/auth/Register"
 import RegisterOwner from "../pages/auth/RegisterOwner"
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
+import HotelDisplay_HotelTab from "../pages/user/HotelDisplay_HotelTab";
+import HotelDisplay_HotelDetail from "../pages/user/HotelDisplay_HotelDetail";
 export const routers = [
   {
     path: "/",
@@ -74,6 +76,12 @@ export const routers = [
   {
     path: "/booking",
     page: HotelDisplayCompre,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
+  {
+    path: "/hotel/:id",
+    page: HotelDisplay_HotelTab,
     isShowHeader: true,
     isShowFooter: true,
   },

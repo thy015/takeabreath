@@ -148,7 +148,7 @@ const Header = ({ children }) => {
       <Row justify={"center"} className="bg-[#114098]">
         <Col span={2}></Col>
         <Col span={20}>
-          <div class="bg-[#114098] flex justify-between items-center pt-4 pb-1 relative">
+          <div class="bg-[#114098] flex justify-between items-center pt-12 pb-4 relative">
             <ul class="flex pt-7 mt-3 ">
               <div className="absolute top-2 text-white left-[3%] text-[25px] font-lobster cursor-pointer pt-2">
                 {" "}
@@ -177,7 +177,7 @@ const Header = ({ children }) => {
                 </Link>
               </li>
             </ul>
-            <ul class="flex space-x-5 pt-3">
+            <ul class="flex space-x-5 ">
               <li>
                 <Link to="/login" className="no-underline">
                   <Button>{setText()}</Button>

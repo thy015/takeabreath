@@ -13,6 +13,7 @@ import Settings from "../pages/admin/Settings";
 import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin";
 import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
 import Login from "../pages/auth/Login"
+import LoginOwner from "../pages/auth/LoginOwner"
 import Register from "../pages/auth/Register"
 import RegisterOwner from "../pages/auth/RegisterOwner"
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
@@ -49,6 +50,12 @@ export const routers = [
   {
     path: "/login",
     page: Login,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+    path: "/loginOwner",
+    page: LoginOwner,
     isShowHeader: false,
     isShowFooter: false,
   },

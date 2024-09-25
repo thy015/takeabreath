@@ -12,16 +12,13 @@ function RegisterOwner() {
     const onFinish = (values) => {
         const formattedDate = values.birthday.format('YYYY/MM/DD');
         values.birthday = formattedDate
-        console.log("[REGISTER OWNER]", values)
-        console.log("[REGISTER OWNER] birthday", formattedDate)
-
         axios.defaults.withCredentials=true
         axios.post("http://localhost:4000/api/auth/signUpOwner",values)
             .then(res=>res.data)
             .then(data=>{
                 if(data.register){
                     openNotification(true,"Register owner successful!","")
-                    navigate('/login')
+                    navigate('/loginOwner')
                 }
             })
             .catch(err=>{

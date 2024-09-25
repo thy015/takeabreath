@@ -52,14 +52,16 @@ const signUpOwner = async (req, res) => {
 };
 
 //chung của owner và admin
-const signInOwner = async (email, password, res) => {
-  if (!email || !password) {
+const signInOwner = async (req, res) => {
+  const {username, password} = req.body
+  console.log( {username, password})
+  if (!username || !password) {
     return res.status(403).json({ message: "Email and password are required" });
   }
 
   try {
     // Check for owner
-    const foundOwner = await Owner.findOne({ email: email });
+    const foundOwner = await Owner.findOne({ email: username });
 
     if (foundOwner) {
       let checkPassword = await bcrypt.compare(password, foundOwner.password)
@@ -92,9 +94,8 @@ const signInOwner = async (email, password, res) => {
 
     // Check for admin if owner not found
     const foundAdmin = await Admin.findOne({
-      email: email
+      email: username
     });
-    console.log("Found Admin:", foundAdmin);
 
     if (foundAdmin) {
       let checkPassword = await bcrypt.compare(password, foundAdmin.password)
@@ -168,8 +169,8 @@ const loginCustomer = async (req, res) => {
               id: customer._id,
               email:customer.email
             });
-  } else {
-    signInOwner(email, password, res)
+  }else{
+    return res.status(400).json({ login: false, message: "User Invalid" });
   }
 };
 

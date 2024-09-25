@@ -1,6 +1,6 @@
 import React from "react";
 import Booking from "../../component/Booking";
-import { Row, Col, Carousel } from "antd";
+import { Row, Col, Carousel} from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
 import { cardData } from "../../localData/localData";
@@ -42,7 +42,6 @@ const HomePage = () => {
 
           <Col span={20} >
           <div className="h-[800px]">
-
             <h4 className={h4Design}>Search by type of accomodation</h4>
             {/* Carousel with card groups */}
             <div className="h-72">

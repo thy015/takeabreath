@@ -80,14 +80,8 @@ export const routers = [
     isShowFooter: true,
   },
   {
-    path: "/test",
-    page: HotelDisplay_HotelTab,
-    isShowHeader: true,
-    isShowFooter: true,
-  },
-  {
     path: "/hotel/:id",
-    page: HotelDisplay_HotelDetail,
+    page: HotelDisplay_HotelTab,
     isShowHeader: true,
     isShowFooter: true,
   },

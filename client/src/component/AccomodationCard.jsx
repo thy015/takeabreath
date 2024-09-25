@@ -3,6 +3,8 @@ import React from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import { MdRoom } from "react-icons/md";
 import { Link } from "react-router-dom";
+
+
 // hotel display page
 const AccommodationCard = ({ hotel }) => {
   return (
@@ -23,7 +25,7 @@ const AccommodationCard = ({ hotel }) => {
                 {hotel.hotelName} - {hotel.hotelType}
                 {/* need to handle this **convert 5=> 5start, 3.5=> 3star... */}
                 <div className="flex mt-2">
-                  <Rate></Rate>
+                  <Rate defaultValue={4}></Rate>
                 </div>
               </Card.Title>
               <div>

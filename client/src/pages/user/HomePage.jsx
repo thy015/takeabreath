@@ -32,7 +32,7 @@ const HomePage = () => {
           Search deals on hotels, homes, and much more...
         </div>
       </div>
-      <div className="absolute flex left-[25%] mt-[-35px] w-full">
+      <div className="absolute flex left-[25%] mt-[-35px] w-[55%]">
 
         <Booking tailwind_prop="w-full h-20 flex"></Booking>
       </div>

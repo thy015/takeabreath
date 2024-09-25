@@ -57,3 +57,11 @@
 .ant-notification-notice{
   color: red !important;
 }
+
+ul{
+  margin: 0!important;
+  padding: 0!important;
+}
+.link-property{
+  text-decoration: none;
+}

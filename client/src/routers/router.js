@@ -81,4 +81,10 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
+  //{/* {
+    //path: "/booking",
+    //page: HotelDisplayCompre,
+    //isShowHeader: true,
+    //isShowFooter: true,
+  //},
 ];

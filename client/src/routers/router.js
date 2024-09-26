@@ -8,7 +8,7 @@ import HomePage from "../pages/user/HomePage";
 import HotelsAdmin from "../pages/admin/Hotels/HotelsAdmin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import Calendar from "../pages/admin/Calendar";
-import HotelDetails from "../pages/admin/Hotels/HotelDetails";
+
 import Settings from "../pages/admin/Settings";
 import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin";
 import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
@@ -31,10 +31,10 @@ export const routers = [
     page: AdminLayout,
     children: [
       { path: "", page: DashboardView  }, 
-      { path: "Hotels", page: HotelsAdmin },
+      { path: "hotel", page: HotelsAdmin },
       { path: "Dashboard", page: DashboardView  }, 
       { path: "Calendar", page: Calendar  }, 
-      { path: "Hotel/:id", page: HotelDetails  }, 
+      { path: "hotel/:id", page: HotelDisplay_HotelTab  }, 
       { path: "Settings", page: Settings  }, 
       {path:"Rooms", page:RoomsAdmin},
       {path:"Hotel/:id/Rooms", page:RoomsOfHotel},

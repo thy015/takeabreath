@@ -71,10 +71,11 @@ const AccommodationCard = ({ hotel }) => {
   );
 };
 // homepage display
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property,link_property}) => {
   return (
-    <Card className="shadow-sm h-full" style={{ borderRadius: "12px" }}>
-      <Card.Img
+    <Link to={`/hotel/${property._id}`} className="link-property">
+    <Card className="shadow-sm h-full rounded-[12px]">
+      <Card.Img className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
         variant="top"
         src={property.imgLink}
         style={{

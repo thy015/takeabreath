@@ -1,7 +1,22 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
-import { FaTachometerAlt,FaHotel,FaUser, FaRegSun, FaWrench, FaStickyNote, FaRegChartBar, FaRegCalendarAlt, FaChevronRight, FaChevronLeft, FaBolt, FaRestroom, FaTicketAlt, FaCalendar } from "react-icons/fa"
-import '../../App.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  FaTachometerAlt,
+  FaHotel,
+  FaUser,
+  FaRegSun,
+  FaWrench,
+  FaStickyNote,
+  FaRegChartBar,
+  FaRegCalendarAlt,
+  FaChevronRight,
+  FaChevronLeft,
+  FaBolt,
+  FaRestroom,
+  FaTicketAlt,
+  FaCalendar,
+} from "react-icons/fa";
+import "../../App.css";
 const Sidebar = () => {
     return (
         <div className='bg-[#003580] px-[25px] h-full'>
@@ -21,14 +36,12 @@ const Sidebar = () => {
                   
                     <FaChevronRight color='white' />
                 </div>
-                <Link to="Customers" className='no-underline'>
                 <div className='flex items-center justify-between gap-[10px] py-[5px] cursor-pointer'>
                     <div className='flex items-center gap-[10px]'>
                         <FaUser color='white' /> <p className='text-[14px] leading-[20px] pt-[10px] font-normal text-white'>Customers</p>
                     </div>
                     <FaChevronRight color='white' />
                 </div>
-                </Link>
                 <Link to="Rooms" className='no-underline'>
                    <div className='flex items-center justify-between gap-[10px] py-[5px] cursor-pointer'>
             
@@ -57,18 +70,28 @@ const Sidebar = () => {
              { /* <div className='flex items-center gap-[10px] py-[5px]  cursor-pointer'>
                     <FaRegChartBar color='white' /> <p className='text-[14px] leading-[20px] pt-[10px] font-normal text-white'>Charts</p>
                 </div>*/}
-                <Link to="Calendar" className='no-underline flex items-center gap-[10px] py-[5px]  cursor-pointer'>
-                    <FaCalendar color='white' /> <p className='text-[14px] leading-[20px] pt-[10px] font-normal text-white'>Calendar</p>
-                </Link>
-               
-                <Link to="Settings" className='no-underline flex items-center gap-[10px] py-[5px] cursor-pointer'>
-                    <FaRegSun color='white' /> <p className='text-[14px] leading-[20px]  pt-[10px] font-normal text-white'>Settings</p>
-                </Link>
-            </div>
-      
-           
-        </div>
-    )
-}
+        <Link
+          to="Calendar"
+          className="no-underline flex items-center gap-[10px] py-[5px]  cursor-pointer"
+        >
+          <FaCalendar color="white" />{" "}
+          <p className="text-[14px] leading-[20px] pt-[10px] font-normal text-white">
+            Calendar
+          </p>
+        </Link>
 
-export default Sidebar
+        <Link
+          to="Settings"
+          className="no-underline flex items-center gap-[10px] py-[5px] cursor-pointer"
+        >
+          <FaRegSun color="white" />{" "}
+          <p className="text-[14px] leading-[20px]  pt-[10px] font-normal text-white">
+            Settings
+          </p>
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;

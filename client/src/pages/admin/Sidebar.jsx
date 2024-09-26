@@ -21,12 +21,14 @@ const Sidebar = () => {
                   
                     <FaChevronRight color='white' />
                 </div>
+                <Link to="Customers" className='no-underline'>
                 <div className='flex items-center justify-between gap-[10px] py-[5px] cursor-pointer'>
                     <div className='flex items-center gap-[10px]'>
                         <FaUser color='white' /> <p className='text-[14px] leading-[20px] pt-[10px] font-normal text-white'>Customers</p>
                     </div>
                     <FaChevronRight color='white' />
                 </div>
+                </Link>
                 <Link to="Rooms" className='no-underline'>
                    <div className='flex items-center justify-between gap-[10px] py-[5px] cursor-pointer'>
             

@@ -16,7 +16,9 @@ import Login from "../pages/auth/Login"
 import LoginOwner from "../pages/auth/LoginOwner"
 import Register from "../pages/auth/Register"
 import RegisterOwner from "../pages/auth/RegisterOwner"
+import Customer from "../pages/admin/Customers/CustomersList";
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
+import AddHotel from "../pages/admin/Hotels/AddHotel"
 export const routers = [
   {
     path: "/",
@@ -36,6 +38,8 @@ export const routers = [
       { path: "Settings", page: Settings  }, 
       {path:"Rooms", page:RoomsAdmin},
       {path:"Hotel/:id/Rooms", page:RoomsOfHotel},
+      {path:"Customers", page:Customer},
+      {path:"CreateHotel",page:AddHotel},
     ],
     isAdmin: true,
     isShowHeader: false,

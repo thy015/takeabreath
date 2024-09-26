@@ -43,13 +43,19 @@ const HotelDetail = () => {
       </p>
       <p className="text-lg text-gray-600 mb-4">
         <span className="font-semibold">Price: </span>
-        {data.minPrice ? data.minPrice.toLocaleString() : 'N/A'} VND
+        {data.minPrice ? data.minPrice.toLocaleString() : 'vo han'} VND
       </p>
-      
-   
-      <Link to={`Rooms`} className="no-underline bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
+      <div>
+      <Link to={`Rooms`} className="no-underline bg-gray-800 text-white px-4 py-2 mr-2 rounded hover:bg-gray-600 transition duration-300">
+        Edit
+      </Link>
+      <Link to={`Rooms`} className="no-underline bg-pink-500 text-white px-4 py-2 mr-2 rounded hover:bg-pink-300 transition duration-300">
         Show Rooms
       </Link>
+      <Link to={`Rooms`} className="no-underline bg-green-500 text-white px-4 py-2 rounded hover:bg-green-300 transition duration-300">
+        Delete ?
+      </Link>
+      </div>
     </div>
   );
 };

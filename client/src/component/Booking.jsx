@@ -44,12 +44,12 @@ const Booking = ({tailwind_prop}) => {
       label: (
         <div className="p-4">
           <div className="flex items-center justify-between">
-            <span>Adults</span>
+            <span >Adults</span>
             <div className="flex items-center">
               <Button
                 onClick={aDecrement}
                 size="small"
-                className="mr-2"
+                className="mr-2 ml-10"
                 disabled={aCount === 0}
               >
                 -
@@ -68,7 +68,7 @@ const Booking = ({tailwind_prop}) => {
       label: (
         <div className="p-4">
           <div className="flex items-center justify-between">
-            <span className="mr-4">Childrens</span>
+            <span className="mr-4 ml-1">Childrens</span>
             <div className="flex items-center">
               <Button
                 onClick={cDecrement}

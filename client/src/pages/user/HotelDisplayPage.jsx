@@ -48,10 +48,10 @@ const HotelDisplayCompre = () => {
     <div>
       <Row>
         <Col span={2} />
-        <Col span={20}>
+        <Col span={20} className="w-full">
           <div className="h-32">
-            <div className="absolute flex left-[21%] mt-8 w-full">
-              <Booking />
+            <div className="absolute flex mt-8 w-full">
+              <Booking tailwind_prop="flex w-full h-16" />
             </div>
           </div>
           <Row gutter={16} className="mt-8">

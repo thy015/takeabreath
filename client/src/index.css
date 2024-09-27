@@ -15,14 +15,14 @@
   border: none !important;
   padding: 0;
 }
-
-.anticon svg{
+/* donot use thks, effect others antd code */
+/* .anticon svg{
   color:white;
-}
+} */
 
-.ant-input::placeholder{
+/* .ant-input::placeholder{
   color: white;
-}
+} */
 :where(.css-dev-only-do-not-override-11lehqq).ant-form-item .ant-form-item-label >label {
   color: white;
   font-size: 20px;
@@ -56,4 +56,12 @@
 }
 .ant-notification-notice{
   color: red !important;
+}
+
+ul{
+  margin: 0!important;
+  padding: 0!important;
+}
+.link-property{
+  text-decoration: none;
 }

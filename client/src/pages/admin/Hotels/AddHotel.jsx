@@ -20,7 +20,8 @@ const CreateHotel = () => {
           message: 'Hotel Created Successfully',
           description: 'The hotel has been created successfully!',
         });
-        navigate('/Admin/hotels'); 
+
+        navigate('Admin/hotels'); 
       } else {
         setErrMessage('Hotel creation failed!');
       }

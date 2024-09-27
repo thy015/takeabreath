@@ -39,8 +39,9 @@ export const routers = [
       { path: "Settings", page: Settings  }, 
       {path:"Rooms", page:RoomsAdmin},
       {path:"Hotel/:id/Rooms", page:RoomsOfHotel},
-      {path:"CreateHotel",page:AddHotel},
+
       {path:"Customers", page:Customer},
+      {path:"CreateHotel",page:AddHotel},
     ],
     isAdmin: true,
     isShowHeader: false,
@@ -82,10 +83,10 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
-  {
-    path: "/hotel/:id",
-    page: HotelDisplay_HotelTab,
-    isShowHeader: true,
-    isShowFooter: true,
-  },
+  //{/* {
+    //path: "/booking",
+    //page: HotelDisplayCompre,
+    //isShowHeader: true,
+    //isShowFooter: true,
+  //},
 ];

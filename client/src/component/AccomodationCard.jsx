@@ -8,12 +8,11 @@ import {RateStar} from "./Rate";
 // hotel display page
 const AccommodationCard = ({ hotel }) => {
   return (
-    <Link to={`/hotel/${hotel._id}`} className="link-property">
-    <Card className="mb-4 ">
+    <Card className="mb-4 rounded-[10px]">
       <Row noGutters>
         <Col md={4}>
           <Card.Img
-            className="object-cover h-full rounded-tl-[12px] rounded-tr-none rounded-br-none p-3"
+            className="object-cover h-full rounded-xl "
             src={hotel.imgLink}
             alt="HOTEL IMG"
           />
@@ -32,7 +31,7 @@ const AccommodationCard = ({ hotel }) => {
                 <span className="text-success font-weight-bold mr-2">
                   {hotel.numberOfRates} people have rated
                 </span>
-                <span className="badge bg-[#0f4098]" style={{ fontSize: "16px" }}>
+                <span className="badge bg-primary" style={{ fontSize: "16px" }}>
                   {hotel.rate}
                 </span>
               </div>
@@ -61,7 +60,7 @@ const AccommodationCard = ({ hotel }) => {
                     Included taxes and charges
                   </div>
                   <div className="flex-end">
-                    <Button size="sm" className="mt-10 float-end "style={{ backgroundColor: '#0f4098'}}>
+                    <Button variant="primary" size="sm" className="mt-10 float-end">
                       See availability
                     </Button>
                   </div>
@@ -72,19 +71,21 @@ const AccommodationCard = ({ hotel }) => {
         </Col>
       </Row>
     </Card>
-    </Link>
   );
 };
 // homepage display
 const PropertyCard = ({ property,link_property}) => {
   return (
-    // `/hotel/${property._id}`
-    <Link to={link_property} className="link-property">
+    <Link to={`/hotel/${property._id}`} className="link-property">
     <Card className="shadow-sm h-full rounded-[12px]">
       <Card.Img className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
         variant="top"
         src={property.imgLink}
-      
+        style={{
+          borderRadius: "12px 12px 0 0",
+          height: "150px",
+          objectFit: "cover",
+        }}
       />
       <Card.Body className="h-[210px] flex flex-col flex-grow-1">
         <Card.Title>{property.hotelName}</Card.Title>
@@ -107,11 +108,10 @@ const PropertyCard = ({ property,link_property}) => {
           </div>
         </div>
         <div className="mt-3" style={{ fontWeight: "bold", fontSize: "16px" }}>
-          Start from  ....{property.minPrice} vnd
+          Start from {property.minPrice} vnd
         </div>
       </Card.Body>
     </Card>
-    </Link>
   );
 };
 

@@ -17,7 +17,7 @@ import { useCount, useGet } from "../hooks/hooks";
 
 const { RangePicker } = DatePicker;
 
-const Booking = ({tailwind_prop}) => {
+const Booking = () => {
   // date picker
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
@@ -147,11 +147,10 @@ const Booking = ({tailwind_prop}) => {
   }
 
   return (
-    <div className={tailwind_prop}>
     <div
-      className=" 
+      className="flex w-[60%] 
      bg-white border-4 border-yellow-400 rounded-lg 
-     overflow-hidden items-center shadow-md w-full"
+     overflow-hidden h-20 items-center shadow-md"
     >
       <Row gutter={0} className="w-full items-center">
         <Col span={6}>
@@ -169,7 +168,7 @@ const Booking = ({tailwind_prop}) => {
             <Input
               placeholder="Where you want to go?"
               prefix={<img src="/icon/double-bed.png" alt="Bed Icon" />}
-              className="rounded-none h-full"
+              className="rounded-none h-16"
               bordered={false}
               value={selectedCity}
               onChange={handleCitySearch}
@@ -181,7 +180,7 @@ const Booking = ({tailwind_prop}) => {
             suffixIcon={<CalendarOutlined />}
             disabledDate={disabledDate}
             onChange={handleDateChange}
-            className="rounded-none "
+            className="rounded-none h-20 w-full"
             bordered={false}
           />
         </Col>
@@ -195,21 +194,20 @@ const Booking = ({tailwind_prop}) => {
             placement="bottomRight"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="h-full w-full rounded-none justify-center flex items-center">
+            <div className="h-20 w-full rounded-none justify-center flex items-center">
               {aCount + cCount} People
             </div>
           </Dropdown>
         </Col>
-        <Col span={4} className={tailwind_prop}>
+        <Col span={4}>
           <Button
             type="primary"
-            className="h-full w-full rounded-none text-[18px]"
+            className="h-20 w-full rounded-none text-[18px]"
           >
             Search
           </Button>
         </Col>
       </Row>
-    </div>
     </div>
   );
 };

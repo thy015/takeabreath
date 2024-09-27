@@ -4,7 +4,7 @@ import HomePage from "../pages/user/HomePage";
 
 //import Login from "../pages/login_register/Login";
 //import Register from "../pages/login_register/Register";
-
+import Customer from "../pages/admin/Customers/CustomerList";
 import HotelsAdmin from "../pages/admin/Hotels/HotelsAdmin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import Calendar from "../pages/admin/Calendar";
@@ -19,6 +19,7 @@ import RegisterOwner from "../pages/auth/RegisterOwner"
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 import HotelDisplay_HotelTab from "../pages/user/HotelDisplay_HotelTab";
 import HotelDisplay_HotelDetail from "../pages/user/HotelDisplay_HotelDetail";
+import AddHotel from "../pages/admin/Hotels/AddHotel";
 export const routers = [
   {
     path: "/",
@@ -38,6 +39,9 @@ export const routers = [
       { path: "Settings", page: Settings  }, 
       {path:"Rooms", page:RoomsAdmin},
       {path:"Hotel/:id/Rooms", page:RoomsOfHotel},
+
+      {path:"Customers", page:Customer},
+      {path:"CreateHotel",page:AddHotel},
     ],
     isAdmin: true,
     isShowHeader: false,
@@ -79,10 +83,10 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
-  {
-    path: "/hotel/:id",
-    page: HotelDisplay_HotelTab,
-    isShowHeader: true,
-    isShowFooter: true,
-  },
+  //{/* {
+    //path: "/booking",
+    //page: HotelDisplayCompre,
+    //isShowHeader: true,
+    //isShowFooter: true,
+  //},
 ];

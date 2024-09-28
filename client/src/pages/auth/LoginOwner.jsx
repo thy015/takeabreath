@@ -90,7 +90,7 @@ function LoginOwner() {
           >Login</button>
         </div>
         <div className="my-[20px] mx-] d-flex justify-between ">
-          <Link to='/register' className="text-white text-[15px] no-underline ml-[35px]">Don't you have account ?</Link>
+          <Link to='/registerOwner' className="text-white text-[15px] no-underline ml-[35px]">Don't you have account ?</Link>
         </div>
 
       </Form>

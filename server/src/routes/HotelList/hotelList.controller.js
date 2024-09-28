@@ -1,6 +1,6 @@
 
 const { Hotel } = require("../../models/hotel.model");
-
+const { Owner } = require("../../models/signUp.model");
 const createHotel = async (req, res) => {
   const {
     address,
@@ -171,11 +171,65 @@ const searchHotel = async (req, res) => {
     });
   }
 };
+const createHotels = async (req, res) => {
+  const {
+    hotelName,
+    address,
+    city,
+    nation,
+    hotelType,
+    phoneNum,
+    imgLink,
+    ownerID,
+  } = req.body;
 
+  try {
+    if (
+      !hotelName ||
+      !address ||
+      !city ||
+      !nation ||
+      !hotelType ||
+      !phoneNum ||
+      !ownerID
+    ) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const checkExistedOwnerID = await Owner.findById(ownerID);
+    if (!checkExistedOwnerID) {
+      return res.status(400).json({
+        status: "BAD",
+        message: "Owner ID does not exist",
+      });
+    }
+
+    const createdHotel = await Hotel.create({
+      hotelName,
+      address,
+      city,
+      nation,
+      hotelType,
+      phoneNum,
+      imgLink,
+      ownerID: req.ownerID,
+    });
+
+    return res.status(201).json({
+      status: "OK",
+      message: "Hotel created successfully",
+      data: createdHotel,
+    });
+  } catch (error) {
+    console.error("Error in createHotel:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   createHotel,
   createRoom,
   getHotelsByOwner,
   searchHotel,
+  createHotels,
 };

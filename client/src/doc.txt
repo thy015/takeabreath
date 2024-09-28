@@ -1,0 +1,21 @@
+ADMIN
+--AdminLayout
+    NavBar
+    SideBar
+
+
+USER
+--HomePage
+    Home_HotelDisplay
+--HotelDisplayPage
+    HotelDisplay_HotelTab
+        HotelDisplay_HotelDetail
+
+COMPONENT
+--AccomodationCard
+    AccommodationCard(Row Card)
+    PropertyCard(4 Cards Per Slide)
+--Booking (tailwind_prop) //Passing width and height for it
+--Rate (hotel)
+    RateText(hotel)
+    RateStar(hotel) //Passing hotel only (data)

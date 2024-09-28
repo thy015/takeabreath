@@ -17,7 +17,7 @@ import { useCount, useGet } from "../hooks/hooks";
 
 const { RangePicker } = DatePicker;
 
-const Booking = () => {
+const Booking = ({tailwind_prop}) => {
   // date picker
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
@@ -44,12 +44,12 @@ const Booking = () => {
       label: (
         <div className="p-4">
           <div className="flex items-center justify-between">
-            <span>Adults</span>
+            <span >Adults</span>
             <div className="flex items-center">
               <Button
                 onClick={aDecrement}
                 size="small"
-                className="mr-2"
+                className="mr-2 ml-10"
                 disabled={aCount === 0}
               >
                 -
@@ -68,7 +68,7 @@ const Booking = () => {
       label: (
         <div className="p-4">
           <div className="flex items-center justify-between">
-            <span className="mr-4">Childrens</span>
+            <span className="mr-4 ml-1">Childrens</span>
             <div className="flex items-center">
               <Button
                 onClick={cDecrement}
@@ -147,10 +147,11 @@ const Booking = () => {
   }
 
   return (
+    <div className={tailwind_prop}>
     <div
-      className="flex w-[60%] 
+      className=" 
      bg-white border-4 border-yellow-400 rounded-lg 
-     overflow-hidden h-20 items-center shadow-md"
+     overflow-hidden items-center shadow-md w-full"
     >
       <Row gutter={0} className="w-full items-center">
         <Col span={6}>
@@ -168,7 +169,7 @@ const Booking = () => {
             <Input
               placeholder="Where you want to go?"
               prefix={<img src="/icon/double-bed.png" alt="Bed Icon" />}
-              className="rounded-none h-16"
+              className="rounded-none h-full"
               bordered={false}
               value={selectedCity}
               onChange={handleCitySearch}
@@ -180,7 +181,7 @@ const Booking = () => {
             suffixIcon={<CalendarOutlined />}
             disabledDate={disabledDate}
             onChange={handleDateChange}
-            className="rounded-none h-20 w-full"
+            className="rounded-none "
             bordered={false}
           />
         </Col>
@@ -194,20 +195,21 @@ const Booking = () => {
             placement="bottomRight"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="h-20 w-full rounded-none justify-center flex items-center">
+            <div className="h-full w-full rounded-none justify-center flex items-center">
               {aCount + cCount} People
             </div>
           </Dropdown>
         </Col>
-        <Col span={4}>
+        <Col span={4} className={tailwind_prop}>
           <Button
             type="primary"
-            className="h-20 w-full rounded-none text-[18px]"
+            className="h-full w-full rounded-none text-[18px]"
           >
             Search
           </Button>
         </Col>
       </Row>
+    </div>
     </div>
   );
 };

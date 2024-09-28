@@ -70,7 +70,6 @@ const PropertyGrid = () => {
   if (!data || data.length === 0) {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
-
   return (
     <Row gutter={[16, 16]}>
       {data.map((property, index) => (
@@ -78,7 +77,9 @@ const PropertyGrid = () => {
           <PropertyCard property={property} />
         </Col>
       ))}
+     
     </Row>
+    
   );
 };
 

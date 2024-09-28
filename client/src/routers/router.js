@@ -17,6 +17,9 @@ import LoginOwner from "../pages/auth/LoginOwner"
 import Register from "../pages/auth/Register"
 import RegisterOwner from "../pages/auth/RegisterOwner"
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
+import OwnerLayout from "../pages/owner/OwnerLayout";
+import Vouchers from "../pages/owner/Voucher/Vouchers";
+import AddVoucher from "../pages/owner/Voucher/AddVoucher";
 export const routers = [
   {
     path: "/",
@@ -76,5 +79,17 @@ export const routers = [
     page: HotelDisplayCompre,
     isShowHeader: true,
     isShowFooter: true,
+  },
+  {
+    path: "/owner",
+    page: OwnerLayout,
+    children:[
+      {path:"",page:Vouchers}, 
+      { path: "Vouchers", page: Vouchers},
+      { path: "AddVoucher", page: AddVoucher}, 
+    ],
+    isOwner:true,
+    isShowHeader: false,
+    isShowFooter: false,
   },
 ];

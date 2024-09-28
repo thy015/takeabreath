@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {Admin} = require('../models/signUp.model')
+const {Admin,Owner} = require('../models/signUp.model')
 const verifyAdmin = async (req,res,next)=>{
     const token = req.cookies.token
     if(!token)
@@ -25,11 +25,11 @@ const verifyOwner = async (req,res,next)=>{
     const decode = await jwt.verify(token,process.env.ACCESS_TOKEN)
   
     const emailOwner = decode.payload.email
-    const adminExsisted = await Owner.findOne({
+    const ownerExsisted = await Owner.findOne({
         email:emailOwner
     })
 
-    if(!adminExsisted)
+    if(!ownerExsisted)
         return res.status(401).json({message:"You aren't an owner !"})
     const userPayload = decode.payload
     req.ownerID=userPayload.id

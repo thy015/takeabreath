@@ -3,9 +3,6 @@ import SideBar from './SideBar'
 import Navbar from './Navbar'
 import { Outlet } from 'react-router-dom'
 function OwnerLayout() {
-   
-
-
     return (
         <div className='flex'>
             <div className="basis-[20%] h-[100vh]">

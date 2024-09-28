@@ -75,7 +75,7 @@ const Register = () => {
         >
           <Input
             type="email"
-            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] text-white placeholder:text-white"
+            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] login-form"
             placeholder="Enter your password"
             suffix={<FontAwesomeIcon icon={faEnvelope} />}
           />
@@ -93,7 +93,7 @@ const Register = () => {
           ]}
         >
           <Input.Password
-            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] text-white placeholder:text-white"
+            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] login-form"
             placeholder='Enter your password'
 
           />
@@ -120,7 +120,7 @@ const Register = () => {
         >
           <Input.Password
             error
-            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] text-white placeholder:text-white"
+            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] login-form"
             placeholder='Enter your repassword'
           />
         </Form.Item>

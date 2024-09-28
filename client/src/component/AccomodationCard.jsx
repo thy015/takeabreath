@@ -115,26 +115,5 @@ const PropertyCard = ({ property,link_property}) => {
   );
 };
 
-const displayCard = ({ data, error, loading }) => {
-  if (loading) {
-    return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
-  }
 
-  if (error) {
-    return (
-      <Alert
-        message="Error"
-        description="Failed to load properties."
-        type="error"
-        showIcon
-      />
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return <Alert message="No hotel data found" type="info" showIcon />;
-  }
-
-  return null;
-};
 export { PropertyCard, AccommodationCard };

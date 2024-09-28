@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom'
 import { openNotification } from "../../hooks/notification";
 function RegisterOwner() {
     const navigate = useNavigate()
-
-
     const [form] = useForm()
     const onFinish = (values) => {
         const formattedDate = values.birthday.format('YYYY/MM/DD');
@@ -50,7 +48,7 @@ function RegisterOwner() {
                     >
                         <Input className=''/>
                     </Form.Item>
-                    <Form.Item
+                    <Form.Item         
                         className='m-[30px] mt-[40px] register-owner'
                         name="email"
                         label="Email"

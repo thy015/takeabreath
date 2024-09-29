@@ -39,6 +39,14 @@
   font-size: 20px !important ;
 }
 
+.login-form, .login-form input::placeholder{
+  color: white;
+}
+
+.login-form svg{
+  color: white;
+}
+
 .ant-form-item-feedback-icon svg{
   color: green !important;
 }
@@ -66,7 +74,6 @@ ul{
 .link-property{
   text-decoration: none;
 }
-=======
 .range-picker-addvoucher svg{
   color: black !important;
 }

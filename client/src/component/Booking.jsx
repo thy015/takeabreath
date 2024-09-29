@@ -144,6 +144,11 @@ const Booking = ({tailwind_prop}) => {
   if (!data || data.length === 0) {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
+// handle - passing data
+  
+
+
+
 
   return (
     <div className={tailwind_prop}>

@@ -149,7 +149,10 @@ function Vouchers() {
         const startDay = new Date(value.startDay)
         const endDay = new Date(value.endDay)
 
-        console.log(startDay.getMonth(),endDay.getMonth(),endDay.getDate(),  startDay.getDate())
+        if(value.discount > 50){
+          openNotification(false, "Update voucher failed", "Discount must no more than 50% !")
+          return
+        }
 
         if(startDay.getMonth() > endDay.getMonth()){
           openNotification(false, "Update voucher failed", "Month of end day must be greater than month of start day !")

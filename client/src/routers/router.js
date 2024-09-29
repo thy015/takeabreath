@@ -92,7 +92,7 @@ export const routers = [
     isShowFooter: true,
   },
 
-{
+  {
     path: "/owner",
     page: OwnerLayout,
     children:[

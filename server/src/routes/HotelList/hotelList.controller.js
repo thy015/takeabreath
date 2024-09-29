@@ -60,40 +60,22 @@ const getHotelsByOwner = async (req, res) => {
 };
 
 const searchHotel = async (req, res) => {
-  const { city } = req.query; // Use req.query to get the city from the query parameters
+  const { city, dayStart,dayEnd,people}=req.body
 
   try {
     // Validate input
-    if (!city) {
+    if (!city || !dayStart|| !dayEnd|| !people) {
       return res.status(403).json({ message: "Input is required" });
     }
 
-    // Find hotels in the specified city
-    const hotelsInCity = await Hotel.find({ city });
-
-    // Find available rooms for each hotel
-    const availableHotels = await Promise.all(
-      hotelsInCity.map(async (hotel) => {
-        const availableRooms = await Room.find({ hotel: hotel._id });
-        if (availableRooms.length > 0) {
-          return {
-            ...hotel._doc,
-            rooms: availableRooms,
-          };
-        } else {
-          return null;
-        }
-      })
-    );
-
-    // Filter out hotels without available rooms
-    const filteredHotels = availableHotels.filter((hotel) => hotel !== null);
-
-    // Respond with the available hotels
+    // Query hotel
+    const hotelCity = await Hotel.find({ city :city});
+    
+    
     return res.status(200).json({
       status: "OK",
       message: "Find Hotel successfully",
-      data: filteredHotels,
+      data
     });
   } catch (e) {
     console.error("Error searching for hotels:", e);

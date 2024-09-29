@@ -37,9 +37,10 @@ ListRouter.get("/hotel/:id/room", async (req, res) => {
     res.status(500).json(e);
   }
 });
-
+// search hotel
+ListRouter.post('/query',hotelListController.queryHotel)
 ListRouter.post("/createHotel", hotelListController.createHotel);
-ListRouter.get("/criteriaSearch", hotelListController.searchHotel);
+
 // all hotel from owner that logged in
 ListRouter.get(
   "/hotelOwner",

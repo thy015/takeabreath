@@ -13,7 +13,9 @@ import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useCount, useGet } from "../hooks/hooks";
-
+import { openNotification } from "../hooks/notification";
+import axios from "axios";
+import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 
 const Booking = ({tailwind_prop}) => {
@@ -21,6 +23,7 @@ const Booking = ({tailwind_prop}) => {
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
 
+  dayjs.extend(isBetween)
   dayjs.extend(customParseFormat);
   const disabledDate = (current) => {
     return current && current < dayjs().startOf("day");
@@ -36,7 +39,7 @@ const Booking = ({tailwind_prop}) => {
     }
   };
   // for the person
-  const [aCount, aIncrement, aDecrement] = useCount(0);
+  const [aCount, aIncrement, aDecrement] = useCount(1);
   const [cCount, cIncrement, cDecrement] = useCount(0);
   const items = [
     {
@@ -49,7 +52,7 @@ const Booking = ({tailwind_prop}) => {
                 onClick={aDecrement}
                 size="small"
                 className="mr-2 ml-10"
-                disabled={aCount === 0}
+                disabled={aCount === 1}
               >
                 -
               </Button>
@@ -144,9 +147,36 @@ const Booking = ({tailwind_prop}) => {
   if (!data || data.length === 0) {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
-// handle - passing data
-  
 
+// handle - passing data
+  const handleSearch=async()=>{
+    const people=aCount+cCount
+    if (!selectedCity || !dayStart || !dayEnd||!people) {
+      return openNotification(false,'Missing information','Please fill out all information before searching');
+    }
+    // 25/10/2002
+    dayjs(dayStart).format('DD/MM/YYYY')
+    dayjs(dayEnd).format('DD/MM/YYYY')
+
+    console.log(dayjs('2016-10-13').isBetween('2016-10-19', '2016-10-27', null, '[)'))
+    console.log(dayjs('2016-10-17').isBetween('2016-10-19', '2016-10-27', null, '(]'))
+    const searchData={
+      city:selectedCity,
+      dayStart,
+      dayEnd,
+      people
+    }
+    try{
+      const resp=await axios.post('http://localhost:4000/api/hotelList/query'
+        ,searchData)
+        console.log(resp.data)
+        // if suc => navigate hoteldisplaypage
+    }
+    catch(e){
+      console.log(e)
+      console.log('Error while passing data')
+    }
+  }
 
 
 
@@ -207,6 +237,7 @@ const Booking = ({tailwind_prop}) => {
         <Col span={4} className={tailwind_prop}>
           <Button
             type="primary"
+            onClick={handleSearch}
             className="h-full w-full rounded-none text-[18px]"
           >
             Search

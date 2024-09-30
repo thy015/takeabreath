@@ -18,11 +18,11 @@ import axios from "axios";
 import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 
-const Booking = ({tailwind_prop}) => {
+const Booking = ({tailwind_prop,onSearchResults}) => {
   // date picker
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
-
+  
   dayjs.extend(isBetween)
   dayjs.extend(customParseFormat);
   const disabledDate = (current) => {
@@ -149,28 +149,31 @@ const Booking = ({tailwind_prop}) => {
   }
 
 // handle - passing data
+
   const handleSearch=async()=>{
     const people=aCount+cCount
     if (!selectedCity || !dayStart || !dayEnd||!people) {
       return openNotification(false,'Missing information','Please fill out all information before searching');
     }
     // 25/10/2002
-    dayjs(dayStart).format('DD/MM/YYYY')
-    dayjs(dayEnd).format('DD/MM/YYYY')
+    const formattedDayStart=dayjs(dayStart).format('DD/MM/YYYY')
+    const formattedDayEnd=dayjs(dayEnd).format('DD/MM/YYYY')
 
-    console.log(dayjs('2016-10-13').isBetween('2016-10-19', '2016-10-27', null, '[)'))
-    console.log(dayjs('2016-10-17').isBetween('2016-10-19', '2016-10-27', null, '(]'))
+    console.log(formattedDayStart)
+    console.log(formattedDayEnd)
+   
     const searchData={
       city:selectedCity,
-      dayStart,
-      dayEnd,
-      people
+      dayStart:formattedDayStart,
+      dayEnd:formattedDayEnd,
+      people:people
     }
     try{
-      const resp=await axios.post('http://localhost:4000/api/hotelList/query'
+      const res= await axios.post('http://localhost:4000/api/hotelList/query'
         ,searchData)
-        console.log(resp.data)
-        // if suc => navigate hoteldisplaypage
+        console.log(res.data)
+        onSearchResults({ hotelData: res.data.hotelData, roomData: res.data.roomData });
+        //passing query data to hoteldisplaypage
     }
     catch(e){
       console.log(e)

@@ -6,7 +6,8 @@ import { useParams } from "react-router-dom";
 
 const HotelDetail_RoomDisplay = () => {
   const { id } = useParams();
-
+  // query data result
+  const [searchResults,setSearchResults]=useState(null)
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
 
@@ -30,7 +31,7 @@ const HotelDetail_RoomDisplay = () => {
       />
     );
   }
-
+  
   if (!data) {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }

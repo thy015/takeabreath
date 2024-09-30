@@ -5,6 +5,8 @@ import { AccommodationCard } from "../../component/AccomodationCard";
 import { useGet } from "../../hooks/hooks";
 import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
+import { Navigate} from "react-router-dom";
+
 const { Panel } = Collapse;
 
 const filters = cardData.map((c) => c.title);
@@ -13,7 +15,8 @@ const HotelDisplayCompre = () => {
     "http://localhost:4000/api/hotelList/hotel"
   );
   const [selectedFilters, setSelectedFilters] = useState([]);
-
+  // query result passin from booking
+  const [searchResults,setSearchResults]=useState(null)
   const handleFilterChange = (checkedValues) => {
     setSelectedFilters(checkedValues);
   };
@@ -33,16 +36,25 @@ const HotelDisplayCompre = () => {
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!searchResults && (!data || data.length === 0)) {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
   console.log(data);
 
+  const handleHotelClick=(hotel)=>{
+    Navigate(`hotel/${hotel._id}`,{state:{roomData:searchResults.roomData}})
+  }
+
+  const displayHotel  = searchResults ? searchResults.hotelData : data
+  
+  
   // Filter hotels based on selected filters
   const filteredHotels =
-    selectedFilters.length > 0
-      ? data.filter((hotel) => selectedFilters.includes(hotel.hotelType))
-      : data;
+  selectedFilters.length > 0
+      ? displayHotel.filter((hotel) => selectedFilters.includes(hotel.hotelType))
+      : displayHotel;
+
+  
 
   return (
     <div>
@@ -51,7 +63,7 @@ const HotelDisplayCompre = () => {
         <Col span={20} className="w-full">
           <div className="h-32">
             <div className="absolute flex mt-8 w-full">
-              <Booking tailwind_prop="flex w-full h-16" />
+              <Booking tailwind_prop="flex w-full h-16" onSearchResults={setSearchResults}/>
             </div>
           </div>
           <Row gutter={16} className="mt-8">
@@ -74,11 +86,17 @@ const HotelDisplayCompre = () => {
                 </Panel>
               </Collapse>
             </Col>
+            {/* hotel display */}
             <Col span={19}>
               <div className="pt-3">
-                {filteredHotels.map((hotel, index) => (
-                  <AccommodationCard key={index} hotel={hotel} />
-                ))}
+              {!filteredHotels ? (
+                  <Alert message="No hotels match the criteria." type="info" />
+                ) : (
+                  filteredHotels.map((hotel, index) => (
+                    <AccommodationCard key={index} hotel={hotel}
+                     />
+                  ))
+                )}
               </div>
             </Col>
           </Row>

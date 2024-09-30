@@ -13,7 +13,7 @@ const AccommodationCard = ({ hotel }) => {
       <Row noGutters>
         <Col md={4}>
           <Card.Img
-            className="object-cover h-full rounded-tl-[12px] rounded-tr-none rounded-br-none p-3"
+            className="object-cover h-[250px] rounded-tl-[12px] rounded-tr-none rounded-br-none p-3"
             src={hotel.imgLink}
             alt="HOTEL IMG"
           />

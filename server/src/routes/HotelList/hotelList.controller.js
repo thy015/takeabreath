@@ -7,6 +7,7 @@ const isBetween=require('dayjs/plugin/isBetween')
 
 dayjs.extend(isBetween)
 
+
 const createRoom = async (req, res) => {
   const { numberOfBeds, typeOfRoom, money, hotelID, capacity, roomImages } = req.body;
 
@@ -122,13 +123,15 @@ const createHotel = async (req, res) => {
 
 const queryHotel=async(req,res)=>{
     const {city,dayStart,dayEnd,people}=req.body
-    try{
-      const start=dayjs(dayStart)
-      const end=dayjs(dayEnd)
-
-      if (!start.isValid() || !end.isValid() || start.isAfter(end)) {
-        return res.status(400).json({ message: 'Invalid date range' });
+    if(!city||!dayStart||!dayEnd||!people){
+      return res.status(403).json({message:"All fields are required"})
     }
+    try{
+      // double check
+      const start=dayjs(dayStart).format('DD/MM/YYYY')
+      const end=dayjs(dayEnd).format('DD/MM/YYYY')
+
+     
     // handle city
     const hotels = await Hotel.find({ city: city });
 
@@ -139,11 +142,12 @@ const queryHotel=async(req,res)=>{
     const rooms=await Room.find({hotelID:{$in: hotelIDs}})
 
     if(rooms.length===0){
-      return res.status(400).json({ message: 'No room in this hotel' });
+      // no room => return null
+      return res.status(200).json({ message: 'No room in this hotel', data:[]});
     }
 
-    const roomsID=map(r=>r._id)
-    const invoices=Invoice.find({roomID:{$in:roomsID}})
+    const roomsID=rooms.map(r=>r._id)
+    const invoices=await Invoice.find({roomID:{$in:roomsID}})
     //dayStart and end handle
     const allowedCase=invoices.some(invoice=>{
       const invoiceStart=dayjs(invoice.checkInDay)

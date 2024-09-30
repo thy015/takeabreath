@@ -39,6 +39,14 @@
   font-size: 20px !important ;
 }
 
+.login-form, .login-form input::placeholder{
+  color: white;
+}
+
+.login-form svg{
+  color: white;
+}
+
 .ant-form-item-feedback-icon svg{
   color: green !important;
 }
@@ -58,6 +66,7 @@
   color: red !important;
 }
 
+
 ul{
   margin: 0!important;
   padding: 0!important;
@@ -65,3 +74,19 @@ ul{
 .link-property{
   text-decoration: none;
 }
+.range-picker-addvoucher svg{
+  color: black !important;
+}
+
+.input-addvoucher::placeholder{
+  color:rgba(0, 0, 0, 0.45) !important
+}
+
+.input-addvoucher input{
+  padding: 0 10px ;
+}
+
+.input-addvoucher input::placeholder{
+  color:rgba(0, 0, 0, 0.45) !important
+}
+

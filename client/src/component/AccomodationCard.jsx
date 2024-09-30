@@ -1,9 +1,8 @@
-import { Rate } from "antd";
 import React from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import { MdRoom } from "react-icons/md";
 import { Link } from "react-router-dom";
-import RateCompo from "./Rate";
+import {RateStar} from "./Rate";
 
 
 // hotel display page
@@ -26,7 +25,7 @@ const AccommodationCard = ({ hotel }) => {
                 {hotel.hotelName} - {hotel.hotelType}
                 {/* need to handle this **convert 5=> 5start, 3.5=> 3star... */}
                 <div className="flex mt-2">
-                 <RateCompo hotel={hotel}></RateCompo>
+                 <RateStar hotel={hotel}></RateStar>
                 </div>
               </Card.Title>
               <div>
@@ -89,7 +88,7 @@ const PropertyCard = ({ property,link_property}) => {
       />
       <Card.Body className="h-[210px] flex flex-col flex-grow-1">
         <Card.Title>{property.hotelName}</Card.Title>
-        <RateCompo hotel={property}></RateCompo>
+        <RateStar hotel={property}></RateStar>
         <Card.Text>{property.address}</Card.Text>
         <div className="d-flex align-items-center">
           <div
@@ -115,5 +114,6 @@ const PropertyCard = ({ property,link_property}) => {
     </Link>
   );
 };
+
 
 export { PropertyCard, AccommodationCard };

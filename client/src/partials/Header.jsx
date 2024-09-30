@@ -150,12 +150,14 @@ const Header = ({ children }) => {
         <Col span={20}>
           <div class="bg-[#114098] flex justify-between items-center pt-12 pb-4 relative">
             <ul class="flex pt-7 mt-3 ">
+              <Link to='/' className="no-underline">
               <div className="absolute top-2 text-white left-[3%] text-[25px] font-lobster cursor-pointer pt-2">
                 {" "}
                 Take A Breath
               </div>
+              </Link>
               <li>
-                <Link to="/" className="no-underline ">
+                <Link to="/booking" className="no-underline ">
                   <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
                     Booking
                   </p>

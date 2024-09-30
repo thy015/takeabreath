@@ -1,73 +1,6 @@
 
-const { Hotel } = require("../../models/hotel.model");
+const { Hotel,Room } = require("../../models/hotel.model");
 const { Owner } = require("../../models/signUp.model");
-const createHotel = async (req, res) => {
-  const {
-    address,
-    taxCode,
-    hotelName,
-    nation,
-    facilityName,
-    businessType,
-    scale,
-    city,
-    hotelPhone,
-    hotelImg,
-  } = req.body;
-
-  try {
-    // Validate input
-    if (
-      !address ||
-      !taxCode ||
-      !hotelName ||
-      !nation ||
-      !facilityName ||
-      !businessType ||
-      !scale ||
-      !city ||
-      !hotelPhone
-    ) {
-      return res.status(403).json({ message: "Input is required" });
-    }
-
-    // Check if the owner ID exists
-    const checkExistedOwnerID = await Account.Account.findOne({
-      _id: req.ownerID,
-    });
-    if (!checkExistedOwnerID) {
-      return res.status(400).json({
-        status: "BAD",
-        message: "Owner ID does not exist",
-      });
-    }
-
-    // Create the hotel
-    const createdHotel = await Hotel.Hotel.create({
-      address,
-      taxCode,
-      nation,
-      hotelName,
-      facilityName,
-      businessType,
-      scale,
-      city,
-      hotelPhone,
-      hotelImg,
-      ownerID: req.ownerID,
-    });
-
-    // Respond with success
-    return res.status(201).json({
-      status: "OK",
-      message: "Hotel created successfully",
-      data: createdHotel,
-    });
-  } catch (e) {
-    console.error("Error in createHotel:", e);
-    return res.status(500).json({ message: e.message });
-  }
-};
 
 const createRoom = async (req, res) => {
   const { numberOfBeds, typeOfRoom, money, hotelID, capacity, roomImages } = req.body;
@@ -79,7 +12,7 @@ const createRoom = async (req, res) => {
     }
 
     // Create the room
-    const createdRoom = await Hotel.Room.create({
+    const createdRoom = await Hotel.create({
       numberOfBeds,
       typeOfRoom,
       money,
@@ -89,7 +22,7 @@ const createRoom = async (req, res) => {
     });
 
     if (createdRoom) {
-      const hotel = await Hotel.Hotel.findById(hotelID);
+      const hotel = await Hotel.findById(hotelID);
       if (hotel) {
         // Update hotel minPrice if necessary
         if (hotel.minPrice === 0 || hotel.minPrice > money) {
@@ -136,12 +69,12 @@ const searchHotel = async (req, res) => {
     }
 
     // Find hotels in the specified city
-    const hotelsInCity = await Hotel.Hotel.find({ city });
+    const hotelsInCity = await Hotel.find({ city });
 
     // Find available rooms for each hotel
     const availableHotels = await Promise.all(
       hotelsInCity.map(async (hotel) => {
-        const availableRooms = await Hotel.Room.find({ hotel: hotel._id });
+        const availableRooms = await Room.find({ hotel: hotel._id });
         if (availableRooms.length > 0) {
           return {
             ...hotel._doc,
@@ -171,7 +104,7 @@ const searchHotel = async (req, res) => {
     });
   }
 };
-const createHotels = async (req, res) => {
+const createHotel = async (req, res) => {
   const {
     hotelName,
     address,
@@ -298,5 +231,4 @@ module.exports = {
   getHotelsByOwner,
   searchHotel,
   createHotels,
-  updateHotels,
 };

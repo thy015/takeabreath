@@ -24,7 +24,6 @@ signUpRouter.get("/customer", async (req, res) => {
     res.status(500).json(e);
   }
 });
-
 signUpRouter.post("/signInCus", signUpController.loginCustomer);
 signUpRouter.post("/signUpCus", signUpController.registerCustomer);
 signUpRouter.get('/logout',signUpController.logout)

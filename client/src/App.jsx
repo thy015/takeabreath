@@ -55,6 +55,22 @@ function App() {
               );
             }
 
+            if (route.isOwner) {
+              return (
+                <Route key={route.path}
+                  path={route.path}
+                  element={<route.page />}>
+                  {route.children &&
+                    route.children.map((child) => (
+                      <Route
+                        key={child.path}
+                        path={child.path}
+                        element={<child.page />} />
+                    ))
+                  }
+                </Route>
+              )
+            }
             // Non-admin routes
             const Layout = route.isShowHeader ? Header : Fragment;
             const FooterLayout = route.isShowFooter ? Footer : Fragment;

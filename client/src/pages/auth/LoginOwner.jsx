@@ -10,7 +10,7 @@ import { AuthContext } from "../../hooks/auth.context";
 function LoginOwner() {
   const {auth,setAuth} = useContext(AuthContext)
   const [formLogin] = Form.useForm()
-  const username = Form.useWatch('username',formLogin)
+  const email = Form.useWatch('username',formLogin)
   const password = Form.useWatch('password',formLogin)
   const [errMessage,setErrMessage] = useState('')
   const navigate= useNavigate()
@@ -18,7 +18,7 @@ function LoginOwner() {
   axios.defaults.withCredentials=true
   const handleLogin = (e) => {
     e.preventDefault()
-    axios.post("http://localhost:4000/api/auth/signInOwner",{username,password})
+    axios.post("http://localhost:4000/api/auth/signInOwner",{email,password})
       .then(res=>{
         console.log(res)
         if(res.data.login){
@@ -58,7 +58,7 @@ function LoginOwner() {
           ]}
         >
           <Input
-            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] text-white placeholder:text-white"
+            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] login-form"
             placeholder="Enter your password"
             suffix={<FontAwesomeIcon icon={faEnvelope} />}
           />
@@ -75,7 +75,7 @@ function LoginOwner() {
           ]}
         >
           <Input.Password
-            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] text-white placeholder:text-white"
+            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] login-form"
             placeholder='Enter your username'
           />
         </Form.Item>
@@ -90,7 +90,7 @@ function LoginOwner() {
           >Login</button>
         </div>
         <div className="my-[20px] mx-] d-flex justify-between ">
-          <Link to='/register' className="text-white text-[15px] no-underline ml-[35px]">Don't you have account ?</Link>
+          <Link to='/registerOwner' className="text-white text-[15px] no-underline ml-[35px]">Don't you have account ?</Link>
         </div>
 
       </Form>

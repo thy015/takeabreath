@@ -24,6 +24,7 @@ import OwnerLayout from "../pages/owner/OwnerLayout";
 import Vouchers from "../pages/owner/Voucher/Vouchers";
 import AddVoucher from "../pages/owner/Voucher/AddVoucher";
 import AddHotel from "../pages/admin/Hotels/AddHotel";
+import Customer from "../pages/admin/Customers/CustomerList"
 export const routers = [
   {
     path: "/",
@@ -32,20 +33,20 @@ export const routers = [
     isShowFooter: true,
   },
   {
-    path: "/Admin",
+    path: "/admin",
     page: AdminLayout,
     children: [
       { path: "", page: DashboardView  }, 
       { path: "hotel", page: HotelsAdmin },
-      { path: "Dashboard", page: DashboardView  }, 
-      { path: "Calendar", page: Calendar  }, 
+      { path: "dashboard", page: DashboardView  }, 
+      { path: "calendar", page: Calendar  }, 
       { path: "hotel/:id", page: HotelDisplay_HotelTab  }, 
-      { path: "Settings", page: Settings  }, 
-      {path:"Rooms", page:RoomsAdmin},
-      {path:"Hotel/:id/Rooms", page:RoomsOfHotel},
+      { path: "settings", page: Settings  }, 
+      {path:"rooms", page:RoomsAdmin},
+      {path:"hotel/:id/rooms", page:RoomsOfHotel},
 
-      {path:"Customers", page:Customer},
-      {path:"CreateHotel",page:AddHotel},
+      {path:"customers", page:Customer},
+      {path:"createHotel",page:AddHotel},
     ],
     isAdmin: true,
     isShowHeader: false,

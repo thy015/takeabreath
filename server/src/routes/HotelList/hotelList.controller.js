@@ -230,5 +230,4 @@ module.exports = {
   createRoom,
   getHotelsByOwner,
   searchHotel,
-  createHotels,
 };

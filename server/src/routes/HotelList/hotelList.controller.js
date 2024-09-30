@@ -225,6 +225,72 @@ const createHotels = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+const updateHotels = async (req, res) => {
+  const {
+    hotelName,
+    address,
+    city,
+    nation,
+    hotelType,
+    phoneNum,
+    imgLink,
+    ownerID,
+  } = req.body;
+
+  try {
+  
+    if (
+      !hotelName ||
+      !address ||
+      !city ||
+      !nation ||
+      !hotelType ||
+      !phoneNum ||
+      !ownerID
+    ) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+
+    const checkExistedOwnerID = await Owner.findById(ownerID);
+    if (!checkExistedOwnerID) {
+      return res.status(400).json({
+        status: "BAD",
+        message: "Owner ID does not exist",
+      });
+    }
+
+    const hotelID = req.params.id; 
+    const hotel = await Hotel.findById(hotelID);
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel not found" });
+    }
+
+    if (hotel.ownerID.toString() !== ownerID) {
+      return res.status(403).json({ message: "You don't have permission to update this hotel." });
+    }
+
+    hotel.hotelName = hotelName;
+    hotel.address = address;
+    hotel.city = city;
+    hotel.nation = nation;
+    hotel.hotelType = hotelType;
+    hotel.phoneNum = phoneNum;
+    hotel.imgLink = imgLink;
+
+    await hotel.save(); 
+
+    return res.status(200).json({
+      status: "OK",
+      message: "Hotel updated successfully",
+      data: hotel,
+    });
+  } catch (error) {
+    console.error("Error in updateHotels:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 
 module.exports = {
   createHotel,
@@ -232,4 +298,5 @@ module.exports = {
   getHotelsByOwner,
   searchHotel,
   createHotels,
+  updateHotels,
 };

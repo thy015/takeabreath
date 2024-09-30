@@ -2,6 +2,17 @@ ADMIN
 --AdminLayout
     NavBar
     SideBar
+--Children
+    DashboardView  
+    HotelsAdmin 
+       AddHotel
+       UpdateHotel
+    Calendar
+    Settings
+    RoomsAdmin
+       RoomsOfHotel
+    Customer
+  
 
 
 USER

@@ -20,6 +20,7 @@ import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 import HotelDisplay_HotelTab from "../pages/user/HotelDisplay_HotelTab";
 import HotelDisplay_HotelDetail from "../pages/user/HotelDisplay_HotelDetail";
 import AddHotel from "../pages/admin/Hotels/AddHotel";
+import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 export const routers = [
   {
     path: "/",
@@ -39,9 +40,9 @@ export const routers = [
       { path: "Settings", page: Settings  }, 
       {path:"Rooms", page:RoomsAdmin},
       {path:"Hotel/:id/Rooms", page:RoomsOfHotel},
-
       {path:"Customers", page:Customer},
       {path:"CreateHotel",page:AddHotel},
+      {path:"hotel/:id/updatehotel",page:UpdateHotel},
     ],
     isAdmin: true,
     isShowHeader: false,

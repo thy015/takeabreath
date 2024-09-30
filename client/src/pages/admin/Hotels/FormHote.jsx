@@ -1,43 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Form, Input, Button, notification } from 'antd';
+import React from 'react'
 
-const CreateHotel = () => {
-  const navigate = useNavigate();
-  const [errMessage, setErrMessage] = useState('');
-
-  const onFinish = async (values) => {
-    setErrMessage(''); 
-
-    try {
-      const response = await axios.post('http://localhost:4000/api/hotelList/createHotel', {
-        ...values,
-      });
-
-      if (response.data.status === 'OK') {
-        notification.success({
-          message: 'Hotel Created Successfully',
-          description: 'The hotel has been created successfully!',
-        });
-
-        navigate('/Admin/hotel'); 
-      } else {
-        setErrMessage('Hotel creation failed!');
-      }
-    } catch (error) {
-      console.error("Error details:", error);
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-      notification.error({
-        message: 'Hotel Creation Failed',
-        description: errorMessage,
-      });
-      setErrMessage(errorMessage); 
-    }
-  };
-
+const FormHote = () => {
   return (
-    <div className="h-screen w-full flex justify-center items-center ">
+<div className="h-screen w-full flex justify-center items-center ">
       <Form
         name="createHotel"
         className='py-8 h-auto  '
@@ -117,7 +82,7 @@ label={<span className="text-black">Hotel Name</span>}
         </Form.Item>
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default CreateHotel;
+export default FormHote

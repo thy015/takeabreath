@@ -2,16 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Input, Button, notification } from 'antd';
-
-const CreateHotel = () => {
+import { useParams } from 'react-router-dom';
+const UpdateHotel = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [errMessage, setErrMessage] = useState('');
 
   const onFinish = async (values) => {
+    
     setErrMessage(''); 
-
+    const { data, error, loading } = useGet(
+      "http://localhost:4000/api/hotelList/hotel/${id}"
+    );
+  
+    if (loading) {
+      return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
+    }
+  
+    if (error) {
+      return (
+        <Alert
+          message="Error"
+          description="Failed to load properties."
+          type="error"
+          showIcon
+        />
+      );
+    }
     try {
-      const response = await axios.post('http://localhost:4000/api/hotelList/createHotel', {
+      const response = await axios.post('http://localhost:4000/api/hotelList/updateHotel', {
         ...values,
       });
 
@@ -21,7 +40,7 @@ const CreateHotel = () => {
           description: 'The hotel has been created successfully!',
         });
 
-        navigate('/Admin/hotel'); 
+        navigate('Admin/hotels'); 
       } else {
         setErrMessage('Hotel creation failed!');
       }
@@ -39,7 +58,7 @@ const CreateHotel = () => {
   return (
     <div className="h-screen w-full flex justify-center items-center ">
       <Form
-        name="createHotel"
+        name="UpdateHotel"
         className='py-8 h-auto  '
         onFinish={onFinish}
       >
@@ -112,7 +131,7 @@ label={<span className="text-black">Hotel Name</span>}
 
         <Form.Item>
           <Button type="primary" htmlType="submit" className="w-full bg-blue-800 hover:bg-blue-300">
-            Create Hotel
+            Update Hotel
           </Button>
         </Form.Item>
       </Form>
@@ -120,4 +139,4 @@ label={<span className="text-black">Hotel Name</span>}
   );
 };
 
-export default CreateHotel;
+export default UpdateHotel;

@@ -13,15 +13,19 @@ import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useCount, useGet } from "../hooks/hooks";
-
+import { openNotification } from "../hooks/notification";
+import axios from "axios";
+import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 
-const Booking = ({tailwind_prop}) => {
+const Booking = ({tailwind_prop,onSearchResults}) => {
   // date picker
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
-
+  
+  dayjs.extend(isBetween)
   dayjs.extend(customParseFormat);
+  
   const disabledDate = (current) => {
     return current && current < dayjs().startOf("day");
   };
@@ -36,7 +40,7 @@ const Booking = ({tailwind_prop}) => {
     }
   };
   // for the person
-  const [aCount, aIncrement, aDecrement] = useCount(0);
+  const [aCount, aIncrement, aDecrement] = useCount(1);
   const [cCount, cIncrement, cDecrement] = useCount(0);
   const items = [
     {
@@ -49,7 +53,7 @@ const Booking = ({tailwind_prop}) => {
                 onClick={aDecrement}
                 size="small"
                 className="mr-2 ml-10"
-                disabled={aCount === 0}
+                disabled={aCount === 1}
               >
                 -
               </Button>
@@ -145,6 +149,41 @@ const Booking = ({tailwind_prop}) => {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
 
+// handle - passing data
+
+  const handleSearch=async()=>{
+    const people=aCount+cCount
+    if (!selectedCity || !dayStart || !dayEnd||!people) {
+      return openNotification(false,'Missing information','Please fill out all information before searching');
+    }
+    // 25/10/2002
+    const formattedDayStart=dayjs(dayStart).format('DD/MM/YYYY')
+    const formattedDayEnd=dayjs(dayEnd).format('DD/MM/YYYY')
+
+    console.log(formattedDayStart)
+    console.log(formattedDayEnd)
+   
+    const searchData={
+      city:selectedCity,
+      dayStart:formattedDayStart,
+      dayEnd:formattedDayEnd,
+      people:people
+    }
+    try{
+      const res= await axios.post('http://localhost:4000/api/hotelList/query'
+        ,searchData)
+        console.log(res.data)
+        onSearchResults({ hotelData: res.data.hotelData, roomData: res.data.roomData });
+        //passing query data to hoteldisplaypage
+    }
+    catch(e){
+      console.log(e)
+      console.log('Error while passing data')
+    }
+  }
+
+
+
   return (
     <div className={tailwind_prop}>
     <div
@@ -202,6 +241,7 @@ const Booking = ({tailwind_prop}) => {
         <Col span={4} className={tailwind_prop}>
           <Button
             type="primary"
+            onClick={handleSearch}
             className="h-full w-full rounded-none text-[18px]"
           >
             Search

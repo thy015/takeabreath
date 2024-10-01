@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useGet } from "../../hooks/hooks";
 import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
@@ -8,7 +8,8 @@ import { CiHeart, CiShare2 } from "react-icons/ci";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 const HotelDisplay_HotelDetail = () => {
   const { id } = useParams();
-
+  const location=useLocation()
+  const roomData=location.state?.roomData || null
   const { data, error, loading } = useGet(
     `http://localhost:4000/api/hotelList/hotel/${id}`
   );
@@ -127,7 +128,7 @@ const HotelDisplay_HotelDetail = () => {
               </div>
             </div>
           </div>
-          <div className="h-[45%] mt-3 w-full border object-cover">
+          <div className="h-[47.5%] mt-3 w-full border object-cover">
             {/* need map api */}
             <img
               className="h-full w-full"
@@ -137,11 +138,13 @@ const HotelDisplay_HotelDetail = () => {
         </Col>
        
       </Row>
-      <div> <h4 className="flex mt-4 semi-bold">Room Available</h4> </div>
+      {/* Feature display */}
+      <div> <h4 className="flex mt-12 font-semibold">Feature</h4> </div>
+      <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
       {/* Room display */}
-      
+      <div>
      <HotelDetail_RoomDisplay></HotelDetail_RoomDisplay>
-
+     </div>
     </div>
   );
 };

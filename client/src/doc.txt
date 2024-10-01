@@ -20,3 +20,10 @@ COMPONENT
 --Rate (hotel)
     RateText(hotel)
     RateStar(hotel) //Passing hotel only (data)
+
+
+Owner
+--OwnerLayout
+    NavBar 
+    SideBar
+    

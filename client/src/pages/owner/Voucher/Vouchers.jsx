@@ -4,6 +4,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { Button, Typography, Modal, Input, InputNumber, Form, Popconfirm, Space, DatePicker } from "antd"
 import { openNotification } from '../../../hooks/notification'
 import TableVoucher from '../../../component/TableVoucher'
+import VoucherCard from '../../../component/VoucherCard'
 import { Link } from 'react-router-dom';
 import axios from "axios"
 import moment from "moment"
@@ -11,11 +12,11 @@ import moment from "moment"
 function Vouchers() {
 
   axios.defaults.withCredentials = true
-
   const [form] = Form.useForm()
   const [editKey, setEditKey] = useState('')
   const [listVoucher, setListVoucher] = useState([])
   const isEditing = (record) => record.key === editKey
+  //get vouchers in db
   useEffect(() => {
     axios.get("http://localhost:4000/api/voucher/list-voucher")
       .then(res =>
@@ -41,7 +42,7 @@ function Vouchers() {
       .catch(err => console.log(err))
   }, [editKey])
 
-
+  //Set each cell in the table to update or not 
   const EditTableCell = ({
     editing,
     dataIndex,
@@ -86,7 +87,7 @@ function Vouchers() {
       </td>
     )
   }
-
+  // function set type input
   const typeInput = (dataIndex) => {
     switch (dataIndex) {
       case "discount":
@@ -100,7 +101,7 @@ function Vouchers() {
     }
   }
 
-
+  // function delete voucher
   const handleDelete = (record) => {
     Modal.confirm({
       title: "Are you sure, you want to delete this",
@@ -126,6 +127,7 @@ function Vouchers() {
     setEditKey('');
   };
 
+  // function edit record in table 
   const openEdit = (record) => {
     console.log("Update")
     form.setFieldsValue({
@@ -140,6 +142,7 @@ function Vouchers() {
     setEditKey(record.key)
   }
 
+  // save update record
   const save = async (key, id) => {
     try {
       const row = form.validateFields()
@@ -231,6 +234,7 @@ function Vouchers() {
       fixed: "right",
       render: (_, record) => {
         const editable = isEditing(record)
+        // if editable return save and cance else return update and delete
         return editable ? (
           <Space>
             <Typography.Link onClick={() => save(record.key, record._id)}>
@@ -260,6 +264,7 @@ function Vouchers() {
   ]
 
 
+  //merge columns 
   const mergeColomns = columns.map((col) => {
     if (!col.edit) {
       return col
@@ -302,7 +307,12 @@ function Vouchers() {
         />
 
       </Form>
-
+        
+      <div>
+        {listVoucher.map((voucher,index)=>(
+          <VoucherCard voucher={voucher} linkProperty={`list-voucher/${voucher._id}`} index ={index}/>
+        ))}
+      </div>
     </div>
   )
 }

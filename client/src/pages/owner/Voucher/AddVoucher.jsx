@@ -23,6 +23,7 @@ function AddVoucher() {
         return result;
 
     }
+    //Fetch data 
     const onFinish = (values) => {
         console.log(values.date)
         const dateVoucher = values.date
@@ -64,6 +65,8 @@ function AddVoucher() {
         
 
     }
+
+    //Form addvoucher
     return (
         <div className='my-[10px] mx-[20px] d-flex flex-col justify-center items-center'>
             <h2 className='mt-[30px] mb-[50px] font-bold'>Add Voucher</h2>

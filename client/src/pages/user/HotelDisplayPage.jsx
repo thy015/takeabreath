@@ -5,18 +5,20 @@ import { AccommodationCard } from "../../component/AccomodationCard";
 import { useGet } from "../../hooks/hooks";
 import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
-import { Navigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 const { Panel } = Collapse;
 
 const filters = cardData.map((c) => c.title);
 const HotelDisplayCompre = () => {
+  const navigate=useNavigate()
   const { data, error, loading } = useGet(
     "http://localhost:4000/api/hotelList/hotel"
   );
   const [selectedFilters, setSelectedFilters] = useState([]);
   // query result passin from booking
   const [searchResults,setSearchResults]=useState(null)
+
   const handleFilterChange = (checkedValues) => {
     setSelectedFilters(checkedValues);
   };
@@ -42,11 +44,10 @@ const HotelDisplayCompre = () => {
   console.log(data);
 
   const handleHotelClick=(hotel)=>{
-    Navigate(`hotel/${hotel._id}`,{state:{roomData:searchResults.roomData}})
+    navigate(`hotel/${hotel._id}`,{state:{roomData:searchResults.roomData}})
   }
 
-  const displayHotel  = searchResults ? searchResults.hotelData : data
-  
+  const displayHotel  = searchResults ? searchResults.hotelData: data
   
   // Filter hotels based on selected filters
   const filteredHotels =
@@ -93,7 +94,7 @@ const HotelDisplayCompre = () => {
                   <Alert message="No hotels match the criteria." type="info" />
                 ) : (
                   filteredHotels.map((hotel, index) => (
-                    <AccommodationCard key={index} hotel={hotel}
+                    <AccommodationCard key={index} hotel={hotel} 
                      />
                   ))
                 )}

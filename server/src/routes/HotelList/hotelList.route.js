@@ -38,8 +38,18 @@ ListRouter.get("/hotel/:id/room", async (req, res) => {
   }
 });
 
+ListRouter.get('/room',async(req,res)=>{
+  try{
+    const room= await Room.find()
+    res.status(200).json(room)
+  }catch(e){
+    res.status(500).json(e)
+  }
+})
+// search hotel
+ListRouter.post('/query',hotelListController.queryHotel)
 ListRouter.post("/createHotel", hotelListController.createHotel);
-ListRouter.get("/criteriaSearch", hotelListController.searchHotel);
+
 // all hotel from owner that logged in
 ListRouter.get(
   "/hotelOwner",

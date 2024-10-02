@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
-import { useLocation} from "react-router-dom";
 
-const HotelDetail_RoomDisplay = () => {
+
+const HotelDetail_RoomDisplay = ({roomData}) => {
 
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
-   // query room data result
-   const location =useLocation()
-   const {roomData}=location.state ||{roomData:[]}
 
   // Increment room count
   const increment = (roomID) => {

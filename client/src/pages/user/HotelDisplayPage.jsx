@@ -45,9 +45,10 @@ const HotelDisplayCompre = () => {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
   console.log(data);
-  // passing prop roomData
+  // passing prop roomData (receive array from be=> filter to each hotel)
   const handleHotelClick=async(hotel)=>{
-    const roomData=searchResults ?searchResults.roomData : (await axios.get(`http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`)).data
+    const roomData=searchResults ?searchResults.roomData.filter(r=>r.hotelID===hotel._id)
+     : (await axios.get(`http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`)).data
     navigate(`hotel/${hotel._id}`,
       { state: { roomData } });
   }

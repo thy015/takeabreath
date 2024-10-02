@@ -6,9 +6,9 @@ import {RateStar} from "./Rate";
 
 
 // hotel display page
-const AccommodationCard = ({ hotel }) => {
+const AccommodationCard = ({ hotel,onClick }) => {
   return (
-    <Link to={`/hotel/${hotel._id}`} className="link-property">
+    <div onClick={onClick}>
     <Card className="mb-4 ">
       <Row noGutters>
         <Col md={4}>
@@ -23,7 +23,6 @@ const AccommodationCard = ({ hotel }) => {
             <div className="d-flex justify-content-between">
               <Card.Title as="h5" className="font-semibold">
                 {hotel.hotelName} - {hotel.hotelType}
-                {/* need to handle this **convert 5=> 5start, 3.5=> 3star... */}
                 <div className="flex mt-2">
                  <RateStar hotel={hotel}></RateStar>
                 </div>
@@ -72,7 +71,7 @@ const AccommodationCard = ({ hotel }) => {
         </Col>
       </Row>
     </Card>
-    </Link>
+    </div>
   );
 };
 // homepage display

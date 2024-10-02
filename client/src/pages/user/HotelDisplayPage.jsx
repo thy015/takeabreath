@@ -5,16 +5,19 @@ import { AccommodationCard } from "../../component/AccomodationCard";
 import { useGet } from "../../hooks/hooks";
 import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
-import { useNavigate} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
+import axios from "axios";
 
 const { Panel } = Collapse;
 
 const filters = cardData.map((c) => c.title);
 const HotelDisplayCompre = () => {
+  
   const navigate=useNavigate()
   const { data, error, loading } = useGet(
     "http://localhost:4000/api/hotelList/hotel"
   );
+
   const [selectedFilters, setSelectedFilters] = useState([]);
   // query result passin from booking
   const [searchResults,setSearchResults]=useState(null)
@@ -42,9 +45,11 @@ const HotelDisplayCompre = () => {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
   console.log(data);
-
-  const handleHotelClick=(hotel)=>{
-    navigate(`hotel/${hotel._id}`,{state:{roomData:searchResults.roomData}})
+  // passing prop roomData
+  const handleHotelClick=async(hotel)=>{
+    const roomData=searchResults ?searchResults.roomData : (await axios.get(`http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`)).data
+    navigate(`hotel/${hotel._id}`,
+      { state: { roomData } });
   }
 
   const displayHotel  = searchResults ? searchResults.hotelData: data
@@ -94,9 +99,9 @@ const HotelDisplayCompre = () => {
                   <Alert message="No hotels match the criteria." type="info" />
                 ) : (
                   filteredHotels.map((hotel, index) => (
-                    <AccommodationCard key={index} hotel={hotel} 
-                     />
-                  ))
+                    <AccommodationCard key={index} hotel={hotel} onClick={() => handleHotelClick(hotel)}/>
+                    
+                  )) 
                 )}
               </div>
             </Col>

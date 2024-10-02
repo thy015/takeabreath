@@ -9,14 +9,15 @@ USER
     Home_HotelDisplay
 --HotelDisplayPage
     HotelDisplay_HotelTab
-        HotelDisplay_HotelDetail
-            HotelDetail_DisplayRoom({roomData})
+        HotelDisplay_HotelDetail        //display hotel._id
+            HotelDetail_DisplayRoom     //display all room (for homepage)
+            
 
 COMPONENT
 --AccomodationCard
-    AccommodationCard(Row Card)
-    PropertyCard(4 Cards Per Slide)
---Booking ({tailwind_prop,onSearchResults}) //Passing width and height for it
+    AccommodationCard(hotel,onClick?)            //row card, for booking display
+    PropertyCard(property,link_property)        //4 cards per slide, for display in home
+--Booking ({tailwind_prop,onSearchResults?})     //Passing width and height for tailwind_prop, onSearchResults is the data booking gain from query
 --Rate (hotel)
     RateText(hotel)
     RateStar(hotel) //Passing hotel only (data)

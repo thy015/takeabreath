@@ -85,8 +85,15 @@ export const routers = [
     isShowFooter: true,
   },
   {
-
     path: "/hotel/:id",
+    page: HotelDisplay_HotelTab,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
+  // use for searching
+  {
+
+    path: "booking/hotel/:id",
     page: HotelDisplay_HotelTab,
     isShowHeader: true,
     isShowFooter: true,

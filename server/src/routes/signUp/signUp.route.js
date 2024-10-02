@@ -3,7 +3,7 @@ const signUpController = require("./signUp.controller");
 const signUpRouter = express.Router();
 const {Owner,Customer}=require('../../models/signUp.model');
 const { verifyLogin, verifyAdmin } = require("../../services/verify");
-// Owner
+// CRUD Owner
 signUpRouter.get("/owner", async (req, res) => {
   try {
     const RegOwner = await Owner.find();
@@ -12,10 +12,12 @@ signUpRouter.get("/owner", async (req, res) => {
     res.status(500).json(e);
   }
 });
+signUpRouter.delete('/owner/:id',signUpController.deleteOwner)
+signUpRouter.put('/owner/:id',signUpController.updateOwner)
 
 signUpRouter.post("/signUpOwner", signUpController.signUpOwner);
 signUpRouter.post("/signInOwner", signUpController.signInOwner);
-// Cus
+// CRUD Cus
 signUpRouter.get("/customer", async (req, res) => {
   try {
     const RegOwner = await Customer.find();
@@ -24,6 +26,9 @@ signUpRouter.get("/customer", async (req, res) => {
     res.status(500).json(e);
   }
 });
+signUpRouter.delete('/customer/:id',signUpController.deleteCus)
+signUpRouter.put('/customer/:id',signUpController.updateCus)
+
 signUpRouter.post("/signInCus", signUpController.loginCustomer);
 signUpRouter.post("/signUpCus", signUpController.registerCustomer);
 signUpRouter.get('/logout',signUpController.logout)

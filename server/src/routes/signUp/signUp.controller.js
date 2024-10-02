@@ -214,6 +214,60 @@ const logout = async (req,res)=>{
   return res.json({logout:true})
 }
 
+// CRUD cus
+const deleteCus=async(req,res)=>{
+  const id=req.params.id
+  try{
+    const deletedCus=await Customer.findByIdAndDelete(id)
+    if(!deletedCus){
+      return res.status(404).json({message:'Customer not found'})
+    }
+    res.status(200).json({message:'Success delete customer'})
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
+
+const updateCus=async(req,res)=>{
+  const id=req.params.id
+  const newData=req.body
+  try{
+    const updateCus= await Customer.findByIdAndUpdate(id,newData,{new:true})
+    if (!updateCus) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    res.status(200).json(updateCus);
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
+// CRUD owner
+const deleteOwner=async(req,res)=>{
+  const id=req.params.id
+  try{
+    const deleteOwner=await Owner.findByIdAndDelete(id)
+    if(!deleteOwner){
+      return res.status(404).json({message:'Customer not found'})
+    }
+    res.status(200).json({message:'Success delete customer'})
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
+
+const updateOwner=async(req,res)=>{
+  const id=req.params.id
+  const newData=req.body
+  try{
+    const updateOwner= await Owner.findByIdAndUpdate(id,newData,{new:true})
+    if (!updateOwner) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    res.status(200).json(updateOwner);
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
 function validateBirthDate(birthday) {
   const currentDay = new Date();
   const dob = new Date(birthday);
@@ -242,6 +296,10 @@ module.exports = {
   signInOwner,
   validateEmail,
   validateBirthDate,
+  deleteCus,
+  updateCus,
+  deleteOwner,
+  updateOwner,
   //phuc
   loginCustomer,
   registerCustomer,

@@ -127,7 +127,7 @@ const HotelDisplay_HotelDetail = () => {
               </div>
             </div>
           </div>
-          <div className="h-[45%] mt-3 w-full border object-cover">
+          <div className="h-[47.5%] mt-3 w-full border object-cover">
             {/* need map api */}
             <img
               className="h-full w-full"
@@ -137,11 +137,13 @@ const HotelDisplay_HotelDetail = () => {
         </Col>
        
       </Row>
-      <div> <h4 className="flex mt-4 semi-bold">Room Available</h4> </div>
+      {/* Feature display */}
+      <div> <h4 className="flex mt-12 font-semibold">Feature</h4> </div>
+      <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
       {/* Room display */}
-      
+      <div>
      <HotelDetail_RoomDisplay></HotelDetail_RoomDisplay>
-
+     </div>
     </div>
   );
 };

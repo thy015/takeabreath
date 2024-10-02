@@ -38,7 +38,8 @@ const commentSchema = new mongoose.Schema({
   ratePoint: { type: Number, enum: [1, 2, 3, 4, 5], required: true },
   content: { type: String, maxlength: 100, required: false },
   roomID: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
-  cusID: { type: String, required: true }, //take from microfe
+  cusID: { type: String, required: true }, 
+  createdDay:{type:Date,default:Date.now(),required:false}
 });
 const Hotel = mongoose.model("Hotel", hotelSchema);
 const Room = mongoose.model("Room", roomSchema);

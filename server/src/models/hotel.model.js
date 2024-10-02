@@ -41,6 +41,7 @@ const commentSchema = new mongoose.Schema({
   cusID: { type: String, required: true }, 
   createdDay:{type:Date,default:Date.now(),required:false}
 });
+
 const Hotel = mongoose.model("Hotel", hotelSchema);
 const Room = mongoose.model("Room", roomSchema);
 const Comment = mongoose.model("Comment", commentSchema);

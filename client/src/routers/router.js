@@ -25,6 +25,8 @@ import Vouchers from "../pages/owner/Voucher/Vouchers";
 import AddVoucher from "../pages/owner/Voucher/AddVoucher";
 import AddHotel from "../pages/admin/Hotels/AddHotel";
 import Customer from "../pages/admin/Customers/CustomerList"
+import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
+import Table from "../pages/admin/Table";
 export const routers = [
   {
     path: "/",
@@ -44,9 +46,10 @@ export const routers = [
       { path: "settings", page: Settings  }, 
       {path:"rooms", page:RoomsAdmin},
       {path:"hotel/:id/rooms", page:RoomsOfHotel},
-
+{path:"table", page:Table},
       {path:"customers", page:Customer},
-      {path:"createHotel",page:AddHotel},
+      {path:"hotel/createHotel",page:AddHotel},
+      {path:"requests",page:cancelReqAdmin},
     ],
     isAdmin: true,
     isShowHeader: false,

@@ -1,14 +1,14 @@
 import React from "react";
-import { Row, Col, Spin, Alert } from "antd";
+import { Row, Col, Spin, Alert, FloatButton } from "antd";
 import { Card } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; 
 import { useGet } from "../../../hooks/hooks";
 import { Link, useParams } from "react-router-dom";
 import { PropertyCard } from "../../../component/AccomodationCard";
-
+import { PlusOutlined } from '@ant-design/icons';
 const PropertyGrid = () => {
-  const { id } = useParams();
+  
   const { data, error, loading } = useGet(
     "http://localhost:4000/api/hotelList/hotel"
   );
@@ -32,15 +32,17 @@ const PropertyGrid = () => {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
   return (
+    <div>
     <Row gutter={[16, 16]}>
-      {data.map((property, index) => (
+      {data.map((property) => (
         <Col key={property._id} xs={24} sm={12} md={6}>
           <PropertyCard property={property} link_property={`/hotel/${property._id}`} link_button={`/admin/hotel/${property._id}/rooms`} showButton={true}/>
         </Col>
       ))}
      
     </Row>
-    
+    <FloatButton icon={<PlusOutlined/>} type="primary" href="/admin/hotel/createHotel" />;
+    </div>
   );
 };
 

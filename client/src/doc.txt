@@ -1,4 +1,5 @@
 ADMIN
+npm install @ant-design/icons 
 --AdminLayout
     NavBar
     SideBar
@@ -11,9 +12,11 @@ ADMIN
     Settings
     RoomsAdmin
        RoomsOfHotel
+       RoomCard
+       RoomsOfHotel
     Customer
-  
-
+       CustomerList
+ 
 
 USER
 --HomePage

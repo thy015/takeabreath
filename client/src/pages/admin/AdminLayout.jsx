@@ -10,8 +10,8 @@ const AdminLayout = () => {
       <div className="basis-[16%] h-[100vh]">
         <Sidebar />
       </div>
-      <div className="basis-[100%] border overflow-scroll h-[100vh]">
-        <Navbar />
+      <div className="basis-[100%]  overflow-scroll h-[100vh]">
+        <Navbar/>
         <Outlet />
       </div>
     </div>

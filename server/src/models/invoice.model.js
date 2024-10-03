@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { CancelReq } = require("./cancelReq.model");
 const InvoiceSchema = new mongoose.Schema({
   createDay: { type: Date, required: false, default: Date.now },
   checkInDay: { type: Date, required: true },
@@ -35,5 +36,5 @@ const Invoice = mongoose.model("Invoice", InvoiceSchema);
 const Receipt=mongoose.model('Receipt',ReceiptSchema)
 module.exports = {
   Invoice,
-  Receipt
+  Receipt,
 };

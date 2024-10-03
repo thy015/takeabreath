@@ -25,7 +25,7 @@ const roomSchema = new mongoose.Schema({
   capacity: { type: Number, required: true },
   numberOfBeds: { type: Number, required: true },
   money: { type: Number, required: true },
-  roomImages: { type: String, required: false },
+  imgLink: { type: String, required: false },
   revenue: { type: Number, required: false, default: 0 },
   hotelID: {
     type: mongoose.Schema.Types.ObjectId,
@@ -41,6 +41,7 @@ const commentSchema = new mongoose.Schema({
   cusID: { type: String, required: true }, 
   createdDay:{type:Date,default:Date.now(),required:false}
 });
+
 const Hotel = mongoose.model("Hotel", hotelSchema);
 const Room = mongoose.model("Room", roomSchema);
 const Comment = mongoose.model("Comment", commentSchema);

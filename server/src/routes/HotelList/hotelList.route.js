@@ -49,7 +49,7 @@ ListRouter.get('/room',async(req,res)=>{
 // search hotel
 ListRouter.post('/query',hotelListController.queryHotel)
 ListRouter.post("/createHotel", hotelListController.createHotel);
-
+ListRouter.post("/updateHotel/:id", hotelListController.updateHotels);
 // all hotel from owner that logged in
 ListRouter.get(
   "/hotelOwner",
@@ -57,7 +57,20 @@ ListRouter.get(
   hotelListController.getHotelsByOwner
 );
 
+ListRouter.get("/room", async (req, res) => {
+  try {
+    const { hotelID } = req.query;
+    if (!hotelID) {
+      return res.status(400).json({ message: "hotelID is required" });
+    }
 
-ListRouter.post("/createRoom", authenToken, hotelListController.createRoom);
+    const rooms = await Room.find({ hotelID: hotelID });
+    res.status(200).json(rooms);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+});
+
+ListRouter.post("/createRoom", verifyOwner, hotelListController.createRoom);
 
 module.exports = ListRouter;

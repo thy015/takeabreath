@@ -1,6 +1,6 @@
 
-const { reqCancel } = require("../../models/cancelReq.model");
-
+const { Owner } = require("../../models/signUp.model");
+const { reqCancel}=require("../../models/cancelReq.model");
 const reqCancelRoom = async (req, res) => {
   const { receiptID } = req.body;
   const cusID = req.cusID;
@@ -52,15 +52,16 @@ const reqCancelRoom = async (req, res) => {
 const handleCancelRoomAccept = async (req, res) => {
   const { reqCancelID } = req.params;
   const { orderId, transactionId } = req.body;
-  const adminID = req.adminID;
-
-  console.log(reqCancelID, adminID, orderId, transactionId);
+  const adminID = "66f2f413a8711e880bd40fbb";
+  const dayAcp = new Date().toISOString(); 
+  console.log(reqCancelID, adminID, orderId, transactionId,dayAcp);
 
   if (!adminID) {
     return res
       .status(403)
       .json({ status: "BAD", message: "Missing required fields" });
   }
+
   if (!mongoose.Types.ObjectId.isValid(reqCancelID)) {
     console.log("Invalid reqCancelID");
     return res
@@ -84,9 +85,8 @@ const handleCancelRoomAccept = async (req, res) => {
           transactionId: transactionId,
         },
         {
-          Headers: {
-            "X-Api":
-              "c1f3fe7e4b97d023548d3aa5eaee38993c2849b2a0f5425d72df862f508cfc58",
+          headers: { // Corrected 'Headers' to 'headers'
+            "X-Api": "c1f3fe7e4b97d023548d3aa5eaee38993c2849b2a0f5425d72df862f508cfc58",
           },
         }
       );
@@ -98,10 +98,10 @@ const handleCancelRoomAccept = async (req, res) => {
         refundResponse.status === 201 ||
         refundResponse.status === "OK"
       ) {
-        // Cập nhật trạng thái yêu cầu hủy phòng
+        // Update cancellation request status
         foundReqCancel.isAccept = "accepted";
         foundReqCancel.adminID = adminID;
-        foundReqCancel.dateAccept = new Date();
+        foundReqCancel.dateAccept = new Date().toISOString(); 
         await foundReqCancel.save();
 
         return res.status(200).json({
@@ -134,13 +134,13 @@ const handleCancelRoomAccept = async (req, res) => {
   }
 };
 
+
 const handleCancelRoomReject = async (req, res) => {
   const { reqCancelID } = req.params;
   const { orderId } = req.body;
-  const adminID = req.adminID;
-
-  console.log(reqCancelID, adminID, orderId);
-
+  const adminID = "66f2f413a8711e880bd40fbb";
+  const dayAcp = new Date().toISOString(); 
+  console.log(reqCancelID, adminID, orderId, dayAcp); 
   if (!adminID) {
     return res
       .status(403)
@@ -157,7 +157,8 @@ const handleCancelRoomReject = async (req, res) => {
 
     try {
       foundReqCancel.isAccept = "rejected";
-      foundReqCancel.adminID = adminID;
+      foundReqCancel.adminID = adminID; 
+      foundReqCancel.dayAcp = dayAcp; 
       await foundReqCancel.save();
 
       return res.status(200).json({
@@ -183,14 +184,13 @@ const handleCancelRoomReject = async (req, res) => {
   }
 };
 
+
 //get info
 const getReqCancelRoomAccepted = async (req, res) => {
   try {
     const reqCancelsAccepted = await reqCancel.find({ isAccept: "accepted" });
-    res.status(200).json({
-      status: "OK",
-      data: reqCancelsAccepted,
-    });
+    res.status(200).json(reqCancelsAccepted
+    );
   } catch (e) {
     console.error("Error in getReqCancelRoomAccepted:", e);
     res.status(500).json({
@@ -201,10 +201,8 @@ const getReqCancelRoomAccepted = async (req, res) => {
 const getReqCancelRoomRejected = async (req, res) => {
   try {
     const reqCancelsRejected = await reqCancel.find({ isAccept: "rejected" });
-    res.status(200).json({
-      status: "OK",
-      data: reqCancelsRejected,
-    });
+    res.status(200).json( reqCancelsRejected,
+    );
   } catch (e) {
     console.error("Error in getReqCancelRoomRejected:", e);
     res.status(500).json({
@@ -217,10 +215,7 @@ const getReqCancelRoomProcess = async (req, res) => {
     const reqCancelsProcessing = await reqCancel.find({
       isAccept: "processing",
     });
-    res.status(200).json({
-      status: "OK",
-      data: reqCancelsProcessing,
-    });
+    res.status(200).json(reqCancelsProcessing);
   } catch (e) {
     console.error("Error in getReqCancelRoomProcess:", e);
     res.status(500).json({

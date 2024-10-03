@@ -1,79 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FaTachometerAlt,
   FaHotel,
   FaUser,
   FaRegSun,
-  FaWrench,
-  FaStickyNote,
-  FaRegChartBar,
-  FaRegCalendarAlt,
+  FaCalendar,
   FaChevronRight,
   FaRestroom,
   FaTicketAlt,
-  FaCalendar,
+  FaReceipt,
 } from "react-icons/fa";
 import "../../App.css";
+import { FaHand } from "react-icons/fa6";
+
+const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => (
+  <Link
+    to={to}
+    className={`no-underline flex items-center justify-between pl-5 gap-[10px] py-[10px] w-full cursor-pointer ${
+      active ? "bg-white text-[#003580]" : "text-white"
+    }`}
+    onClick={onClick}
+  >
+    <div className="flex items-center gap-[10px]">
+      <Icon color={active ? "#003580" : "white"} />
+      <p className="text-[14px] leading-[20px] font-normal pt-[10px]">{label}</p>
+    </div>
+    <FaChevronRight className="pr-2" color={active ? "#003580" : "white"} />
+  </Link>
+);
 
 const Sidebar = () => {
+  const [activeItem, setActiveItem] = useState(null);
+
+  const handleItemClick = (item) => {
+    setActiveItem(item);
+  };
+
+  const manageItems = [
+    { label: "Hotels", to: "hotel", icon: FaHotel },
+    { label: "Customers", to: "customers", icon: FaUser },
+    { label: "Rooms", to: "rooms", icon: FaRestroom },
+    { label: "Vouchers", to: "", icon: FaTicketAlt },
+    { label: "Invoice", to: "", icon: FaReceipt },
+    { label: "Requests", to: "requests", icon: FaHand },
+  
+  ];
+
+  const addonItems = [
+    { label: "Calendar", to: "calendar", icon: FaCalendar },
+    { label: "Settings", to: "settings", icon: FaRegSun },
+  ];
+
   return (
-    <div className="bg-[#003580] px-[25px] h-full">
+    <div className="bg-[#003580] h-full">
       <div className="px-[15px] py-[30px] flex items-center justify-center border-b-[1px] border-[#EDEDED]/[0.3]">
         <h1 className="text-white text-[20px] leading-[24px] font-extrabold cursor-pointer">
           TakeABreath
         </h1>
       </div>
-      <Link to="Dashboard" className="no-underline flex items-center gap-[15px] py-[10px] border-b-[1px] border-[#EDEDED]/[0.3] cursor-pointer">
-        <FaTachometerAlt color="white" />
-        <p className="text-[14px] leading-[20px] font-bold text-white pt-[10px]">Dashboard</p>
-      </Link>
-      <div className="pt-[15px] border-b-[1px] border-[#EDEDED]/[0.3]">
-        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]"> MANAGE</p>
-        <Link to="Hotel" className="no-underline flex items-center justify-between gap-[10px] py-[5px] cursor-pointer">
-          <div className="flex items-center gap-[10px]">
-            <FaHotel color="white" />
-            <p className="text-[14px] leading-[20px] font-normal pt-[10px] text-white">Hotels</p>
-          </div>
-          <FaChevronRight color="white" />
-        </Link>
-        <Link to="Customers" className="no-underline flex items-center justify-between gap-[10px] py-[5px] cursor-pointer">
-          <div className="flex items-center gap-[10px]">
-            <FaUser color="white" />
-            <p className="text-[14px] leading-[20px] pt-[10px] font-normal text-white">Customers</p>
-          </div>
-          <FaChevronRight color="white" />
-        </Link>
-        <Link to="Rooms" className="no-underline flex items-center justify-between gap-[10px] py-[5px] cursor-pointer">
-          <div className="flex items-center gap-[10px]">
-            <FaRestroom color="white" />
-            <p className="text-[14px] leading-[20px] pt-[10px] font-normal text-white">Rooms</p>
-          </div>
-          <FaChevronRight color="white" />
-        </Link>
-        <div className="flex items-center justify-between gap-[10px] py-[5px] cursor-pointer">
-          <div className="flex items-center gap-[10px]">
-            <FaTicketAlt color="white" />
-            <p className="text-[14px] leading-[20px] pt-[10px] font-normal text-white">Vouchers</p>
-          </div>
-          <FaChevronRight color="white" />
-        </div>
+      <SidebarItem
+        label="Dashboard"
+        to="dashboard"
+        icon={FaTachometerAlt}
+        active={activeItem === "Dashboard"}
+        onClick={() => handleItemClick("Dashboard")}
+      />
+      <div className="pt-[15px] border-t-[1px] border-[#EDEDED]/[0.3]">
+        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">MANAGE</p>
       </div>
+
+      {manageItems.map((item) => (
+        <SidebarItem
+          key={item.label}
+          {...item}
+          active={activeItem === item.label}
+          onClick={() => handleItemClick(item.label)}
+        />
+      ))}
       <div className="pt-[5px] border-b-[1px] border-[#EDEDED]/[0.3]">
-        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]"> ADDONS</p>
-        <Link to="Pages" className="no-underline flex items-center gap-[10px] py-[5px] cursor-pointer">
-          <FaStickyNote color="white" />
-          <p className="text-[14px] leading-[20px] pt-[10px] font-normal text-white">Pages</p>
-        </Link>
-        <Link to="Calendar" className="no-underline flex items-center gap-[10px] py-[5px] cursor-pointer">
-          <FaCalendar color="white" />
-          <p className="text-[14px] leading-[20px] pt-[10px] font-normal text-white">Calendar</p>
-        </Link>
-        <Link to="Settings" className="no-underline flex items-center gap-[10px] py-[5px] cursor-pointer">
-          <FaRegSun color="white" />
-          <p className="text-[14px] leading-[20px] pt-[10px] font-normal text-white">Settings</p>
-        </Link>
+        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">ADDONS</p>
       </div>
+
+      {addonItems.map((item) => (
+        <SidebarItem
+          key={item.label}
+          {...item}
+          active={activeItem === item.label}
+          onClick={() => handleItemClick(item.label)}
+        />
+      ))}
     </div>
   );
 };

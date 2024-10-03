@@ -214,7 +214,8 @@ const queryHotel=async(req,res)=>{
           return res.status(200).json({
               status: "OK",
               roomData: availableRooms,
-              hotelData: hotels
+              hotelData: hotels,
+              
           });
       } else {
           return res.status(200).json({

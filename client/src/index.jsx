@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { AuthWrapper } from './hooks/auth.context';
-
+import {Provider} from 'react-redux'
+import {store} from './hooks/redux/store';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthWrapper>
     <StrictMode>
+      <Provider store={store}>
       <App />
+      </Provider>
     </StrictMode>
   </AuthWrapper>,
 

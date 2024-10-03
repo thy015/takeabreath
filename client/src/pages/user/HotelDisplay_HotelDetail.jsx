@@ -148,6 +148,7 @@ const HotelDisplay_HotelDetail = () => {
       {/* Room display */}
       <div>
      <HotelDetail_RoomDisplay roomData={roomData}></HotelDetail_RoomDisplay>
+     
      </div>
     </div>
   );

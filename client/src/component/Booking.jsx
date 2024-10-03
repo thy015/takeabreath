@@ -17,8 +17,11 @@ import { openNotification } from "../hooks/notification";
 import axios from "axios";
 import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
-
-const Booking = ({tailwind_prop,onSearchResults}) => {
+import {useDispatch} from 'react-redux'
+import { setSearchResult } from "../hooks/redux/searchSlice";
+const Booking = ({tailwind_prop}) => {
+// onSearchResults
+const dispatch=useDispatch()
 
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
@@ -173,16 +176,24 @@ const Booking = ({tailwind_prop,onSearchResults}) => {
       const res= await axios.post('http://localhost:4000/api/hotelList/query'
         ,searchData)
         console.log(res.data)
-        onSearchResults({ hotelData: res.data.hotelData, roomData: res.data.roomData });
+        // onSearchResults({ hotelData: res.data.hotelData, roomData: res.data.roomData });
+        dispatch(setSearchResult({ 
+          hotelData: res.data.hotelData, 
+          roomData: res.data.roomData
+         }))
         //passing query data to hoteldisplaypage
+        if(typeof setSearchResult === 'function'){
+          setSearchResult({
+            hotelData:res.data.hotelData,
+            roomData:res.data.roomData
+          })
+        }
     }
     catch(e){
       console.log(e)
       console.log('Error while passing data')
     }
   }
-
-
 
   return (
     <div className={tailwind_prop}>

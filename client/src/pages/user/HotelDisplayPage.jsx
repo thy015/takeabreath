@@ -77,7 +77,6 @@ const HotelDisplayCompre = () => {
             <Col span={5}>
             <Breadcrumb>
             </Breadcrumb>
-            {/* need map API */}
             <div className="w-[228px] h-[169px mb-4">
                 <img src="https://th.bing.com/th/id/OIP.Xl33AAWnwUNysT_nFRsUEgHaHa?rs=1&pid=ImgDetMain"/> 
             </div>

@@ -12,7 +12,7 @@ const HotelDisplay_HotelDetail = () => {
     const { id } = useParams();
      // query room data result
    const location =useLocation()
-   const {roomData}=location.state ||{roomData:[]}
+   const { roomData = [] } = location.state || {};
 
   const { data, error, loading } = useGet(
     `http://localhost:4000/api/hotelList/hotel/${id}`

@@ -47,13 +47,20 @@ const HotelDisplayCompre = () => {
   console.log(data);
   // passing prop roomData (receive array from be=> filter to each hotel)
   const handleHotelClick=async(hotel)=>{
-    const roomData=searchResults ?searchResults.roomData.filter(r=>r.hotelID===hotel._id)
-     : (await axios.get(`http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`)).data
+    let roomData=[]
+    if(searchResults?.roomData.length>0){
+      roomData=searchResults.roomData.filter(r=>r.hotelID===hotel._id)
+    }else{
+      const response = await axios.get(`http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`);
+      roomData = response.data; 
+    }
     navigate(`hotel/${hotel._id}`,
       { state: { roomData } });
   }
-
-  const displayHotel  = searchResults ? searchResults.hotelData: data
+// no searchResults => fall back to data
+  const displayHotel  = searchResults?.hotelData?.length
+   ? searchResults.hotelData
+   : data
   
   // Filter hotels based on selected filters
   const filteredHotels =

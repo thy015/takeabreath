@@ -33,7 +33,6 @@ const HomePage = () => {
         </div>
       </div>
       <div className="absolute flex left-[25%] mt-[-35px] w-[55%]">
-
         <Booking tailwind_prop="w-full h-20 flex"></Booking>
       </div>
       <div className="mt-24">

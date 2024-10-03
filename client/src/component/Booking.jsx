@@ -19,10 +19,12 @@ import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 import {useDispatch} from 'react-redux'
 import { setSearchResult } from "../hooks/redux/searchSlice";
+import { useNavigate } from "react-router-dom";
 const Booking = ({tailwind_prop}) => {
 // onSearchResults
 const dispatch=useDispatch()
-
+const navigate=useNavigate()
+  //day handle
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
   
@@ -155,6 +157,7 @@ const dispatch=useDispatch()
 // handle - passing data
 
   const handleSearch=async()=>{
+    
     const people=aCount+cCount
     if (!selectedCity || !dayStart || !dayEnd||!people) {
       return openNotification(false,'Missing information','Please fill out all information before searching');
@@ -176,18 +179,12 @@ const dispatch=useDispatch()
       const res= await axios.post('http://localhost:4000/api/hotelList/query'
         ,searchData)
         console.log(res.data)
-        // onSearchResults({ hotelData: res.data.hotelData, roomData: res.data.roomData });
+        
         dispatch(setSearchResult({ 
           hotelData: res.data.hotelData, 
           roomData: res.data.roomData
          }))
-        //passing query data to hoteldisplaypage
-        if(typeof setSearchResult === 'function'){
-          setSearchResult({
-            hotelData:res.data.hotelData,
-            roomData:res.data.roomData
-          })
-        }
+        navigate('/booking')
     }
     catch(e){
       console.log(e)

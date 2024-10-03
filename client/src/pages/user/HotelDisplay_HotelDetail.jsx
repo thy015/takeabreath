@@ -142,7 +142,7 @@ const HotelDisplay_HotelDetail = () => {
       <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
       {/* Room display */}
       <div>
-     <HotelDetail_RoomDisplay></HotelDetail_RoomDisplay>
+     <HotelDetail_RoomDisplay hotel={data}></HotelDetail_RoomDisplay>
      </div>
     </div>
   );

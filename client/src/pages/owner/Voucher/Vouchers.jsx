@@ -5,12 +5,13 @@ import { Button, Typography, Modal, Input, InputNumber, Form, Popconfirm, Space,
 import { openNotification } from '../../../hooks/notification'
 import TableVoucher from '../../../component/TableVoucher'
 import VoucherCard from '../../../component/VoucherCard'
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import axios from "axios"
 import moment from "moment"
 
 function Vouchers() {
 
+  const navigate = useNavigate()
   axios.defaults.withCredentials = true
   const [form] = Form.useForm()
   const [editKey, setEditKey] = useState('')
@@ -35,11 +36,13 @@ function Vouchers() {
           })
         })
         setListVoucher(dataList)
-
-
-        console.log(data)
+        openNotification(true,"Get data successfully","")
+        
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        openNotification(false,err.response.data.message,"")
+        navigate("/")
+      })
   }, [editKey])
 
   //Set each cell in the table to update or not 

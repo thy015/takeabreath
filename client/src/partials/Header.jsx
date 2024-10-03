@@ -157,7 +157,9 @@ const Header = ({ children }) => {
               </div>
               </Link>
               <li>
-                <Link to="/booking" className="no-underline ">
+                <Link to="/booking" className="no-underline " onClick={()=>{
+                  window.reload()
+                }}>
                   <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
                     Booking
                   </p>

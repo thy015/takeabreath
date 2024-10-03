@@ -5,13 +5,15 @@ import { AccommodationCard } from "../../component/AccomodationCard";
 import { useGet } from "../../hooks/hooks";
 import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
-import { useNavigate, useParams} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import axios from "axios";
-
+import { useSelector } from "react-redux";
 const { Panel } = Collapse;
 
 const filters = cardData.map((c) => c.title);
 const HotelDisplayCompre = () => {
+  // global, take from redux and booking
+  const searchResults=useSelector((state)=>state.searchResults)
   
   const navigate=useNavigate()
   const { data, error, loading } = useGet(
@@ -19,8 +21,6 @@ const HotelDisplayCompre = () => {
   );
 
   const [selectedFilters, setSelectedFilters] = useState([]);
-  // query result passin from booking
-  const [searchResults,setSearchResults]=useState(null)
 
   const handleFilterChange = (checkedValues) => {
     setSelectedFilters(checkedValues);
@@ -45,21 +45,28 @@ const HotelDisplayCompre = () => {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
   console.log(data);
-  // passing prop roomData
+  // passing prop roomData (receive array from be=> filter to each hotel)
   const handleHotelClick=async(hotel)=>{
-    const roomData=searchResults ?searchResults.roomData : (await axios.get(`http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`)).data
+    let roomData=[]
+    if(searchResults?.roomData.length>0){
+      roomData=searchResults.roomData.filter(r=>r.hotelID===hotel._id)
+    }else{
+      const response = await axios.get(`http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`);
+      roomData = response.data; 
+    }
     navigate(`hotel/${hotel._id}`,
       { state: { roomData } });
   }
-
-  const displayHotel  = searchResults ? searchResults.hotelData: data
+// no searchResults => fall back to data
+  const displayHotel  = searchResults?.hotelData?.length
+   ? searchResults.hotelData
+   : data
   
   // Filter hotels based on selected filters
   const filteredHotels =
   selectedFilters.length > 0
       ? displayHotel.filter((hotel) => selectedFilters.includes(hotel.hotelType))
       : displayHotel;
-
   
 
   return (
@@ -69,14 +76,13 @@ const HotelDisplayCompre = () => {
         <Col span={20} className="w-full">
           <div className="h-32">
             <div className="absolute flex mt-8 w-full">
-              <Booking tailwind_prop="flex w-full h-16" onSearchResults={setSearchResults}/>
+              <Booking tailwind_prop="flex w-full h-16"/>
             </div>
           </div>
           <Row gutter={16} className="mt-8">
             <Col span={5}>
             <Breadcrumb>
             </Breadcrumb>
-            {/* need map API */}
             <div className="w-[228px] h-[169px mb-4">
                 <img src="https://th.bing.com/th/id/OIP.Xl33AAWnwUNysT_nFRsUEgHaHa?rs=1&pid=ImgDetMain"/> 
             </div>
@@ -99,8 +105,7 @@ const HotelDisplayCompre = () => {
                   <Alert message="No hotels match the criteria." type="info" />
                 ) : (
                   filteredHotels.map((hotel, index) => (
-                    <AccommodationCard key={index} hotel={hotel} onClick={() => handleHotelClick(hotel)}/>
-                    
+                    <AccommodationCard key={index} hotel={hotel} onClick={() => handleHotelClick(hotel)}/>  
                   )) 
                 )}
               </div>

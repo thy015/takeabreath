@@ -75,7 +75,7 @@ const AccommodationCard = ({ hotel,onClick }) => {
   );
 };
 // homepage display
-const PropertyCard = ({ property, link_property, link_button,showButton = false }) => {
+const PropertyCard = ({ property, link_property, link_button,showButton = false, edit }) => {
   return (
     <Link to={link_property} className="link-property">
       <Card className="shadow-sm h-full rounded-[12px]">
@@ -109,12 +109,23 @@ const PropertyCard = ({ property, link_property, link_button,showButton = false 
           </div>
 
           {showButton && (
+            <div>
+              <Link to={edit}>
+              <button className="bg-gray-700 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-gray-400 ">
+               Edit
+                </button>
+               </Link>
             <Link to={link_button}>
-           <button className="bg-pink-400 text-white font-bold py-1 px-2 rounded hover:bg-pink-500 ">
-            Show Rooms
+           <button className="bg-pink-700 text-white font-bold py-1 px-2 rounded hover:bg-pink-400 ">
+            Rooms
              </button>
-
             </Link>
+            <Link to={link_button}>
+           <button className="bg-cyan-600 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-cyan-300 ">
+            Delete
+             </button>
+            </Link>
+            </div>
           )}
         </Card.Body>
       </Card>

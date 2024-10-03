@@ -49,7 +49,7 @@ ListRouter.get('/room',async(req,res)=>{
 // search hotel
 ListRouter.post('/query',hotelListController.queryHotel)
 ListRouter.post("/createHotel", hotelListController.createHotel);
-
+ListRouter.post("/updateHotel/:id", hotelListController.updateHotels);
 // all hotel from owner that logged in
 ListRouter.get(
   "/hotelOwner",

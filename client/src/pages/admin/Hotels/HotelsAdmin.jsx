@@ -36,7 +36,7 @@ const PropertyGrid = () => {
     <Row gutter={[16, 16]}>
       {data.map((property) => (
         <Col key={property._id} xs={24} sm={12} md={6}>
-          <PropertyCard property={property} link_property={`/hotel/${property._id}`} link_button={`/admin/hotel/${property._id}/rooms`} showButton={true}/>
+          <PropertyCard property={property} link_property={`/hotel/${property._id}`} link_button={`/admin/hotel/${property._id}/rooms`} edit={`/admin/hotel/${property._id}/updateHotel`}  showButton={true}/>
         </Col>
       ))}
      

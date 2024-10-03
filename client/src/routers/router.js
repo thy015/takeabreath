@@ -27,6 +27,7 @@ import AddHotel from "../pages/admin/Hotels/AddHotel";
 import Customer from "../pages/admin/Customers/CustomerList"
 import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
 import Table from "../pages/admin/Table";
+import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 export const routers = [
   {
     path: "/",
@@ -50,6 +51,7 @@ export const routers = [
       {path:"customers", page:Customer},
       {path:"hotel/createHotel",page:AddHotel},
       {path:"requests",page:cancelReqAdmin},
+      {path:"hotel/:id/updateHotel",page:UpdateHotel},
     ],
     isAdmin: true,
     isShowHeader: false,

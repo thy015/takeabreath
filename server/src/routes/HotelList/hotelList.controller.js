@@ -129,41 +129,22 @@ const updateHotels = async (req, res) => {
     hotelType,
     phoneNum,
     imgLink,
-    ownerID,
   } = req.body;
 
   try {
-  
-    if (
-      !hotelName ||
-      !address ||
-      !city ||
-      !nation ||
-      !hotelType ||
-      !phoneNum ||
-      !ownerID
-    ) {
+ 
+    if (!hotelName || !address || !city || !nation || !hotelType || !phoneNum) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-
-    const checkExistedOwnerID = await Owner.findById(ownerID);
-    if (!checkExistedOwnerID) {
-      return res.status(400).json({
-        status: "BAD",
-        message: "Owner ID does not exist",
-      });
-    }
-
-    const hotelID = req.params.id; 
+    const hotelID = req.params.id;
     const hotel = await Hotel.findById(hotelID);
+
     if (!hotel) {
       return res.status(404).json({ message: "Hotel not found" });
     }
 
-    if (hotel.ownerID.toString() !== ownerID) {
-      return res.status(403).json({ message: "You don't have permission to update this hotel." });
-    }
+  
 
     hotel.hotelName = hotelName;
     hotel.address = address;
@@ -185,6 +166,7 @@ const updateHotels = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 
 
 const queryHotel=async(req,res)=>{
@@ -248,5 +230,6 @@ module.exports = {
   createHotel,
   createRoom,
   getHotelsByOwner,
-  queryHotel
+  queryHotel,
+  updateHotels
 };

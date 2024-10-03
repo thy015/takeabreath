@@ -3,20 +3,21 @@ npm install @ant-design/icons
 --AdminLayout
     NavBar
     SideBar
---Children
-    DashboardView  
+  --Children  (Body of admin layout)
+    DashboardView
+       PieComponent            //Data sample and chart for displaying charts in DashboardView
     HotelsAdmin 
        AddHotel
        UpdateHotel
-    Calendar
+    Calendar                  
     Settings
     RoomsAdmin
-       RoomsOfHotel
-       RoomCard
-       RoomsOfHotel
+       RoomsOfHotel            //Display list of particular hotel's rooms
+       RoomCard                //roomDisplayComponent
+       RoomsAdmin              //Display list of roomcard (all rooms in database)
     Customer
-       CustomerList
- 
+       CustomerList            //Display list of customer
+    Table                      //Table list component to display lists (CustomerList, CancelReq list)
 
 USER
 --HomePage

@@ -25,6 +25,7 @@ const Booking = ({tailwind_prop,onSearchResults}) => {
   
   dayjs.extend(isBetween)
   dayjs.extend(customParseFormat);
+  
   const disabledDate = (current) => {
     return current && current < dayjs().startOf("day");
   };

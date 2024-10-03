@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 import { useGet } from "../../hooks/hooks";
 import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
@@ -8,7 +8,7 @@ import { CiHeart, CiShare2 } from "react-icons/ci";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 const HotelDisplay_HotelDetail = () => {
   const { id } = useParams();
-
+  
   const { data, error, loading } = useGet(
     `http://localhost:4000/api/hotelList/hotel/${id}`
   );

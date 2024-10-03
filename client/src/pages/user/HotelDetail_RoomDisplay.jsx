@@ -1,40 +1,15 @@
 import React, { useState } from "react";
 import { Card } from "react-bootstrap";
-import { Row, Col, Spin, Alert, Button } from "antd";
-import { useGet } from "../../hooks/hooks";
-import { useParams } from "react-router-dom";
+import { Row, Col, Button } from "antd";
+import { useLocation} from "react-router-dom";
 
 const HotelDetail_RoomDisplay = () => {
-  const { id } = useParams();
-  // query data result
-  const [searchResults,setSearchResults]=useState(null)
+
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
-
-  // Fetch room data
-  const { data, error, loading } = useGet(
-    `http://localhost:4000/api/hotelList/hotel/${id}/room`
-  );
-
-  if (loading) {
-    return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
-  }
-
-  if (error) {
-    console.log(data);
-    return (
-      <Alert
-        message="Error"
-        description="Failed to load hotel details."
-        type="error"
-        showIcon
-      />
-    );
-  }
-  
-  if (!data) {
-    return <Alert message="No hotel data found" type="info" showIcon />;
-  }
+   // query room data result
+   const location =useLocation()
+   const {roomData}=location.state ||{roomData:[]}
 
   // Increment room count
   const increment = (roomID) => {
@@ -55,7 +30,7 @@ const HotelDetail_RoomDisplay = () => {
   return (
     <div>
       <div className="mt-4">
-        {data.map((room) => {
+        {roomData.map((room) => {
           // room property
           const returnCount = counts[room._id] || 1;
           const finalPrice = room.money * returnCount;

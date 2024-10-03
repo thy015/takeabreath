@@ -214,27 +214,31 @@ const queryHotel=async(req,res)=>{
 
     const roomsID=rooms.map(r=>r._id)
     const invoices=await Invoice.find({roomID:{$in:roomsID}})
-    //dayStart and end handle
-    const allowedCase=invoices.some(invoice=>{
-      const invoiceStart=dayjs(invoice.checkInDay)
-      const invoiceEnd=dayjs(invoice.checkOutDay)
+    //dayStart and end handle (filter room not available)
+  
+        const availableRooms = rooms.filter(room => {
+          const roomInvoices = invoices.filter(invoice => invoice.roomID.equals(room._id));
+          return !roomInvoices.some(invoice => {
+              const invoiceStart = dayjs(invoice.checkInDay);
+              const invoiceEnd = dayjs(invoice.checkOutDay);
+              return (
+                  dayjs(start).isBetween(invoiceStart, invoiceEnd, null, '[)') ||
+                  dayjs(end).isBetween(invoiceStart, invoiceEnd, null, '(]')
+              );
+          });
+      });
 
-      return(
-        dayjs(start).isBetween(invoiceStart,invoiceEnd,'[)')||
-        dayjs(end).isBetween(invoiceStart,invoiceEnd,'(]')
-      )
-    })
-    // 2 case false => room available
-    if(!allowedCase){
-      return res.status(200).json({
-        status: "OK",
-        roomData:rooms,
-        hotelData:hotels
-      })
-    }
-    else{
-      return res.status(400).json({ message: 'Room is not available' });
-    }
+      if (availableRooms.length > 0) {
+          return res.status(200).json({
+              status: "OK",
+              roomData: availableRooms,
+              hotelData: hotels
+          });
+      } else {
+          return res.status(200).json({
+              message: 'No available rooms for the selected dates'
+          });
+      }
     }catch(e){
       console.log('Problem in hotel query controller: ' + e);
       return res.status(500).json({ message: 'Internal server error' });

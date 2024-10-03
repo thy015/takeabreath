@@ -120,6 +120,54 @@ const createHotel = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+const updateHotels = async (req, res) => {
+  const {
+    hotelName,
+    address,
+    city,
+    nation,
+    hotelType,
+    phoneNum,
+    imgLink,
+  } = req.body;
+
+  try {
+ 
+    if (!hotelName || !address || !city || !nation || !hotelType || !phoneNum) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const hotelID = req.params.id;
+    const hotel = await Hotel.findById(hotelID);
+
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel not found" });
+    }
+
+  
+
+    hotel.hotelName = hotelName;
+    hotel.address = address;
+    hotel.city = city;
+    hotel.nation = nation;
+    hotel.hotelType = hotelType;
+    hotel.phoneNum = phoneNum;
+    hotel.imgLink = imgLink;
+
+    await hotel.save(); 
+
+    return res.status(200).json({
+      status: "OK",
+      message: "Hotel updated successfully",
+      data: hotel,
+    });
+  } catch (error) {
+    console.error("Error in updateHotels:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 
 const queryHotel=async(req,res)=>{
     const {city,dayStart,dayEnd,people}=req.body
@@ -182,5 +230,6 @@ module.exports = {
   createHotel,
   createRoom,
   getHotelsByOwner,
-  queryHotel
+  queryHotel,
+  updateHotels
 };

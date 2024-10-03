@@ -19,7 +19,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 
 const Booking = ({tailwind_prop,onSearchResults}) => {
-  // date picker
+
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
   

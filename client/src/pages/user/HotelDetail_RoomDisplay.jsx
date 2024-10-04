@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
-
+import { useSelector } from "react-redux";
 
 const HotelDetail_RoomDisplay = ({roomData}) => {
 
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
-
+  const {totalCheckInDay}=useSelector((state)=>state.inputDay)
   // Increment room count
   const increment = (roomID) => {
     setCounts((prevCounts) => ({
@@ -23,15 +23,18 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
       [roomID]: Math.max((prevCounts[roomID] || 1) - 1, 1), //never go below 0, no need just in case
     }));
   };
-
+  const formatMoney=(money)=>{
+    return new Intl.NumberFormat('de-DE').format(money)
+  }
   return (
     <div>
       <div className="mt-4">
         {roomData.map((room) => {
           // room property
           const returnCount = counts[room._id] || 1;
-          const finalPrice = room.money * returnCount;
-          const fees = (finalPrice * 15) / 100;
+          const countRoomPrice = room.money * returnCount;
+          const rangeRoomPrice=countRoomPrice*totalCheckInDay
+          const fees = (rangeRoomPrice * 15) / 100;
           return (
             // Display room details
             <Row className="border-b my-12" key={room.id}>
@@ -61,7 +64,6 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
                 </div>
               </Col>
               {/* Display price and book button */}
-              {/* need handle number of room book cant go over numberOfRooms in Room */}
               <Col span={8}>
                 <div className="w-full h-95% p-4 border border-gray-300 shadow-md rounded-lg mb-8">
                   {/* Count room */}
@@ -85,21 +87,21 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
                     <ul className="flex items-start flex-col border-b">
                       <li className="flex justify-between w-full mb-2 mt-2">
                         <span>Price x {returnCount} room: </span>
-                        <span>{finalPrice} VND</span>
+                        <span>{formatMoney(countRoomPrice)} VND</span>
                       </li>
                       <li className="flex justify-between w-full mb-2">
                         {/* need handle number of night */}
-                        <span>For ... night:</span>
-                        <span> </span>
+                        <span>For <span className="text-success">{totalCheckInDay} night </span>: </span>
+                        <span>{formatMoney(rangeRoomPrice)} VND</span>
                       </li>
                       <li className="flex justify-between w-full mb-2">
                         <span>Fees and taxes:</span>
-                        <span> {fees} VND</span>
+                        <span> {formatMoney(fees)} VND</span>
                       </li>
                     </ul>
                     <div className="flex justify-between w-full mt-2">
                       <span className="font-semibold">Total:</span>
-                      <span className="text-success"> {finalPrice + fees} VND</span>
+                      <span className="text-success"> {formatMoney(rangeRoomPrice + fees)} VND</span>
                     </div>
                     {/* reserve */}
                     <div className="mt-3" >

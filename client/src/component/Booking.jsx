@@ -19,6 +19,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 import {useDispatch} from 'react-redux'
 import { setSearchResult } from "../hooks/redux/searchSlice";
+import { setInputDay } from "../hooks/redux/inputDaySlice";
 import { useNavigate } from "react-router-dom";
 const Booking = ({tailwind_prop}) => {
 // onSearchResults
@@ -162,7 +163,13 @@ const navigate=useNavigate()
     if (!selectedCity || !dayStart || !dayEnd||!people) {
       return openNotification(false,'Missing information','Please fill out all information before searching');
     }
-    // 25/10/2002
+   
+//format before dispatch => error
+    dispatch(setInputDay({
+      dayStart:dayStart,
+      dayEnd:dayEnd,
+    }))
+ // 25/10/2002
     const formattedDayStart=dayjs(dayStart).format('DD/MM/YYYY')
     const formattedDayEnd=dayjs(dayEnd).format('DD/MM/YYYY')
 

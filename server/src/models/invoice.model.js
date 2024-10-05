@@ -11,16 +11,6 @@ const InvoiceSchema = new mongoose.Schema({
     enum: ["waiting", "paid"],
     default: "waiting",
   },
-  deleteDay: {
-    type: Date,
-    required: false,
-    default: function () {
-      // Set deleteDay to 7 days after checkOutDay
-      return this.checkOutDay
-        ? new Date(this.checkOutDay.getTime() + 7 * 24 * 60 * 60 * 1000)
-        : null;
-    },
-  },
   cusID: { type: String, required: true }, //take from microfe
   roomID: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
 });

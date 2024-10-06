@@ -1,5 +1,5 @@
 
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
@@ -12,7 +12,7 @@ import { openNotification } from "../../hooks/notification";
 import { AuthContext } from "../../hooks/auth.context";
 const Login = () => {
 
-  const {auth,setAuth} = useContext(AuthContext)
+  const { auth, setAuth } = useContext(AuthContext)
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -127,7 +127,7 @@ const Login = () => {
                     </div>
                     <div className="mt-12">
                       <Form>
-              <Form.Item label="Email" name="email">
+                        <Form.Item label="Email" name="email">
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={
@@ -167,7 +167,7 @@ const Login = () => {
                       >
                         {" "}
                         Register
-
+                      </span>
                     </div>
                     <div className="flex justify-start mt-3">
                       <span>I'm an owner</span>

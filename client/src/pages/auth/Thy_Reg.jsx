@@ -101,7 +101,7 @@ const Register = () => {
               className="col-4"
               initial={{ x: 0 }}
               animate={{ x: isSignInClicked ? 850 : 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 1 }}
               onAnimationComplete={() => {
                 if (isSignInClicked) {
                   navigate("/login");
@@ -116,12 +116,16 @@ const Register = () => {
             </motion.div>
             <motion.div
               className="col-8"
-              initial={{ x: 0, opacity: 1 }}
+              initial={{opacity: 0 }}
               animate={{
-                x: isSignInClicked ? -600 : 0,
                 opacity: isSignInClicked ? 0 : 1,
               }}
-              transition={{ duration: 0.75, ease: easeIn }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 0.75,
+                ease: "easeOut",
+                delay: 0.15,
+              }}
               onAnimationComplete={() => {
                 if (isSignInClicked) {
                   navigate("/login");

@@ -101,7 +101,7 @@ const Register = () => {
               className="col-4"
               initial={{ x: 0 }}
               animate={{ x: isSignInClicked ? 850 : 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 1 }}
               onAnimationComplete={() => {
                 if (isSignInClicked) {
                   navigate("/login");

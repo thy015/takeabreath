@@ -4,11 +4,12 @@ import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
-import { easeIn, easeInOut, easeOut, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
 
 const Login = () => {
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -167,7 +168,7 @@ const Login = () => {
               className="col-4"
               initial={{ x: 0 }}
               animate={{ x: isRegisterClicked ? -850 : 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 1 }}
               onAnimationComplete={() => {
                 if (isRegisterClicked) {
                   navigate("/register");

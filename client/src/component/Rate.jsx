@@ -25,6 +25,7 @@ const getRatingDescription = (rate) => {
     return "Bad";
   }
 };
+
 const RateStar = ({ hotel }) => {
   return (
     <div>

@@ -24,12 +24,8 @@
   color: white;
 } */
 :where(.css-dev-only-do-not-override-11lehqq).ant-form-item .ant-form-item-label >label {
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  min-width: 150px;
+  min-width: 120px;
   margin-left: 5px;
-  width: 42px;
 }
 
 .register-owner label{
@@ -88,4 +84,5 @@ ul{
 
 .input-addvoucher input::placeholder{
   color:rgba(0, 0, 0, 0.45) !important
+
 }

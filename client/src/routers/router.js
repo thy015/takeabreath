@@ -12,14 +12,13 @@ import Calendar from "../pages/admin/Calendar";
 import Settings from "../pages/admin/Settings";
 import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin";
 import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
-import Login from "../pages/auth/Login"
+// import Login from "../pages/auth/Login"
 import LoginOwner from "../pages/auth/LoginOwner"
-import Register from "../pages/auth/Register"
+// import Register from "../pages/auth/Register"
 import RegisterOwner from "../pages/auth/RegisterOwner"
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 
 import HotelDisplay_HotelTab from "../pages/user/HotelDisplay_HotelTab";
-import HotelDisplay_HotelDetail from "../pages/user/HotelDisplay_HotelDetail";
 import OwnerLayout from "../pages/owner/OwnerLayout";
 import Vouchers from "../pages/owner/Voucher/Vouchers";
 import AddVoucher from "../pages/owner/Voucher/AddVoucher";
@@ -28,6 +27,8 @@ import Customer from "../pages/admin/Customers/CustomerList"
 import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
 import Table from "../pages/admin/Table";
 import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
+import Login from "../pages/auth/Thy_Login";
+import Register from "../pages/auth/Thy_Reg";
 export const routers = [
   {
     path: "/",
@@ -63,6 +64,7 @@ export const routers = [
   //   isShowHeader: false,
   //   isShowFooter: false,
   // },
+  // test
   {
     path: "/login",
     page: Login,

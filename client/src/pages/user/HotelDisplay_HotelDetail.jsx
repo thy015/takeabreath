@@ -5,10 +5,15 @@ import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
+import { useLocation} from "react-router-dom";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
+
 const HotelDisplay_HotelDetail = () => {
-  const { id } = useParams();
-  
+    const { id } = useParams();
+     // query room data result
+   const location =useLocation()
+   const { roomData = [] } = location.state || {};
+
   const { data, error, loading } = useGet(
     `http://localhost:4000/api/hotelList/hotel/${id}`
   );
@@ -142,7 +147,10 @@ const HotelDisplay_HotelDetail = () => {
       <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
       {/* Room display */}
       <div>
-     <HotelDetail_RoomDisplay hotel={data}></HotelDetail_RoomDisplay>
+
+     <HotelDetail_RoomDisplay roomData={roomData}></HotelDetail_RoomDisplay>
+     
+
      </div>
     </div>
   );

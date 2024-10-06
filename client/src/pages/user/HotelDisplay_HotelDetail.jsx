@@ -148,7 +148,8 @@ const HotelDisplay_HotelDetail = () => {
       {/* Room display */}
       <div>
 
-     <HotelDetail_RoomDisplay roomData={roomData}></HotelDetail_RoomDisplay>
+      {console.log('Detail hotel',roomData)}
+     <HotelDetail_RoomDisplay roomData={roomData} hotel={data}></HotelDetail_RoomDisplay>
      
 
      </div>

@@ -1,22 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
-
+import BookingConfirmationForm from "../../component/BookingConfirmationForm"
 import { useSelector } from "react-redux";
 
-const HotelDetail_RoomDisplay = ({roomData}) => {
-
+const HotelDetail_RoomDisplay = ({roomData,hotel}) => {
+  console.log('[ROOM DATA]',roomData)
   // State for room count, where room ID is the key
-  const [counts, setCounts] = useState({});
   const {totalCheckInDay}=useSelector((state)=>state.inputDay)
-import { useLocation } from "react-router-dom";
-import BookingConfirmationForm from "../../component/BookingConfirmationForm"
-const HotelDetail_RoomDisplay = ({hotel}) => {
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
   // query room data result
-  const location = useLocation()
-  const { roomData } = location.state || { roomData: [] }
   
   //open modal : Phuc
   const [isShow, setShow] = useState(false)

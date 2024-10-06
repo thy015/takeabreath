@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Form, Input, Checkbox,Tooltip } from "antd";
+import React, { useState,useContext } from "react";
+import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaGoogle, FaFacebookF } from "react-icons/fa";
@@ -7,17 +7,18 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { easeOut, motion } from "framer-motion";
 import axios from 'axios';
 import { openNotification } from "../../hooks/notification";
-
+import { AuthContext } from "../../hooks/auth.context";
 const Login = () => {
+  const {auth,setAuth} = useContext(AuthContext)
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-    const [isRegisterClicked,setIsRegisterClicked]=useState(false)
-      const handleRegisterClick=()=>{
-        setIsRegisterClicked(true)
-      }
+  const [isRegisterClicked, setIsRegisterClicked] = useState(false)
+  const handleRegisterClick = () => {
+    setIsRegisterClicked(true)
+  }
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -25,36 +26,49 @@ const Login = () => {
       [name]: value
     });
   };
-
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
   const handleFormSubmit = async () => {
-    const { email, password} = formData;
+    const { email, password } = formData;
 
     if (!email || !password) {
       openNotification(false, 'Please fill all the fields');
       return;
     }
-    
+
     if (!validateEmail(email)) {
       openNotification(false, 'Invalid email format');
       return;
     }
 
-    if (password.length <= 8) {
-      openNotification(false, 'Password should be at least 8 characters');
-      return;
-    }
-
-    try {
-      const response = await axios.post('hieuauthen', formData);
-      console.log(response.data);
-      if (response.status === 200) {
-        openNotification(true, 'Success login');
-        navigate('/');
-      }
-    } catch (e) {
-      console.log(e + 'Error passing form data');
-      openNotification(false,'Failed to register','Please try again after 5 minutes');
-    }
+    // if (password.length <= 8) {
+    //   openNotification(false, 'Password should be at least 8 characters');
+    //   return;
+    // }
+    axios.post("http://localhost:4000/api/auth/signInCus", { email, password })
+      .then(res => {
+        if (res.data.login) {
+          console.log(res)
+          setAuth({
+            isAuthenticated: true,
+            user: {
+              id: res?.data?.id ?? "",
+              email: res?.data?.email ?? "",
+              name: res?.data?.name ?? ""
+            }
+          })
+          openNotification(true, "Login Successful", "")
+          navigate(res.data.redirect)
+        }
+      }).catch(err => {
+        console.log(err)
+        openNotification(false, "Login Failed", "err.response.data.message")
+      })
   };
 
   return (
@@ -64,22 +78,22 @@ const Login = () => {
         <div className="col-2"></div>
         <div className="col-8">
           <div className="row bg-slate-50 h-full shadow-lg g-0">
-           
+
             <div className="col-8">
               <div className="row h-full">
                 <div className="col-2"></div>
                 <motion.div className="col-8"
-                   initial={{ x: 0, opacity: 1 }}
-                   animate={{
-                     x: isRegisterClicked ? 550 : 0,
-                     opacity: isRegisterClicked ? 0 : 1,
-                   }}
-                   transition={{ duration: 1, ease:easeOut}}
-                   onAnimationComplete={() => {
-                     if (isRegisterClicked) {
-                       navigate("/register");
-                     }
-                   }}
+                  initial={{ x: 0, opacity: 1 }}
+                  animate={{
+                    x: isRegisterClicked ? 550 : 0,
+                    opacity: isRegisterClicked ? 0 : 1,
+                  }}
+                  transition={{ duration: 1, ease: easeOut }}
+                  onAnimationComplete={() => {
+                    if (isRegisterClicked) {
+                      navigate("/register");
+                    }
+                  }}
                 >
                   <div className="py-32">
                     <h5 className="font-bold">Sign In with <span className="text-[#114098]">TakeABreath</span> </h5>
@@ -98,17 +112,17 @@ const Login = () => {
                     </div>
                     <div className="mt-12">
                       <Form>
-                        <Form.Item label='Email' name='email'>                  
+                        <Form.Item label='Email' name='email'>
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={<Tooltip title='Email must be approriate, example: thymai@hotmail.com'>
-                            <MdOutlineEmail />
+                              <MdOutlineEmail />
                             </Tooltip>
-                          }
+                            }
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                          />    
+                          />
                         </Form.Item>
                         <Form.Item label='Password' name='password'>
                           <Input.Password
@@ -127,7 +141,7 @@ const Login = () => {
                     </div>
                     <div className="flex justify-start mt-12">
                       <span>Not having an account yet?</span>
-                        <span className="text-[#114098] cursor-pointer no-underline ml-2" onClick={handleRegisterClick}> Register</span>
+                      <span className="text-[#114098] cursor-pointer no-underline ml-2" onClick={handleRegisterClick}> Register</span>
                     </div>
                     <div className="flex justify-start mt-3">
                       <span>I'm an owner</span>
@@ -140,15 +154,15 @@ const Login = () => {
                 <div className="col-2"></div>
               </div>
             </div>
-            <motion.div className="col-4" 
-            initial={{x:0}}
-            animate={{x:isRegisterClicked ? -850 : 0}}
-            transition={{duration:0.5}}
-            onAnimationComplete={()=>{
-              if(isRegisterClicked){
-                navigate('/register')
-              }
-            }}
+            <motion.div className="col-4"
+              initial={{ x: 0 }}
+              animate={{ x: isRegisterClicked ? -850 : 0 }}
+              transition={{ duration: 0.5 }}
+              onAnimationComplete={() => {
+                if (isRegisterClicked) {
+                  navigate('/register')
+                }
+              }}
             >
               <img
                 className="h-full w-full object-cover img-out"

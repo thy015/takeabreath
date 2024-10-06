@@ -1,21 +1,25 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
 import BookingConfirmationForm from "../../component/BookingConfirmationForm"
 import { useSelector } from "react-redux";
-
-const HotelDetail_RoomDisplay = ({roomData,hotel}) => {
-  console.log('[ROOM DATA]',roomData)
+import { AuthContext } from "../../hooks/auth.context";
+import { openNotification } from "../../hooks/notification";
+const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
   // State for room count, where room ID is the key
-  const {totalCheckInDay}=useSelector((state)=>state.inputDay)
+  const { totalCheckInDay } = useSelector((state) => state.inputDay)
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
   // query room data result
-  
+
   //open modal : Phuc
   const [isShow, setShow] = useState(false)
   const [roomSelected, setRoomSelected] = useState({})
-
+  const [countRoom, setCountRoom] = useState()
+  const [getTotal, setTotal] = useState()
+  let totalPrice = []
+  //get auth context 
+  const { auth } = useContext(AuthContext)
   // Increment room count
   const increment = (roomID) => {
     setCounts((prevCounts) => ({
@@ -31,18 +35,23 @@ const HotelDetail_RoomDisplay = ({roomData,hotel}) => {
       [roomID]: Math.max((prevCounts[roomID] || 1) - 1, 1), //never go below 0, no need just in case
     }));
   };
-  const formatMoney=(money)=>{
+
+
+  // Save total price
+
+  const formatMoney = (money) => {
     return new Intl.NumberFormat('de-DE').format(money)
   }
   return (
     <div>
       <div className="mt-4">
-        {roomData.map((room,index) => {
+        {roomData.map((room, index) => {
           // room property
           const returnCount = counts[room._id] || 1;
           const countRoomPrice = room.money * returnCount;
-          const rangeRoomPrice=countRoomPrice*totalCheckInDay
+          const rangeRoomPrice = countRoomPrice * totalCheckInDay
           const fees = (rangeRoomPrice * 15) / 100;
+          totalPrice[room._id] = rangeRoomPrice + fees
           return (
             // Display room details
             <Row className="border-b my-12" key={room.id}>
@@ -115,14 +124,22 @@ const HotelDetail_RoomDisplay = ({roomData,hotel}) => {
                     <div className="mt-3" >
                       <Button
                         onClick={() => {
-                          setShow(true)
-                          setRoomSelected(roomData[index])
+                          if(auth.isAuthenticated){
+                            setShow(true)
+                            setRoomSelected(roomData[index])
+                            setCountRoom(counts[roomData[index]._id])
+                            setTotal(totalPrice[roomData[index]._id])
+                          }else{
+                            openNotification(false,"Reserve failed","Please log in or register account !")
+                          }
+                          
                         }}
                         type='solid'
                         className="w-full bg-[#1677ff] hover:scale-105 text-white"
                       >Reserve
                       </Button>
-                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel ={hotel} count ={counts[room._id]} />
+                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel={hotel} count={countRoom} totalPrice={getTotal} />
+
                     </div>
                   </div>
                 </div>

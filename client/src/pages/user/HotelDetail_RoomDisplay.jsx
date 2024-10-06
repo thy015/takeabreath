@@ -13,7 +13,6 @@ const HotelDetail_RoomDisplay = ({hotel}) => {
   //open modal : Phuc
   const [isShow, setShow] = useState(false)
   const [roomSelected, setRoomSelected] = useState({})
-
   // Increment room count
   const increment = (roomID) => {
     setCounts((prevCounts) => ({
@@ -118,7 +117,7 @@ const HotelDetail_RoomDisplay = ({hotel}) => {
                         className="w-full bg-[#1677ff] hover:scale-105 text-white"
                       >Reserve
                       </Button>
-                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel ={hotel} />
+                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel ={hotel} count ={counts[room._id]} />
                     </div>
                   </div>
                 </div>

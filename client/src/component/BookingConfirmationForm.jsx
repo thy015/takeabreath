@@ -3,9 +3,9 @@ import { Modal, Col, Row, Rate, Form, Input, ConfigProvider, Select, Button } fr
 import FormItem from 'antd/es/form/FormItem'
 import axios from 'axios'
 import { useForm } from 'antd/es/form/Form'
-function BookingConfirmationForm({ isShow, onCancel, room, hotel }) {
+function BookingConfirmationForm({ isShow, onCancel, room, hotel,count }) {
     const [form] = useForm()
-
+    const[days,setDay] = useState(3)
     const [nations, setNation] = useState([
         {
             "native": "Andorra"
@@ -758,7 +758,7 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel }) {
             "native": "Zimbabwe"
         }
     ])
-
+    console.log(count)
     const handleOke = () => {
         form.submit()
         console.log("Click confirm booking")
@@ -766,9 +766,9 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel }) {
 
 
     const onFinish = (values) => {
-        console.log("[Value hotel]",hotel)
-        console.log("[Value rooms]",room)
-        console.log("[Value input]",values)
+        console.log("[Value hotel]", hotel)
+        console.log("[Value rooms]", room)
+        console.log("[Value input]", values)
     }
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
@@ -848,7 +848,31 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel }) {
 
                             </Col>
                             <Col span={24} className='h-[150px] border-[1px] p-[10px] max-w-[90%] border-gray-300 rounded-[10px] mb-[25px]'>
-                                Details Price
+                                <Row className='mb-[5px] max-h-[45px]'>
+                                    <Col span={11} className='border-r-[1px] border-y-slate-400 mr-[11px]'>
+                                        Check In
+                                        <p>
+                                           <b> Web,Oct 2, 2024</b>
+                                        </p>
+                                    </Col>
+                                    
+                                    <Col span={12} >
+                                        Check Out
+                                        <p>
+                                           <b> Web,Oct 2, 2024</b>
+                                        </p>
+                                    </Col>
+                                </Row>
+                                <div className='mb-[5px]'>
+                                    {/* You select {count} rooms */}
+                                </div>
+                                <div className='mb-[5px]'>
+                                    <b>Total length of day: </b> {days} days
+                                </div>
+
+                                <div className='mb-[5px]'>
+                                    {/* <b>Total prices: </b> {room.money * count * days} VND */}
+                                </div>
                             </Col>
                         </Row>
 

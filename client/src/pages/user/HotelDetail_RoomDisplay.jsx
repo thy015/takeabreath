@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
+
 import { useSelector } from "react-redux";
 
 const HotelDetail_RoomDisplay = ({roomData}) => {
@@ -8,6 +9,19 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
   const {totalCheckInDay}=useSelector((state)=>state.inputDay)
+import { useLocation } from "react-router-dom";
+import BookingConfirmationForm from "../../component/BookingConfirmationForm"
+const HotelDetail_RoomDisplay = ({hotel}) => {
+  // State for room count, where room ID is the key
+  const [counts, setCounts] = useState({});
+  // query room data result
+  const location = useLocation()
+  const { roomData } = location.state || { roomData: [] }
+  
+  //open modal : Phuc
+  const [isShow, setShow] = useState(false)
+  const [roomSelected, setRoomSelected] = useState({})
+
   // Increment room count
   const increment = (roomID) => {
     setCounts((prevCounts) => ({
@@ -29,7 +43,7 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
   return (
     <div>
       <div className="mt-4">
-        {roomData.map((room) => {
+        {roomData.map((room,index) => {
           // room property
           const returnCount = counts[room._id] || 1;
           const countRoomPrice = room.money * returnCount;
@@ -52,15 +66,15 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
               {/* Display room info */}
               <Col span={8}>
                 <div className="py-3">
-                 
-                 <div className="pl-4">
+
+                  <div className="pl-4">
                     <ul className="flex flex-col w-full text-left ">
                       <li>Room Type: {room.typeOfRoom}</li>
                       <li>Capacity: {room.capacity}</li>
                       <li>Total Bed: {room.numberOfBeds}</li>
                       <li>Amenities: ....</li>
                     </ul>
-                    </div>
+                  </div>
                 </div>
               </Col>
               {/* Display price and book button */}
@@ -105,7 +119,16 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
                     </div>
                     {/* reserve */}
                     <div className="mt-3" >
-                    <Button type='solid' className="w-full bg-[#1677ff] hover:scale-105 text-white">Reserve</Button>
+                      <Button
+                        onClick={() => {
+                          setShow(true)
+                          setRoomSelected(roomData[index])
+                        }}
+                        type='solid'
+                        className="w-full bg-[#1677ff] hover:scale-105 text-white"
+                      >Reserve
+                      </Button>
+                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel ={hotel} count ={counts[room._id]} />
                     </div>
                   </div>
                 </div>

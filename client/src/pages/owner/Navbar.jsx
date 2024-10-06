@@ -7,8 +7,6 @@ function Navbar() {
     const {auth,setAuth} = useContext(AuthContext)
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
-  
-    console.log("[Admin Page] ",auth)
     axios.defaults.withCredentials = true
     const showProfile = () => {
       setOpen(!open);

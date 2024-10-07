@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF } from "react-icons/fa";
+import { FaGoogle, FaFacebookF,FaAddressCard } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
-import { easeIn, easeInOut, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const validateEmail = (email) => {
   return String(email)
@@ -17,10 +17,10 @@ const validateEmail = (email) => {
     );
 };
 
-const Register = () => {
+const RegisterOwner = () => {
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
-  
+
   const handleSignInClick = () => {
     setIsSignInClicked(true);
   };
@@ -29,6 +29,7 @@ const Register = () => {
     password: "",
     name: "",
     phone: "",
+    idenCard:'',
     agreeTerms: false,
   });
 
@@ -48,9 +49,9 @@ const Register = () => {
   };
 
   const handleFormSubmit = async () => {
-    const { email, password, name, phone, agreeTerms } = formData;
+    const { email, password, name, phone, agreeTerms,idenCard } = formData;
 
-    if (!email || !password || !name || !phone) {
+    if (!email || !password || !name || !phone||!idenCard) {
       openNotification(false, "Please fill all the fields");
       return;
     }
@@ -69,6 +70,10 @@ const Register = () => {
       openNotification(false, "Phone must be 10 digits and start with 0");
       return;
     }
+    if (idenCard.length !== 12) {
+      openNotification(false, "Invalid card");
+      return;
+    }
     if (!agreeTerms) {
       openNotification(false, "You must agree to the terms of service");
       return;
@@ -78,7 +83,7 @@ const Register = () => {
       console.log(response.data);
       if (response.status === 200) {
         openNotification(true, "Success register");
-        navigate("/login");
+        navigate("/loginOwner");
       }
     } catch (e) {
       console.log(e + "Error passing form data");
@@ -92,22 +97,27 @@ const Register = () => {
 
   return (
     <div>
-      <div className="row h-[550px]">
+      <div className="row h-[650px]">
         <div className="col-2"></div>
         <div className="col-8">
-          <div className="row bg-slate-50 h-full shadow-lg g-0">
-            <div
-              className="col-4 relative"  >
-              <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">Have your fun journey with TAB</div>
+          <div className="row bg-[#114098] h-full shadow-lg g-0">
+            <div className="col-5 relative border-r">
+              <div className="gryphen absolute flex mt-[100px] ml-16 text-white text-semibold text-[20px] italic">
+                Register for Your Very First Journey
+              </div>
+              <div className="gryphen absolute flex mt-[130px] ml-[200px] text-white font-bold text-[20px] italic">
+                as a<span className="text-[#c3d7ef] mx-2"> TAB </span>
+                Partner
+              </div>
               <img
-                className="h-full w-full object-cover"
-                src="https://images.unsplash.com/photo-1530273883449-aae8b023c196?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                className="w-full flex mt-56"
+                src="/img/sign-up.svg"
                 alt="side-image"
               />
             </div>
             <motion.div
-              className="col-8"
-              initial={{opacity: 0 }}
+              className="col-7"
+              initial={{ opacity: 0 }}
               animate={{
                 opacity: isSignInClicked ? 0 : 1,
               }}
@@ -119,7 +129,7 @@ const Register = () => {
               }}
               onAnimationComplete={() => {
                 if (isSignInClicked) {
-                  navigate("/login");
+                  navigate("/loginOwner");
                 }
               }}
             >
@@ -127,26 +137,29 @@ const Register = () => {
                 <div className="col-2"></div>
                 <div className="col-8">
                   <div className="py-7">
-                    <h5 className="font-bold">
-                      Register with{" "}
-                      <span className="text-[#114098]">TakeABreath</span>{" "}
+                    <h5 className="font-bold text-[#c3d7ef]">
+                      Be an owner with{" "}
+                      <span className="text-white">TakeABreath</span>{" "}
                     </h5>
                     <div className="flex justify-center">
-                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
+                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 text-[#114098] bg-white hover:scale-105 hover:text-black mx-2 cursor-pointer my-2">
                         <FaGoogle />
                       </div>
-                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
+                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 text-[#114098] bg-white hover:scale-105 hover:text-black mx-2 cursor-pointer my-2">
                         <FaFacebookF />
                       </div>
                     </div>
-                    <div className="flex items-center mt-4">
+                    <div className="flex items-center mt-2">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4">or</div>
+                      <div className="mx-4 text-white">or</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-4">
                       <Form>
-                        <Form.Item label="Email" name="email">
+                        <Form.Item
+                          label={<span className="white-label">Email</span>}
+                          name="email"
+                        >
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={
@@ -159,7 +172,10 @@ const Register = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label="Password" name="password">
+                        <Form.Item
+                          label={<span className="white-label">Password</span>}
+                          name="password"
+                        >
                           <Input.Password
                             placeholder="ads123@"
                             name="password"
@@ -167,7 +183,10 @@ const Register = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label="Name">
+                        <Form.Item
+                          label={<span className="white-label">Name</span>}
+                          name='name'
+                        >
                           <Input
                             placeholder="Anderson"
                             suffix={<FaUser />}
@@ -176,7 +195,11 @@ const Register = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label="Phone Number">
+                        <Form.Item
+                          label={
+                            <span className="white-label">Phone Number</span>
+                          } name='phone'
+                        >
                           <Input
                             placeholder="0908xxxxxx"
                             suffix={<FaPhoneFlip />}
@@ -185,8 +208,24 @@ const Register = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
+                        {/* owner ++ */}
+                        <Form.Item
+                          label={
+                            <span className="white-label">Identification Card</span>
+                          }
+                          name='idenCard'
+                        >
+                          <Input
+                            placeholder="12 digits"
+                            suffix={<FaAddressCard />}
+                            name="idenCard"
+                            value={formData.idenCard}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Item>
                         <Form.Item>
                           <Checkbox
+                            className="text-white"
                             checked={formData.agreeTerms}
                             onChange={handleCheckboxChange}
                           >
@@ -196,30 +235,20 @@ const Register = () => {
                         <Form.Item>
                           <Button
                             onClick={handleFormSubmit}
-                            className="my-2 ml-8 hover:scale-105"
+                            className="my-2 ml-8 hover:scale-105 bg-white"
+                            style={{ color: "#114098" }}
                           >
                             Create Account
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
-                    <div className="flex justify-start">
-                      <span>I'm already a member</span>
-
-                      <span
-                        className="text-[#114098] cursor-pointer no-underline ml-2"
-                        onClick={handleSignInClick}
-                      >
-                        Sign In
-                      </span>
-                    </div>
-                    <div className="flex justify-start mt-3">
-                      <span>I'm an owner</span>
-                      <Link to="/loginOwner" className="no-underline">
-                        <span className="text-[#114098] cursor-pointer no-underline ml-2">
+                   
+                    <div className="flex justify-start mt-3 text-[#c3d7ef]">
+                      <span>I'm already an owner</span>
+                        <span className="text-white cursor-pointer no-underline ml-2" onClick={handleSignInClick}>
                           Sign In Owner
                         </span>
-                      </Link>
                     </div>
                   </div>
                 </div>
@@ -234,4 +263,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterOwner;

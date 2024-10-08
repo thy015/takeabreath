@@ -12,8 +12,8 @@ import { openNotification } from "../../hooks/notification";
 import { AuthContext } from "../../hooks/auth.context";
 const Login = () => {
 
-  const { auth, setAuth } = useContext(AuthContext)
 
+  const { auth, setAuth } = useContext(AuthContext)
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -81,8 +81,7 @@ const Login = () => {
 
   return (
     <div>
-      <div className="h-10"> </div>
-      <div className="row h-[750px]">
+      <div className="row h-[635px]">
         <div className="col-2"></div>
         <div className="col-8">
           <div className="row bg-slate-50 h-full shadow-lg g-0">
@@ -102,12 +101,12 @@ const Login = () => {
                     delay: 0.15,
                   }}
                   onAnimationComplete={() => {
-                    if (isSignInClicked) {
+                    if (isRegisterClicked) {
                       navigate("/register");
                     }
                   }}
                 >
-                  <div className="py-32">
+                  <div className="pt-20">
                     <h5 className="font-bold">
                       Sign In with{" "}
                       <span className="text-[#114098]">TakeABreath</span>{" "}
@@ -151,7 +150,7 @@ const Login = () => {
                         <Form.Item>
                           <Button
                             onClick={handleFormSubmit}
-                            className="my-2 ml-8 hover:scale-105"
+                            className="my-2 hover:scale-105"
                           >
                             Sign In
                           </Button>
@@ -182,24 +181,15 @@ const Login = () => {
                 <div className="col-2"></div>
               </div>
             </div>
-
-            <motion.div
-              className="col-4"
-              initial={{ x: 0 }}
-              animate={{ x: isRegisterClicked ? -850 : 0 }}
-              transition={{ duration: 1 }}
-              onAnimationComplete={() => {
-                if (isRegisterClicked) {
-                  navigate("/register");
-                }
-              }}
-            >
+            <div
+              className="col-4 relative"
+            > <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">Have your fun journey with TAB</div>
               <img
                 className="h-full w-full object-cover img-out"
                 src="https://images.unsplash.com/photo-1530273883449-aae8b023c196?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="side-image"
               />
-            </motion.div>
+            </div>
           </div>
         </div>
         <div className="col-2"></div>

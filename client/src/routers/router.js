@@ -15,7 +15,8 @@ import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
 // import Login from "../pages/auth/Login"
 import LoginOwner from "../pages/auth/LoginOwner"
 // import Register from "../pages/auth/Register"
-import RegisterOwner from "../pages/auth/RegisterOwner"
+// import RegisterOwner from "../pages/auth/RegisterOwner"
+import RegisterOwner from "../pages/auth/Thy_RegOwner";
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 
 import HotelDisplay_HotelTab from "../pages/user/HotelDisplay_HotelTab";
@@ -29,6 +30,7 @@ import Table from "../pages/admin/Table";
 import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
+import LogInOwner from "../pages/auth/Thy_LoginOwner";
 export const routers = [
   {
     path: "/",
@@ -73,7 +75,7 @@ export const routers = [
   },
   {
     path: "/loginOwner",
-    page: LoginOwner,
+    page: LogInOwner,
     isShowHeader: false,
     isShowFooter: false,
   },

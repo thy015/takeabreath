@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ const validateEmail = (email) => {
 const Register = () => {
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
-
+  
   const handleSignInClick = () => {
     setIsSignInClicked(true);
   };
@@ -65,7 +65,7 @@ const Register = () => {
       return;
     }
 
-    if (!phone.length === 10 || !phone.startsWith("0")) {
+    if (phone.length !== 10 || !phone.startsWith("0")) {
       openNotification(false, "Phone must be 10 digits and start with 0");
       return;
     }
@@ -92,28 +92,19 @@ const Register = () => {
 
   return (
     <div>
-      <div className="h-10"> </div>
-      <div className="row h-[750px]">
+      <div className="row h-[550px]">
         <div className="col-2"></div>
         <div className="col-8">
           <div className="row bg-slate-50 h-full shadow-lg g-0">
-            <motion.div
-              className="col-4"
-              initial={{ x: 0 }}
-              animate={{ x: isSignInClicked ? 850 : 0 }}
-              transition={{ duration: 1 }}
-              onAnimationComplete={() => {
-                if (isSignInClicked) {
-                  navigate("/login");
-                }
-              }}
-            >
+            <div
+              className="col-4 relative"  >
+              <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">Have your fun journey with TAB</div>
               <img
                 className="h-full w-full object-cover"
                 src="https://images.unsplash.com/photo-1530273883449-aae8b023c196?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="side-image"
               />
-            </motion.div>
+            </div>
             <motion.div
               className="col-8"
               initial={{opacity: 0 }}
@@ -135,7 +126,7 @@ const Register = () => {
               <div className="row h-full">
                 <div className="col-2"></div>
                 <div className="col-8">
-                  <div className="py-20">
+                  <div className="py-7">
                     <h5 className="font-bold">
                       Register with{" "}
                       <span className="text-[#114098]">TakeABreath</span>{" "}

@@ -24,7 +24,7 @@
   color: white;
 } */
 :where(.css-dev-only-do-not-override-11lehqq).ant-form-item .ant-form-item-label >label {
-  min-width: 120px;
+  min-width: 130px;
   margin-left: 5px;
 }
 
@@ -85,4 +85,10 @@ ul{
 .input-addvoucher input::placeholder{
   color:rgba(0, 0, 0, 0.45) !important
 
+}
+.gryphen{
+  font-family: gryphen;
+}
+.white-label{
+  color: white!important;
 }

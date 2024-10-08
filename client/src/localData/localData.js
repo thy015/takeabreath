@@ -40,4 +40,32 @@ const cardData = [
     imgSrc: "https://via.placeholder.com/150",
   },
 ];
-export { cardData };
+// footer
+const footerData = [
+  {
+    title:'Our New Project',
+    props:[
+      'Houses','Rooms','Flats','Villas'
+    ]
+  },
+  {
+    title:'Company',
+    props:[
+      'How we work','Our location','Security','Policies'
+    ]
+  },
+  {
+    title:'Movement',
+    props:[
+      'Donations Project','Public Relations','Support Us','Renting'
+    ]
+  },
+  {
+    title:'Help',
+    props:[
+      'Contact Us','FAQ','Privacy','Blogs'
+    ]
+  },
+]
+export { cardData,footerData };
+

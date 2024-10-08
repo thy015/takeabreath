@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+
+import React, { useState, useContext } from "react";
+
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,17 +9,19 @@ import { MdOutlineEmail } from "react-icons/md";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
-
+import { AuthContext } from "../../hooks/auth.context";
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
   const [isRegisterClicked, setIsRegisterClicked] = useState(false);
   const handleRegisterClick = () => {
     setIsRegisterClicked(true);
   };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -25,7 +29,13 @@ const Login = () => {
       [name]: value,
     });
   };
-
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
   const handleFormSubmit = async () => {
     const { email, password } = formData;
 
@@ -39,26 +49,31 @@ const Login = () => {
       return;
     }
 
-    if (password.length <= 8) {
-      openNotification(false, "Password should be at least 8 characters");
-      return;
-    }
 
-    try {
-      const response = await axios.post("hieuauthen", formData);
-      console.log(response.data);
-      if (response.status === 200) {
-        openNotification(true, "Success login");
-        navigate("/");
-      }
-    } catch (e) {
-      console.log(e + "Error passing form data");
-      openNotification(
-        false,
-        "Failed to register",
-        "Please try again after 5 minutes"
-      );
-    }
+    // if (password.length <= 8) {
+    //   openNotification(false, 'Password should be at least 8 characters');
+    //   return;
+    // }
+    axios.post("http://localhost:4000/api/auth/signInCus", { email, password })
+      .then(res => {
+        if (res.data.login) {
+          console.log(res)
+          setAuth({
+            isAuthenticated: true,
+            user: {
+              id: res?.data?.id ?? "",
+              email: res?.data?.email ?? "",
+              name: res?.data?.name ?? ""
+            }
+          })
+          openNotification(true, "Login Successful", "")
+          navigate(res.data.redirect)
+        }
+      }).catch(err => {
+        console.log(err)
+        openNotification(false, "Login Failed", "err.response.data.message")
+      })
+
   };
 
   return (
@@ -141,6 +156,7 @@ const Login = () => {
                     </div>
                     <div className="flex justify-start mt-12">
                       <span>Not having an account yet?</span>
+
                       <span
                         className="text-[#114098] cursor-pointer no-underline ml-2"
                         onClick={handleRegisterClick}

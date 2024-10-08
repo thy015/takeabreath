@@ -11,6 +11,9 @@ import axios from "axios";
 import { openNotification } from "../../hooks/notification";
 import { AuthContext } from "../../hooks/auth.context";
 const Login = () => {
+
+
+  const { auth, setAuth } = useContext(AuthContext)
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",

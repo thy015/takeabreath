@@ -74,8 +74,7 @@ const Register = () => {
       return;
     }
     try {
-      const response = await axios.post("hieuauthen", formData);
-      console.log(response.data);
+      const response = await axios.post("http://localhost:4000/api/auth/signUpCus", formData);
       if (response.status === 200) {
         openNotification(true, "Success register");
         navigate("/login");

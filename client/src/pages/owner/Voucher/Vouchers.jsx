@@ -311,11 +311,7 @@ function Vouchers() {
 
       </Form>
         
-      <div>
-        {listVoucher.map((voucher,index)=>(
-          <VoucherCard voucher={voucher} linkProperty={`list-voucher/${voucher._id}`} index ={index}/>
-        ))}
-      </div>
+    
     </div>
   )
 }

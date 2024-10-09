@@ -7,6 +7,7 @@ const ownerSchema = new mongoose.Schema({
   phoneNum: { type: String, required: true },
   idenCard: { type: String, required: true },
   avatarLink: { type: String, required: false },
+  idenCard:{type:String,required:true},
   regDay: { type: Date, default: Date.now, required: false },
 });
 

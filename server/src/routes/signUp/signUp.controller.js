@@ -3,11 +3,14 @@ const { Owner, Admin, Customer } = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../services/jwt");
 //owner
 const signUpOwner = async (req, res) => {
-  const { email, password, name, phone,idenCard } =
+
+  const { ownerName, password, email, birthday, phone, idenCard} =
     req.body;
 
-  
-  if (!name || !password || !email || !idenCard || !phone) {
+  console.log("[body]", { ownerName, password, email, birthday, phone, idenCard })
+
+  if (!ownerName || !password || !email || !birthday || !phone ||!idenCard) {
+
     return res.status(403).json({ message: "Input is required" });
   } else if (!validateEmail(email)) {
     return res.status(400).json({ message: "Invalid email" });

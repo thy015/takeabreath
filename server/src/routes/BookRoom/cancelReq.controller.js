@@ -1,5 +1,5 @@
 
-const { Owner } = require("../../models/signUp.model");
+
 const { reqCancel}=require("../../models/cancelReq.model");
 const reqCancelRoom = async (req, res) => {
   const { receiptID } = req.body;

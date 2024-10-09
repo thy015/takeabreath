@@ -41,12 +41,7 @@ const LogInOwner = () => {
     });
   };
 
-  const handleCheckboxChange = (e) => {
-    setFormData({
-      ...formData,
-      agreeTerms: e.target.checked,
-    });
-  };
+ 
 
   const handleFormSubmit = async () => {
     const { email, password} = formData;
@@ -56,10 +51,6 @@ const LogInOwner = () => {
       return;
     }
 
-    if (!validateEmail(email)) {
-      openNotification(false, "Invalid email format");
-      return;
-    }
 
     if (password.length <= 8) {
       openNotification(false, "Password should be at least 8 characters");

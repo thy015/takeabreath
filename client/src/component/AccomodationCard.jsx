@@ -3,10 +3,17 @@ import { Card, Button, Row, Col } from "react-bootstrap";
 import { MdRoom } from "react-icons/md";
 import { Link } from "react-router-dom";
 import {RateStar} from "./Rate";
-
+import {useSelector} from 'react-redux'
 
 // hotel display page
 const AccommodationCard = ({ hotel,onClick }) => {
+  // the query room data
+  const {roomData}=useSelector((state)=>state.searchResults)
+    const filteredRoom=roomData?.filter(r=>r.hotelID===hotel._id)[0]
+
+  const formatMoney = (money) => {
+      return new Intl.NumberFormat('de-DE').format(money)
+    }
   return (
     <div onClick={onClick}>
     <Card className="mb-4 ">
@@ -50,12 +57,24 @@ const AccommodationCard = ({ hotel,onClick }) => {
 
             {/* later for approriate room display */}
             <Row>
-              <Col md={7}>
-                <div className="w-full bg-blue-500 h-28">test</div>
-              </Col>
+                <Col md={7}>
+                  {filteredRoom ? (
+                    <div className="w-full h-28 p-2 flex justify-start flex-col items-start">
+                      <h6>{filteredRoom.roomName}</h6>
+                      <div>Room Type: {filteredRoom.typeOfRoom}</div>
+                      <div>Number of beds: {filteredRoom.numberOfBeds}</div>
+                      <div className="text-success">Price: {formatMoney(filteredRoom.money)} VND</div>
+                    </div>
+                  ) : (
+                    <div className="w-full h-28">No available rooms</div>
+                  )}
+                </Col>
               <Col md={5}>
-                <div className="font-semibold flex flex-col">
-                  <div className="text-green-600">VND: ....</div>
+                <div className="font-semibold flex flex-col items-end">
+                {filteredRoom ? (
+                  <div className="text-green-600">From: {formatMoney(filteredRoom.money)} VND</div>)
+                  :null
+                  }
                   <div className="text-muted font-[14px]">
                     Included taxes and charges
                   </div>

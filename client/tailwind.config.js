@@ -5,7 +5,8 @@ module.exports = {
     extend: {  fontFamily: {
       lobster: ["Lobster", "cursive"],
       gryphen: ["Qwitcher Grypen"],
-      poppins:['Poppins']
+      poppins:['Poppins'],
+      afacad:['Afacad Flux']
     }, },
   },
   plugins: [],

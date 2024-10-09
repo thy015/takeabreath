@@ -27,7 +27,9 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPr
     const handleOke = () => {
         form.submit()
     }
-
+    const formatMoney = (money) => {
+        return new Intl.NumberFormat('de-DE').format(money)
+      }
     const { dayStart, dayEnd, totalCheckInDay } = useSelector((state) => state.inputDay)
     const onFinish = (values) => {
         const idHotel = hotel._id
@@ -102,7 +104,7 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPr
                                         <Input className='min-w-[150px]' />
                                     </FormItem>
                                     <FormItem
-                                        label="CCCD"
+                                        label="Identification Card"
                                         name="cccd"
                                         rules={[
                                             {
@@ -127,7 +129,7 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPr
                                     </FormItem>
 
                                     <FormItem
-                                        label="Numberphone"
+                                        label="Phone Number"
                                         name="numberphone"
                                         maxLength={10}
                                         rules={[
@@ -271,7 +273,7 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPr
                                     <b>Total room: </b> {count ?? "1"} rooms
                                 </div>
                                 <div className='mb-[5px]'>
-                                    <b>Total price: </b> {totalPrice} VND
+                                    <b>Total price: </b> {formatMoney(totalPrice)} VND
                                 </div>
                             </Col>
                         </Row>

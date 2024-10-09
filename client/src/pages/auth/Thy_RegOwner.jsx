@@ -79,7 +79,7 @@ const RegisterOwner = () => {
       return;
     }
     try {
-      const response = await axios.post("hieuauthen", formData);
+      const response = await axios.post("http://localhost:4000/api/auth/signUpOwner", formData);
       console.log(response.data);
       if (response.status === 200) {
         openNotification(true, "Success register");

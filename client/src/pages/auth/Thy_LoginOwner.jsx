@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF,FaAddressCard } from "react-icons/fa";
+import { FaGoogle, FaFacebookF, FaAddressCard } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import axios from "axios";
+import { AuthContext } from "../../hooks/auth.context";
 import { openNotification } from "../../hooks/notification";
 import { motion } from "framer-motion";
 
@@ -18,6 +19,7 @@ const validateEmail = (email) => {
 };
 
 const LogInOwner = () => {
+  const { auth, setAuth } = useContext(AuthContext)
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
 
@@ -29,7 +31,7 @@ const LogInOwner = () => {
     password: "",
     name: "",
     phone: "",
-    idenCard:'',
+    idenCard: '',
     agreeTerms: false,
   });
 
@@ -49,17 +51,13 @@ const LogInOwner = () => {
   };
 
   const handleFormSubmit = async () => {
-    const { email, password} = formData;
+    const { email, password } = formData;
 
     if (!email || !password) {
       openNotification(false, "Please fill all the fields");
       return;
     }
 
-    if (!validateEmail(email)) {
-      openNotification(false, "Invalid email format");
-      return;
-    }
 
     if (password.length <= 8) {
       openNotification(false, "Password should be at least 8 characters");
@@ -67,11 +65,18 @@ const LogInOwner = () => {
     }
 
     try {
-      const response = await axios.post("hieuauthen", formData);
-      console.log(response.data);
+      const response = await axios.post("http://localhost:4000/api/auth/signInOwner", formData);
       if (response.status === 200) {
-        openNotification(true, "Success register");
-        navigate("/registerOwner");
+        openNotification(true, "Success login");
+        setAuth({
+          isAuthenticated: true,
+          user: {
+            id: response?.data?.id ?? "",
+            email: response?.data?.email ?? "",
+            name: response?.data?.name ?? ""
+          }
+        })
+        navigate(response.data.redirect);
       }
     } catch (e) {
       console.log(e + "Error passing form data");
@@ -89,7 +94,7 @@ const LogInOwner = () => {
         <div className="col-2"></div>
         <div className="col-8">
           <div className="row bg-[#114098] h-full shadow-lg g-0">
-            
+
             <motion.div
               className="col-7"
               initial={{ opacity: 0 }}
@@ -113,7 +118,7 @@ const LogInOwner = () => {
                 <div className="col-8">
                   <div className="py-32">
                     <h5 className="font-bold text-[#c3d7ef]">
-                     Welcome back 
+                      Welcome back
                       <span className="text-white"> TakeABreath</span>{" "}
                       Partner !
                     </h5>
@@ -159,7 +164,7 @@ const LogInOwner = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                     
+
                         <Form.Item>
                           <Button
                             onClick={handleFormSubmit}
@@ -171,12 +176,12 @@ const LogInOwner = () => {
                         </Form.Item>
                       </Form>
                     </div>
-                   
+
                     <div className="flex justify-start mt-3 text-[#c3d7ef]">
                       <span>I'm not register owner yet!</span>
-                        <span className="text-white cursor-pointer no-underline ml-2" onClick={handleSignInClick}>
-                          Register Owner
-                        </span>
+                      <span className="text-white cursor-pointer no-underline ml-2" onClick={handleSignInClick}>
+                        Register Owner
+                      </span>
                     </div>
                   </div>
                 </div>

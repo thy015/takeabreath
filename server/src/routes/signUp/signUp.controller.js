@@ -3,18 +3,15 @@ const { Owner, Admin, Customer } = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../services/jwt");
 //owner
 const signUpOwner = async (req, res) => {
-  const { ownerName, password, email, birthday, phone } =
+  const { email, password, name, phone,idenCard } =
     req.body;
 
-  console.log("[body]", { ownerName, password, email, birthday, phone })
-
-  if (!ownerName || !password || !email || !birthday || !phone) {
+  
+  if (!name || !password || !email || !idenCard || !phone) {
     return res.status(403).json({ message: "Input is required" });
   } else if (!validateEmail(email)) {
     return res.status(400).json({ message: "Invalid email" });
-  } else if (!validateBirthDate(birthday)) {
-    return res.status(400).json({ message: "Not enough age" });
-  }
+  } 
 
   try {
     // Check if the account already exists
@@ -29,16 +26,16 @@ const signUpOwner = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     // Create the new owner account
     const createdOwner = new Owner({
-      ownerName:ownerName,
+      ownerName:name,
       password:hashPassword,
       email:email,
-      birthday:birthday,
       phoneNum:phone,
+      idenCard:idenCard
     });
 
     await createdOwner.save()
     // Respond with success
-    return res.status(201).json({
+    return res.status(200).json({
       status: "OK",
       register:true,
       message: "Succ",
@@ -82,7 +79,7 @@ const signInOwner = async (req, res) => {
         regDay: foundOwner.regDay,
       });
 
-      return res.cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
         login: true,
         status: "OK",
         message: "Success log in",
@@ -112,7 +109,7 @@ const signInOwner = async (req, res) => {
         email:foundAdmin.email
       });
 
-      return res.cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
         status: "OK",
         message: "Admin logged in",
         access_token: access_token,
@@ -175,9 +172,9 @@ const loginCustomer = async (req, res) => {
 };
 
 const registerCustomer = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name, phone } = req.body;
 
-  if (!email || !password) {
+  if (!email || !password || !name || !phone) {
     return res.status(403).json({ message: 'missing required input' });
   }
   try {
@@ -190,12 +187,14 @@ const registerCustomer = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const customer = new Customer({
       email: email,
+      cusName:name,
+      phoneNum:phone,
       password: hashPassword
     });
 
     customer.save()
     console.log(customer)
-    return res.status(201).json({
+    return res.status(200).json({
       status: "OK",
       register:true,
       message: "Succ",

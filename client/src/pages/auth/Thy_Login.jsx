@@ -74,7 +74,7 @@ const Login = () => {
         }
       }).catch(err => {
         console.log(err)
-        openNotification(false, "Login Failed", "err.response.data.message")
+        openNotification(false, "Login Failed", err.response.data.message)
       })
 
   };

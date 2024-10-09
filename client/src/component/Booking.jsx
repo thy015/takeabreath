@@ -168,6 +168,7 @@ const navigate=useNavigate()
     dispatch(setInputDay({
       dayStart:dayStart,
       dayEnd:dayEnd,
+      city:selectedCity
     }))
  // 25/10/2002
     const formattedDayStart=dayjs(dayStart).format('DD/MM/YYYY')

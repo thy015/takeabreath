@@ -122,7 +122,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                     </div>
                     {/* reserve */}
                     <div className="mt-3" >
-                      <Button
+                      <Button disabled={totalCheckInDay===0}
                         onClick={() => {
                           if(auth.isAuthenticated){
                             setShow(true)
@@ -132,10 +132,9 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                           }else{
                             openNotification(false,"Reserve failed","Please log in or register account !")
                           }
-                          
                         }}
                         type='solid'
-                        className="w-full bg-[#1677ff] hover:scale-105 text-white"
+                        className={`w-full text-white ${totalCheckInDay===0? 'bg-gray-400':'bg-[#1677ff] hover:scale-105'}` }
                       >Reserve
                       </Button>
                       <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel={hotel} count={countRoom} totalPrice={getTotal} />

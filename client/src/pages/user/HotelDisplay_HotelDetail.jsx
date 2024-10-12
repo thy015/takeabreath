@@ -7,13 +7,13 @@ import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
 import { useLocation} from "react-router-dom";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
+import { useSelector } from "react-redux";
 
 const HotelDisplay_HotelDetail = () => {
     const { id } = useParams();
      // query room data result
-   const location =useLocation()
-   const { roomData = [] } = location.state || {};
-
+   const {roomData}=useSelector((state)=>state.searchResults)
+      const specRoomData=roomData.filter(r=>r.hotelID===id)
   const { data, error, loading } = useGet(
     `http://localhost:4000/api/hotelList/hotel/${id}`
   );
@@ -148,8 +148,8 @@ const HotelDisplay_HotelDetail = () => {
       {/* Room display */}
       <div>
 
-      {console.log('Detail hotel',roomData)}
-     <HotelDetail_RoomDisplay roomData={roomData} hotel={data}></HotelDetail_RoomDisplay>
+      {console.log('Detail hotel',specRoomData)}
+     <HotelDetail_RoomDisplay roomData={specRoomData} hotel={data}></HotelDetail_RoomDisplay>
      
 
      </div>

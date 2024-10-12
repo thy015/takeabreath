@@ -1,7 +1,7 @@
-import React, { useEffect, useLayoutEffect, useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { Modal, Col, Row, Form, Input, ConfigProvider, Select, Button, DatePicker, Radio, Rate } from 'antd'
+import { Modal, Col, Row, Form, Input, ConfigProvider, Select, DatePicker, Radio } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 import { useForm } from 'antd/es/form/Form'
 import PhoneInput from 'react-phone-input-2'
@@ -9,21 +9,12 @@ import 'react-phone-input-2/lib/style.css'
 import { useSelector } from "react-redux";
 import FormPayment from '../component/FormPayment'
 import { AuthContext } from "../hooks/auth.context";
+import {RateStar} from './Rate'
 function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPrice }) {
     const { auth } = useContext(AuthContext)
     const [form] = useForm()
     const [payment, setPayment] = useState('')
-    const rateCal = (rate) => {
-        if (rate >= 4.8) {
-            return 5;
-        } else if (rate >= 4.0) {
-            return 4;
-        } else if (rate > 3.5) {
-            return 3;
-        } else if (rate > 2.5) {
-            return 2;
-        } else return 1;
-    };
+    const [selectedPayment,setSelectedPayment]=useState('')
     const handleOke = () => {
         form.submit()
     }
@@ -31,21 +22,23 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPr
         return new Intl.NumberFormat('de-DE').format(money)
       }
     const { dayStart, dayEnd, totalCheckInDay } = useSelector((state) => state.inputDay)
+      const handlePaymentChange=(e)=>{
+        const selectedValue=e.target.value
+        setPayment(selectedValue)
+        setSelectedPayment(selectedValue)
+      }
+      
     const onFinish = (values) => {
         const idHotel = hotel._id
         const idRoom = room._id
         const idCus = auth.user.id ?? "Chua login"
         const dataBooking = {
             inputName: values.fullname,
-            inputCccd: values.cccd,
+            inputIdenCard: values.cccd,
             inputGender:values.gender,
             paymentMethod: values.paymentMethod,
             inputPhoneNum: values.numberphone,
             inputEmail: values.email,
-            inputCardData: {
-                numberCart: values.numberCard ?? values.phonepayment,
-                CVV: values.cvv ?? null
-            },
             inputDob: dayjs(values.dob).format("DD/MM/YYYY"),
             total:totalPrice,
             checkInDay:dayStart,
@@ -168,9 +161,11 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPr
                                         name="paymentMethod"
                                         label="Select payment method"
                                     >
-                                        <Radio.Group className='ml-[10px]'>
-                                            <Radio value='visa' onClick={() => { setPayment('visa') }}>Visa</Radio>
+                                        <Radio.Group className='ml-[10px]' onChange={handlePaymentChange}>
+                                            <Radio value='visa' onClick={() => { setPayment('paypal') }}>Paypal</Radio>
                                             <Radio value='momo' onClick={() => { setPayment('momo') }}>Momo</Radio>
+                                       {selectedPayment==='momo' &&   <img src='/img/momo.jpeg'></img>}
+                                       {selectedPayment==='visa' &&   <h2>Confirm Paypal Process</h2>}
                                         </Radio.Group>
                                     </FormItem>
                                     <FormPayment paymentMethod={payment} />
@@ -200,7 +195,7 @@ function BookingConfirmationForm({ isShow, onCancel, room, hotel, count, totalPr
                                 <p className='text-[15px] mb-[5px]  mt-[2px]' >
                                     Hotel
                                     <span className='ml-[10px]'>
-                                        <Rate disabled defaultValue={rateCal(hotel.rate)}></Rate>
+                                        <RateStar hotel={hotel}></RateStar>
                                     </span>
                                 </p>
                                 <p className='text-[16px] mb-[5px]'>

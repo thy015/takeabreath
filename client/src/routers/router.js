@@ -31,6 +31,7 @@ import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
+import SuccessPayment from "../component/SuccessPayment";
 export const routers = [
   {
     path: "/",
@@ -94,6 +95,12 @@ export const routers = [
   {
     path: "/booking",
     page: HotelDisplayCompre,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
+  {
+    path: "/booking-success",
+    page: SuccessPayment,
     isShowHeader: true,
     isShowFooter: true,
   },

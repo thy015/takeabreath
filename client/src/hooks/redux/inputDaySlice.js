@@ -6,7 +6,12 @@ const initialState={
     dayStart:'',
     dayEnd:'',
     totalCheckInDay:0,
-    city:''
+    city:'',
+    totalPrice:0,
+    completedPayment:false,
+    countRoom:0,
+    selectedHotel:{},
+    selectedRoom:{}
 }
 const inputDaySlice =createSlice({
     name:'inputDay',
@@ -24,7 +29,22 @@ const inputDaySlice =createSlice({
             state.totalCheckInDay=0
             state.city=''
         },
+        // for paypal, need convert based on dollar rates
+        setPaymentState:(state,action)=>{
+            state.selectedHotel=action.payload.selectedHotel
+            state.selectedRoom=action.payload.selectedRoom
+            state.countRoom=action.payload.countRoom
+            state.totalPrice=action.payload.totalPrice/25
+            state.completedPayment=action.payload.completedPayment
+        },
+        clearPaymentState:(state,action)=>{
+            state.totalPrice=0,
+            state.completedPayment=false,
+            state.countRoom=0
+            state.selectedHotel={}
+            state.selectedRoom={}
+        }
     }
 })
-export const {setInputDay,clearInputDay}=inputDaySlice.actions
+export const {setInputDay,clearInputDay,setPaymentState,clearPaymentState}=inputDaySlice.actions
 export default inputDaySlice.reducer

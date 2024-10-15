@@ -32,6 +32,7 @@ import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
 import SuccessPayment from "../component/SuccessPayment";
+import Test from "../component/Test";
 export const routers = [
   {
     path: "/",
@@ -128,6 +129,13 @@ export const routers = [
       { path: "AddVoucher", page: AddVoucher}, 
     ],
     isOwner:true,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
+    path: "/test",
+    page: Test,
     isShowHeader: false,
     isShowFooter: false,
   },

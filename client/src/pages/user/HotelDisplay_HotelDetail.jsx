@@ -11,32 +11,33 @@ import { useSelector } from "react-redux";
 
 const HotelDisplay_HotelDetail = () => {
     const { id } = useParams();
+    
      // query room data result
-   const {roomData}=useSelector((state)=>state.searchResults)
+      const {roomData}=useSelector((state)=>state.searchResults)
       const specRoomData=roomData.filter(r=>r.hotelID===id)
-  const { data, error, loading } = useGet(
-    `http://localhost:4000/api/hotelList/hotel/${id}`
-  );
+      const { data, error, loading } = useGet(
+        `http://localhost:4000/api/hotelList/hotel/${id}`
+      );
 
-  if (loading) {
-    return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
-  }
+      if (loading) {
+        return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
+      }
 
-  if (error) {
-    console.log(data);
-    return (
-      <Alert
-        message="Error"
-        description="Failed to load hotel details."
-        type="error"
-        showIcon
-      />
-    );
-  }
+      if (error) {
+        console.log(data);
+        return (
+          <Alert
+            message="Error"
+            description="Failed to load hotel details."
+            type="error"
+            showIcon
+          />
+        );
+      }
 
-  if (!data) {
-    return <Alert message="No hotel data found" type="info" showIcon />;
-  }
+      if (!data) {
+        return <Alert message="No hotel data found" type="info" showIcon />;
+      }
   return (
     <div>
       <Row gutter={18}>

@@ -2,46 +2,57 @@ import React, { useContext, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
 import BookingConfirmationForm from "../../component/BookingConfirmationForm"
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { AuthContext } from "../../hooks/auth.context";
 import { openNotification } from "../../hooks/notification";
 const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
   // State for room count, where room ID is the key
   const { totalCheckInDay } = useSelector((state) => state.inputDay)
-  // State for room count, where room ID is the key
+  const dispatch=useDispatch()
   const [counts, setCounts] = useState({});
-  // query room data result
 
-  //open modal : Phuc
-  const [isShow, setShow] = useState(false)
-  const [roomSelected, setRoomSelected] = useState({})
-  const [countRoom, setCountRoom] = useState()
-  const [getTotal, setTotal] = useState()
-  let totalPrice = []
-  //get auth context 
-  const { auth } = useContext(AuthContext)
-  // Increment room count
-  const increment = (roomID) => {
-    setCounts((prevCounts) => ({
-      ...prevCounts,
-      [roomID]: (prevCounts[roomID] || 1) + 1, //if undefined => ini=0
-    }));
-  };
+      //open modal : Phuc
+      const [isShow, setShow] = useState(false)
+      const [roomSelected, setRoomSelected] = useState({})
+      const [countRoom, setCountRoom] = useState()
+      const [getTotal, setTotal] = useState()
+      let totalPrice = []
 
-  // Decrement room count
-  const decrement = (roomID) => {
-    setCounts((prevCounts) => ({
-      ...prevCounts,
-      [roomID]: Math.max((prevCounts[roomID] || 1) - 1, 1), //never go below 0, no need just in case
-    }));
-  };
+        //send totalPrice paypal
+        const handleReserve=async(selectedRoom,countRoom,totalPrice)=>{
+          await dispatch(
+            setPaymentState({
+            selectedHotel:hotel,
+            selectedRoom:selectedRoom,
+            countRoom:countRoom,
+            totalPrice:totalPrice,
+            completedPayment:false
+          }))
+        }
+      //get auth context 
+      const { auth } = useContext(AuthContext)
+    
+      const increment = (roomID) => {
+        setCounts((prevCounts) => ({
+          ...prevCounts,
+          [roomID]: (prevCounts[roomID] || 1) + 1, //if undefined => ini=0
+        }));
+      };
+
+    
+      const decrement = (roomID) => {
+        setCounts((prevCounts) => ({
+          ...prevCounts,
+          [roomID]: Math.max((prevCounts[roomID] || 1) - 1, 1), //never go below 0, no need just in case
+        }));
+      };
 
 
-  // Save total price
+      // Save total price
 
-  const formatMoney = (money) => {
-    return new Intl.NumberFormat('de-DE').format(money)
-  }
+      const formatMoney = (money) => {
+        return new Intl.NumberFormat('de-DE').format(money)
+      }
   return (
     <div>
       <div className="mt-4">
@@ -51,7 +62,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
           const countRoomPrice = room.money * returnCount;
           const rangeRoomPrice = countRoomPrice * totalCheckInDay
           const fees = (rangeRoomPrice * 15) / 100;
-          totalPrice[room._id] = rangeRoomPrice + fees
+          const totalPrice = rangeRoomPrice + fees
           return (
             // Display room details
             <Row className="border-b my-12" key={room.id}>
@@ -118,7 +129,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                     </ul>
                     <div className="flex justify-between w-full mt-2">
                       <span className="font-semibold">Total:</span>
-                      <span className="text-success"> {formatMoney(rangeRoomPrice + fees)} VND</span>
+                      <span className="text-success"> {formatMoney(totalPrice)} VND</span>
                     </div>
                     {/* reserve */}
                     <div className="mt-3" >
@@ -126,9 +137,10 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                         onClick={() => {
                           if(auth.isAuthenticated){
                             setShow(true)
+                            handleReserve(roomData[index],returnCount,totalPrice)
                             setRoomSelected(roomData[index])
-                            setCountRoom(counts[roomData[index]._id])
-                            setTotal(totalPrice[roomData[index]._id])
+                            setCountRoom(returnCount)
+                            setTotal(totalPrice)
                           }else{
                             openNotification(false,"Reserve failed","Please log in or register account !")
                           }

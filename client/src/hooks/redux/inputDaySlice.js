@@ -8,6 +8,7 @@ const initialState={
     totalCheckInDay:0,
     city:'',
     totalPrice:0,
+    convertPrice:0,
     completedPayment:false,
     countRoom:0,
     selectedHotel:{},
@@ -34,7 +35,8 @@ const inputDaySlice =createSlice({
             state.selectedHotel=action.payload.selectedHotel
             state.selectedRoom=action.payload.selectedRoom
             state.countRoom=action.payload.countRoom
-            state.totalPrice=action.payload.totalPrice/25
+            state.totalPrice=action.payload.totalPrice
+            state.convertPrice=action.payload.totalPrice/25000
             state.completedPayment=action.payload.completedPayment
         },
         clearPaymentState:(state,action)=>{

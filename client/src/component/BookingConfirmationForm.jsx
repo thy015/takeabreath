@@ -21,28 +21,31 @@ import { AuthContext } from "../hooks/auth.context";
 import { RateStar } from "./Rate";
 import PayPalButton from "./PayPalButton";
 
-function BookingConfirmationForm({
-  isShow,
-  onCancel,
-  room,
-  hotel,
-  count,
-  totalPrice,
-}) {
+function BookingConfirmationForm({isShow, onCancel}) {
   const { auth } = useContext(AuthContext);
   const [form] = useForm();
   const [payment, setPayment] = useState("");
   const [selectedPayment, setSelectedPayment] = useState("");
-   
+
   const handleOke = () => {
     form.submit();
   };
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };
-  const { dayStart, dayEnd, totalCheckInDay } = useSelector(
-    (state) => state.inputDay
-  );
+      //redux query
+      const {
+        dayStart,
+        dayEnd,
+        totalCheckInDay,
+        selectedHotel,
+        selectedRoom,
+        totalPrice,
+        convertPrice,
+        countRoom,
+        completedPayment,
+      } = useSelector((state) => state.inputDay);
+
   const handlePaymentChange = (e) => {
     const selectedValue = e.target.value;
     setPayment(selectedValue);
@@ -50,8 +53,8 @@ function BookingConfirmationForm({
   };
 
   const onFinish = async (values) => {
-    const idHotel = hotel._id;
-    const idRoom = room._id;
+    const idHotel = selectedHotel._id;
+    const idRoom = selectedRoom._id;
     const idCus = auth.user.id ?? "Chua login";
     const dataBooking = {
       inputName: values.fullname,
@@ -88,22 +91,21 @@ function BookingConfirmationForm({
 
   return (
     <div>
-
       <Modal
         open={isShow}
         onCancel={onCancel}
         className="min-w-[80%] max-h-[100px]"
         okText="Confirm Booking"
-        onOk={handleOke}
+        onOk={(handleOke)}
       >
-        <h2 className="text-center font-bold">Booking Detail</h2>
-        <Row className="h-[520px] " wrap={true}>
+        <h2 className="text-center font-semibold font-poppins"> TAB Booking Detail</h2>
+        <Row className="h-[520px] " wrap={true} gutter={24}>
           {/* input form */}
           <Col
             span={16}
-            className="border-[1px] p-[10px] h-[520px] border-gray-300 rounded-[10px] min-w-[550px]"
+            className="border-[1px] p-6 h-[520px] border-gray-300 rounded-[10px] min-w-[550px]"
           >
-            <h3 className="text-center mt-[18px]  mb-[29px]">
+            <h3 className="text-center mt-[18px] mb-[29px] font-poppins">
               Enter your details
             </h3>
             <ConfigProvider
@@ -220,10 +222,13 @@ function BookingConfirmationForm({
                       {selectedPayment === "momo" && (
                         <img src="/img/momo.jpeg"></img>
                       )}
-                      {selectedPayment === "visa" && (                    
-                      <div>  
-                           <PayPalButton></PayPalButton>
-                      <div className="mt-8">Click the button below to complete the payment</div></div>
+                      {selectedPayment === "visa" && (
+                        <div>
+                          <PayPalButton></PayPalButton>
+                          <div className="mt-8">
+                            Click the button below to complete the payment
+                          </div>
+                        </div>
                       )}
                     </Radio.Group>
                   </FormItem>
@@ -249,55 +254,46 @@ function BookingConfirmationForm({
             </ConfigProvider>
           </Col>
           {/* information */}
-          <Col span={8}>
-            <Row className="d-flex justify-center items-center">
+          <Col span={8} >
               {/* information hotel */}
-              <Col
-                span={24}
-                className=" mb-[25px] p-[10px] h-[170px] max-w-[90%] border-[1px] border-gray-300 rounded-[10px]"
+              <div className="flex flex-col space-y-4">
+              <div className=" p-7 h-[170px] border-[1px] border-gray-300 rounded-[10px]"
               >
-                <p className="text-[15px] mb-[5px]  mt-[2px]">
-                  Hotel
-                  <span className="ml-[10px]">
-                    <RateStar hotel={hotel}></RateStar>
-                  </span>
-                </p>
-                <p className="text-[16px] mb-[5px]">
-                  <b>{hotel.hotelName}</b>
-                </p>
-                <p className="text-[16px] mb-[5px]">{hotel.address}</p>
-                <div className="mb-[5px]">
-                  <span className="mr-[20px]">Nation: {hotel.nation}</span>
-                  <span>City: {hotel.city}</span>
+                {" "}
+                <div className="flex space-x-5">
+                  <h4 className="font-lobster">{selectedHotel.hotelName}</h4>
+                  <RateStar hotel={selectedHotel}></RateStar>{" "}
                 </div>
-                <p>Phone: {hotel.phoneNum}</p>
-              </Col>
+                <p className="text-[16px] mb-[5px]">
+                  {selectedHotel.address}, {selectedHotel.city},{" "}
+                  {selectedHotel.nation}
+                </p>
+                <div className="text-[16px]">
+                  Hotel Number: {selectedHotel.phoneNum}
+                </div>
+              </div>
               {/* information rooms */}
-              <Col
-                span={24}
-                className="h-[150px] mb-[25px] p-[10px] max-w-[90%] border-[1px] border-gray-300 rounded-[10px]"
+              <div
+                className="h-[150px] p-6 border-[1px] border-gray-300 rounded-[10px]"
               >
                 <p className="text-[15px] mb-[5px]  mt-[2px]">
-                  Room for {room.capacity} people
+                  Room contain {selectedRoom.capacity} people
                 </p>
                 <p className="text-[16px] mb-[5px]">
-                  <b>{room.roomName}</b>
+                  <b>{selectedRoom.roomName}</b>
                 </p>
 
-                <div className="mb-[5px]">
-                  <span className="mr-[20px]">
-                    Type of room: {room.typeOfRoom}
-                  </span>
-                  <span>Beds: {room.numberOfBeds}</span>
+                <div className="flex space-x-5">
+                  <span>Type: {selectedRoom.typeOfRoom}</span>
+                  <span>{selectedRoom.numberOfBeds} Bed</span>
+                  <span>Room price: {formatMoney(selectedRoom.money)} VND</span>
                 </div>
-                <p>Room price: {formatMoney(room.money)} VND</p>
-              </Col>
+              </div>
               {/* information booking */}
-              <Col
-                span={24}
-                className="h-[150px] border-[1px] p-[10px] max-w-[90%] border-gray-300 rounded-[10px] mb-[25px]"
+              <div
+                className="h-[150px] border-[1px] px-6 pt-2 border-gray-300 rounded-[10px]"
               >
-                <Row className="mb-[5px] max-h-[45px]">
+                <Row>
                   <Col
                     span={11}
                     className="border-r-[1px] border-y-slate-400 mr-[11px]"
@@ -315,22 +311,27 @@ function BookingConfirmationForm({
                     </p>
                   </Col>
                 </Row>
-                <div className="mb-[5px]">{/* You select {count} rooms */}</div>
-                <div className="mb-[5px]">
-                  <b>Total length of day: </b> {totalCheckInDay} days
+                <div className="flex flex-col justify-between">
+                  <div className="flex justify-between">
+                    <div>Total length of day: </div>{" "}
+                    <div>{totalCheckInDay} days</div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div>Total room: </div>
+                    <div>
+                      {countRoom} {countRoom === 1 ? "room" : "rooms"}
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div>Total price:</div>{" "}
+                    <div className="text-success">{formatMoney(totalPrice)} VND </div>
+                  </div>
                 </div>
-                <div className="mb-[5px]">
-                  <b>Total room: </b> {count ?? "1"} rooms
-                </div>
-                <div className="mb-[5px]">
-                  <b>Total price: </b> {formatMoney(totalPrice)} VND
-                </div>
-              </Col>
-            </Row>
+              </div>
+           </div>
           </Col>
         </Row>
       </Modal>
-    
     </div>
   );
 }

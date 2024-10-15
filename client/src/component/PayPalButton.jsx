@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-const PayPalButton = () => {
+const PayPalButton = (value) => {
     const paypal = useRef();
-        
-        const dollarRates=25
+
     useEffect(() => {
         const addPayPalScript = () => {
             const script = document.createElement('script');
@@ -19,7 +18,7 @@ const PayPalButton = () => {
                                     description: 'Test',
                                     amount: {
                                         currency_code: 'USD',
-                                        value: 0.01,
+                                        value: value,
                                     },
                                 },
                             ],

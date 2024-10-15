@@ -5,6 +5,7 @@ import BookingConfirmationForm from "../../component/BookingConfirmationForm"
 import { useSelector,useDispatch } from "react-redux";
 import { AuthContext } from "../../hooks/auth.context";
 import { openNotification } from "../../hooks/notification";
+import {setPaymentState} from '../../hooks/redux/inputDaySlice'
 const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
   // State for room count, where room ID is the key
   const { totalCheckInDay } = useSelector((state) => state.inputDay)
@@ -16,11 +17,11 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
       const [roomSelected, setRoomSelected] = useState({})
       const [countRoom, setCountRoom] = useState()
       const [getTotal, setTotal] = useState()
-      let totalPrice = []
 
         //send totalPrice paypal
-        const handleReserve=async(selectedRoom,countRoom,totalPrice)=>{
-          await dispatch(
+        const handleReserve=(selectedRoom,countRoom,totalPrice)=>{
+          setShow(true)
+           dispatch(
             setPaymentState({
             selectedHotel:hotel,
             selectedRoom:selectedRoom,
@@ -47,9 +48,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
         }));
       };
 
-
       // Save total price
-
       const formatMoney = (money) => {
         return new Intl.NumberFormat('de-DE').format(money)
       }
@@ -136,11 +135,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                       <Button disabled={totalCheckInDay===0}
                         onClick={() => {
                           if(auth.isAuthenticated){
-                            setShow(true)
-                            handleReserve(roomData[index],returnCount,totalPrice)
-                            setRoomSelected(roomData[index])
-                            setCountRoom(returnCount)
-                            setTotal(totalPrice)
+                            handleReserve(room,returnCount,totalPrice)
                           }else{
                             openNotification(false,"Reserve failed","Please log in or register account !")
                           }
@@ -149,7 +144,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                         className={`w-full text-white ${totalCheckInDay===0? 'bg-gray-400':'bg-[#1677ff] hover:scale-105'}` }
                       >Reserve
                       </Button>
-                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel={hotel} count={countRoom} totalPrice={getTotal} />
+                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} />
 
                     </div>
                   </div>

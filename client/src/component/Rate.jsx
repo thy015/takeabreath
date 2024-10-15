@@ -1,6 +1,6 @@
 import React from "react";
 import { Rate } from "antd";
-
+// need enhance
 const rateCal = (rate) => {
   if (rate >= 4.8) {
     return 5;
@@ -10,7 +10,7 @@ const rateCal = (rate) => {
     return 3;
   } else if (rate > 2.5) {
     return 2;
-  } else return 1;
+  } else return 0;
 };
 const getRatingDescription = (rate) => {
   if (rate >= 4.8) {
@@ -22,9 +22,10 @@ const getRatingDescription = (rate) => {
   } else if (rate > 2.5) {
     return "Average";
   } else {
-    return "Bad";
+    return "Unknown";
   }
 };
+
 const RateStar = ({ hotel }) => {
   return (
     <div>

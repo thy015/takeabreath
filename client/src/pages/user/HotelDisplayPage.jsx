@@ -5,13 +5,22 @@ import { AccommodationCard } from "../../component/AccomodationCard";
 import { useGet } from "../../hooks/hooks";
 import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useSelector } from "react-redux";
 const { Panel } = Collapse;
 
 const filters = cardData.map((c) => c.title);
 const HotelDisplayCompre = () => {
+  // global, take from redux and booking
+  const searchResults = useSelector((state) => state.searchResults);
+  const { city } = useSelector((state) => state.inputDay);
+
+  const navigate = useNavigate();
   const { data, error, loading } = useGet(
     "http://localhost:4000/api/hotelList/hotel"
   );
+
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const handleFilterChange = (checkedValues) => {
@@ -33,16 +42,35 @@ const HotelDisplayCompre = () => {
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!searchResults && (!data || data.length === 0)) {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
   console.log(data);
+  // passing prop roomData (receive array from be=> filter to each hotel)
+  const handleHotelClick = async (hotel) => {
+    let roomData = [];
+    if (searchResults?.roomData.length > 0) {
+      roomData = searchResults.roomData.filter((r) => r.hotelID === hotel._id);
+    } else {
+      const response = await axios.get(
+        `http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`
+      );
+      roomData = response.data;
+    }
+    navigate(`hotel/${hotel._id}`, { state: { roomData } });
+  };
+  // no searchResults => fall back to data
+  const displayHotel = searchResults?.hotelData?.length
+    ? searchResults.hotelData
+    : data;
 
   // Filter hotels based on selected filters
   const filteredHotels =
     selectedFilters.length > 0
-      ? data.filter((hotel) => selectedFilters.includes(hotel.hotelType))
-      : data;
+      ? displayHotel.filter((hotel) =>
+          selectedFilters.includes(hotel.hotelType)
+        )
+      : displayHotel;
 
   return (
     <div>
@@ -54,14 +82,21 @@ const HotelDisplayCompre = () => {
               <Booking tailwind_prop="flex w-full h-16" />
             </div>
           </div>
-          <Row gutter={16} className="mt-8">
-            <Col span={5}>
-            <Breadcrumb>
-            </Breadcrumb>
-            {/* need map API */}
-            <div className="w-[228px] h-[169px mb-4">
-                <img src="https://th.bing.com/th/id/OIP.Xl33AAWnwUNysT_nFRsUEgHaHa?rs=1&pid=ImgDetMain"/> 
+          <div className="flex justify-start font-afacad">
+              {searchResults.hotelData?.length > 0 ? (
+                <h4 className="text-[30px] text-[#114098] ">
+                  {city}: {searchResults.hotelData.length} properties found
+                </h4>
+              ) : (
+                <h4 className="text-[30px] text-[#114098] ">Try searching for what you like:</h4>
+              )}
             </div>
+          <Row gutter={16} className="mt-6">
+            <Col span={5}>
+              <Breadcrumb></Breadcrumb>
+              <div className="w-[228px] h-[169px mb-4">
+                <img src="https://th.bing.com/th/id/OIP.Xl33AAWnwUNysT_nFRsUEgHaHa?rs=1&pid=ImgDetMain" />
+              </div>
               <Collapse defaultActiveKey={["1"]}>
                 <Panel header="Chọn lọc theo:" key="1">
                   <Checkbox.Group onChange={handleFilterChange}>
@@ -74,11 +109,20 @@ const HotelDisplayCompre = () => {
                 </Panel>
               </Collapse>
             </Col>
+            {/* hotel display */}
             <Col span={19}>
               <div className="pt-3">
-                {filteredHotels.map((hotel, index) => (
-                  <AccommodationCard key={index} hotel={hotel} />
-                ))}
+                {!filteredHotels  ? (
+                  <Alert message="No hotels match the criteria." type="info" />
+                ) : (
+                  filteredHotels.map((hotel, index) => (
+                    <AccommodationCard
+                      key={index}
+                      hotel={hotel}
+                      onClick={() => handleHotelClick(hotel)}
+                    />
+                  ))
+                )}
               </div>
             </Col>
           </Row>

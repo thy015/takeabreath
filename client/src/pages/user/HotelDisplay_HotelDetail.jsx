@@ -1,12 +1,18 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 import { useGet } from "../../hooks/hooks";
-import { Spin, Alert, Row, Col} from "antd";
+import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
+import { useLocation} from "react-router-dom";
+import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
+
 const HotelDisplay_HotelDetail = () => {
-  const { id } = useParams();
+    const { id } = useParams();
+     // query room data result
+   const location =useLocation()
+   const { roomData = [] } = location.state || {};
 
   const { data, error, loading } = useGet(
     `http://localhost:4000/api/hotelList/hotel/${id}`
@@ -44,7 +50,9 @@ const HotelDisplay_HotelDetail = () => {
               </h4>
               <div className="flex flex-row items-start ">
                 <MdRoom className="text-[#0F4098]  mb-3 text-[20px]" />
-                <div >{data.address}, {data.city}, {data.nation}</div>
+                <div>
+                  {data.address}, {data.city}, {data.nation}
+                </div>
               </div>
             </div>
           </div>
@@ -124,7 +132,7 @@ const HotelDisplay_HotelDetail = () => {
               </div>
             </div>
           </div>
-          <div className="h-[45%] mt-3 w-full border object-cover">
+          <div className="h-[47.5%] mt-3 w-full border object-cover">
             {/* need map api */}
             <img
               className="h-full w-full"
@@ -132,19 +140,19 @@ const HotelDisplay_HotelDetail = () => {
             />
           </div>
         </Col>
-        {/* Feature*/}
-        <div className="ml-2 my-2">
-          <h4>
-            Feature
-          </h4>
-
-          <div>
-          <h4>
-            Available Rooms
-          </h4>
-          </div>
-        </div>
+       
       </Row>
+      {/* Feature display */}
+      <div> <h4 className="flex mt-12 font-semibold">Feature</h4> </div>
+      <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
+      {/* Room display */}
+      <div>
+
+      {console.log('Detail hotel',roomData)}
+     <HotelDetail_RoomDisplay roomData={roomData} hotel={data}></HotelDetail_RoomDisplay>
+     
+
+     </div>
     </div>
   );
 };

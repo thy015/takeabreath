@@ -1,73 +1,12 @@
 
-const { Hotel } = require("../../models/hotel.model");
+const { Hotel,Room } = require("../../models/hotel.model");
+const { Invoice } = require("../../models/invoice.model");
 const { Owner } = require("../../models/signUp.model");
-const createHotel = async (req, res) => {
-  const {
-    address,
-    taxCode,
-    hotelName,
-    nation,
-    facilityName,
-    businessType,
-    scale,
-    city,
-    hotelPhone,
-    hotelImg,
-  } = req.body;
+const dayjs=require('dayjs')
+const isBetween=require('dayjs/plugin/isBetween')
 
-  try {
-    // Validate input
-    if (
-      !address ||
-      !taxCode ||
-      !hotelName ||
-      !nation ||
-      !facilityName ||
-      !businessType ||
-      !scale ||
-      !city ||
-      !hotelPhone
-    ) {
-      return res.status(403).json({ message: "Input is required" });
-    }
+dayjs.extend(isBetween)
 
-    // Check if the owner ID exists
-    const checkExistedOwnerID = await Account.Account.findOne({
-      _id: req.ownerID,
-    });
-    if (!checkExistedOwnerID) {
-      return res.status(400).json({
-        status: "BAD",
-        message: "Owner ID does not exist",
-      });
-    }
-
-    // Create the hotel
-    const createdHotel = await Hotel.Hotel.create({
-      address,
-      taxCode,
-      nation,
-      hotelName,
-      facilityName,
-      businessType,
-      scale,
-      city,
-      hotelPhone,
-      hotelImg,
-      ownerID: req.ownerID,
-    });
-
-    // Respond with success
-    return res.status(201).json({
-      status: "OK",
-      message: "Hotel created successfully",
-      data: createdHotel,
-    });
-  } catch (e) {
-    console.error("Error in createHotel:", e);
-    return res.status(500).json({ message: e.message });
-  }
-};
 
 const createRoom = async (req, res) => {
   const { numberOfBeds, typeOfRoom, money, hotelID, capacity, roomImages } = req.body;
@@ -79,7 +18,7 @@ const createRoom = async (req, res) => {
     }
 
     // Create the room
-    const createdRoom = await Hotel.Room.create({
+    const createdRoom = await Hotel.create({
       numberOfBeds,
       typeOfRoom,
       money,
@@ -89,7 +28,7 @@ const createRoom = async (req, res) => {
     });
 
     if (createdRoom) {
-      const hotel = await Hotel.Hotel.findById(hotelID);
+      const hotel = await Hotel.findById(hotelID);
       if (hotel) {
         // Update hotel minPrice if necessary
         if (hotel.minPrice === 0 || hotel.minPrice > money) {
@@ -126,52 +65,8 @@ const getHotelsByOwner = async (req, res) => {
   }
 };
 
-const searchHotel = async (req, res) => {
-  const { city } = req.query; // Use req.query to get the city from the query parameters
 
-  try {
-    // Validate input
-    if (!city) {
-      return res.status(403).json({ message: "Input is required" });
-    }
-
-    // Find hotels in the specified city
-    const hotelsInCity = await Hotel.Hotel.find({ city });
-
-    // Find available rooms for each hotel
-    const availableHotels = await Promise.all(
-      hotelsInCity.map(async (hotel) => {
-        const availableRooms = await Hotel.Room.find({ hotel: hotel._id });
-        if (availableRooms.length > 0) {
-          return {
-            ...hotel._doc,
-            rooms: availableRooms,
-          };
-        } else {
-          return null;
-        }
-      })
-    );
-
-    // Filter out hotels without available rooms
-    const filteredHotels = availableHotels.filter((hotel) => hotel !== null);
-
-    // Respond with the available hotels
-    return res.status(200).json({
-      status: "OK",
-      message: "Find Hotel successfully",
-      data: filteredHotels,
-    });
-  } catch (e) {
-    console.error("Error searching for hotels:", e);
-    return res.status(500).json({
-      status: "Error",
-      message: "There was an error searching for hotels.",
-      error: e.message,
-    });
-  }
-};
-const createHotels = async (req, res) => {
+const createHotel = async (req, res) => {
   const {
     hotelName,
     address,
@@ -225,11 +120,117 @@ const createHotels = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+const updateHotels = async (req, res) => {
+  const {
+    hotelName,
+    address,
+    city,
+    nation,
+    hotelType,
+    phoneNum,
+    imgLink,
+  } = req.body;
 
+  try {
+ 
+    if (!hotelName || !address || !city || !nation || !hotelType || !phoneNum) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const hotelID = req.params.id;
+    const hotel = await Hotel.findById(hotelID);
+
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel not found" });
+    }
+
+  
+
+    hotel.hotelName = hotelName;
+    hotel.address = address;
+    hotel.city = city;
+    hotel.nation = nation;
+    hotel.hotelType = hotelType;
+    hotel.phoneNum = phoneNum;
+    hotel.imgLink = imgLink;
+
+    await hotel.save(); 
+
+    return res.status(200).json({
+      status: "OK",
+      message: "Hotel updated successfully",
+      data: hotel,
+    });
+  } catch (error) {
+    console.error("Error in updateHotels:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+const queryHotel=async(req,res)=>{
+    const {city,dayStart,dayEnd,people}=req.body
+    if(!city||!dayStart||!dayEnd||!people){
+      return res.status(403).json({message:"All fields are required"})
+    }
+    try{
+      // double check
+      const start=dayjs(dayStart).format('DD/MM/YYYY')
+      const end=dayjs(dayEnd).format('DD/MM/YYYY')
+
+     
+    // handle city
+    const hotels = await Hotel.find({ city: city });
+
+    if(hotels.length===0){
+      return res.status(400).json({ message: 'No hotel in this city' });
+    }
+    const hotelIDs=hotels.map(h=>h._id)
+    const rooms=await Room.find({hotelID:{$in: hotelIDs}})
+
+    if(rooms.length===0){
+      // no room => return null
+      return res.status(200).json({ message: 'No room in this hotel', data:[]});
+    }
+
+    const roomsID=rooms.map(r=>r._id)
+    const invoices=await Invoice.find({roomID:{$in:roomsID}})
+    //dayStart and end handle (filter room not available)
+  
+        const availableRooms = rooms.filter(room => {
+          const roomInvoices = invoices.filter(invoice => invoice.roomID.equals(room._id));
+          return !roomInvoices.some(invoice => {
+              const invoiceStart = dayjs(invoice.checkInDay);
+              const invoiceEnd = dayjs(invoice.checkOutDay);
+              return (
+                  dayjs(start).isBetween(invoiceStart, invoiceEnd, null, '[)') ||
+                  dayjs(end).isBetween(invoiceStart, invoiceEnd, null, '(]')
+              );
+          });
+      });
+
+      if (availableRooms.length > 0) {
+          return res.status(200).json({
+              status: "OK",
+              roomData: availableRooms,
+              hotelData: hotels,
+              
+          });
+      } else {
+          return res.status(200).json({
+              message: 'No available rooms for the selected dates'
+          });
+      }
+    }catch(e){
+      console.log('Problem in hotel query controller: ' + e);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+}
 module.exports = {
   createHotel,
   createRoom,
   getHotelsByOwner,
-  searchHotel,
-  createHotels,
+  queryHotel,
+  updateHotels
 };

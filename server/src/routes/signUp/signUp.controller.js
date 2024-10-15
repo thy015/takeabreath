@@ -3,18 +3,18 @@ const { Owner, Admin, Customer } = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../services/jwt");
 //owner
 const signUpOwner = async (req, res) => {
-  const { ownerName, password, email, birthday, phone } =
+
+  const { ownerName, password, email, birthday, phone, idenCard} =
     req.body;
 
-  console.log("[body]", { ownerName, password, email, birthday, phone })
+  console.log("[body]", { ownerName, password, email, birthday, phone, idenCard })
 
-  if (!ownerName || !password || !email || !birthday || !phone) {
+  if (!ownerName || !password || !email || !birthday || !phone ||!idenCard) {
+
     return res.status(403).json({ message: "Input is required" });
   } else if (!validateEmail(email)) {
     return res.status(400).json({ message: "Invalid email" });
-  } else if (!validateBirthDate(birthday)) {
-    return res.status(400).json({ message: "Not enough age" });
-  }
+  } 
 
   try {
     // Check if the account already exists
@@ -29,16 +29,16 @@ const signUpOwner = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     // Create the new owner account
     const createdOwner = new Owner({
-      ownerName:ownerName,
+      ownerName:name,
       password:hashPassword,
       email:email,
-      birthday:birthday,
       phoneNum:phone,
+      idenCard:idenCard
     });
 
     await createdOwner.save()
     // Respond with success
-    return res.status(201).json({
+    return res.status(200).json({
       status: "OK",
       register:true,
       message: "Succ",
@@ -82,7 +82,7 @@ const signInOwner = async (req, res) => {
         regDay: foundOwner.regDay,
       });
 
-      return res.cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
         login: true,
         status: "OK",
         message: "Success log in",
@@ -112,7 +112,7 @@ const signInOwner = async (req, res) => {
         email:foundAdmin.email
       });
 
-      return res.cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
         status: "OK",
         message: "Admin logged in",
         access_token: access_token,
@@ -175,9 +175,9 @@ const loginCustomer = async (req, res) => {
 };
 
 const registerCustomer = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name, phone } = req.body;
 
-  if (!email || !password) {
+  if (!email || !password || !name || !phone) {
     return res.status(403).json({ message: 'missing required input' });
   }
   try {
@@ -190,12 +190,14 @@ const registerCustomer = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const customer = new Customer({
       email: email,
+      cusName:name,
+      phoneNum:phone,
       password: hashPassword
     });
 
     customer.save()
     console.log(customer)
-    return res.status(201).json({
+    return res.status(200).json({
       status: "OK",
       register:true,
       message: "Succ",
@@ -214,6 +216,60 @@ const logout = async (req,res)=>{
   return res.json({logout:true})
 }
 
+// CRUD cus
+const deleteCus=async(req,res)=>{
+  const id=req.params.id
+  try{
+    const deletedCus=await Customer.findByIdAndDelete(id)
+    if(!deletedCus){
+      return res.status(404).json({message:'Customer not found'})
+    }
+    res.status(200).json({message:'Success delete customer'})
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
+
+const updateCus=async(req,res)=>{
+  const id=req.params.id
+  const newData=req.body
+  try{
+    const updateCus= await Customer.findByIdAndUpdate(id,newData,{new:true})
+    if (!updateCus) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    res.status(200).json(updateCus);
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
+// CRUD owner
+const deleteOwner=async(req,res)=>{
+  const id=req.params.id
+  try{
+    const deleteOwner=await Owner.findByIdAndDelete(id)
+    if(!deleteOwner){
+      return res.status(404).json({message:'Customer not found'})
+    }
+    res.status(200).json({message:'Success delete customer'})
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
+
+const updateOwner=async(req,res)=>{
+  const id=req.params.id
+  const newData=req.body
+  try{
+    const updateOwner= await Owner.findByIdAndUpdate(id,newData,{new:true})
+    if (!updateOwner) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    res.status(200).json(updateOwner);
+  }catch(e){
+    return res.status(500).json({message:'Internal server prob'}+e)
+  }
+}
 function validateBirthDate(birthday) {
   const currentDay = new Date();
   const dob = new Date(birthday);
@@ -242,6 +298,10 @@ module.exports = {
   signInOwner,
   validateEmail,
   validateBirthDate,
+  deleteCus,
+  updateCus,
+  deleteOwner,
+  updateOwner,
   //phuc
   loginCustomer,
   registerCustomer,

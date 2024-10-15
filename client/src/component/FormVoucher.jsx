@@ -45,7 +45,6 @@ const FormVoucher=({record})=> {
                             }
                         ]}
                     >
-                        {console.log("[INPUT VOUCHER]",record.voucherName)}
                         <Input className=' px-[10px] input-addvoucher'  placeholder={record.voucherName} />
                    
                     </FormItem>

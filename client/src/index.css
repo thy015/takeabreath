@@ -24,12 +24,8 @@
   color: white;
 } */
 :where(.css-dev-only-do-not-override-11lehqq).ant-form-item .ant-form-item-label >label {
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  min-width: 150px;
+  min-width: 130px;
   margin-left: 5px;
-  width: 42px;
 }
 
 .register-owner label{
@@ -37,6 +33,14 @@
   font-size: large;
   min-width: 200px  !important ;
   font-size: 20px !important ;
+}
+
+.login-form, .login-form input::placeholder{
+  color: white;
+}
+
+.login-form svg{
+  color: white;
 }
 
 .ant-form-item-feedback-icon svg{
@@ -66,7 +70,6 @@ ul{
 .link-property{
   text-decoration: none;
 }
-=======
 .range-picker-addvoucher svg{
   color: black !important;
 }
@@ -81,5 +84,15 @@ ul{
 
 .input-addvoucher input::placeholder{
   color:rgba(0, 0, 0, 0.45) !important
-}
 
+}
+.gryphen{
+  font-family: gryphen;
+}
+.white-label{
+  color: white!important;
+}
+/* src/App.css or src/index.css */
+html {
+  font-family: 'Poppins', sans-serif; /* Apply Poppins font to the entire HTML */
+}

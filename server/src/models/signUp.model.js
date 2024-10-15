@@ -3,9 +3,11 @@ const ownerSchema = new mongoose.Schema({
   ownerName: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  birthday: { type: String, required: true },
+  birthday: { type: String, required: false },
   phoneNum: { type: String, required: true },
+  idenCard: { type: String, required: true },
   avatarLink: { type: String, required: false },
+  idenCard:{type:String,required:true},
   regDay: { type: Date, default: Date.now, required: false },
 });
 

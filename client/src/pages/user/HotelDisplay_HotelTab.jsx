@@ -2,6 +2,7 @@ import React from "react";
 import { Col, Row, Tabs } from "antd";
 import HotelDisplay_HotelDetail from "./HotelDisplay_HotelDetail";
 import Booking from "../../component/Booking";
+import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 const { TabPane } = Tabs;
 const HotelDisplay_HotelTab = () => {
   const tab_titles = [
@@ -10,7 +11,7 @@ const HotelDisplay_HotelTab = () => {
       title: "Overview",
       content: <HotelDisplay_HotelDetail></HotelDisplay_HotelDetail>,
     },
-    { key: "2", title: "Info & prices", content: "" },
+    { key: "2", title: "Info & prices", content: <HotelDetail_RoomDisplay></HotelDetail_RoomDisplay> },
     { key: "3", title: "Facilities", content: "" },
     { key: "4", title: "Policies", content: "" },
     { key: "5", title: "The fine print", content: "" },
@@ -21,9 +22,6 @@ const HotelDisplay_HotelTab = () => {
       <Col span={4} />
       <Col span={16}>
         <div>
-          <div className="my-6">
-            <Booking tailwind_prop="w-full h-16"></Booking>
-          </div>
 
           <div className="w-full">
             <Tabs defaultActiveKey="1" size="large" tabBarGutter={80} >
@@ -33,6 +31,10 @@ const HotelDisplay_HotelTab = () => {
                 </TabPane>
               ))}
             </Tabs>
+            <h5>CHECK OUT OTHER HOTELS:</h5>
+            <div className="my-6">
+            <Booking tailwind_prop="w-full h-16"></Booking>
+          </div>
           </div>
         </div>
       </Col>

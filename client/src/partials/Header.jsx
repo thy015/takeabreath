@@ -157,7 +157,9 @@ const Header = ({ children }) => {
               </div>
               </Link>
               <li>
-                <Link to="/booking" className="no-underline ">
+                <Link to="/booking" className="no-underline " onClick={()=>{
+                  window.reload()
+                }}>
                   <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
                     Booking
                   </p>
@@ -181,14 +183,17 @@ const Header = ({ children }) => {
             </ul>
             <ul class="flex space-x-5 ">
               <li>
-                <Link to="/login" className="no-underline">
+                <Link to={auth.isAuthenticated ? "/profile": "/login"} className="no-underline">
                   <Button>{setText()}</Button>
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="no-underline">
+                {
+                  auth.isAuthenticated ? <></>:<Link to="/register" className="no-underline">
                   <Button>Sign Up</Button>
                 </Link>
+                }
+                
               </li>{""}
               <li>
                 <Link to="/" className="no-underline">

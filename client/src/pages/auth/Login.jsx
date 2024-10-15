@@ -70,7 +70,7 @@ function Login() {
           ]}
         >
           <Input
-            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] text-white placeholder:text-white"
+            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] login-form"
             placeholder="Enter your email"
             suffix={<FontAwesomeIcon icon={faEnvelope} />}
           />
@@ -87,7 +87,7 @@ function Login() {
           ]}
         >
           <Input.Password
-            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] text-white placeholder:text-white"
+            className="bg-transparent max-w-[250px] rounded-[30px] px-[20px] py-[10px] login-form"
             placeholder='Enter your password'
           />
         </Form.Item>

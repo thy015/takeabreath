@@ -31,6 +31,8 @@ import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
+import SuccessPayment from "../component/SuccessPayment";
+import Test from "../component/Test";
 export const routers = [
   {
     path: "/",
@@ -98,6 +100,12 @@ export const routers = [
     isShowFooter: true,
   },
   {
+    path: "/booking-success",
+    page: SuccessPayment,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
+  {
     path: "/hotel/:id",
     page: HotelDisplay_HotelTab,
     isShowHeader: true,
@@ -121,6 +129,13 @@ export const routers = [
       { path: "AddVoucher", page: AddVoucher}, 
     ],
     isOwner:true,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
+    path: "/test",
+    page: Test,
     isShowHeader: false,
     isShowFooter: false,
   },

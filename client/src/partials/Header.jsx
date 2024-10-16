@@ -1,18 +1,27 @@
 import { Button, Dropdown, Row, Col } from "antd";
 import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ".././index.css";
 import { AuthContext } from "../hooks/auth.context";
 import axios from "axios";
 import { openNotification } from "../hooks/notification";
-
+import { useSelector,useDispatch } from "react-redux";
 const Header = ({ children }) => {
 
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
-
+    //log in
+    const navigate=useNavigate()
+    const handleLogInNavigate=(e)=>{
+      if(auth.isAuthenticated){
+        navigate('/profile')
+      }else{
+        e.preventDefault()
+        navigate('/login', {state:{from:location.pathname}})
+      }
+    }
   const setLogout = ()=>{
     if(auth.isAuthenticated){
       items.push({
@@ -157,13 +166,9 @@ const Header = ({ children }) => {
               </div>
               </Link>
               <li>
-                <Link to="/booking" className="no-underline " onClick={()=>{
-                  window.reload()
-                }}>
                   <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
                     Booking
                   </p>
-                </Link>
               </li>
               <li>
                 <Link to="/" className="no-underline">
@@ -182,10 +187,11 @@ const Header = ({ children }) => {
               </li>
             </ul>
             <ul class="flex space-x-5 ">
-              <li>
-                <Link to={auth.isAuthenticated ? "/profile": "/login"} className="no-underline">
+              <li>        
+
+                <div onClick={handleLogInNavigate}>
                   <Button>{setText()}</Button>
-                </Link>
+                  </div>
               </li>
               <li>
                 {

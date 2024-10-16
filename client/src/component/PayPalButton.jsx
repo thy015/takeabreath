@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-const PayPalButton = (value) => {
+import { useSelector,useDispatch } from 'react-redux';
+import { setPaymentCompleted } from '../hooks/redux/inputDaySlice';
+import {openNotification} from '../hooks/notification'
+const PayPalButton = () => {
     const paypal = useRef();
-
+    const dispatch=useDispatch()
+    const {convertPrice}=useSelector((state)=>state.inputDay)
     useEffect(() => {
         const addPayPalScript = () => {
             const script = document.createElement('script');
@@ -18,7 +21,7 @@ const PayPalButton = (value) => {
                                     description: 'Test',
                                     amount: {
                                         currency_code: 'USD',
-                                        value: value,
+                                        value: convertPrice,
                                     },
                                 },
                             ],
@@ -27,9 +30,13 @@ const PayPalButton = (value) => {
                     onApprove: async (data, actions) => {
                         const order = await actions.order.capture();
                         console.log(order);
+                        openNotification(true,"Success","Payment success")
+                        dispatch(setPaymentCompleted({completedPayment:true}))
+                        e.preventDefault()
                     },
                     onError: (err) => {
                         console.error(err);
+                        e.preventDefault()
                     },
                 }).render(paypal.current);
             };

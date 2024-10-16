@@ -11,6 +11,7 @@ import {
   Select,
   DatePicker,
   Radio,
+  message
 } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useForm } from "antd/es/form/Form";
@@ -20,16 +21,15 @@ import { useSelector } from "react-redux";
 import { AuthContext } from "../hooks/auth.context";
 import { RateStar } from "./Rate";
 import PayPalButton from "./PayPalButton";
-
+import {useNavigate} from "react-router-dom"
 function BookingConfirmationForm({isShow, onCancel}) {
   const { auth } = useContext(AuthContext);
   const [form] = useForm();
   const [payment, setPayment] = useState("");
-  const [selectedPayment, setSelectedPayment] = useState("");
-
-  const handleOke = () => {
-    form.submit();
-  };
+  const [paymentModalVisible,setPaymentModalVisible]=useState(false)
+  const [isFormValid,setIsFormValid]=useState(false)
+  const [timeCount,setTimeCount]=useState(20*60)
+  const navigate=useNavigate()
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };
@@ -45,49 +45,71 @@ function BookingConfirmationForm({isShow, onCancel}) {
         countRoom,
         completedPayment,
       } = useSelector((state) => state.inputDay);
-
+      //radio
   const handlePaymentChange = (e) => {
     const selectedValue = e.target.value;
     setPayment(selectedValue);
-    setSelectedPayment(selectedValue);
   };
 
-  const onFinish = async (values) => {
-    const idHotel = selectedHotel._id;
-    const idRoom = selectedRoom._id;
-    const idCus = auth.user.id ?? "Chua login";
-    const dataBooking = {
-      inputName: values.fullname,
-      inputIdenCard: values.idenCard,
-      inputGender: values.gender,
-      paymentMethod: values.paymentMethod,
-      inputPhoneNum: values.numberphone,
-      inputEmail: values.email,
-      inputDob: dayjs(values.dob).format("DD/MM/YYYY"),
-      total: totalPrice,
-      checkInDay: dayjs(dayStart).format("DD/MM/YYYY"),
-      checkOutDay: dayjs(dayEnd).format("DD/MM/YYYY"),
-      totalDay: totalCheckInDay,
-    };
-
-    console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking);
+  const handleOk = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/api/bookRoom", {
-        idHotel,
-        idCus,
-        idRoom,
-        dataBooking,
-      });
-      console.log("[RESPONSE]", res);
-      if (res.status === 200) {
-        navigate("/booking-success");
-      } else {
-        message.error("Booking failed", message.error(res.data.message));
-      }
-    } catch (e) {
-      console.log("[ERROR]", e);
+      await form.validateFields();
+      setIsFormValid(true);
+      setPaymentModalVisible(true);
+    } catch (error) {
+      console.log("Validation failed:", error);
     }
   };
+  const checkFormValidity=async()=>{
+    try{
+      await form.validateFields()
+      setIsFormValid(true)
+    }catch(e){
+      setIsFormValid(false)
+    }
+  }
+      //2nd modal
+  const handlePaymentConfirmation = () => {
+    message.success("Payment successful!");
+    setPaymentModalVisible(false);
+    onCancel(); 
+  };
+  // const onFinish = async (values) => {
+  //   const idHotel = selectedHotel._id;
+  //   const idRoom = selectedRoom._id;
+  //   const idCus = auth.user.id ?? "Chua login";
+  //   const dataBooking = {
+  //     inputName: values.fullname,
+  //     inputIdenCard: values.idenCard,
+  //     inputGender: values.gender,
+  //     paymentMethod: values.paymentMethod,
+  //     inputPhoneNum: values.numberphone,
+  //     inputEmail: values.email,
+  //     inputDob: dayjs(values.dob).format("DD/MM/YYYY"),
+  //     total: totalPrice,
+  //     checkInDay: dayjs(dayStart).format("DD/MM/YYYY"),
+  //     checkOutDay: dayjs(dayEnd).format("DD/MM/YYYY"),
+  //     totalDay: totalCheckInDay,
+  //   };
+
+  //   console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking);
+  //   try {
+  //     const res = await axios.post("http://localhost:4000/api/bookRoom", {
+  //       idHotel,
+  //       idCus,
+  //       idRoom,
+  //       dataBooking,
+  //     });
+  //     console.log("[RESPONSE]", res);
+  //     if (res.status === 200) {
+  //       navigate("/booking-success");
+  //     } else {
+  //       message.error("Booking failed", message.error(res.data.message));
+  //     }
+  //   } catch (e) {
+  //     console.log("[ERROR]", e);
+  //   }
+  // };
 
   return (
     <div>
@@ -96,7 +118,14 @@ function BookingConfirmationForm({isShow, onCancel}) {
         onCancel={onCancel}
         className="min-w-[80%] max-h-[100px]"
         okText="Confirm Booking"
-        onOk={(handleOke)}
+        onOk={(handleOk)}
+        okButtonProps={{
+          disabled:!isFormValid,
+          className: isFormValid 
+          ?"bg-[#114098] text-white text-lg py-3 px-6" 
+          : 'text-black text-lg py-3 px-6 bg-grey-500' ,
+          }}
+        cancelButtonProps={{className:'py-3 px-6 text-lg'}}
       >
         <h2 className="text-center font-semibold font-poppins"> TAB Booking Detail</h2>
         <Row className="h-[520px] " wrap={true} gutter={24}>
@@ -120,7 +149,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
               <div style={{ overflowY: "auto", height: "400px" }}>
                 <Form
                   scrollToFirstError={true}
-                  onFinish={onFinish}
+                  onValuesChange={checkFormValidity}
                   labelCol={{
                     span: 8,
                   }}
@@ -203,7 +232,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                       onChange={handlePaymentChange}
                     >
                       <Radio
-                        value="visa"
+                        value="paypal"
                         onClick={() => {
                           setPayment("paypal");
                         }}
@@ -219,12 +248,12 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         Momo
                       </Radio>
                       {/* choosing payment */}
-                      {selectedPayment === "momo" && (
+                      {payment === "momo" && (
                         <img src="/img/momo.jpeg"></img>
                       )}
-                      {selectedPayment === "visa" && (
+                      {payment === "paypal" && (
                         <div>
-                          <PayPalButton></PayPalButton>
+                        
                           <div className="mt-8">
                             Click the button below to complete the payment
                           </div>
@@ -331,6 +360,26 @@ function BookingConfirmationForm({isShow, onCancel}) {
            </div>
           </Col>
         </Row>
+      </Modal>
+      {/* confirm modal pop up after click confirm booking */}
+      <Modal
+      open={paymentModalVisible}
+      title='Payment Confirmation'
+      onCancel={()=>setPaymentModalVisible(false)}
+      onOk={handlePaymentConfirmation}
+      okButtonProps={{
+        disabled:!completedPayment,
+        className: completedPayment 
+        ?"bg-success text-white text-lg py-3 px-6" 
+        : 'text-black text-lg py-3 px-6 bg-grey-500' ,
+        }}
+      >
+        <p>Confirm your payment using {payment}</p>
+        <p>Your total price is {totalPrice} VND which is <span className="text-success">{convertPrice} USD </span></p>
+        <p>Please  <span className="text-success">click the button</span> to confirm your payment, 
+          otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
+         
+      {payment==='paypal'? <PayPalButton></PayPalButton> : 'hi'}  
       </Modal>
     </div>
   );

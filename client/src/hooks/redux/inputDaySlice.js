@@ -37,7 +37,9 @@ const inputDaySlice =createSlice({
             state.countRoom=action.payload.countRoom
             state.totalPrice=action.payload.totalPrice
             state.convertPrice=action.payload.totalPrice/25000
-            state.completedPayment=action.payload.completedPayment
+        },
+        setPaymentCompleted:(state,action)=>{
+            state.completedPayment=true
         },
         clearPaymentState:(state,action)=>{
             state.totalPrice=0,
@@ -45,8 +47,9 @@ const inputDaySlice =createSlice({
             state.countRoom=0
             state.selectedHotel={}
             state.selectedRoom={}
+            state.completedPayment=false
         }
     }
 })
-export const {setInputDay,clearInputDay,setPaymentState,clearPaymentState}=inputDaySlice.actions
+export const {setInputDay,clearInputDay,setPaymentState,clearPaymentState,setPaymentCompleted}=inputDaySlice.actions
 export default inputDaySlice.reducer

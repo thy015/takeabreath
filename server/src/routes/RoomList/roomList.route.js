@@ -2,8 +2,8 @@ const express = require("express");
 const ListRouter = express.Router();
 const Hotel = require("../../models/hotel.model");
 const { authenToken } = require("../../services/jwt");
-
-
+const { verifyOwner, verifyAdmin } = require("../../services/verify");
+//ListRouter.all("*",verifyAdmin);
 ListRouter.get("/rooms", async (req, res) => {
   try {
     const rooms = await Hotel.Room.find();

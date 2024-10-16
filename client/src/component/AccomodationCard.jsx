@@ -2,18 +2,18 @@ import React from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import { MdRoom } from "react-icons/md";
 import { Link } from "react-router-dom";
-import {RateStar} from "./Rate";
-import {useSelector} from 'react-redux'
+import { RateStar } from "./Rate";
+import { useSelector } from 'react-redux'
 
 // hotel display page
-const AccommodationCard = ({ hotel,onClick }) => {
-  // the query room data
-  const {roomData}=useSelector((state)=>state.searchResults)
-    const filteredRoom=roomData?.filter(r=>r.hotelID===hotel._id)[0]
+const AccommodationCard = ({ hotel, onClick }) => {
+  const { roomData } = useSelector((state) => state.searchResults)
+  const filteredRoom = roomData?.filter(r => r.hotelID === hotel._id)[0]
 
   const formatMoney = (money) => {
-      return new Intl.NumberFormat('de-DE').format(money)
-    }
+    return new Intl.NumberFormat('de-DE').format(money)
+  }
+
   return (
     <div onClick={onClick}>
     <Card className="mb-4 ">
@@ -93,65 +93,60 @@ const AccommodationCard = ({ hotel,onClick }) => {
     </div>
   );
 };
+
 // homepage display
-const PropertyCard = ({ property, link_property, link_button,showButton = false, edit }) => {
+const PropertyCard = ({ property, link_button, showButton = false, edit, showDeleteModal }) => {
   return (
-    <Link to={link_property} className="link-property">
-      <Card className="shadow-sm h-full rounded-[12px]">
-        <Card.Img
-          className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
-          variant="top"
-          src={property.imgLink}
-        />
-        <Card.Body className="h-[210px] flex flex-col flex-grow-1">
-          <Card.Title>{property.hotelName}</Card.Title>
-          <RateStar hotel={property}></RateStar>
-          <Card.Text className="whitespace-nowrap overflow-hidden text-ellipsis">{property.address}</Card.Text>
-          <div className="d-flex align-items-center">
-            <div
-              style={{
-                backgroundColor: "#003580",
-                color: "white",
-                padding: "0 8px",
-                borderRadius: "5px",
-                fontWeight: "bold",
-              }}
-            >
-              {property.rate}
-            </div>
-            <div style={{ marginLeft: "8px" }}>
-              {property.numberOfRates} people have rated - {property.hotelType}
-            </div>
+    <Card className="shadow-sm h-full rounded-[12px]">
+      <Card.Img
+        className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
+        variant="top"
+        src={property.imgLink}
+      />
+      <Card.Body className="h-[210px] flex flex-col flex-grow-1">
+        <Card.Title>{property.hotelName}</Card.Title>
+        <RateStar hotel={property}></RateStar>
+        <Card.Text className="whitespace-nowrap overflow-hidden text-ellipsis">{property.address}</Card.Text>
+        <div className="d-flex align-items-center">
+          <div
+            style={{
+              backgroundColor: "#003580",
+              color: "white",
+              padding: "0 8px",
+              borderRadius: "5px",
+              fontWeight: "bold",
+            }}
+          >
+            {property.rate}
           </div>
-          <div className="mt-3" style={{ fontWeight: "bold", fontSize: "16px" }}>
+          <div style={{ marginLeft: "8px" }}>
+            {property.numberOfRates} people have rated - {property.hotelType}
+          </div>
+      
+        </div>
+        <div className="mt-3" style={{ fontWeight: "bold", fontSize: "16px" }}>
             Start from ....{property.minPrice} vnd
           </div>
-
-          {showButton && (
-            <div>
-              <Link to={edit}>
+        {showButton && (
+          <div>
+            <Link to={edit}>
               <button className="bg-gray-700 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-gray-400 ">
-               Edit
-                </button>
-               </Link>
-            <Link to={link_button}>
-           <button className="bg-pink-700 text-white font-bold py-1 px-2 rounded hover:bg-pink-400 ">
-            Rooms
-             </button>
+                Sửa
+              </button>
             </Link>
             <Link to={link_button}>
-           <button className="bg-cyan-600 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-cyan-300 ">
-            Delete
-             </button>
+              <button className="bg-green-700 text-white font-bold py-1 px-2 rounded hover:bg-green-400 ">
+                Phòng
+              </button>
             </Link>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </Link>
+            <button onClick={showDeleteModal} className="bg-orange-600 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-red-400">
+             Xóa
+            </button>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
-
-
 
 export { PropertyCard, AccommodationCard };

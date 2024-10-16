@@ -39,7 +39,6 @@ function App() {
       <Router>
         <Routes>
           {routers.map((route) => {
-            // Admin routes
             if (route.isAdmin) {
               return (
                 <Route key={route.path} path={route.path} element={<route.page />}>

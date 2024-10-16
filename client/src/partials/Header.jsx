@@ -1,15 +1,20 @@
 import { Button, Dropdown, Row, Col } from "antd";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {  faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ".././index.css";
 import { AuthContext } from "../hooks/auth.context";
 import axios from "axios";
 import { openNotification } from "../hooks/notification";
+import { useTranslation, Trans } from "react-i18next";
 
 const Header = ({ children }) => {
-
+  //translate
+  const { t ,i18n} = useTranslation();
+  const changeLanguage=(lng)=>{
+    i18n.changeLanguage(lng)
+  }
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
     //log in
@@ -45,7 +50,7 @@ const Header = ({ children }) => {
       }
     
     }else{
-      return "Log In"
+      return t('sign-in')
     }
   }
 
@@ -168,22 +173,22 @@ const Header = ({ children }) => {
             <ul className="flex pt-4 items-end">
               <li>
                   <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
-                    Booking
+                    {t('booking')}
                   </p>
               </li>
               <li>
                 <Link to="/" className="no-underline">
-                  <p className={hoverEffect}>Activities</p>
+                  <p className={hoverEffect}>{t('activities')}</p>
                 </Link>
               </li>
               <li>
                 <Link to="/" className="no-underline">
-                  <p className={hoverEffect}>Coupons and Discount</p>
+                  <p className={hoverEffect}>{t('coupons')}</p>
                 </Link>
               </li>
               <li>
                 <Link to="/" className="no-underline">
-                  <p className={hoverEffect}>Favourites</p>
+                  <p className={hoverEffect}>{t('favs')}</p>
                 </Link>
               </li>
            
@@ -193,21 +198,28 @@ const Header = ({ children }) => {
             <ul class="flex space-x-4 cursor-pointer">
              
             <li className="flex ">
-            <div className="underline decoration-yellow-200">
-            <p className={hoverEffect}> VI</p>
+
+            <div className={
+                  i18n.language === 'vie' ? 'font-bold underline decoration-yellow-200' : ''
+                }
+                onClick={()=>changeLanguage('vie')}>
+            <p className={hoverEffect}> {t('VIE')}</p>
               </div>
-            <div>
-            <p className={hoverEffect}>EN</p>
-            </div>
+              <div
+                className={i18n.language === 'en' ? 'font-bold underline decoration-yellow-200' : ''}
+                onClick={() => changeLanguage('en')}
+              >
+                <p className={hoverEffect}>{t('EN')}</p>
+              </div>
              </li>
             <li>
-           <p className={hoverEffect}>  TAB Partners</p>
+           <p className={hoverEffect}> {t('partners')}</p>
              </li>
             <li>
-              <p className={hoverEffect}> About Us</p>
+              <p className={hoverEffect}> {t('about-us')}</p>
              </li>
             <li className="pr-3">
-            <p className={hoverEffect}> My Reservation</p>
+            <p className={hoverEffect}> {t('my-reserve')}</p>
              </li>
             
 
@@ -220,7 +232,7 @@ const Header = ({ children }) => {
               <li>
                 {
                   auth.isAuthenticated ? <></>:<Link to="/register" className="no-underline">
-                  <Button>Sign Up</Button>
+                  <Button>{t('register')}</Button>
                 </Link>
                 }
                 

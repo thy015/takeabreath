@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 const cardData = [
   {
     title: "Hotel",
@@ -41,31 +43,35 @@ const cardData = [
   },
 ];
 // footer
-const footerData = [
+export const footerData = ()=>{
+  const {t}=useTranslation()
+  return[
+ 
   {
-    title:'Our New Project',
+    title:t('Our New Project'),
     props:[
-      'Houses','Rooms','Flats','Villas'
+      t('Houses'),t('Rooms'),t('Flats'),t('Villas')
     ]
   },
   {
-    title:'Company',
+    title:t('Company'),
     props:[
-      'How we work','Our location','Security','Policies'
+      t('How we work'),t('Our location'),t('Security'),t('Policies')
     ]
   },
   {
-    title:'Movement',
+    title:t('Movement'),
     props:[
-      'Donations Project','Public Relations','Support Us','Renting'
+      t('Donations Project'),t('Public Relations'),t('Support Us'),t('Renting')
     ]
   },
   {
-    title:'Help',
+    title:t('Help'),
     props:[
-      'Contact Us','FAQ','Privacy','Blogs'
+      t('Contact Us'),t('FAQ'),t('Privacy'),t('Blogs')
     ]
   },
 ]
-export { cardData,footerData };
+}
+export { cardData };
 

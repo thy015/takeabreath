@@ -4,8 +4,11 @@ import {
   FacebookFilled,
   InstagramFilled,
 } from "@ant-design/icons";
-import { footerData } from "../localData/localData";
+import {footerData} from '../localData/localData'
+import { useTranslation } from "react-i18next";
 const Footer = () => {
+  const { t } = useTranslation();
+  const footerItems=footerData()
   return (
     <div>
       <div className="h-[50%] bg-[#003580]">
@@ -16,8 +19,7 @@ const Footer = () => {
             <div className="col-4">
             <div>
               <h3 className="font-lobster text-white mt-10">Take A Breath</h3>
-              <p className="text-white">TakeABreath.com is part of Tab Inc., the world leader in online travel and related services.
-              Copyright © 2004–2024 Booking.com™. All rights reserved.</p>
+              <p className="text-white">{t('footer-describe')}</p>
             <div className="flex text-white justify-center space-x-4 text-[24px] my-8">
               <FacebookFilled></FacebookFilled>
               <InstagramFilled></InstagramFilled>
@@ -27,7 +29,7 @@ const Footer = () => {
           </div>
           <div className="col-8">
           <div className="flex text-white text-start space-x-20 pt-12 pl-8">
-     {footerData.map((fData,fIndex)=>(
+     {footerItems.map((fData,fIndex)=>(
       <div key={fIndex}>
         <ul className="space-y-3">
           <li className="font-bold text-[18px]">{fData.title}</li>

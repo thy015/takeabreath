@@ -21,7 +21,9 @@ import {useDispatch} from 'react-redux'
 import { setSearchResult } from "../hooks/redux/searchSlice";
 import { setInputDay } from "../hooks/redux/inputDaySlice";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 const Booking = ({tailwind_prop}) => {
+  const {t}=useTranslation()
 // onSearchResults
 const dispatch=useDispatch()
 const navigate=useNavigate()
@@ -53,7 +55,7 @@ const navigate=useNavigate()
       label: (
         <div className="p-4">
           <div className="flex items-center justify-between">
-            <span >Adults</span>
+            <span >{t('adults')}</span>
             <div className="flex items-center">
               <Button
                 onClick={aDecrement}
@@ -77,7 +79,7 @@ const navigate=useNavigate()
       label: (
         <div className="p-4">
           <div className="flex items-center justify-between">
-            <span className="mr-4 ml-1">Childrens</span>
+            <span className="mr-4 ml-1">{t('childrens')}</span>
             <div className="flex items-center">
               <Button
                 onClick={cDecrement}
@@ -221,7 +223,7 @@ const navigate=useNavigate()
             onOpenChange={(flag) => setShowCities(flag)}
           >
             <Input
-              placeholder="Where you want to go?"
+              placeholder={t('where-you-want-to-go')}
               prefix={<img src="/icon/double-bed.png" alt="Bed Icon" />}
               className="rounded-none h-full"
               bordered={false}
@@ -232,6 +234,7 @@ const navigate=useNavigate()
         </Col>
         <Col span={8}>
           <RangePicker
+            placeholder={[t('check-in'),t('check-out')]}
             suffixIcon={<CalendarOutlined />}
             disabledDate={disabledDate}
             onChange={handleDateChange}
@@ -250,7 +253,7 @@ const navigate=useNavigate()
             onClick={(e) => e.stopPropagation()}
           >
             <div className="h-full w-full rounded-none justify-center flex items-center">
-              {aCount + cCount} People
+              {aCount + cCount} {t('people')}
             </div>
           </Dropdown>
         </Col>
@@ -260,7 +263,7 @@ const navigate=useNavigate()
             onClick={handleSearch}
             className="h-full w-full rounded-none text-[18px]"
           >
-            Search
+           {t('search')}
           </Button>
         </Col>
       </Row>

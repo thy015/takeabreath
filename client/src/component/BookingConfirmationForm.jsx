@@ -364,7 +364,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
       {/* confirm modal pop up after click confirm booking */}
       <Modal
       open={paymentModalVisible}
-      title='Payment Confirmation'
+      title={<div className="text-center font-lobster text-[26px] font-light">Payment Confirmation</div>}
       onCancel={()=>setPaymentModalVisible(false)}
       onOk={handlePaymentConfirmation}
       okButtonProps={{
@@ -374,11 +374,12 @@ function BookingConfirmationForm({isShow, onCancel}) {
         : 'text-black text-lg py-3 px-6 bg-grey-500' ,
         }}
       >
+        <div className="text-center p-2 text-[16px]">
         <p>Confirm your payment using {payment}</p>
-        <p>Your total price is {totalPrice} VND which is <span className="text-success">{convertPrice} USD </span></p>
+        <p>Your total price is {formatMoney(totalPrice)} VND which is <span className="text-success">{convertPrice} USD </span></p>
         <p>Please  <span className="text-success">click the button</span> to confirm your payment, 
           otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
-         
+          </div>
       {payment==='paypal'? <PayPalButton></PayPalButton> : 'hi'}  
       </Modal>
     </div>

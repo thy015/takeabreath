@@ -7,7 +7,9 @@ import { cardData } from "../../localData/localData";
 import "../../index.css";
 import PropertyGrid from "./Home_HotelDisplay";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 const HomePage = () => {
+  const { t } = useTranslation();
   const navigate=useNavigate()
   const h4Design = "items-start flex font-bold pb-4";
   // Carousel n Cards
@@ -31,9 +33,9 @@ const HomePage = () => {
         className="flex top-[30%] left-[15%] absolute 
       flex-col text-white "
       >
-        <div className="font-lobster text-4xl">Find your next stay</div>
+        <div className="font-lobster text-4xl">{t('find-next-stay')}</div>
         <div className="text-lg mt-4">
-          Search deals on hotels, homes, and much more...
+        {t('search-deals')}
         </div>
       </div>
       <div className="absolute flex left-[25%] mt-[-35px] w-[55%]">
@@ -45,7 +47,7 @@ const HomePage = () => {
 
           <Col span={20}>
             <div className="h-[800px]">
-              <h4 className={h4Design}>Search by type of accomodation</h4>
+              <h4 className={h4Design}>{t('type-of-accomodation')}</h4>
               {/* Carousel with card groups */}
               <div className="h-72">
                 <Carousel arrows swipeToSlide>
@@ -72,7 +74,7 @@ const HomePage = () => {
                 </Carousel>
               </div>
               {/* display homestay */}
-              <h4 className={h4Design}>High rated accomodation</h4>
+              <h4 className={h4Design}>{t('high-rated-accomodation')}</h4>
               <div className="h-[400px]">
                 <PropertyGrid></PropertyGrid>
               </div>
@@ -99,13 +101,12 @@ const HomePage = () => {
               <div className="col-6" style={{marginTop:'60px'}}>
                 <div className="row">
                 <h3 className="gryphen font-bold text-[#114098] italic">
-                    Join us for a remarkable summer!
+                {t('join-us-for-a-remarkable-summer')}
                   </h3>
                   <div className="col-2"></div>
                   <div className="col-8">
                   <p className="text-gray-600 mb-4 text-start">
-                    Experience unforgettable moments and create lasting memories
-                    with us this summer. Don't miss out on the fun!
+                  {t('join-us-describe')}
                   </p>
                   <button className="btn btn-primary hover:scale-110" style={{background:'#114098'}} onClick={()=>{
                     navigate('/booking')

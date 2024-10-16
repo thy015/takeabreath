@@ -7,7 +7,7 @@ import ".././index.css";
 import { AuthContext } from "../hooks/auth.context";
 import axios from "axios";
 import { openNotification } from "../hooks/notification";
-import { useSelector,useDispatch } from "react-redux";
+
 const Header = ({ children }) => {
 
   const { auth, setAuth } = useContext(AuthContext)
@@ -92,7 +92,7 @@ const Header = ({ children }) => {
   }
 
   const hoverEffect =
-    "text-white text-[18px] pl-5 font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
+    "text-white text-[18px] pl-5 font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105 ";
 
   const items = [
     {
@@ -157,14 +157,15 @@ const Header = ({ children }) => {
       <Row justify={"center"} className="bg-[#114098]">
         <Col span={2}></Col>
         <Col span={20}>
-          <div class="bg-[#114098] flex justify-between items-center pt-12 pb-4 relative">
-            <ul class="flex pt-7 mt-3 ">
-              <Link to='/' className="no-underline">
-              <div className="absolute top-2 text-white left-[3%] text-[25px] font-lobster cursor-pointer pt-2">
+        <Link to='/' className="no-underline">
+              <div className="text-white text-[25px] font-lobster cursor-pointer float-left py-3 absolute">
                 {" "}
                 Take A Breath
               </div>
               </Link>
+          <div className="bg-[#114098] flex justify-between pt-12 pb-3">
+           
+            <ul className="flex pt-4 items-end">
               <li>
                   <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
                     Booking
@@ -182,11 +183,34 @@ const Header = ({ children }) => {
               </li>
               <li>
                 <Link to="/" className="no-underline">
-                  <p className={hoverEffect}>Membership</p>
+                  <p className={hoverEffect}>Favourites</p>
                 </Link>
               </li>
+           
             </ul>
-            <ul class="flex space-x-5 ">
+          
+            <div className="items-start">
+            <ul class="flex space-x-4 cursor-pointer">
+             
+            <li className="flex ">
+            <div className="underline decoration-yellow-200">
+            <p className={hoverEffect}> VI</p>
+              </div>
+            <div>
+            <p className={hoverEffect}>EN</p>
+            </div>
+             </li>
+            <li>
+           <p className={hoverEffect}>  TAB Partners</p>
+             </li>
+            <li>
+              <p className={hoverEffect}> About Us</p>
+             </li>
+            <li className="pr-3">
+            <p className={hoverEffect}> My Reservation</p>
+             </li>
+            
+
               <li>        
 
                 <div onClick={handleLogInNavigate}>
@@ -202,13 +226,7 @@ const Header = ({ children }) => {
                 
               </li>{""}
               <li>
-                <Link to="/" className="no-underline">
-                  <FontAwesomeIcon
-                    icon={faShoppingCart}
-                    size="lg"
-                    className="mt-2 text-white"
-                  />
-                </Link>
+             
               </li>
               <li>
                 <Dropdown
@@ -228,7 +246,9 @@ const Header = ({ children }) => {
                   />
                 </Dropdown>
               </li>
+             
             </ul>
+            </div>
           </div>
         </Col>
         <Col span={2}></Col>

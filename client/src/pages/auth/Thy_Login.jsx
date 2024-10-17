@@ -1,5 +1,5 @@
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
@@ -10,11 +10,21 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
 import { AuthContext } from "../../hooks/auth.context";
+import { useLocation } from "react-router-dom";
 const Login = () => {
 
 
   const { auth, setAuth } = useContext(AuthContext)
+  // get the redirect url from the location
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  const [redirectPath, setRedirectPath] = useState("");
+    useEffect(()=>{
+      const path=location.state?.from 
+      setRedirectPath(path)
+    },[location])
+    
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -70,7 +80,7 @@ const Login = () => {
             }
           })
           openNotification(true, "Login Successful", "")
-          navigate(res.data.redirect)
+          navigate(redirectPath)
         }
       }).catch(err => {
         console.log(err)
@@ -100,6 +110,7 @@ const Login = () => {
                     ease: "easeOut",
                     delay: 0.15,
                   }}
+
                   onAnimationComplete={() => {
                     if (isRegisterClicked) {
                       navigate("/register");

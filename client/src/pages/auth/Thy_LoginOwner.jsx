@@ -43,12 +43,7 @@ const LogInOwner = () => {
     });
   };
 
-  const handleCheckboxChange = (e) => {
-    setFormData({
-      ...formData,
-      agreeTerms: e.target.checked,
-    });
-  };
+ 
 
   const handleFormSubmit = async () => {
     const { email, password } = formData;

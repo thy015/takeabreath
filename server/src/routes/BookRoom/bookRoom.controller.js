@@ -1,91 +1,21 @@
 
 const { Invoice,Receipt} = require("../../models/invoice.model");
-const { Hotel, Room } = require("../../models/hotel.model");
+const { Room } = require("../../models/hotel.model");
 
 const bookRoom = async (req, res) => {
-  const { roomID, checkInDay,checkOutDay,price} = req.body;
-  const cusID = req.cusID;
-
-  console.log("Request body:", req.body);
-  console.log("Customer ID:", cusID);
-
-  // Validate input
-  if (!roomID ||  !cusID||  ! checkInDay||  ! checkOutDay||  ! price) {
-    console.error("Missing required fields:", { roomID, cusID,checkInDay,checkOutDay,price });
-    return res.status(403).json({ message: "Missing required fields" });
-  }
-
-  try {
-    console.log(`Customer ID extracted from token: ${cusID}`);
-
-    const foundRoom = await Room.findById(roomID);
-    if (!foundRoom) {
-      return res.status(404).json({
-        status: "BAD",
-        message: "Room not found",
-      });
+  const {idHotel,idCus,idRoom,dataBooking} = req.body;
+  try{
+    if(!idHotel||!idCus||!idRoom||!dataBooking){
+      return res.status(403).json({message:"Missing data"})
     }
+    if(dataBooking.paymentMethod==="momo"){
 
-    // found room - continue search if there's an invoice matching checkInDay
-    
-
-    const roomPrice = foundRoom.money;
-    const total = roomPrice + roomPrice * 0.08; // VAT
-
-    const invoice = await Invoice.create({
-      cusID,
-      roomID,
-      total,
-      paymentMethod,
-    });
-
-    const voucherResponse = await axios.post(
-      "https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest",
-      {
-        OrderID: invoice._id,
-        TotalMoney: total,
-        PartnerID: "1000000005",
-        ServiceName: `Book room`,
-        CustomerCode: invoice.cusID,
-        Description: `Book ${foundRoom.typeOfRoom} from ${hotelName}`,
-        LinkHome: "https://mern-tab-be.vercel.app/",
-        LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`,
-      }
-    );
-
-    if (voucherResponse.status === 200 || voucherResponse.status === "OK") {
-      const responseData = {
-        status: "OK",
-        message: "Choose voucher success",
-        data: voucherResponse.data,
-        orderID: voucherResponse.data.partNerRequest.OrderID,
-      };
-
-      // Set a timeout to delete the invoice if not paid
-      setTimeout(async () => {
-        const foundInvoice = await Invoice.findById(invoice._id);
-        if (foundInvoice && !foundInvoice.isPaid) {
-          await Invoice.findByIdAndDelete(foundInvoice._id);
-          console.log(
-            `Deleted invoice ${foundInvoice._id} due to overtime process, failed book room`
-          );
-        }
-      }, 1200000); // 20 minutes
-
-      return res.status(200).json(responseData);
-    } else {
-      return res.status(500).json({
-        status: "BAD",
-        message: "3rd choose voucher failed",
-      });
     }
-  } catch (e) {
-    console.error("Error in bookRoom:", e);
-    return res.status(500).json({
-      status: "ERROR",
-      message: "Error booking room",
-      error: e.message,
-    });
+    if(dataBooking.paymentMethod==="paypal"){
+      
+    }
+  }catch(e){
+    console.log("[ERROR]",e)
   }
 };
 //logic sau khi book thanh cong

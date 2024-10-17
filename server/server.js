@@ -9,6 +9,8 @@ const cookieParser = require('cookie-parser');
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const http = require("http");
+const swaggerUI=require('swagger-ui-express')
+const swaggerSpec=require('./docs/swagger')
 
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 const RoomListRouter = require("./src/routes/RoomList/roomList.route");
@@ -42,7 +44,9 @@ app.use(
     credentials: true
   })
 );
-
+// swagger config
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
+console.log(`Swagger: http://localhost:${PORT}/api-docs`)
 app.use("/api/roomList", RoomListRouter);
 app.use("/api/hotelList", HotelListRouter);
 app.use("/api/auth", signUpRouter);

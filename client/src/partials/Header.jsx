@@ -1,18 +1,32 @@
 import { Button, Dropdown, Row, Col } from "antd";
-import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {  faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ".././index.css";
 import { AuthContext } from "../hooks/auth.context";
 import axios from "axios";
 import { openNotification } from "../hooks/notification";
+import { useTranslation, Trans } from "react-i18next";
 
 const Header = ({ children }) => {
-
+  //translate
+  const { t ,i18n} = useTranslation();
+  const changeLanguage=(lng)=>{
+    i18n.changeLanguage(lng)
+  }
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
-
+    //log in
+    const navigate=useNavigate()
+    const handleLogInNavigate=(e)=>{
+      if(auth.isAuthenticated){
+        navigate('/profile')
+      }else{
+        e.preventDefault()
+        navigate('/login', {state:{from:location.pathname}})
+      }
+    }
   const setLogout = ()=>{
     if(auth.isAuthenticated){
       items.push({
@@ -36,7 +50,7 @@ const Header = ({ children }) => {
       }
     
     }else{
-      return "Log In"
+      return t('sign-in')
     }
   }
 
@@ -83,7 +97,7 @@ const Header = ({ children }) => {
   }
 
   const hoverEffect =
-    "text-white text-[18px] pl-5 font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
+    "text-white text-[18px]  font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105 no-underline";
 
   const items = [
     {
@@ -148,61 +162,80 @@ const Header = ({ children }) => {
       <Row justify={"center"} className="bg-[#114098]">
         <Col span={2}></Col>
         <Col span={20}>
-          <div class="bg-[#114098] flex justify-between items-center pt-12 pb-4 relative">
-            <ul class="flex pt-7 mt-3 ">
-              <Link to='/' className="no-underline">
-              <div className="absolute top-2 text-white left-[3%] text-[25px] font-lobster cursor-pointer pt-2">
+        <Link to='/' className="no-underline">
+              <div className="text-white text-[25px] font-lobster cursor-pointer float-left py-3 absolute ml-2">
                 {" "}
                 Take A Breath
               </div>
               </Link>
-              <li>
-                <Link to="/booking" className="no-underline " onClick={()=>{
-                  window.reload()
-                }}>
-                  <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
-                    Booking
-                  </p>
-                </Link>
+          <div className="bg-[#114098] flex justify-between pt-12 pb-8">
+           
+            <ul className="flex items-end ">
+              <li className='w-28 text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105'>
+                  
+                    {t('booking')}
+                  
               </li>
-              <li>
-                <Link to="/" className="no-underline">
-                  <p className={hoverEffect}>Activities</p>
-                </Link>
+                <Link to="/" className={hoverEffect}>
+              <li className='w-28'>
+                 {t('activities')}
               </li>
-              <li>
-                <Link to="/" className="no-underline">
-                  <p className={hoverEffect}>Coupons and Discount</p>
                 </Link>
+              <Link to="/" className={hoverEffect}>
+              <li className='w-24'>
+                  {t('coupons')}
               </li>
-              <li>
-                <Link to="/" className="no-underline">
-                  <p className={hoverEffect}>Membership</p>
                 </Link>
+                <Link to="/" className={hoverEffect}>
+              <li className='w-28'>
+                  {t('favs')}
               </li>
+                </Link>
+           
             </ul>
-            <ul class="flex space-x-5 ">
-              <li>
-                <Link to={auth.isAuthenticated ? "/profile": "/login"} className="no-underline">
+          
+            <div className="items-start">
+            <ul class="flex space-x-4 cursor-pointer">
+             
+            <li className="flex ">
+
+            <div className={
+                  i18n.language === 'vie' ? 'font-bold underline decoration-yellow-200 pr-4' : 'pr-4'
+                }
+                onClick={()=>changeLanguage('vie')}>
+            <p className={hoverEffect}> {t('VIE')}</p>
+              </div>
+              <div
+                className={i18n.language === 'en' ? 'font-bold underline decoration-yellow-200 pr-4' : 'pr-4'}
+                onClick={() => changeLanguage('en')}
+              >
+                <p className={hoverEffect}>{t('EN')}</p>
+              </div>
+             </li>
+            <li>
+           <p className={hoverEffect}> {t('partners')}</p>
+             </li>
+             <li className='w-32'>
+              <p className={hoverEffect}> {t('about-us')}</p>
+             </li>
+            
+
+              <li>        
+
+                <div onClick={handleLogInNavigate}>
                   <Button>{setText()}</Button>
-                </Link>
+                  </div>
               </li>
               <li>
                 {
                   auth.isAuthenticated ? <></>:<Link to="/register" className="no-underline">
-                  <Button>Sign Up</Button>
+                  <Button>{t('register')}</Button>
                 </Link>
                 }
                 
               </li>{""}
               <li>
-                <Link to="/" className="no-underline">
-                  <FontAwesomeIcon
-                    icon={faShoppingCart}
-                    size="lg"
-                    className="mt-2 text-white"
-                  />
-                </Link>
+             
               </li>
               <li>
                 <Dropdown
@@ -222,7 +255,9 @@ const Header = ({ children }) => {
                   />
                 </Dropdown>
               </li>
+             
             </ul>
+            </div>
           </div>
         </Col>
         <Col span={2}></Col>

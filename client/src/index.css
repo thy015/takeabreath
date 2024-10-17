@@ -92,3 +92,7 @@ ul{
 .white-label{
   color: white!important;
 }
+/* src/App.css or src/index.css */
+html {
+  font-family: 'Poppins', sans-serif; /* Apply Poppins font to the entire HTML */
+}

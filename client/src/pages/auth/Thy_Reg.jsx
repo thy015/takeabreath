@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,9 +7,11 @@ import { MdOutlineEmail } from "react-icons/md";
 import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
-import { easeIn, easeInOut, motion } from "framer-motion";
-
+import {motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import ChangeLangButton from "../../component/ChangeLangButton"
 const validateEmail = (email) => {
+  
   return String(email)
     .toLowerCase()
     .match(
@@ -18,6 +20,7 @@ const validateEmail = (email) => {
 };
 
 const Register = () => {
+  const {t}=useTranslation()
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
   
@@ -97,7 +100,7 @@ const Register = () => {
           <div className="row bg-slate-50 h-full shadow-lg g-0">
             <div
               className="col-4 relative"  >
-              <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">Have your fun journey with TAB</div>
+              <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">{t('have-your-fun-journey-with-tab')}</div>
               <img
                 className="h-full w-full object-cover"
                 src="https://images.unsplash.com/photo-1530273883449-aae8b023c196?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -127,7 +130,7 @@ const Register = () => {
                 <div className="col-8">
                   <div className="py-7">
                     <h5 className="font-bold">
-                      Register with{" "}
+                    {t('register-with')}{" "}
                       <span className="text-[#114098]">TakeABreath</span>{" "}
                     </h5>
                     <div className="flex justify-center">
@@ -140,7 +143,7 @@ const Register = () => {
                     </div>
                     <div className="flex items-center mt-4">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4">or</div>
+                      <div className="mx-4">{t('or')}</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-4">
@@ -158,7 +161,7 @@ const Register = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label="Password" name="password">
+                        <Form.Item label= {t('password')} name="password">
                           <Input.Password
                             placeholder="ads123@"
                             name="password"
@@ -166,7 +169,7 @@ const Register = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label="Name">
+                        <Form.Item label={t('name')}>
                           <Input
                             placeholder="Anderson"
                             suffix={<FaUser />}
@@ -175,7 +178,7 @@ const Register = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label="Phone Number">
+                        <Form.Item label=  {t('phone-number')}>
                           <Input
                             placeholder="0908xxxxxx"
                             suffix={<FaPhoneFlip />}
@@ -189,7 +192,7 @@ const Register = () => {
                             checked={formData.agreeTerms}
                             onChange={handleCheckboxChange}
                           >
-                            I agree with all statements in terms of service
+                            {t('i-agree')}
                           </Checkbox>
                         </Form.Item>
                         <Form.Item>
@@ -197,32 +200,36 @@ const Register = () => {
                             onClick={handleFormSubmit}
                             className="my-2 ml-8 hover:scale-105"
                           >
-                            Create Account
+                           {t('create-account')}
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
                     <div className="flex justify-start">
-                      <span>I'm already a member</span>
+                      <span>{t('im-already-a-member')}</span>
 
                       <span
                         className="text-[#114098] cursor-pointer no-underline ml-2"
                         onClick={handleSignInClick}
                       >
-                        Sign In
+                        {t('sign-in')}
                       </span>
                     </div>
                     <div className="flex justify-start mt-3">
-                      <span>I'm an owner</span>
+                      <span>{t('im-an-owner')}</span>
                       <Link to="/loginOwner" className="no-underline">
                         <span className="text-[#114098] cursor-pointer no-underline ml-2">
-                          Sign In Owner
+                        {t('sign-in-owner')}
                         </span>
                       </Link>
                     </div>
                   </div>
                 </div>
-                <div className="col-2"></div>
+                <div className="col-2 flex justify-start items-end">
+                <div className=" flex">
+                <ChangeLangButton color="black" underlineColor='green-500' />
+                </div>
+                </div>
               </div>
             </motion.div>
           </div>

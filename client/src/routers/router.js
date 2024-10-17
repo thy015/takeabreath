@@ -12,10 +12,7 @@ import Calendar from "../pages/admin/Calendar";
 import Settings from "../pages/admin/Settings";
 import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin";
 import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
-// import Login from "../pages/auth/Login"
-import LoginOwner from "../pages/auth/LoginOwner"
-// import Register from "../pages/auth/Register"
-// import RegisterOwner from "../pages/auth/RegisterOwner"
+
 import RegisterOwner from "../pages/auth/Thy_RegOwner";
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 

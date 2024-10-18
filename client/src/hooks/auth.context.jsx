@@ -6,7 +6,8 @@ export const AuthContext = createContext({
         id: '',
         email: '',
         name: ''
-    }
+    },
+    login:()=>{}
 })
 
 export const AuthWrapper = ({ children }) => {
@@ -18,8 +19,20 @@ export const AuthWrapper = ({ children }) => {
             email:''
         }
     })
+
+    const login=(decodedToken)=>{
+        setAuth({
+            isAuthenticated:true,
+            user:{
+                id:decodedToken.id ||'',
+                name:decodedToken.name ||'',
+                email:decodedToken.email ||'',
+                role:decodedToken.role ||''
+            }
+        })
+    }
     return (
-        <AuthContext.Provider value={{ auth, setAuth }}>
+        <AuthContext.Provider value={{ auth,setAuth,login }}>
             {children}
         </AuthContext.Provider>
     )

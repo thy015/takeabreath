@@ -2,7 +2,7 @@ const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
 const {Hotel,Room} = require("../../models/hotel.model");
-const { verifyOwner } = require("../../services/verify");
+const { verifyOwner } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
   try {

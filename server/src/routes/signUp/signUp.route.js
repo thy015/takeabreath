@@ -2,7 +2,7 @@ const express = require("express");
 const signUpController = require("./signUp.controller");
 const signUpRouter = express.Router();
 const {Owner,Customer}=require('../../models/signUp.model');
-const { verifyLogin, verifyAdmin } = require("../../services/verify");
+const { verifyLogin, verifyAdmin } = require("../../middleware/verify");
 // CRUD Owner
 signUpRouter.get("/owner", async (req, res) => {
   try {

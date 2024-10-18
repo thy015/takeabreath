@@ -4,7 +4,7 @@ import PayPalButton from './PayPalButton'
 const Test = () => {
   return (
     <div>
-      <PayPalButton></PayPalButton>
+      
     </div>
   )
 }

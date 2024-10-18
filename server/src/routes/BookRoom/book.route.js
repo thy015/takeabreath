@@ -1,6 +1,6 @@
 const express = require("express");
 const bookController = require("./bookRoom.controller");
-const { authenCusToken } = require("../../services/jwt");
+const { authenCusToken } = require("../../middleware/jwt");
 const bookRouter = express.Router();
 
 bookRouter.get("/invoice", bookController.getInvoicesWithReceipts);

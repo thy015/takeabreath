@@ -2,7 +2,7 @@ import React, {  useState } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF } from "react-icons/fa";
+import { FaGoogle, FaFacebookF,FaAccessibleIcon } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import axios from "axios";
@@ -10,6 +10,8 @@ import { openNotification } from "../../hooks/notification";
 import {motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import ChangeLangButton from "../../component/ChangeLangButton"
+import {SSO} from '@htilssu/wowo'
+
 const validateEmail = (email) => {
   
   return String(email)
@@ -20,6 +22,7 @@ const validateEmail = (email) => {
 };
 
 const Register = () => {
+  const sso = new SSO('TAB')
   const {t}=useTranslation()
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
@@ -91,7 +94,11 @@ const Register = () => {
       );
     }
   };
+//sso
 
+function handleLoginSSO() {
+  sso.redirectToLogin("http://localhost:3000/sso")
+}
   return (
     <div>
       <div className="row h-[550px]">
@@ -139,6 +146,9 @@ const Register = () => {
                       </div>
                       <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
                         <FaFacebookF />
+                      </div>
+                      <div onClick={handleLoginSSO} className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
+                        <FaAccessibleIcon />
                       </div>
                     </div>
                     <div className="flex items-center mt-4">

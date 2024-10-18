@@ -10,13 +10,7 @@ import { openNotification } from "../../hooks/notification";
 import { motion } from "framer-motion";
 import ChangeLangButton from "../../component/ChangeLangButton"
 import { useTranslation } from "react-i18next";
-const validateEmail = (email) => {
-  return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-};
+
 
 const LogInOwner = () => {
   const { t } = useTranslation();
@@ -55,10 +49,6 @@ const LogInOwner = () => {
     }
 
 
-    if (password.length <= 8) {
-      openNotification(false, "Password should be at least 8 characters");
-      return;
-    }
 
     try {
       const response = await axios.post("http://localhost:4000/api/auth/signInOwner", formData);

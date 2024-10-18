@@ -30,6 +30,7 @@ import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
 import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
+import SSO from '../pages/auth/SSO'
 export const routers = [
   {
     path: "/",
@@ -136,5 +137,20 @@ export const routers = [
     isShowHeader: false,
     isShowFooter: false,
   },
-];
+  {
+
+    path: "/sso",
+    page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
+    path: "*",
+    page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+]
+
 

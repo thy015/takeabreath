@@ -1,7 +1,7 @@
 const express = require("express")
 const VoucherRoute = express.Router()
 const {Voucher} = require("../../models/voucher.model")
-const {verifyOwner} = require("../../services/verify")
+const {verifyOwner} = require("../../middleware/verify")
 const {addVoucher,getListVoucher,deleteVoucher,updateVoucher} = require("./voucher.controller")
 
 VoucherRoute.all("*",verifyOwner)

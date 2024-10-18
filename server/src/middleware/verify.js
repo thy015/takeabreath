@@ -52,8 +52,10 @@ const verifyLogin = async (req,res,next)=>{
     next()
 }
 
+
 module.exports = {
     verifyAdmin, 
     verifyLogin,
-    verifyOwner
+    verifyOwner,
+
 }

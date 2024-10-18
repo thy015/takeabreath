@@ -11,8 +11,10 @@ import axios from "axios";
 import { openNotification } from "../../hooks/notification";
 import { AuthContext } from "../../hooks/auth.context";
 import { useLocation } from "react-router-dom";
+import ChangeLangButton from "../../component/ChangeLangButton";
+import { useTranslation } from "react-i18next";
 const Login = () => {
-
+  const {t}=useTranslation()
 
   const { auth, setAuth } = useContext(AuthContext)
   // get the redirect url from the location
@@ -97,7 +99,11 @@ const Login = () => {
           <div className="row bg-slate-50 h-full shadow-lg g-0">
             <div className="col-8">
               <div className="row h-full">
-                <div className="col-2"></div>
+                <div className="col-2 flex justify-start items-end">
+                  <div className="pl-4 flex">
+                <ChangeLangButton color="black" underlineColor='green-500' />
+                </div>
+                </div>
                 <motion.div
                   className="col-8"
                   initial={{ opacity: 0 }}
@@ -119,8 +125,8 @@ const Login = () => {
                 >
                   <div className="pt-20">
                     <h5 className="font-bold">
-                      Sign In with{" "}
-                      <span className="text-[#114098]">TakeABreath</span>{" "}
+                      {t('sign-in-with')}
+                      <span className="text-[#114098] ml-2">TakeABreath</span>{" "}
                     </h5>
                     <div className="flex justify-center">
                       <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
@@ -132,12 +138,12 @@ const Login = () => {
                     </div>
                     <div className="flex items-center mt-4">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4">or</div>
+                      <div className="mx-4">{t('or-register')}</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-12">
                       <Form>
-                        <Form.Item label="Email" name="email">
+                        <Form.Item label={t('email')} name="email">
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={
@@ -150,7 +156,7 @@ const Login = () => {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label="Password" name="password">
+                        <Form.Item label={t('password')} name="password">
                           <Input.Password
                             placeholder="ads123@"
                             name="password"
@@ -163,38 +169,40 @@ const Login = () => {
                             onClick={handleFormSubmit}
                             className="my-2 hover:scale-105"
                           >
-                            Sign In
+                             {t('sign-in')}
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
                     <div className="flex justify-start mt-12">
-                      <span>Not having an account yet?</span>
+                      <span>{t('not-having-an-account-yet')}</span>
 
                       <span
                         className="text-[#114098] cursor-pointer no-underline ml-2"
                         onClick={handleRegisterClick}
                       >
                         {" "}
-                        Register
+                        {t('register')}
                       </span>
                     </div>
                     <div className="flex justify-start mt-3">
-                      <span>I'm an owner</span>
+                      <span>{t('im-an-owner')}</span>
                       <Link to="/loginOwner" className="no-underline">
                         <span className="text-[#114098] cursor-pointer no-underline ml-2">
-                          Sign In Owner
+                        {t('sign-in-owner')}
                         </span>
                       </Link>
                     </div>
                   </div>
                 </motion.div>
-                <div className="col-2"></div>
+                <div className="col-2">
+               
+                </div>
               </div>
             </div>
             <div
               className="col-4 relative"
-            > <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">Have your fun journey with TAB</div>
+            > <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">{t('have-your-fun-journey-with-tab')}</div>
               <img
                 className="h-full w-full object-cover img-out"
                 src="https://images.unsplash.com/photo-1530273883449-aae8b023c196?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -203,7 +211,9 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <div className="col-2"></div>
+        <div className="col-2">
+         
+        </div>
       </div>
     </div>
   );

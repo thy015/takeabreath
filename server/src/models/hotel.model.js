@@ -2,7 +2,6 @@
 const mongoose = require("mongoose");
 const hotelSchema = new mongoose.Schema({
   hotelName: { type: String, required: true },
-  numberOfRooms: { type: Number, required: false, default: 0 },
   address: { type: String, required: true },
   city: { type: String, required: true },
   nation: { type: String, required: true },
@@ -21,6 +20,7 @@ const hotelSchema = new mongoose.Schema({
 
 const roomSchema = new mongoose.Schema({
   roomName: { type: String, required: true },
+  numberOfRooms: { type: Number, required: false, default: 0 },
   typeOfRoom: { type: String, required: true },
   capacity: { type: Number, required: true },
   numberOfBeds: { type: Number, required: true },

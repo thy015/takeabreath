@@ -14,9 +14,6 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
 
       //open modal : Phuc
       const [isShow, setShow] = useState(false)
-      const [roomSelected, setRoomSelected] = useState({})
-      const [countRoom, setCountRoom] = useState()
-      const [getTotal, setTotal] = useState()
 
         //send totalPrice paypal
         const handleReserve=(selectedRoom,countRoom,totalPrice)=>{

@@ -7,14 +7,12 @@ import ".././index.css";
 import { AuthContext } from "../hooks/auth.context";
 import axios from "axios";
 import { openNotification } from "../hooks/notification";
-import { useTranslation, Trans } from "react-i18next";
-
+import { useTranslation } from "react-i18next";
+import ChangeLangButton from "../component/ChangeLangButton";
 const Header = ({ children }) => {
-  //translate
-  const { t ,i18n} = useTranslation();
-  const changeLanguage=(lng)=>{
-    i18n.changeLanguage(lng)
-  }
+
+  const { t } = useTranslation();
+
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
     //log in
@@ -97,7 +95,7 @@ const Header = ({ children }) => {
   }
 
   const hoverEffect =
-    "text-white text-[18px]  font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105 no-underline";
+    "text-white text-[20px] font-afacad transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105 no-underline hover:bg-[#5576B4] hover:rounded-md";
 
   const items = [
     {
@@ -163,7 +161,7 @@ const Header = ({ children }) => {
         <Col span={2}></Col>
         <Col span={20}>
         <Link to='/' className="no-underline">
-              <div className="text-white text-[25px] font-lobster cursor-pointer float-left py-3 absolute ml-2">
+              <div className="text-white text-[25px] font-lobster cursor-pointer float-left py-3 absolute ml-3">
                 {" "}
                 Take A Breath
               </div>
@@ -171,11 +169,11 @@ const Header = ({ children }) => {
           <div className="bg-[#114098] flex justify-between pt-12 pb-8">
            
             <ul className="flex items-end ">
-              <li className='w-28 text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105'>
-                  
-                    {t('booking')}
-                  
+            <Link to="/" className={hoverEffect}>
+              <li className='w-28 '>               
+                    {t('booking')}    
               </li>
+              </Link>
                 <Link to="/" className={hoverEffect}>
               <li className='w-28'>
                  {t('activities')}
@@ -195,24 +193,11 @@ const Header = ({ children }) => {
             </ul>
           
             <div className="items-start">
-            <ul class="flex space-x-4 cursor-pointer">
-             
-            <li className="flex ">
-
-            <div className={
-                  i18n.language === 'vie' ? 'font-bold underline decoration-yellow-200 pr-4' : 'pr-4'
-                }
-                onClick={()=>changeLanguage('vie')}>
-            <p className={hoverEffect}> {t('VIE')}</p>
-              </div>
-              <div
-                className={i18n.language === 'en' ? 'font-bold underline decoration-yellow-200 pr-4' : 'pr-4'}
-                onClick={() => changeLanguage('en')}
-              >
-                <p className={hoverEffect}>{t('EN')}</p>
-              </div>
+            <ul class="flex space-x-4 cursor-pointer">           
+            <li className="flex">
+          <ChangeLangButton color="white" underlineColor="yellow-200"/>
              </li>
-            <li>
+            <li className="w-20">
            <p className={hoverEffect}> {t('partners')}</p>
              </li>
              <li className='w-32'>

@@ -3,15 +3,22 @@ const { Invoice,Receipt} = require("../../models/invoice.model");
 const { Room } = require("../../models/hotel.model");
 
 const bookRoom = async (req, res) => {
-  const {idHotel,idCus,idRoom,dataBooking} = req.body;
+  const {idHotel,idCus,idRoom,dataBooking,invoiceState} = req.body;
   try{
-    if(!idHotel||!idCus||!idRoom||!dataBooking){
+    if(!idHotel||!idCus||!idRoom||!dataBooking||!invoiceState){
       return res.status(403).json({message:"Missing data"})
     }
-    if(dataBooking.paymentMethod==="momo"){
-
-    }
     if(dataBooking.paymentMethod==="paypal"){
+      const invoice = new Invoice({
+        idHotel,
+        idCus,
+        idRoom,
+        dataBooking,
+        invoiceState
+      })
+      await invoice.save({
+        
+      })
       
     }
   }catch(e){

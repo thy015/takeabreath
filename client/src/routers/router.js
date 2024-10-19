@@ -12,10 +12,7 @@ import Calendar from "../pages/admin/Calendar";
 import Settings from "../pages/admin/Settings";
 import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin";
 import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
-// import Login from "../pages/auth/Login"
-import LoginOwner from "../pages/auth/LoginOwner"
-// import Register from "../pages/auth/Register"
-// import RegisterOwner from "../pages/auth/RegisterOwner"
+
 import RegisterOwner from "../pages/auth/Thy_RegOwner";
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 
@@ -32,6 +29,7 @@ import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
 import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
+import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/AdminVoucher";
 export const routers = [
   {
@@ -132,5 +130,20 @@ export const routers = [
     isShowHeader: false,
     isShowFooter: false,
   },
-];
+  {
+
+    path: "/sso",
+    page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
+    path: "*",
+    page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+]
+
 

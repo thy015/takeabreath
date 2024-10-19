@@ -38,18 +38,18 @@ const Sidebar = () => {
   };
 
   const manageItems = [
-    { label: "Hotels", to: "hotel", icon: FaHotel },
-    { label: "Customers", to: "customers", icon: FaUser },
-    { label: "Rooms", to: "rooms", icon: FaRestroom },
-    { label: "Vouchers", to: "", icon: FaTicketAlt },
-    { label: "Invoice", to: "", icon: FaReceipt },
-    { label: "Requests", to: "requests", icon: FaHand },
+    { label: "Khách Sạn", to: "hotel", icon: FaHotel },
+    { label: "Khách Hàng", to: "customers", icon: FaUser },
+    { label: "Phòng", to: "rooms", icon: FaRestroom },
+    { label: "Vouchers", to: "vouchers", icon: FaTicketAlt },
+    { label: "Hóa Đơn", to: "", icon: FaReceipt },
+    { label: "Yêu Cầu", to: "requests", icon: FaHand },
   
   ];
 
   const addonItems = [
-    { label: "Calendar", to: "calendar", icon: FaCalendar },
-    { label: "Settings", to: "settings", icon: FaRegSun },
+    { label: "Lịch Làm Việc", to: "calendar", icon: FaCalendar },
+    { label: "Cài Đặt", to: "settings", icon: FaRegSun },
   ];
 
   return (
@@ -60,7 +60,7 @@ const Sidebar = () => {
         </h1>
       </div>
       <SidebarItem
-        label="Dashboard"
+        label="Trang Chủ"
         to="dashboard"
         icon={FaTachometerAlt}
         active={activeItem === "Dashboard"}

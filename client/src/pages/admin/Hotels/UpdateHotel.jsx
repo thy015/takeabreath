@@ -64,12 +64,12 @@ const UpdateHotel = () => {
         className='py-8 h-auto'
         onFinish={onFinish} 
       >
-        <h1 className="text-xl font-bold mb-4 text-black">Update Hotel</h1>
+        <h1 className="text-xl font-bold mb-4 text-black">Cập Nhật Khách Sạn</h1>
 
         {errMessage && <div className="text-red-500">{errMessage}</div>}
 
         <Form.Item
-          label={<span className="text-black">Hotel Name</span>}
+          label={<span className="text-black">Tên Khách Sạn</span>}
           name="hotelName"
           rules={[{ required: true, message: 'Please input hotel name!' }]}
         >
@@ -77,7 +77,7 @@ const UpdateHotel = () => {
         </Form.Item>
 
         <Form.Item
-          label={<span className="text-black">Address</span>}
+          label={<span className="text-black">Địa Chỉ</span>}
           name="address"
           rules={[{ required: true, message: 'Please input hotel address!' }]}
         >
@@ -85,7 +85,7 @@ const UpdateHotel = () => {
         </Form.Item>
 
         <Form.Item
-          label={<span className="text-black">City</span>}
+          label={<span className="text-black">Thành Phố</span>}
           name="city"
           rules={[{ required: true, message: 'Please input city!' }]}
         >
@@ -93,7 +93,7 @@ const UpdateHotel = () => {
         </Form.Item>
 
         <Form.Item
-          label={<span className="text-black">Nation</span>}
+          label={<span className="text-black">Quốc Tịch</span>}
           name="nation"
           rules={[{ required: true, message: 'Please input nation!' }]}
         >
@@ -101,7 +101,7 @@ const UpdateHotel = () => {
         </Form.Item>
 
         <Form.Item
-          label={<span className="text-black">Hotel Type</span>}
+          label={<span className="text-black">Loại Khách Sạn</span>}
           name="hotelType"
           rules={[{ required: true, message: 'Please input hotel type!' }]}
         >
@@ -109,7 +109,7 @@ const UpdateHotel = () => {
         </Form.Item>
 
         <Form.Item
-          label={<span className="text-black">Phone</span>}
+          label={<span className="text-black">Số Điện Thoại</span>}
           name="phoneNum"
           rules={[{ required: true, message: 'Please input phone number!' }]}
         >
@@ -117,7 +117,7 @@ const UpdateHotel = () => {
         </Form.Item>
 
         <Form.Item
-          label={<span className="text-black">Image</span>}
+          label={<span className="text-black">Hình Ảnh</span>}
           name="imgLink"
           rules={[{ required: true, message: 'Please input image link!' }]}
         >
@@ -126,7 +126,7 @@ const UpdateHotel = () => {
 
         <Form.Item>
           <Button type="primary" htmlType="submit" className="w-full bg-blue-800 hover:bg-blue-300">
-            Update Hotel
+            Cập Nhật
           </Button>
         </Form.Item>
       </Form>

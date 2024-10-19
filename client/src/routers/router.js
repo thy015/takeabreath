@@ -20,10 +20,9 @@ import HotelDisplay_HotelTab from "../pages/user/HotelDisplay_HotelTab";
 import OwnerLayout from "../pages/owner/OwnerLayout";
 import Vouchers from "../pages/owner/Voucher/Vouchers";
 import AddVoucher from "../pages/owner/Voucher/AddVoucher";
-import AddHotel from "../pages/admin/Hotels/AddHotel";
 import Customer from "../pages/admin/Customers/CustomerList"
 import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
-import Table from "../pages/admin/Table";
+
 import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
@@ -31,6 +30,7 @@ import LogInOwner from "../pages/auth/Thy_LoginOwner";
 import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
+import AdminVoucher from "../pages/admin/AdminVoucher";
 export const routers = [
   {
     path: "/",
@@ -50,23 +50,16 @@ export const routers = [
       { path: "settings", page: Settings  }, 
       {path:"rooms", page:RoomsAdmin},
       {path:"hotel/:id/rooms", page:RoomsOfHotel},
-{path:"table", page:Table},
       {path:"customers", page:Customer},
-      {path:"hotel/createHotel",page:AddHotel},
       {path:"requests",page:cancelReqAdmin},
       {path:"hotel/:id/updateHotel",page:UpdateHotel},
+      {path:"vouchers",page:AdminVoucher},
     ],
     isAdmin: true,
     isShowHeader: false,
     isShowFooter: false,
   },
-  // {
-  //   path: "/Admin",
-  //   page: AdminLayout,
-  //   isShowHeader: false,
-  //   isShowFooter: false,
-  // },
-  // test
+ 
   {
     path: "/login",
     page: Login,

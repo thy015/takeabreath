@@ -54,10 +54,10 @@ const LogInOwner = () => {
     }
 
 
-    if (password.length <= 8) {
-      openNotification(false, "Password should be at least 8 characters");
-      return;
-    }
+    // if (password.length <= 8) {
+    //   openNotification(false, "Password should be at least 8 characters");
+    //   return;
+    // }
 
     try {
       const response = await axios.post("http://localhost:4000/api/auth/signInOwner", formData);
@@ -74,11 +74,11 @@ const LogInOwner = () => {
         navigate(response.data.redirect);
       }
     } catch (e) {
-      console.log(e + "Error passing form data");
+      console.log(e);
       openNotification(
         false,
         "Failed to register",
-        "Please try again after 5 minutes"
+        e.response.data.message
       );
     }
   };

@@ -4,12 +4,12 @@ const { generalAccessTokens } = require("../../services/jwt");
 //owner
 const signUpOwner = async (req, res) => {
 
-  const { ownerName, password, email, birthday, phone, idenCard} =
+  const { name, password, email, birthday, phone, idenCard} =
     req.body;
 
-  console.log("[body]", { ownerName, password, email, birthday, phone, idenCard })
+  console.log("[body]", { name, password, email, birthday, phone, idenCard })
 
-  if (!ownerName || !password || !email || !birthday || !phone ||!idenCard) {
+  if (!name || !password || !email  || !phone ||!idenCard) {
 
     return res.status(403).json({ message: "Input is required" });
   } else if (!validateEmail(email)) {

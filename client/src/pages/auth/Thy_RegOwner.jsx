@@ -92,7 +92,7 @@ const RegisterOwner = () => {
       openNotification(
         false,
         "Failed to register",
-        "Please try again after 5 minutes"
+        e.response.data.message
       );
     }
   };

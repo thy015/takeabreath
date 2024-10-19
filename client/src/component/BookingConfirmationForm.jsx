@@ -22,6 +22,8 @@ import { AuthContext } from "../hooks/auth.context";
 import { RateStar } from "./Rate";
 import PayPalButton from "./PayPalButton";
 import {useNavigate} from "react-router-dom"
+import {useDispatch} from "react-redux"
+import {setInvoiceID} from "../hooks/redux/inputDaySlice"
 function BookingConfirmationForm({isShow, onCancel}) {
   const { auth } = useContext(AuthContext);
   const [form] = useForm();
@@ -29,6 +31,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
   const [paymentModalVisible,setPaymentModalVisible]=useState(false)
   const [isFormValid,setIsFormValid]=useState(false)
   const navigate=useNavigate()
+  const dispatch=useDispatch()
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };
@@ -50,15 +53,6 @@ function BookingConfirmationForm({isShow, onCancel}) {
     setPayment(selectedValue);
   };
 
-  const handleOk = async () => {
-    try {
-      await form.validateFields();
-      setIsFormValid(true);
-      setPaymentModalVisible(true);
-    } catch (error) {
-      console.log("Validation failed:", error);
-    }
-  };
   const checkFormValidity=async()=>{
     try{
       await form.validateFields()
@@ -77,22 +71,24 @@ function BookingConfirmationForm({isShow, onCancel}) {
     const idHotel = selectedHotel._id;
     const idRoom = selectedRoom._id;
     const idCus = auth.user.id ?? "Chua login";
-    const dataBooking = {
+    const dataBooking = 
+      {
       inputName: values.fullname,
       inputIdenCard: values.idenCard,
       inputGender: values.gender,
       paymentMethod: values.paymentMethod,
       inputPhoneNum: values.numberphone,
       inputEmail: values.email,
-      inputDob: dayjs(values.dob).format("DD/MM/YYYY"),
+      inputDob: dayjs(values.dob),
       total: totalPrice,
-      checkInDay: dayjs(dayStart).format("DD/MM/YYYY"),
-      checkOutDay: dayjs(dayEnd).format("DD/MM/YYYY"),
+      checkInDay: dayjs(dayStart),
+      checkOutDay: dayjs(dayEnd),
       totalDay: totalCheckInDay,
-    };
-    const invoiceState=completedPayment
-
-    console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking,invoiceState);
+      totalRoom:countRoom
+      }
+    
+    // need handle voucher
+    console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking);
     
     try {
       const response = await axios.post("http://localhost:4000/api/booking", {
@@ -100,16 +96,17 @@ function BookingConfirmationForm({isShow, onCancel}) {
         idCus,
         idRoom,
         dataBooking,
-        invoiceState
       });
-      console.log("[RESPONSE]", response);
-      if (res.status === 200) {
-        navigate("/booking-success");
+      console.log("[RESPONSE]", response.data);
+      console.log('[Invoice ID]',response.data.invoiceID)
+      dispatch(setInvoiceID({invoiceID:response.data.invoiceID}))
+      if(response.status===200){
+        setPaymentModalVisible(true)
       } else {
         message.error("Booking failed", message.error(res.data.message));
       }
     } catch (e) {
-      console.log("[ERROR]", e);
+      console.log("[ERROR]", e.response.message);
     }
     
   };
@@ -121,7 +118,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
         onCancel={onCancel}
         className="min-w-[80%] max-h-[100px]"
         okText="Confirm Booking"
-        onOk={(handleOk)}
+        onOk={()=>form.submit()}
         okButtonProps={{
           disabled:!isFormValid,
           className: isFormValid 

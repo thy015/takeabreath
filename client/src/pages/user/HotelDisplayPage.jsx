@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 const { Panel } = Collapse;
-
-const filters = cardData.map((c) => c.title);
+  
 const HotelDisplayCompre = () => {
+  const cardItems=cardData()
+const filters = cardItems.map((c) => c.title);
   // global, take from redux and booking
   const searchResults = useSelector((state) => state.searchResults);
   const { city } = useSelector((state) => state.inputDay);

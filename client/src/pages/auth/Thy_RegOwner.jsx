@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF,FaAddressCard } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
 import { motion } from "framer-motion";
-
+import { useTranslation } from "react-i18next";
+import ChangeLangButton from "../../component/ChangeLangButton";
 const validateEmail = (email) => {
   return String(email)
     .toLowerCase()
@@ -18,6 +19,7 @@ const validateEmail = (email) => {
 };
 
 const RegisterOwner = () => {
+  const {t} = useTranslation();
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
 
@@ -103,17 +105,20 @@ const RegisterOwner = () => {
           <div className="row bg-[#114098] h-full shadow-lg g-0">
             <div className="col-5 relative border-r">
               <div className="gryphen absolute flex mt-[100px] ml-16 text-white text-semibold text-[20px] italic">
-                Register for Your Very First Journey
+              {t('register-owner-describe')}
               </div>
               <div className="gryphen absolute flex mt-[130px] ml-[200px] text-white font-bold text-[20px] italic">
-                as a<span className="text-[#c3d7ef] mx-2"> TAB </span>
-                Partner
+              {t('as-a')}<span className="text-[#c3d7ef] mx-2"> TAB </span>
+                {t('partner')}
               </div>
               <img
                 className="w-full flex mt-56"
                 src="/img/sign-up.svg"
                 alt="side-image"
               />
+              <div className='absolute flex top-[92%] left-[70%]'>
+                <ChangeLangButton color='white' underline='yellow-200'></ChangeLangButton>
+                </div>
             </div>
             <motion.div
               className="col-7"
@@ -138,7 +143,7 @@ const RegisterOwner = () => {
                 <div className="col-8">
                   <div className="py-7">
                     <h5 className="font-bold text-[#c3d7ef]">
-                      Be an owner with{" "}
+                    {t('be-an-owner')}{" "}
                       <span className="text-white">TakeABreath</span>{" "}
                     </h5>
                     <div className="flex justify-center">
@@ -151,7 +156,7 @@ const RegisterOwner = () => {
                     </div>
                     <div className="flex items-center mt-2">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4 text-white">or</div>
+                      <div className="mx-4 text-white">{t('or')}</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-4">
@@ -173,7 +178,7 @@ const RegisterOwner = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label={<span className="white-label">Password</span>}
+                          label={<span className="white-label">{t('password')}</span>}
                           name="password"
                         >
                           <Input.Password
@@ -184,7 +189,7 @@ const RegisterOwner = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label={<span className="white-label">Name</span>}
+                          label={<span className="white-label">{t('name')}</span>}
                           name='name'
                         >
                           <Input
@@ -197,7 +202,7 @@ const RegisterOwner = () => {
                         </Form.Item>
                         <Form.Item
                           label={
-                            <span className="white-label">Phone Number</span>
+                            <span className="white-label">{t('phone-number')}</span>
                           } name='phone'
                         >
                           <Input
@@ -211,7 +216,7 @@ const RegisterOwner = () => {
                         {/* owner ++ */}
                         <Form.Item
                           label={
-                            <span className="white-label">Identification Card</span>
+                            <span className="white-label">{t('iden-card')}</span>
                           }
                           name='idenCard'
                         >
@@ -229,7 +234,7 @@ const RegisterOwner = () => {
                             checked={formData.agreeTerms}
                             onChange={handleCheckboxChange}
                           >
-                            I agree with all statements in terms of service
+                            {t('i-agree')}
                           </Checkbox>
                         </Form.Item>
                         <Form.Item>
@@ -238,16 +243,16 @@ const RegisterOwner = () => {
                             className="my-2 ml-8 hover:scale-105 bg-white"
                             style={{ color: "#114098" }}
                           >
-                            Create Account
+                            {t('create-account')}
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
                    
                     <div className="flex justify-start mt-3 text-[#c3d7ef]">
-                      <span>I'm already an owner</span>
+                      <span>{t('im-already-a-member')}</span>
                         <span className="text-white cursor-pointer no-underline ml-2" onClick={handleSignInClick}>
-                          Sign In Owner
+                          {t('sign-in-owner')}
                         </span>
                     </div>
                   </div>

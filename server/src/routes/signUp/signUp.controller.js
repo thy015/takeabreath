@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { Owner, Admin, Customer } = require("../../models/signUp.model");
-const { generalAccessTokens } = require("../../services/jwt");
+const { generalAccessTokens } = require("../../middleware/jwt");
 //owner
 const signUpOwner = async (req, res) => {
 

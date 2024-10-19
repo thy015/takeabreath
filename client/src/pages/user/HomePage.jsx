@@ -3,7 +3,7 @@ import Booking from "../../component/Booking";
 import { Row, Col, Carousel } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
-import { cardData } from "../../localData/localData";
+import {cardData} from '../../localData/localData'
 import "../../index.css";
 import PropertyGrid from "./Home_HotelDisplay";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +12,13 @@ const HomePage = () => {
   const { t } = useTranslation();
   const navigate=useNavigate()
   const h4Design = "items-start flex font-bold pb-4";
+  const cardItems=cardData()
   // Carousel n Cards
   const slides = [];
   const itemsPerSlide = 4;
 
-  for (let i = 0; i < cardData.length; i += itemsPerSlide) {
-    slides.push(cardData.slice(i, i + itemsPerSlide));
+  for (let i = 0; i < cardItems.length; i += itemsPerSlide) {
+    slides.push(cardItems.slice(i, i + itemsPerSlide));
   }
 
   return (

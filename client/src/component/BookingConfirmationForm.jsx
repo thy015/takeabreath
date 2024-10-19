@@ -28,7 +28,6 @@ function BookingConfirmationForm({isShow, onCancel}) {
   const [payment, setPayment] = useState("");
   const [paymentModalVisible,setPaymentModalVisible]=useState(false)
   const [isFormValid,setIsFormValid]=useState(false)
-  const [timeCount,setTimeCount]=useState(20*60)
   const navigate=useNavigate()
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
@@ -74,42 +73,46 @@ function BookingConfirmationForm({isShow, onCancel}) {
     setPaymentModalVisible(false);
     onCancel(); 
   };
-  // const onFinish = async (values) => {
-  //   const idHotel = selectedHotel._id;
-  //   const idRoom = selectedRoom._id;
-  //   const idCus = auth.user.id ?? "Chua login";
-  //   const dataBooking = {
-  //     inputName: values.fullname,
-  //     inputIdenCard: values.idenCard,
-  //     inputGender: values.gender,
-  //     paymentMethod: values.paymentMethod,
-  //     inputPhoneNum: values.numberphone,
-  //     inputEmail: values.email,
-  //     inputDob: dayjs(values.dob).format("DD/MM/YYYY"),
-  //     total: totalPrice,
-  //     checkInDay: dayjs(dayStart).format("DD/MM/YYYY"),
-  //     checkOutDay: dayjs(dayEnd).format("DD/MM/YYYY"),
-  //     totalDay: totalCheckInDay,
-  //   };
+  const onFinish = async (values) => {
+    const idHotel = selectedHotel._id;
+    const idRoom = selectedRoom._id;
+    const idCus = auth.user.id ?? "Chua login";
+    const dataBooking = {
+      inputName: values.fullname,
+      inputIdenCard: values.idenCard,
+      inputGender: values.gender,
+      paymentMethod: values.paymentMethod,
+      inputPhoneNum: values.numberphone,
+      inputEmail: values.email,
+      inputDob: dayjs(values.dob).format("DD/MM/YYYY"),
+      total: totalPrice,
+      checkInDay: dayjs(dayStart).format("DD/MM/YYYY"),
+      checkOutDay: dayjs(dayEnd).format("DD/MM/YYYY"),
+      totalDay: totalCheckInDay,
+    };
+    const invoiceState=completedPayment
 
-  //   console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking);
-  //   try {
-  //     const res = await axios.post("http://localhost:4000/api/bookRoom", {
-  //       idHotel,
-  //       idCus,
-  //       idRoom,
-  //       dataBooking,
-  //     });
-  //     console.log("[RESPONSE]", res);
-  //     if (res.status === 200) {
-  //       navigate("/booking-success");
-  //     } else {
-  //       message.error("Booking failed", message.error(res.data.message));
-  //     }
-  //   } catch (e) {
-  //     console.log("[ERROR]", e);
-  //   }
-  // };
+    console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking,invoiceState);
+    
+    try {
+      const response = await axios.post("http://localhost:4000/api/booking", {
+        idHotel,
+        idCus,
+        idRoom,
+        dataBooking,
+        invoiceState
+      });
+      console.log("[RESPONSE]", response);
+      if (res.status === 200) {
+        navigate("/booking-success");
+      } else {
+        message.error("Booking failed", message.error(res.data.message));
+      }
+    } catch (e) {
+      console.log("[ERROR]", e);
+    }
+    
+  };
 
   return (
     <div>
@@ -148,6 +151,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
             >
               <div style={{ overflowY: "auto", height: "400px" }}>
                 <Form
+                  onFinish={onFinish}
                   scrollToFirstError={true}
                   onValuesChange={checkFormValidity}
                   labelCol={{
@@ -219,6 +223,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                     <Radio.Group className="ml-[10px]">
                       <Radio value="male">Male</Radio>
                       <Radio value="female">Female</Radio>
+                      <Radio value="unknown">Secret</Radio>
                     </Radio.Group>
                   </FormItem>
 
@@ -246,6 +251,14 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         }}
                       >
                         Momo
+                      </Radio>
+                      <Radio
+                        value="wowo"
+                        onClick={() => {
+                          setPayment("wowo");
+                        }}
+                      >
+                        Wowo
                       </Radio>
                       {/* choosing payment */}
                       {payment === "momo" && (

@@ -1,7 +1,7 @@
 const express = require("express");
 const ListRouter = express.Router();
 const Hotel = require("../../models/hotel.model");
-const { authenToken } = require("../../services/jwt");
+const { authenToken } = require("../../middleware/jwt");
 
 
 ListRouter.get("/rooms", async (req, res) => {

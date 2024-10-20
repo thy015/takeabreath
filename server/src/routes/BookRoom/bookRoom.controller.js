@@ -55,11 +55,13 @@ const completedTran = async (req, res) => {
     return res.status(403).json({message:"Missing data"})
   }
   console.log(order,invoiceID)
+  const roomMatch=await Room({_id:invoiceID})
   try{
     if(order.status==="COMPLETED"){
       const invoice=await Invoice.findById(invoiceID)
       if(invoice && invoice.invoiceState==="waiting"){
         invoice.invoiceState="paid"
+        roomMatch=roomMatch-1
         await invoice.save()
         return res.status(200).json({message:"Payment success"})
       } else if(invoice && invoice.invoiceState==="paid"){

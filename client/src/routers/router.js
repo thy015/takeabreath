@@ -31,6 +31,8 @@ import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/AdminVoucher";
+import Hotel from "../pages/owner/Hotel/Hotel";
+import { CreateHotel } from "../pages/admin/Hotels/CreateHotel";
 export const routers = [
   {
     path: "/",
@@ -115,9 +117,10 @@ export const routers = [
     path: "/owner",
     page: OwnerLayout,
     children:[
-      {path:"",page:Vouchers}, 
+      { path:"", page:Hotel}, 
       { path: "Vouchers", page: Vouchers},
       { path: "AddVoucher", page: AddVoucher}, 
+      { path: "Hotel", page: Hotel}, 
     ],
     isOwner:true,
     isShowHeader: false,

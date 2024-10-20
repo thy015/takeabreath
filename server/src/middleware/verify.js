@@ -44,12 +44,18 @@ const verifyLogin = async (req,res,next)=>{
             message:"Unauthorized"
         })
     }
+    try{
+        const decode = await jwt.verify(token,process.env.ACCESS_TOKEN)
+        const userPayload = decode.payload
+        req.user=userPayload
+        next()
+    }catch(err){
+        return res.status(401).json({
+            message:err
+        })
+    }
 
-   const decode = await jwt.verify(token,process.env.ACCESS_TOKEN)
-   
-    const userPayload = decode.payload
-    req.user=userPayload
-    next()
+    
 }
 
 

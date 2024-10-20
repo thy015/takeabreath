@@ -5,9 +5,14 @@ import { Menu, ConfigProvider } from 'antd'
 
 const items = [
     {
+        key: "Hotel",
+        label: (<p className='font-bold'>Khách sạn</p>),
+    },
+    {
         key: "Vouchers",
         label: (<p className='font-bold'>Voucher</p>),
-    }
+    },
+    
 ]
 
 
@@ -48,6 +53,7 @@ function SideBar() {
                     }}
                     items={items}
                     onClick={hanldeClickItem}
+                    defaultSelectedKeys={['Hotel']}
                 />
             </div>
         </ConfigProvider>

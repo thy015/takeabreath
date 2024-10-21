@@ -78,7 +78,7 @@ const completedTran = async (req, res) => {
 };
 
 const getRoomsBookedCustomer = async (req, res) => {
-  const cusID = req.cusID;
+  const cusID = req.params.cusID; // Extract cusID from req.params
   if (!cusID) {
     return res.status(403).json({ message: "Missing customer ID" });
   }
@@ -87,14 +87,13 @@ const getRoomsBookedCustomer = async (req, res) => {
     const paidRoomsInvoice = bookedRooms.filter((room) => room.isPaid === true);
     const roomIDs = paidRoomsInvoice.map((invoice) => invoice.roomID);
 
-    const paidRooms = await Room.find({ _id: roomIDs });
-    const receiptID = await Receipt.find({ invoiceID: paidRoomsInvoice._id });
+    const paidRooms = await Room.find({ _id: { $in: roomIDs } });
+    const receiptIDs = await Receipt.find({ invoiceID: { $in: paidRoomsInvoice.map(inv => inv._id) } });
+
     if (paidRooms.length > 0) {
-      return res.status(200).json({ paidRooms, bookedRooms, receiptID });
+      return res.status(200).json({ paidRooms, bookedRooms, receiptIDs });
     } else {
-      return res
-        .status(200)
-        .json({ message: "There's no room booked successfully" });
+      return res.status(200).json({ message: "There's no room booked successfully" });
     }
   } catch (e) {
     return res.status(500).json({ message: "Error in controller", error: e });
@@ -111,9 +110,29 @@ const getInvoicesWithReceipts = async (req, res) => {
   }
 };
 
+const getInvoicesPaid = async (req, res) => {
+  try {
+    const receipt = await Invoice.find({invoiceState:"paid"});
+    res.status(200).json(receipt);
+  } catch (e) {
+    console.error("Error fetching invoices paid:", e);
+    res.status(500).json(e);
+  }
+};
+const getInvoicesWaiting = async (req, res) => {
+  try {
+    const receipt = await Invoice.find({invoiceState:"waiting"});
+    res.status(200).json(receipt);
+  } catch (e) {
+    console.error("Error fetching invoices paid:", e);
+    res.status(500).json(e);
+  }
+};
 module.exports = {
   bookRoom,
   getInvoicesWithReceipts,
   getRoomsBookedCustomer,
   completedTran,
+  getInvoicesPaid,
+  getInvoicesWaiting
 };

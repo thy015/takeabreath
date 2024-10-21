@@ -1,8 +1,7 @@
 import React, { useCallback } from "react";
 import { Spin, Alert } from "antd";
 import { useGet } from "../../../hooks/hooks";
-import TableComponent from "../Table";
-
+import {InfoCircleOutlined } from '@ant-design/icons';
 const cancelReqAdmin = () => {
   const {
     data: processingData,
@@ -25,7 +24,6 @@ const cancelReqAdmin = () => {
     refetch: refetchRejectedData,
   } = useGet("http://localhost:4000/api/cancelReq/rejected");
 
-  // New API call for customers
   const {
     data: customerData,
     error: customerError,
@@ -114,25 +112,100 @@ const cancelReqAdmin = () => {
   ];
 
   return (
-    <div>
-      <TableComponent
-        header="Processing"
-        columns={columns}
-        data={processingDataFormatted}
-        isReq={true}
-        refreshData={refreshData}
-      />
-      <TableComponent
-        header="Accepted"
-        columns={columnss}
-        data={acceptedDataFormatted}
-      />
-      <TableComponent
-        header="Rejected"
-        columns={columnsss}
-        data={rejectedDataFormatted}
-      />
+    <div className="grid grid-cols-3 gap-4 bg-white mt-0.5">
+    <div className="p-4 ">
+      <h3 className="font-semibold mb-2 bg-white">ĐANG CHỜ: 3</h3>
+      <div className="p-3 border rounded-lg mb-2 bg-white">
+        <div className="flex justify-between">
+          <span>29/09/2024</span>
+          <InfoCircleOutlined />
+        </div>
+        
+        <div className="flex justify-between mt-2">
+        <span>ID-01</span>
+        <div className="flex gap-2">
+          <button className="bg-green-500 text-white px-2 py-1 rounded">Đồng ý</button>
+          <button className="bg-red-500 text-white px-2 py-1 rounded">Từ chối</button>
+          </div>
+        </div>
+      </div>
+      <div className="p-3 border rounded-lg mb-2 bg-white">
+        <div className="flex justify-between">
+          <span>29/09/2024</span>
+          <InfoCircleOutlined />
+        </div>
+        
+        <div className="flex justify-between mt-2">
+        <span>ID-01</span>
+        <div className="flex gap-2">
+          <button className="bg-green-500 text-white px-2 py-1 rounded">Đồng ý</button>
+          <button className="bg-red-500 text-white px-2 py-1 rounded">Từ chối</button>
+          </div>
+        </div>
+      </div>
+      <div className="p-3 border rounded-lg mb-2 bg-white">
+        <div className="flex justify-between">
+          <span>29/09/2024</span>
+          <InfoCircleOutlined />
+        </div>
+        
+        <div className="flex justify-between mt-2">
+        <span>ID-01</span>
+        <div className="flex gap-2">
+          <button className="bg-green-500 text-white px-2 py-1 rounded">Đồng ý</button>
+          <button className="bg-red-500 text-white px-2 py-1 rounded">Từ chối</button>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div className="p-4 bg-white">
+      <h3 className="font-semibold mb-2">ĐÃ TỪ CHỐI: 2</h3>
+      <div className="p-3 border rounded-lg mb-2 bg-white">
+        <div className="flex justify-between">
+          <span>29/09/2024 - 1/10/2024</span>
+        </div>
+        <div className="flex items-center mt-2 justify-between">
+          <div>
+          <span className="text-red-500">ID-01</span>
+          <span className="ml-2 bg-blue-500 text-white rounded-full px-2">LB</span>
+          </div>
+          <InfoCircleOutlined />
+        </div>
+      </div>
+      <div className="p-3 border rounded-lg mb-2 bg-white">
+        <div className="flex justify-between">
+          <span>29/09/2024 - 1/10/2024</span>
+        </div>
+        <div className="flex items-center mt-2 justify-between">
+          <div>
+          <span className="text-red-500">ID-01</span>
+          <span className="ml-2 bg-blue-500 text-white rounded-full px-2">LB</span>
+          </div>
+          <InfoCircleOutlined />
+        </div>
+      </div>
+    </div>
+
+    <div className="p-4 bg-white">
+      <h3 className="font-semibold mb-2">ĐÃ ĐỒNG Ý: 1</h3>
+
+      <div className="p-3 border rounded-lg mb-4 bg-white">
+        <div className="flex justify-between">
+          <span>29/09/2024 - 1/10/2024</span>
+          
+        </div>
+        <div className="flex items-center mt-2 justify-between">
+          <div>
+          <span className="text-green-500">ID-01</span>
+          <span className="ml-2 bg-purple-500 text-white rounded-full px-2">LB</span>
+          </div>
+          <InfoCircleOutlined />
+        </div>
+      </div>
+    </div>
+  </div>
+  
   );
 };
 

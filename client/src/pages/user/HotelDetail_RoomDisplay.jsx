@@ -82,6 +82,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                       <li>Room Type: {room.typeOfRoom}</li>
                       <li>Capacity: {room.capacity}</li>
                       <li>Total Bed: {room.numberOfBeds}</li>
+                      <li>Number of rooms: {room.numberOfRooms}</li>
                       <li>Amenities: ....</li>
                     </ul>
                   </div>
@@ -114,7 +115,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                         <span>{formatMoney(countRoomPrice)} VND</span>
                       </li>
                       <li className="flex justify-between w-full mb-2">
-                        {/* need handle number of night */}
+
                         <span>For <span className="text-success">{totalCheckInDay} night </span>: </span>
                         <span>{formatMoney(rangeRoomPrice)} VND</span>
                       </li>

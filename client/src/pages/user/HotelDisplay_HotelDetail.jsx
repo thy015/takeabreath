@@ -5,7 +5,6 @@ import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
-import { useLocation} from "react-router-dom";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 import { useSelector } from "react-redux";
 

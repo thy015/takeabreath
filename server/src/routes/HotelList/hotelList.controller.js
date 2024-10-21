@@ -107,7 +107,7 @@ const createHotel = async (req, res) => {
       hotelType,
       phoneNum,
       imgLink,
-      ownerID: req.ownerID,
+      ownerID: ownerID,
     });
 
     return res.status(201).json({

@@ -9,6 +9,10 @@ bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post('/',bookController.bookRoom)
 bookRouter.get(
   "/bookingHistory/:cusID",
+bookRouter.post("/completedTran", bookController.completedTran);
+bookRouter.post('/',bookController.bookRoom)
+bookRouter.get(
+  "/bookingHistory",
   bookController.getRoomsBookedCustomer
 );
 module.exports = bookRouter;

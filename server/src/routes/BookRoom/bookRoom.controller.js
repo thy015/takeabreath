@@ -3,60 +3,77 @@ const { Invoice,Receipt} = require("../../models/invoice.model");
 const { Room } = require("../../models/hotel.model");
 
 const bookRoom = async (req, res) => {
-  const {idHotel,idCus,idRoom,dataBooking,invoiceState} = req.body;
+  const {idHotel,idCus,idRoom,dataBooking} = req.body;
   try{
-    if(!idHotel||!idCus||!idRoom||!dataBooking||!invoiceState){
+    if(!idHotel||!idCus||!idRoom||!dataBooking){
       return res.status(403).json({message:"Missing data"})
     }
     if(dataBooking.paymentMethod==="paypal"){
-      const invoice = new Invoice({
-        idHotel,
-        idCus,
-        idRoom,
-        dataBooking,
-        invoiceState
+      const invoice = await Invoice.create({
+        hotelID:idHotel,
+        cusID:idCus,
+        roomID:idRoom,
+        guestInfo:
+          {
+            name:dataBooking.inputName,
+            idenCard:dataBooking.inputIdenCard,
+            email:dataBooking.inputEmail,
+            phone:dataBooking.inputPhoneNum,
+            dob:dataBooking.inputDob,
+            gender:dataBooking.inputGender,
+            paymentMethod:dataBooking.paymentMethod,
+            totalPrice:dataBooking.total,
+            totalRoom:dataBooking.totalRoom,
+            checkInDay:dataBooking.checkInDay,
+            checkOutDay:dataBooking.checkOutDay
+          }
       })
-      await invoice.save({
-        
-      })
-      
+      setTimeout(async()=>{
+        const updatedInvoice=await Invoice.findById(invoice._id)
+        if(updatedInvoice && updatedInvoice.invoiceState==="waiting"){
+          await Invoice.findByIdAndDelete(invoice._id)
+          console.log(`Invoice ${invoice._id} deleted due to time out`)
+        }
+      },120000)
+      return res.status(200).json(
+        {
+          status:"OK",
+          message:"Invoice created successfully, waiting for payment",
+          data:invoice,
+          invoiceID:invoice._id
+        }) 
     }
   }catch(e){
     console.log("[ERROR]",e)
+    return res.status(500).json({message:"Internal server error"})
   }
 };
 //logic sau khi book thanh cong
 const completedTran = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const invoice = await Invoice.findById(id);
-    if (!invoice) {
-      return res.status(404).json({
-        status: "BAD",
-        message: "Invoice not found",
-      });
+  const {order,invoiceID}=req.body
+  if(!order||!invoiceID){
+    return res.status(403).json({message:"Missing data"})
+  }
+  console.log(order,invoiceID)
+  try{
+    if(order.status==="COMPLETED"){
+      const invoice=await Invoice.findById(invoiceID)
+      if(invoice && invoice.invoiceState==="waiting"){
+        invoice.invoiceState="paid"
+        await invoice.save()
+        return res.status(200).json({message:"Payment success"})
+      } else if(invoice && invoice.invoiceState==="paid"){
+        return res.status(200).json({message:"Payment already success"})
+      } else {
+        return res.status(404).json({message:"Invoice not found or expired please try again"})
+      }
+    } //not completed payment
+    else{
+      return res.status(403).json({message:"Payment failed"})
     }
-    //đổi tt biên lai => đổi tt phòng => tạo hóa đơn
-    invoice.isPaid = true;
-    await invoice.save();
-
-    const foundRoom = await Room.findById(invoice.roomID);
-    if (foundRoom) {
-      foundRoom.isAvailable = false;
-      await foundRoom.save();
-    }
-    const receipt = await createReceipt(invoice._id);
-
-    res.status(200).json({
-      status: "OK",
-      message: "Transaction completed, room booked successfully",
-    });
-  } catch (e) {
-    console.error("Error in completedTran:", e);
-    res.status(500).json({
-      status: "BAD",
-      message: "Internal server error",
-    });
+  }catch(e){
+    console.log("[ERROR]",e)
+    return res.status(500).json({message:"Internal server error"})
   }
 };
 

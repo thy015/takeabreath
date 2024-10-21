@@ -2,10 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { setPaymentCompleted } from '../hooks/redux/inputDaySlice';
 import {openNotification} from '../hooks/notification'
+import axios from 'axios'
+
 const PayPalButton = () => {
     const paypal = useRef();
     const dispatch=useDispatch()
-    const {convertPrice}=useSelector((state)=>state.inputDay)
+    const {convertPrice,invoiceID}=useSelector((state)=>state.inputDay)
     useEffect(() => {
         const addPayPalScript = () => {
             const script = document.createElement('script');
@@ -30,9 +32,21 @@ const PayPalButton = () => {
                     onApprove: async (data, actions) => {
                         const order = await actions.order.capture();
                         console.log(order);
-                        openNotification(true,"Success","Payment success")
                         dispatch(setPaymentCompleted({completedPayment:true}))
-                        e.preventDefault()
+                        try{
+                            const res=await 
+                            axios.post('http://localhost:4000/api/booking/completedTran',
+                                {order,invoiceID})
+                        if(res.status===200){
+                            openNotification(true,"Success","Payment success")
+                        }
+                        else{
+                            openNotification(false,"Error","Payment failed")
+                        
+                        }}catch(e){
+                            console.log('error',e.message)
+                        }
+                        
                     },
                     onError: (err) => {
                         console.error(err);

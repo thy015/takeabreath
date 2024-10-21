@@ -32,6 +32,8 @@ function BookingConfirmationForm({isShow, onCancel}) {
   const [isFormValid,setIsFormValid]=useState(false)
   const navigate=useNavigate()
   const dispatch=useDispatch()
+
+
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };

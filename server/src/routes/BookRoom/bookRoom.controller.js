@@ -29,7 +29,7 @@ const bookRoom = async (req, res) => {
           }
       })
       setTimeout(async()=>{
-        const updatedInvoice=await Invoice.findById(invoice._id)
+        const updatedInvoice= await Invoice.findById(invoice._id)
         if(updatedInvoice && updatedInvoice.invoiceState==="waiting"){
           await Invoice.findByIdAndDelete(invoice._id)
           console.log(`Invoice ${invoice._id} deleted due to time out`)
@@ -55,11 +55,17 @@ const completedTran = async (req, res) => {
     return res.status(403).json({message:"Missing data"})
   }
   console.log(order,invoiceID)
-  const roomMatch=await Room.findById(invoiceID.roomID)
-  
+ 
   try{
+    const invoice = await Invoice.findById(invoiceID);
+    if (!invoice) {
+      return res.status(404).json({message: "Invoice not found"});
+    }
+    const roomMatch = await Room.findById(invoice.roomID);
+    if (!roomMatch) {
+      return res.status(404).json({message: "Room not found"});
+    } 
     if(order.status==="COMPLETED"){
-      const invoice=await Invoice.findById(invoiceID)
       if(invoice && invoice.invoiceState==="waiting"){
         invoice.invoiceState="paid"
         roomMatch.numberOfRooms=roomMatch.numberOfRooms-1

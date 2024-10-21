@@ -26,22 +26,22 @@ export const cardData = ()=>{
     {
       title: t('Cabin'),
       text: "This is card number 5",
-      imgSrc: "https://via.placeholder.com/150",
+      imgSrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd5JYN7tXO6DDtIvWjYvrOKCHwEYQwsT8cWg&s",
     },
     {
       title: t('Cottage'),
       text: "This is card number 5",
-      imgSrc: "https://via.placeholder.com/150",
+      imgSrc: "https://www.bhg.com/thmb/riniwvt-u2Fo4tYIRJWiRhgTIWA=/1764x0/filters:no_upscale():strip_icc()/cottage-home-brick-gate-shrubbery-7e117ecd-f5e2829db0d5485a8f092c274e310fa0.jpg",
     },
     {
       title: t('Glamping'),
       text: "This is card number 5",
-      imgSrc: "https://via.placeholder.com/150",
+      imgSrc: "https://lh7-us.googleusercontent.com/docsz/AD_4nXcGCuXPBVw6zcIjGEQ3uPpBUxByfDhdO1of1UY3FDUPuQSh7LbkJzoDZ_bQFoQulyt7EwVZsqIE0RPHZKK3M3i22hZYKtMDkUzGotcMQQ8l9xOt7dV5JGroVLDN48-BjORPZ02SN5AWkH62FrhaVawQ8cdO?key=l2LitlgDdvTEreyj3YFWzw",
     },
     {
       title: t('Guest House'),
       text: "This is card number 5",
-      imgSrc: "https://via.placeholder.com/150",
+      imgSrc: "https://cdn.discordapp.com/attachments/1296366202309972010/1296366634671280209/6b26b093-1b53-4fb0-98af-8ef72156e1e9.png?ex=6716a443&is=671552c3&hm=c8bfdd5f562e83376b849ebc2becb956453698fe28481c06149ea50d56557456&",
     },
   ];
 }

@@ -107,7 +107,7 @@ const createHotel = async (req, res) => {
       hotelType,
       phoneNum,
       imgLink,
-      ownerID: ownerID,
+      ownerID: req.ownerID,
     });
 
     return res.status(201).json({
@@ -198,11 +198,11 @@ const queryHotel=async(req,res)=>{
     const roomsID=rooms.map(r=>r._id)
     const invoices=await Invoice.find({roomID:{$in:roomsID}})
     //dayStart and end handle (filter room not available)
-
+        
         const availableRooms = rooms.filter(room => {
           const roomInvoices = invoices.filter(invoice => invoice.roomID.equals(room._id));
           return !roomInvoices.some(invoice => {
-              const invoiceStart = dayjs(invoice.guestInfo.checkInDay).format('DD/MM/YYYY');
+              const invoiceStart = dayjs(invoice.guestInfo.checkInDay).format('DD/MM/YYYY')
               const invoiceEnd = dayjs(invoice.guestInfo.checkOutDay).format('DD/MM/YYYY');
               return (
                   dayjs(start).isBetween(invoiceStart, invoiceEnd, null, '[)') ||
@@ -228,31 +228,10 @@ const queryHotel=async(req,res)=>{
       return res.status(500).json({ message: 'Internal server error' });
     }
 }
-const deleteHotel = async (req, res) => {
-  try {
-    const hotel = req.params.id; 
-
-
-    const deletedProduct = await Hotel.findByIdAndDelete(hotel);
-    if (!deletedProduct) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
-    }
-
-    return res.status(200).json({
-      message: "Product deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error in delete product:", error);
-    return res.status(500).json({ message: error.message });
-  }
-};
 module.exports = {
   createHotel,
   createRoom,
   getHotelsByOwner,
   queryHotel,
-  updateHotels,
-  deleteHotel,
+  updateHotels
 };

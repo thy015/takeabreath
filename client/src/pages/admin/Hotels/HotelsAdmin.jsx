@@ -106,11 +106,6 @@ const PropertyGrid = () => {
         ))}
       </Row>
 
-      <FloatButton
-        icon={<PlusOutlined />}
-        type="primary"
-        onClick={showModal}
-      />
 
       <CreateHotel
         visible={isModalVisible}

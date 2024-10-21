@@ -95,7 +95,7 @@ const filters = cardItems.map((c) => c.title);
           <Row gutter={16} className="mt-6">
             <Col span={5}>
               <Breadcrumb></Breadcrumb>
-              <div className="w-[228px] h-[169px mb-4">
+              <div className="w-[210px] h-[169px mb-4">
                 <img src="https://th.bing.com/th/id/OIP.Xl33AAWnwUNysT_nFRsUEgHaHa?rs=1&pid=ImgDetMain" />
               </div>
               <Collapse defaultActiveKey={["1"]}>

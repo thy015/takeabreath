@@ -24,7 +24,6 @@ function Vouchers() {
         res.data
       )
       .then(data => {
-
         const dataList = data.listVoucher.map((voucher, index) => {
           const startDay = new Date(voucher.startDay)
           const endDay = new Date(voucher.endDay)

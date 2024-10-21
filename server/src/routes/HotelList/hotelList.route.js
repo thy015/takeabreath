@@ -72,7 +72,7 @@ ListRouter.get("/room", async (req, res) => {
 });
 
 ListRouter.post("/createRoom", verifyOwner, hotelListController.createRoom);
-
+ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
 module.exports = ListRouter;
 
 //This is the start of swagger docs

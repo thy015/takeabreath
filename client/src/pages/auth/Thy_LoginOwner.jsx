@@ -65,11 +65,11 @@ const LogInOwner = () => {
         navigate(response.data.redirect);
       }
     } catch (e) {
-      console.log(e + "Error passing form data");
+      console.log(e);
       openNotification(
         false,
         "Failed to register",
-        "Please try again after 5 minutes"
+        e.response.data.message
       );
     }
   };

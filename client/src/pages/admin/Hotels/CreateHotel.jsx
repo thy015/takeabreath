@@ -1,25 +1,40 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Input, Button, Select, notification, Row, Col, Spin, Alert, Modal, Image } from 'antd';
 import { useGet } from "../../../hooks/hooks";
 import { AuthContext } from '../../../hooks/auth.context'
-import { setHotels } from '../../../hooks/redux/hotelsSclice';
-import { useSelector,useDispatch } from "react-redux";
-import { addHotel } from '../../../hooks/redux/hotelsSclice';
+import { seletedHotel, setHotels } from '../../../hooks/redux/hotelsSclice';
+import { useSelector, useDispatch } from "react-redux";
+import { addHotel, updateHotels } from '../../../hooks/redux/hotelsSclice';
+import { openNotification } from '../../../hooks/notification';
 const { Option } = Select;
 
 const CreateHotel = ({ visible, handleCancel }) => {
   const { auth } = useContext(AuthContext)
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  const hotelSelected = useSelector(state => state.hotel.selectedHotel)
+  const [hotel, setHotels] = useState(pre => hotelSelected)
   const [errMessage, setErrMessage] = useState('');
   const [imageURL, setImage] = useState('')
+  const [form] = Form.useForm();
   const { data: owners, error: ownerError, loading: ownerLoad } = useGet("http://localhost:4000/api/auth/owner");
-
+  const [initialValues, setInitialValues] = useState({});
+  useEffect(() => {
+    form.setFieldsValue({
+      hotelName: hotelSelected.hotelName ?? "",
+      address: hotelSelected.address ?? "",
+      city: hotelSelected.city ?? "",
+      hotelType: hotelSelected.hotelType ?? "",
+      phoneNum: hotelSelected.phoneNum ?? "",
+      nation: hotelSelected.nation ?? "",
+    });
+  }, [visible, hotelSelected, form])
   if (ownerLoad) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
+
 
   if (ownerError) {
     return (
@@ -30,6 +45,14 @@ const CreateHotel = ({ visible, handleCancel }) => {
         showIcon
       />
     );
+  }
+
+  const setValue = (nameInput) => {
+    if (hotelSelected != {}) {
+      console.log("Set")
+    } else {
+      console.log(null)
+    }
   }
 
   const handleImage = async (e) => {
@@ -52,39 +75,62 @@ const CreateHotel = ({ visible, handleCancel }) => {
     console.log(imageURL)
   }
 
+  const isEmpty = (obj) => Object.keys(obj).length === 0;
+
   const onFinish = async (values) => {
-    console.log(values)
     const form = {
       ...values,
-      imgLink: String(imageURL),
+      imgLink: String(imageURL) ? String(imageURL) : String(hotelSelected.imgLink),
       ownerID: auth.user.id
     }
-    setErrMessage('');
-    try {
-      const response = await axios.post('http://localhost:4000/api/hotelList/createHotel', form);
-
-      if (response.data.status === 'OK') {
-        notification.success({
-          message: 'Hotel Created Successfully',
-          description: 'The hotel has been created successfully!',
+    console.log(hotelSelected)
+    if (hotelSelected === undefined || !isEmpty(hotelSelected)) {
+      console.log("Update")
+      try {
+        const response = await axios.post(`http://localhost:4000/api/hotelList/updateHotel/${hotelSelected._id}`, form);
+        if (response.data.status === 'OK') {
+          openNotification(true, "Cập nhật thành công", "")
+          dispatch(updateHotels(response.data.data))
+          
+          handleCancel();
+        } else {
+          setErrMessage('Hotel creation failed!');
+        }
+      } catch (error) {
+        console.error("Error details:", error);
+        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        notification.error({
+          message: 'Hotel Creation Failed',
+          description: errorMessage,
         });
-        dispatch(addHotel(form))
-        handleCancel();
-      } else {
-        setErrMessage('Hotel creation failed!');
+        setErrMessage(errorMessage);
       }
-    } catch (error) {
-      console.error("Error details:", error);
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-      notification.error({
-        message: 'Hotel Creation Failed',
-        description: errorMessage,
-      });
-      setErrMessage(errorMessage);
+    } else {
+      try {
+        const response = await axios.post('http://localhost:4000/api/hotelList/createHotel', form);
+        if (response.data.status === 'OK') {
+          openNotification(true, "Thêm thành công", "")
+          dispatch(addHotel(form))
+          handleCancel();
+        } else {
+          setErrMessage('Hotel creation failed!');
+        }
+      } catch (error) {
+        console.error("Error details:", error);
+        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        notification.error({
+          message: 'Hotel Creation Failed',
+          description: errorMessage,
+        });
+        setErrMessage(errorMessage);
+      }
     }
+    setErrMessage('');
+
   };
 
   return (
+
     <Modal
       open={visible}
       onCancel={handleCancel}
@@ -92,87 +138,108 @@ const CreateHotel = ({ visible, handleCancel }) => {
       width={'50%'}
     >
       <Form
+        form={form}
         labelCol={{ span: 15 }}
         wrapperCol={{ span: 15 }}
+        width={700}
         name="createHotel"
         className="h-auto"
         onFinish={onFinish}
+        initialValues={{
+          hotelName: hotelSelected?.hotelName || '',
+          address: hotelSelected?.address || '',
+          city: hotelSelected?.city || '',
+          hotelType: hotelSelected?.hotelType || '',
+          phoneNum: hotelSelected?.phoneNum || '',
+          nation: hotelSelected?.nation || '',
+        }}
       >
-        <h1 className="text-xl font-bold mb-10 text-blue-900 text-center">Tạo Mới Khách Sạn</h1>
+        <h1 className="text-xl font-bold mb-10 text-blue-900 text-center">{isEmpty(hotelSelected) ? "Tạo Mới Khách Sạn" : "Cập Nhật Khách Sạn"}</h1>
 
         {errMessage && <div className="text-red-500">{errMessage}</div>}
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              label="Tên khách sạn"
-              name="hotelName"
-              rules={[{ required: true, message: 'Please input hotel name!' }]}
-            >
-              <Input placeholder="Hotel Name" />
-            </Form.Item>
+        <Col span={12}>
+          <Form.Item
+            width={700}
+            label="Tên khách sạn"
+            name="hotelName"
+            rules={[{ required: true, message: 'Please input hotel name!' }]}
+          >
+            <Input placeholder={hotelSelected?.hotelName ?? "Hotel Name"} className='w-[350px]' />
+          </Form.Item>
 
-            <Form.Item
-              label="Địa chỉ"
-              name="address"
-              rules={[{ required: true, message: 'Please input hotel address!' }]}
-            >
-              <Input placeholder="Address" />
-            </Form.Item>
+          <Form.Item
+            label="Địa chỉ"
+            name="address"
+            rules={[{ required: true, message: 'Please input hotel address!' }]}
+          >
 
-            <Form.Item
-              label="Thành phố"
-              name="city"
-              rules={[{ required: true, message: 'Please input city!' }]}
-            >
-              <Input placeholder="City" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              label="Loại chỗ ở"
-              name="hotelType"
-              rules={[{ required: true, message: 'Please input hotel type!' }]}
-            >
-              <Input placeholder="Hotel Type" />
-            </Form.Item>
+            <Input placeholder={hotelSelected?.address ?? "Address"} className='w-[350px]' type='input' />
+          </Form.Item>
 
-            <Form.Item
-              label="Số điện thoại"
-              name="phoneNum"
-              rules={[{ required: true, message: 'Please input phone number!' }]}
-            >
-              <Input placeholder="Phone Number" />
-            </Form.Item>
-            <Form.Item
-              label="Quốc gia"
-              name="nation"
-              rules={[{ required: true, message: 'Please input nation!' }]}
-            >
-              <Input placeholder="Nation" />
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item
-              label="Link hình ảnh"
-              name="imgLink"
-            >
-              <Input placeholder="Image Link" type='file' onChange={handleImage} />
-            </Form.Item>
-          </Col>
+          <Form.Item
+            label="Thành phố"
+            name="city"
+            rules={[{ required: true, message: 'Please input city!' }]}
+          >
+            <Input placeholder={hotelSelected?.city ?? "City"} className='w-[350px]' />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label="Loại chỗ ở"
+            name="hotelType"
+            rules={[{ required: true, message: 'Please input hotel type!' }]}
+          >
+            <Input placeholder={hotelSelected?.hotelType ?? "Hotel Type"} className='w-[350px]' />
+          </Form.Item>
 
-        </Row>
+          <Form.Item
+            label="Số điện thoại"
+            name="phoneNum"
+            rules={[{ required: true, message: 'Please input phone number!' }]}
+          >
+            <Input placeholder={hotelSelected?.phoneNum ?? "Phone Number"} className='w-[350px]' />
+          </Form.Item>
+          <Form.Item
+            label="Quốc gia"
+            name="nation"
+            rules={[{ required: true, message: 'Please input nation!' }]}
+          >
+            <Input placeholder={hotelSelected?.nation ?? "Nation"} className='w-[350px]' />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label="Link hình ảnh"
+            name="imgLink"
+          >
+            <Input placeholder="Image Link" type='file' onChange={handleImage} className='w-[350px]' />
+          </Form.Item>
+        </Col>
         <div className='items-center d-flex justify-center mb-[10px]'>
-          <Image className='items-center' src={imageURL} />
+          <Image className='items-center' src={hotelSelected?.imgLink ?? imageURL} />
         </div>
         <Form.Item wrapperCol={{ span: 23 }}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              type="danger"
-              htmlType="submit"
-              className="bg-blue-900 hover:bg-blue-400 text-white"
-            >
-              Tạo Khách Sạn
-            </Button>
+            {
+              hotelSelected?.address ?
+                <Button
+                  type="danger"
+                  htmlType="submit"
+                  className="bg-blue-900 hover:bg-blue-400 text-white"
+                >
+                  Cập nhật
+                </Button>
+                :
+                <Button
+                  type="danger"
+                  htmlType="submit"
+                  className="bg-blue-900 hover:bg-blue-400 text-white"
+                >
+                  Tạo Khách Sạn
+                </Button>
+            }
+
           </div>
         </Form.Item>
       </Form>

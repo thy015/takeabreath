@@ -1,35 +1,46 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Table, Popconfirm, Typography, Space } from 'antd'
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { CreateHotel } from '../../admin/Hotels/CreateHotel'
-import { setHotels,deleteHotel } from '../../../hooks/redux/hotelsSclice';
+import { setHotels, deleteHotel, seletedHotel } from '../../../hooks/redux/hotelsSclice';
 import axios from 'axios'
 import { openNotification } from '../../../hooks/notification';
 
 function Hotel() {
     const dispatch = useDispatch()
-    const hotels = useSelector(state=>state.hotel.hotels)
+    const hotels = useSelector(state => state.hotel.hotels)
     const [visible, setVisible] = useState(false)
     useEffect(() => {
         axios.get("http://localhost:4000/api/hotelList/hotelOwner")
             .then(res => res.data)
             .then(data => {
-                dispatch(setHotels(data.data))
+                const hotels = data.data.map((item => (
+                    {
+                        ...item,
+                        key: item._id
+                    }
+                )))
+                dispatch(setHotels(hotels))
             })
             .catch(err => console.log(err))
     }, [])
 
-    const handleDelete = (record)=>{
+    const handleDelete = (record) => {
         axios.delete(`http://localhost:4000/api/hotelList/deleteHotel/${record._id}`)
-            .then(res=>res.data)
-            .then(data=>{
+            .then(res => res.data)
+            .then(data => {
                 dispatch(deleteHotel(record._id))
-                openNotification(true,"Xóa khách sạn thành công !","")
+                openNotification(true, "Xóa khách sạn thành công !", "")
             })
-            .catch(err=>console.log(err))
+            .catch(err => console.log(err))
+    }
+
+    const handleUpdate = (record) => {
+        dispatch(seletedHotel(record))
+        setVisible(true)
     }
 
     const columns = [
@@ -97,11 +108,11 @@ function Hotel() {
                 return (
                     <>
                         <Space>
-                            <Typography.Link  >
+                            <Typography.Link onClick={() => handleUpdate(record)} >
                                 <p>Cập nhật</p>
                             </Typography.Link>
                             <Typography.Link >
-                                <Popconfirm title="Bạn có muốn xóa không" okText="Có" cancelText="Không" onConfirm={()=>handleDelete(record)}>
+                                <Popconfirm title="Bạn có muốn xóa không" okText="Có" cancelText="Không" onConfirm={() => handleDelete(record)}>
                                     <p>Xóa</p>
                                 </Popconfirm>
                             </Typography.Link>
@@ -140,7 +151,13 @@ function Hotel() {
                     </Table>
                 </div>
             </div>
-            <CreateHotel visible={visible} handleCancel={()=>setVisible(false)}></CreateHotel>
+            <CreateHotel
+                visible={visible}
+                handleCancel={() => {
+                    setVisible(false)
+                    dispatch(seletedHotel({}))
+                }}
+            ></CreateHotel>
         </>
 
     )

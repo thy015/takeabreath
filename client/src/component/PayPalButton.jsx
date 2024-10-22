@@ -7,7 +7,12 @@ import axios from 'axios'
 const PayPalButton = () => {
     const paypal = useRef();
     const dispatch=useDispatch()
-    const {convertPrice,invoiceID}=useSelector((state)=>state.inputDay)
+   const {convertPrice,invoiceID}=useSelector((state)=>state.inputDay)
+  
+
+   useEffect(() => {
+    console.log("Current invoiceID in PayPalButton:", invoiceID);
+}, [invoiceID]);
     useEffect(() => {
         const addPayPalScript = () => {
             const script = document.createElement('script');
@@ -31,7 +36,8 @@ const PayPalButton = () => {
                     },
                     onApprove: async (data, actions) => {
                         const order = await actions.order.capture();
-                        console.log(order);
+                        console.log("Order:", order);
+                        console.log("InvoiceID being sent:", invoiceID);
                         dispatch(setPaymentCompleted({completedPayment:true}))
                         try{
                             const res=await 
@@ -44,7 +50,7 @@ const PayPalButton = () => {
                             openNotification(false,"Error","Payment failed")
                         
                         }}catch(e){
-                            console.log('error',e.message)
+                            console.log('error',e.response.data.message)
                         }
                         
                     },
@@ -58,7 +64,7 @@ const PayPalButton = () => {
         };
 
         addPayPalScript();
-    }, []);
+    }, [invoiceID]);
 
     return (
         <div>         

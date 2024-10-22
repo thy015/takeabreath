@@ -18,10 +18,12 @@ import axios from "axios";
 import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 import {useDispatch} from 'react-redux'
-import { setSearchResult } from "../hooks/redux/searchSlice";
+import { countRoom, setSearchResult } from "../hooks/redux/searchSlice";
 import { setInputDay } from "../hooks/redux/inputDaySlice";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
 const Booking = ({tailwind_prop}) => {
   const {t}=useTranslation()
 // onSearchResults
@@ -33,7 +35,10 @@ const navigate=useNavigate()
   
   dayjs.extend(isBetween)
   dayjs.extend(customParseFormat);
+  dayjs.extend(utc)
+  dayjs.extend(timezone)
   
+
   const disabledDate = (current) => {
     return current && current < dayjs().startOf("day");
   };
@@ -166,16 +171,14 @@ const navigate=useNavigate()
       return openNotification(false,'Missing information','Please fill out all information before searching');
     }
    
-//format before dispatch => error
+//format before dispatch 
+const formattedDayStart = dayjs(dayStart).tz('Asia/Ho_Chi_Minh').format(); // GMT+7
+const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
     dispatch(setInputDay({
-      dayStart:dayStart,
-      dayEnd:dayEnd,
+      dayStart:formattedDayStart,
+      dayEnd:formattedDayEnd,
       city:selectedCity
     }))
- // 25/10/2002
-    const formattedDayStart=dayjs(dayStart).format('DD/MM/YYYY')
-    const formattedDayEnd=dayjs(dayEnd).format('DD/MM/YYYY')
-
     console.log(formattedDayStart)
     console.log(formattedDayEnd)
    
@@ -185,6 +188,7 @@ const navigate=useNavigate()
       dayEnd:formattedDayEnd,
       people:people
     }
+    console.log(searchData)
     try{
       const res= await axios.post('http://localhost:4000/api/hotelList/query'
         ,searchData)
@@ -192,7 +196,8 @@ const navigate=useNavigate()
         
         dispatch(setSearchResult({ 
           hotelData: res.data.hotelData, 
-          roomData: res.data.roomData
+          roomData: res.data.roomData,
+          countRoom:res.data.countRoom
          }))
         navigate('/booking')
     }

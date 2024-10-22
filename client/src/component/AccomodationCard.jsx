@@ -52,7 +52,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
                 </span>
               </div>
               <div className="text-muted  ">{hotel.address}</div>
-              <div>Room total: {hotel.numberOfRooms}</div>
+              {/* <div>Room total: {hotel.numberOfRooms}</div> */}
             </Card.Text>
 
             {/* later for approriate room display */}
@@ -124,24 +124,18 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
           </div>
       
         </div>
-        <div className="mt-3" style={{ fontWeight: "bold", fontSize: "16px" }}>
+        <div className="mt-2" style={{ fontWeight: "bold", fontSize: "16px" }}>
             Start from ....{property.minPrice} vnd
           </div>
         {showButton && (
-          <div>
-            <Link to={edit}>
-              <button className="bg-gray-700 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-gray-400 ">
-                Sửa
-              </button>
-            </Link>
+          <div className="flex justify-end">
+            
             <Link to={link_button}>
-              <button className="bg-green-700 text-white font-bold py-1 px-2 rounded hover:bg-green-400 ">
+              <button className="bg-green-700 text-white font-bold py-1 px-2 rounded hover:bg-green-400">
                 Phòng
               </button>
             </Link>
-            <button onClick={showDeleteModal} className="bg-orange-600 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-red-400">
-             Xóa
-            </button>
+
           </div>
         )}
       </Card.Body>

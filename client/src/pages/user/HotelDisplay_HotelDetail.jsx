@@ -1,20 +1,29 @@
 import React from "react";
-import {useParams } from "react-router-dom";
+import {useLocation, useParams } from "react-router-dom";
 import { useGet } from "../../hooks/hooks";
 import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
-import { useLocation} from "react-router-dom";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 import { useSelector } from "react-redux";
 
 const HotelDisplay_HotelDetail = () => {
     const { id } = useParams();
-    
-     // query room data result
-      const {roomData}=useSelector((state)=>state.searchResults)
+    const location=useLocation()
+    const {roomData}=location.state || {roomData:[]}
+     // query room data result, integrate countRoom
+      const {countRoom}=useSelector((state)=>state.searchResults)
       const specRoomData=roomData.filter(r=>r.hotelID===id)
+        const specRoomIntegratedCount=specRoomData.map((room)=> {
+          const countEach=countRoom.find((cr)=>cr.roomID===room._id)
+          console.log('each',countEach)
+          return {
+            ...room,
+            countRoom:countEach ? countEach.countRoom :0
+            
+          }
+        })
       const { data, error, loading } = useGet(
         `http://localhost:4000/api/hotelList/hotel/${id}`
       );
@@ -148,11 +157,20 @@ const HotelDisplay_HotelDetail = () => {
       <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
       {/* Room display */}
       <div>
-
-      {console.log('Detail hotel',specRoomData)}
-     <HotelDetail_RoomDisplay roomData={specRoomData} hotel={data}></HotelDetail_RoomDisplay>
-     
-
+      {console.log('Detail hotel in hoteldisplay_hoteldetail',specRoomData)}
+      {specRoomData.length === 0 ? (
+          <Alert
+            message="PLEASE QUERY FIRST"
+            description="Please try query to see rooms"
+            type="info"
+            showIcon
+          />
+        ) : (
+          <HotelDetail_RoomDisplay
+            roomData={specRoomIntegratedCount}
+            hotel={data}
+          ></HotelDetail_RoomDisplay>
+        )}
      </div>
     </div>
   );

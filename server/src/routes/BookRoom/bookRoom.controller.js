@@ -1,6 +1,11 @@
 
 const { Invoice,Receipt} = require("../../models/invoice.model");
 const { Room } = require("../../models/hotel.model");
+const timezone =require('dayjs/plugin/timezone')
+const dayjs=require('dayjs')
+const utc=require('dayjs/plugin/utc')
+dayjs.extend(timezone)
+dayjs.extend(utc)
 
 const bookRoom = async (req, res) => {
   const {idHotel,idCus,idRoom,dataBooking} = req.body;
@@ -9,6 +14,9 @@ const bookRoom = async (req, res) => {
       return res.status(403).json({message:"Missing data"})
     }
     if(dataBooking.paymentMethod==="paypal"){
+      const convertCheckInDay = dayjs(dataBooking.checkInDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
+      const convertCheckOutDay=dayjs(dataBooking.checkOutDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
+      console.log('Convert check in and out day',convertCheckInDay,convertCheckOutDay)
       const invoice = await Invoice.create({
         hotelID:idHotel,
         cusID:idCus,
@@ -24,12 +32,12 @@ const bookRoom = async (req, res) => {
             paymentMethod:dataBooking.paymentMethod,
             totalPrice:dataBooking.total,
             totalRoom:dataBooking.totalRoom,
-            checkInDay:dataBooking.checkInDay,
-            checkOutDay:dataBooking.checkOutDay
+            checkInDay:new Date(convertCheckInDay),
+            checkOutDay:new Date(convertCheckOutDay)
           }
       })
       setTimeout(async()=>{
-        const updatedInvoice=await Invoice.findById(invoice._id)
+        const updatedInvoice= await Invoice.findById(invoice._id)
         if(updatedInvoice && updatedInvoice.invoiceState==="waiting"){
           await Invoice.findByIdAndDelete(invoice._id)
           console.log(`Invoice ${invoice._id} deleted due to time out`)
@@ -55,9 +63,17 @@ const completedTran = async (req, res) => {
     return res.status(403).json({message:"Missing data"})
   }
   console.log(order,invoiceID)
+ 
   try{
+    const invoice = await Invoice.findById(invoiceID);
+    if (!invoice) {
+      return res.status(404).json({message: "Invoice not found"});
+    }
+    const roomMatch = await Room.findById(invoice.roomID);
+    if (!roomMatch) {
+      return res.status(404).json({message: "Room not found"});
+    } 
     if(order.status==="COMPLETED"){
-      const invoice=await Invoice.findById(invoiceID)
       if(invoice && invoice.invoiceState==="waiting"){
         invoice.invoiceState="paid"
         await invoice.save()

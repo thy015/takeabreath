@@ -10,7 +10,7 @@ const InvoiceSchema = new mongoose.Schema({
   guestInfo:
     {
       name:{type:String,required:true},
-      idenCard:{type:String,unique:true, required:true},
+      idenCard:{type:String, required:true},
       email:{type:String, required:true},
       phone:{type:String,required:true},
       dob:{type:Date,required:true},

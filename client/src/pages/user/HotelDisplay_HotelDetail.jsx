@@ -1,5 +1,5 @@
 import React from "react";
-import {useParams } from "react-router-dom";
+import {useLocation, useParams } from "react-router-dom";
 import { useGet } from "../../hooks/hooks";
 import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
@@ -10,10 +10,20 @@ import { useSelector } from "react-redux";
 
 const HotelDisplay_HotelDetail = () => {
     const { id } = useParams();
-    
-     // query room data result
-      const {roomData}=useSelector((state)=>state.searchResults)
+    const location=useLocation()
+    const {roomData}=location.state || {roomData:[]}
+     // query room data result, integrate countRoom
+      const {countRoom}=useSelector((state)=>state.searchResults)
       const specRoomData=roomData.filter(r=>r.hotelID===id)
+        const specRoomIntegratedCount=specRoomData.map((room)=> {
+          const countEach=countRoom.find((cr)=>cr.roomID===room._id)
+          console.log('each',countEach)
+          return {
+            ...room,
+            countRoom:countEach ? countEach.countRoom :0
+            
+          }
+        })
       const { data, error, loading } = useGet(
         `http://localhost:4000/api/hotelList/hotel/${id}`
       );
@@ -157,7 +167,7 @@ const HotelDisplay_HotelDetail = () => {
           />
         ) : (
           <HotelDetail_RoomDisplay
-            roomData={specRoomData}
+            roomData={specRoomIntegratedCount}
             hotel={data}
           ></HotelDetail_RoomDisplay>
         )}

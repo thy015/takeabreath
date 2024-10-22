@@ -84,7 +84,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                       <li>Room Type: {room.typeOfRoom}</li>
                       <li>Capacity: {room.capacity}</li>
                       <li>Total Bed: {room.numberOfBeds}</li>
-                      <li>Number of rooms: {room.numberOfRooms}</li>
+                      <li>Number of rooms: {room.countRoom}</li>
                       <li>Amenities: ....</li>
                     </ul>
                   </div>
@@ -104,7 +104,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                     <div>{returnCount}</div>
                     <Button
                       onClick={() => increment(room._id)}
-                      disabled={counts[room._id] === 5}
+                      disabled={counts[room._id] === room.countRoom}
                     >
                       +
                     </Button>

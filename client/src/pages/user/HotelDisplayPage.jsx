@@ -57,6 +57,7 @@ const filters = cardItems.map((c) => c.title);
         `http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`
       );
       roomData = response.data;
+      console.log('Debug roomdata in hoteldisplaypage',roomData)
     }
     navigate(`hotel/${hotel._id}`, { state: { roomData } });
   };

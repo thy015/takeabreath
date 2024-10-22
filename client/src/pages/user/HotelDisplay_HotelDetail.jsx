@@ -147,11 +147,20 @@ const HotelDisplay_HotelDetail = () => {
       <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
       {/* Room display */}
       <div>
-
-      {console.log('Detail hotel',specRoomData)}
-     <HotelDetail_RoomDisplay roomData={specRoomData} hotel={data}></HotelDetail_RoomDisplay>
-     
-
+      {console.log('Detail hotel in hoteldisplay_hoteldetail',specRoomData)}
+      {specRoomData.length === 0 ? (
+          <Alert
+            message="PLEASE QUERY FIRST"
+            description="Please try query to see rooms"
+            type="info"
+            showIcon
+          />
+        ) : (
+          <HotelDetail_RoomDisplay
+            roomData={specRoomData}
+            hotel={data}
+          ></HotelDetail_RoomDisplay>
+        )}
      </div>
     </div>
   );

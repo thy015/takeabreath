@@ -1,6 +1,11 @@
 
 const { Invoice,Receipt} = require("../../models/invoice.model");
 const { Room } = require("../../models/hotel.model");
+const timezone =require('dayjs/plugin/timezone')
+const dayjs=require('dayjs')
+const utc=require('dayjs/plugin/utc')
+dayjs.extend(timezone)
+dayjs.extend(utc)
 
 const bookRoom = async (req, res) => {
   const {idHotel,idCus,idRoom,dataBooking} = req.body;
@@ -9,6 +14,9 @@ const bookRoom = async (req, res) => {
       return res.status(403).json({message:"Missing data"})
     }
     if(dataBooking.paymentMethod==="paypal"){
+      const convertCheckInDay = dayjs(dataBooking.checkInDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
+      const convertCheckOutDay=dayjs(dataBooking.checkOutDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
+      console.log('Convert check in and out day',convertCheckInDay,convertCheckOutDay)
       const invoice = await Invoice.create({
         hotelID:idHotel,
         cusID:idCus,
@@ -24,8 +32,8 @@ const bookRoom = async (req, res) => {
             paymentMethod:dataBooking.paymentMethod,
             totalPrice:dataBooking.total,
             totalRoom:dataBooking.totalRoom,
-            checkInDay:dataBooking.checkInDay,
-            checkOutDay:dataBooking.checkOutDay
+            checkInDay:new Date(convertCheckInDay),
+            checkOutDay:new Date(convertCheckOutDay)
           }
       })
       setTimeout(async()=>{
@@ -68,9 +76,7 @@ const completedTran = async (req, res) => {
     if(order.status==="COMPLETED"){
       if(invoice && invoice.invoiceState==="waiting"){
         invoice.invoiceState="paid"
-        roomMatch.numberOfRooms=roomMatch.numberOfRooms-1
         await invoice.save()
-        await roomMatch.save()
         return res.status(200).json({message:"Payment success"})
       } else if(invoice && invoice.invoiceState==="paid"){
         return res.status(200).json({message:"Payment already success"})

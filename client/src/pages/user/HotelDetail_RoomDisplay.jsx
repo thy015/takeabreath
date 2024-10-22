@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
 import BookingConfirmationForm from "../../component/BookingConfirmationForm"
@@ -11,7 +11,9 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
   const { totalCheckInDay } = useSelector((state) => state.inputDay)
   const dispatch=useDispatch()
   const [counts, setCounts] = useState({});
-
+      useEffect(()=>{
+        console.log('Remount when change room number')
+      },[roomData])
       //open modal : Phuc
       const [isShow, setShow] = useState(false)
 

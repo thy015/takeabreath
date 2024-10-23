@@ -2,6 +2,7 @@ import React, { useEffect,useContext } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import {useJwt} from 'react-jwt'
 import { AuthContext } from '../../hooks/auth.context'
+import axios from 'axios'
 import Cookies from 'js-cookie'
 const SSO = () => {
   const [searchParams] = useSearchParams();
@@ -14,12 +15,14 @@ const SSO = () => {
     if (decodedToken && !isExpired) {
       console.log('decoded token on SSO:', decodedToken);
       login(decodedToken);
+      axios.post("http://localhost:4000/api/auth/login-with-sso",decodedToken)
+        .catch(err=>{
+          console.log(err)
+        })
       if (decodedToken.role === 'user') {
-        Cookies.set('token', token,{expires:1});
         navigate('/');
       }
       else if (decodedToken.role==='partner'){
-        Cookies.set('token', token,{expires:1});
         navigate('/owner')
       }
     }

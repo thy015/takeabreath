@@ -73,6 +73,7 @@ ListRouter.get("/room", async (req, res) => {
 
 ListRouter.get("/list-room",verifyOwner,async (req,res)=>{
   try{
+    console.log(req.ownerID )
     const ownerId= req.ownerID 
     const rooms = await Room.find({
       ownerID:ownerId

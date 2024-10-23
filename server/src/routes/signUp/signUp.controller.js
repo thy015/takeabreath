@@ -4,16 +4,16 @@ const { generalAccessTokens } = require("../../middleware/jwt");
 //owner
 const signUpOwner = async (req, res) => {
 
-  const { name, password, email, birthday, phone, idenCard} =
+  const { name, password, email, birthday, phone, idenCard } =
     req.body;
- 
 
-  if (!name || !password || !email  || !phone ||!idenCard) {
+
+  if (!name || !password || !email || !phone || !idenCard) {
 
     return res.status(403).json({ message: "Input is required" });
   } else if (!validateEmail(email)) {
     return res.status(400).json({ message: "Invalid email" });
-  } 
+  }
 
   try {
     // Check if the account already exists
@@ -28,32 +28,32 @@ const signUpOwner = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     // Create the new owner account
     const createdOwner = new Owner({
-      ownerName:name,
-      password:hashPassword,
-      email:email,
-      phoneNum:phone,
-      idenCard:idenCard
+      ownerName: name,
+      password: hashPassword,
+      email: email,
+      phoneNum: phone,
+      idenCard: idenCard
     });
 
     await createdOwner.save()
     // Respond with success
     return res.status(200).json({
       status: "OK",
-      register:true,
+      register: true,
       message: "Succ",
       data: createdOwner,
     });
   } catch (e) {
     return res
       .status(500)
-      .json({message: "Internal Server Error" });
+      .json({ message: "Internal Server Error" });
   }
 };
 
 //chung của owner và admin
 const signInOwner = async (req, res) => {
-  const {email, password} = req.body
-  console.log( {email, password})
+  const { email, password } = req.body
+  console.log({ email, password })
   if (!email || !password) {
     return res.status(403).json({ message: "Email and password are required" });
   }
@@ -74,7 +74,7 @@ const signInOwner = async (req, res) => {
       const access_token = await generalAccessTokens({
         id: foundOwner._id,
         email: foundOwner.email,
-        name:foundOwner.ownerName,
+        name: foundOwner.ownerName,
         birthday: foundOwner.birthday,
         phoneNum: foundOwner.phoneNum,
         avatarLink: foundOwner.avatarLink,
@@ -108,7 +108,7 @@ const signInOwner = async (req, res) => {
       const access_token = await generalAccessTokens({
         id: foundAdmin._id,
         name: foundAdmin.adminName,
-        email:foundAdmin.email
+        email: foundAdmin.email
       });
 
       return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
@@ -116,7 +116,7 @@ const signInOwner = async (req, res) => {
         message: "Admin logged in",
         access_token: access_token,
         name: foundAdmin.adminName,
-        id:foundAdmin._id,
+        id: foundAdmin._id,
         login: true,
         redirect: "/Admin",
       });
@@ -161,14 +161,14 @@ const loginCustomer = async (req, res) => {
     });
 
     return res.cookie("token", token, { httpOnly: true, secure: true })
-            .json({
-              login: true,
-              redirect: "/",
-              name: customer.cusName,
-              id: customer._id,
-              email:customer.email
-            });
-  }else{
+      .json({
+        login: true,
+        redirect: "/",
+        name: customer.cusName,
+        id: customer._id,
+        email: customer.email
+      });
+  } else {
     return res.status(400).json({ login: false, message: "User Invalid" });
   }
 };
@@ -189,8 +189,8 @@ const registerCustomer = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const customer = new Customer({
       email: email,
-      cusName:name,
-      phoneNum:phone,
+      cusName: name,
+      phoneNum: phone,
       password: hashPassword
     });
 
@@ -198,7 +198,7 @@ const registerCustomer = async (req, res) => {
     console.log(customer)
     return res.status(200).json({
       status: "OK",
-      register:true,
+      register: true,
       message: "Succ",
       data: customer,
       redirect: '/Customer'
@@ -210,63 +210,155 @@ const registerCustomer = async (req, res) => {
   }
 };
 
-const logout = async (req,res)=>{
+const loginWithSSO = async (req, res) => {
+  const { firstName, lastName, id, userId,partnerId, role, email, dob } = req.body
+  let name = ""
+  if(!userId){
+    name= "Onwer Name"
+  }else{
+    name=firstName+" "+lastName
+  }
+
+  if(role ==="partner"){
+    let owner ={}
+    const ownerExsisted = await Owner.findOne({
+      email:email
+    })
+
+    if(!ownerExsisted){
+      const newOwner = Owner({
+        ownerName:"Owner Name",
+        email:email,
+        birthday:dob,
+        idenCard:"Unknown",
+        phoneNum:"Unknown",
+        password:"Unknown"
+      })
+
+      await newOwner.save()
+      owner = newOwner
+    }else{
+      owner =ownerExsisted
+    }
+
+    const token = await generalAccessTokens({
+      id:owner._id,
+      name: owner.ownerName,
+      email: owner.email,
+      role: role,
+      birthday: owner.birthday,
+      idSSO:id
+    })
+
+    console.log("[TOKEN OWNER]",token)
+    return res.cookie("token", token, { httpOnly: true, secure: true })
+    .json({
+      login: true,
+      redirect: role,
+      name: owner.ownerName,
+      id: owner._id,
+      email: owner.email
+    })
+
+  }else if(role === "user"){
+
+    let customer = {}
+    const customerExsisted = await Customer.findOne({
+      email:email
+    })
+    if(!customerExsisted){
+      const newCus = new Customer({
+        cusName:name,
+        email:email,
+        password:"Unknown",
+        birthday:dob
+      })
+      await newCus.save()
+      customer = newCus
+    }else{
+      customer=customerExsisted
+    }
+
+    const token = await generalAccessTokens({
+      id:customer._id,
+      name: customer.cusName,
+      email: customer.email,
+      role: role,
+      birthday: customer.birthday,
+      idSSO:id
+    })
+
+    console.log("[TOKEN CUSTOMER]",token)
+    return res.cookie("token", token, { httpOnly: true, secure: true })
+    .json({
+      login: true,
+      redirect: role,
+      name: customer.cusName,
+      id: customer._id,
+      email: customer.email
+    })
+  }
+
+ 
+}
+
+const logout = async (req, res) => {
   res.clearCookie('token')
-  return res.json({logout:true})
+  return res.json({ logout: true })
 }
 
 // CRUD cus
-const deleteCus=async(req,res)=>{
-  const id=req.params.id
-  try{
-    const deletedCus=await Customer.findByIdAndDelete(id)
-    if(!deletedCus){
-      return res.status(404).json({message:'Customer not found'})
+const deleteCus = async (req, res) => {
+  const id = req.params.id
+  try {
+    const deletedCus = await Customer.findByIdAndDelete(id)
+    if (!deletedCus) {
+      return res.status(404).json({ message: 'Customer not found' })
     }
-    res.status(200).json({message:'Success delete customer'})
-  }catch(e){
-    return res.status(500).json({message:'Internal server prob'}+e)
+    res.status(200).json({ message: 'Success delete customer' })
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server prob' } + e)
   }
 }
 
-const updateCus=async(req,res)=>{
-  const id=req.params.id
-  const newData=req.body
-  try{
-    const updateCus= await Customer.findByIdAndUpdate(id,newData,{new:true})
+const updateCus = async (req, res) => {
+  const id = req.params.id
+  const newData = req.body
+  try {
+    const updateCus = await Customer.findByIdAndUpdate(id, newData, { new: true })
     if (!updateCus) {
       return res.status(404).json({ message: "Customer not found" });
     }
     res.status(200).json(updateCus);
-  }catch(e){
-    return res.status(500).json({message:'Internal server prob'}+e)
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server prob' } + e)
   }
 }
 // CRUD owner
-const deleteOwner=async(req,res)=>{
-  const id=req.params.id
-  try{
-    const deleteOwner=await Owner.findByIdAndDelete(id)
-    if(!deleteOwner){
-      return res.status(404).json({message:'Customer not found'})
+const deleteOwner = async (req, res) => {
+  const id = req.params.id
+  try {
+    const deleteOwner = await Owner.findByIdAndDelete(id)
+    if (!deleteOwner) {
+      return res.status(404).json({ message: 'Customer not found' })
     }
-    res.status(200).json({message:'Success delete customer'})
-  }catch(e){
-    return res.status(500).json({message:'Internal server prob'}+e)
+    res.status(200).json({ message: 'Success delete customer' })
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server prob' } + e)
   }
 }
 
-const updateOwner=async(req,res)=>{
-  const id=req.params.id
-  const newData=req.body
-  try{
-    const updateOwner= await Owner.findByIdAndUpdate(id,newData,{new:true})
+const updateOwner = async (req, res) => {
+  const id = req.params.id
+  const newData = req.body
+  try {
+    const updateOwner = await Owner.findByIdAndUpdate(id, newData, { new: true })
     if (!updateOwner) {
       return res.status(404).json({ message: "Customer not found" });
     }
     res.status(200).json(updateOwner);
-  }catch(e){
-    return res.status(500).json({message:'Internal server prob'}+e)
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server prob' } + e)
   }
 }
 function validateBirthDate(birthday) {
@@ -304,5 +396,6 @@ module.exports = {
   //phuc
   loginCustomer,
   registerCustomer,
-  logout
+  logout,
+  loginWithSSO
 };

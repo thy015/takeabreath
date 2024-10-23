@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState ={
     hotels:[],
-    selectedHotel:{}
+    selectedHotel:{},
 }
 
 const hotelsSlice = createSlice({

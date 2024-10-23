@@ -1,34 +1,37 @@
 
-const { Hotel,Room } = require("../../models/hotel.model");
+const { Hotel, Room } = require("../../models/hotel.model");
 const { Invoice } = require("../../models/invoice.model");
 const { Owner } = require("../../models/signUp.model");
-const dayjs=require('dayjs')
-const isBetween=require('dayjs/plugin/isBetween')
+const dayjs = require('dayjs')
+const isBetween = require('dayjs/plugin/isBetween')
 
 dayjs.extend(isBetween)
 
 
 const createRoom = async (req, res) => {
-  const { numberOfBeds, typeOfRoom, money, hotelID, capacity, roomImages } = req.body;
+  const { numberOfBeds, numberOfRooms, typeOfRoom, money, hotelID, capacity, imgLink, roomName } = req.body;
 
   try {
     // Validate input
-    if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity) {
+    if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity || !roomName) {
       return res.status(403).json({ message: "Input is required" });
     }
 
     // Create the room
-    const createdRoom = await Hotel.create({
+    const createdRoom = await Room.create({
+      roomName,
       numberOfBeds,
+      numberOfRooms,
       typeOfRoom,
       money,
       capacity,
       hotelID,
-      roomImages,
+      imgLink,
+      ownerID: req.ownerID
     });
 
     if (createdRoom) {
-      const hotel = await Hotel.findById(hotelID);
+      const hotel = await Hotel.findById(createdRoom.hotelID);
       if (hotel) {
         // Update hotel minPrice if necessary
         if (hotel.minPrice === 0 || hotel.minPrice > money) {
@@ -47,6 +50,44 @@ const createRoom = async (req, res) => {
         data: createdRoom,
       });
     }
+  } catch (e) {
+    console.error("Error in createRoom:", e);
+    return res.status(500).json({ message: e.message });
+  }
+};
+const updateRoom = async (req, res) => {
+  const id = req.params.id
+  const { numberOfBeds, numberOfRooms, typeOfRoom, money, hotelID, capacity, imgLink, roomName } = req.body;
+  if (!id)
+    return res.status(403).json({
+      message: "Bị mất id phòng",
+    });
+  try {
+    // Validate input
+    if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity || !roomName) {
+      return res.status(403).json({ message: "Input is required" });
+    }
+
+    // Update room
+    const room = await Room.findById({_id:id})
+
+    room.roomName=roomName
+    room.numberOfBeds=numberOfBeds
+    room.numberOfRooms=numberOfRooms
+    room.typeOfRoom=typeOfRoom
+    room.money=money
+    room.capacity=capacity
+    room.hotelID=hotelID
+    room.imgLink=imgLink
+    await room.save()
+
+    await room.populate("hotelID")
+      // Respond with success
+      return res.status(201).json({
+        status: "OK",
+        message: "Room created successfully",
+        data: room,
+      });
   } catch (e) {
     console.error("Error in createRoom:", e);
     return res.status(500).json({ message: e.message });
@@ -120,6 +161,7 @@ const createHotel = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 const updateHotels = async (req, res) => {
   const {
     hotelName,
@@ -132,7 +174,7 @@ const updateHotels = async (req, res) => {
   } = req.body;
 
   try {
- 
+
     if (!hotelName || !address || !city || !nation || !hotelType || !phoneNum) {
       return res.status(400).json({ message: "All fields are required." });
     }
@@ -144,7 +186,7 @@ const updateHotels = async (req, res) => {
       return res.status(404).json({ message: "Hotel not found" });
     }
 
-  
+
 
     hotel.hotelName = hotelName;
     hotel.address = address;
@@ -154,7 +196,7 @@ const updateHotels = async (req, res) => {
     hotel.phoneNum = phoneNum;
     hotel.imgLink = imgLink;
 
-    await hotel.save(); 
+    await hotel.save();
 
     return res.status(200).json({
       status: "OK",
@@ -169,69 +211,67 @@ const updateHotels = async (req, res) => {
 
 
 
-const queryHotel=async(req,res)=>{
-    const {city,dayStart,dayEnd,people}=req.body
-    if(!city||!dayStart||!dayEnd||!people){
-      return res.status(403).json({message:"All fields are required"})
-    }
-    try{
-      // double check
-      const start=dayjs(dayStart).format('DD/MM/YYYY')
-      const end=dayjs(dayEnd).format('DD/MM/YYYY')
+const queryHotel = async (req, res) => {
+  const { city, dayStart, dayEnd, people } = req.body
+  if (!city || !dayStart || !dayEnd || !people) {
+    return res.status(403).json({ message: "All fields are required" })
+  }
+  try {
+    // double check
+    const start = dayjs(dayStart).format('DD/MM/YYYY')
+    const end = dayjs(dayEnd).format('DD/MM/YYYY')
 
-     
+
     // handle city
     const hotels = await Hotel.find({ city: city });
 
-    if(hotels.length===0){
+    if (hotels.length === 0) {
       return res.status(400).json({ message: 'No hotel in this city' });
     }
-    const hotelIDs=hotels.map(h=>h._id)
-    const rooms=await Room.find({hotelID:{$in: hotelIDs}})
+    const hotelIDs = hotels.map(h => h._id)
+    const rooms = await Room.find({ hotelID: { $in: hotelIDs } })
 
-    if(rooms.length===0){
+    if (rooms.length === 0) {
       // no room => return null
-      return res.status(200).json({ message: 'No room in this hotel', data:[]});
+      return res.status(200).json({ message: 'No room in this hotel', data: [] });
     }
 
-    const roomsID=rooms.map(r=>r._id)
-    const invoices=await Invoice.find({roomID:{$in:roomsID}})
+    const roomsID = rooms.map(r => r._id)
+    const invoices = await Invoice.find({ roomID: { $in: roomsID } })
     //dayStart and end handle (filter room not available)
-  
-        const availableRooms = rooms.filter(room => {
-          const roomInvoices = invoices.filter(invoice => invoice.roomID.equals(room._id));
-          return !roomInvoices.some(invoice => {
-              const invoiceStart = dayjs(invoice.checkInDay);
-              const invoiceEnd = dayjs(invoice.checkOutDay);
-              return (
-                  dayjs(start).isBetween(invoiceStart, invoiceEnd, null, '[)') ||
-                  dayjs(end).isBetween(invoiceStart, invoiceEnd, null, '(]')
-              );
-          });
-      });
 
-      if (availableRooms.length > 0) {
-          return res.status(200).json({
-              status: "OK",
-              roomData: availableRooms,
-              hotelData: hotels,
-              
-          });
-      } else {
-          return res.status(200).json({
-              message: 'No available rooms for the selected dates'
-          });
-      }
-    }catch(e){
-      console.log('Problem in hotel query controller: ' + e);
-      return res.status(500).json({ message: 'Internal server error' });
+    const availableRooms = rooms.filter(room => {
+      const roomInvoices = invoices.filter(invoice => invoice.roomID.equals(room._id));
+      return !roomInvoices.some(invoice => {
+        const invoiceStart = dayjs(invoice.checkInDay);
+        const invoiceEnd = dayjs(invoice.checkOutDay);
+        return (
+          dayjs(start).isBetween(invoiceStart, invoiceEnd, null, '[)') ||
+          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, '(]')
+        );
+      });
+    });
+
+    if (availableRooms.length > 0) {
+      return res.status(200).json({
+        status: "OK",
+        roomData: availableRooms,
+        hotelData: hotels,
+
+      });
+    } else {
+      return res.status(200).json({
+        message: 'No available rooms for the selected dates'
+      });
     }
+  } catch (e) {
+    console.log('Problem in hotel query controller: ' + e);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
 }
 const deleteHotel = async (req, res) => {
   try {
-    const hotel = req.params.id; 
-
-
+    const hotel = req.params.id;
     const deletedProduct = await Hotel.findByIdAndDelete(hotel);
     if (!deletedProduct) {
       return res.status(404).json({
@@ -247,6 +287,37 @@ const deleteHotel = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+const deleteRoom = async (req, res) => {
+  const id = req.params.id
+  if (!id)
+    return res.status(403).json({
+      message: "Bị mất id phòng",
+    });
+  try {
+    const invoice = await Invoice.countDocuments({ roomID: id })
+
+    if (invoice > 0) {
+      return res.status(400).json({
+        message: "Phòng đã được đặt không thể xóa !",
+      });
+    }
+    const roomDelete = await Room.findByIdAndDelete({ _id: id })
+    if (roomDelete) {
+      return res.status(200).json({ messgae: "Xóa phòng thành công !" })
+    } else {
+      return res.status(400).json({ messgae: "Xóa phòng không thành công !" })
+    }
+  } catch (er) {
+    return res.status(500).json({
+      message: er.message,
+    });
+  }
+
+
+
+
+}
 module.exports = {
   createHotel,
   createRoom,
@@ -254,4 +325,6 @@ module.exports = {
   queryHotel,
   updateHotels,
   deleteHotel,
+  deleteRoom,
+  updateRoom
 };

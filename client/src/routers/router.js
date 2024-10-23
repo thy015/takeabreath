@@ -32,7 +32,7 @@ import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/AdminVoucher";
 import Hotel from "../pages/owner/Hotel/Hotel";
-import { CreateHotel } from "../pages/admin/Hotels/CreateHotel";
+import Room from "../pages/owner/Room/Room"
 export const routers = [
   {
     path: "/",
@@ -121,6 +121,8 @@ export const routers = [
       { path: "Vouchers", page: Vouchers},
       { path: "AddVoucher", page: AddVoucher}, 
       { path: "Hotel", page: Hotel}, 
+      { path: "Room", page: Room}, 
+    
     ],
     isOwner:true,
     isShowHeader: false,

@@ -39,6 +39,7 @@ function Hotel() {
     }
 
     const handleUpdate = (record) => {
+        console.log(record)
         dispatch(seletedHotel(record))
         setVisible(true)
     }
@@ -102,8 +103,8 @@ function Hotel() {
             fixed: 'right',
             title: 'Action',
             width: 200,
-            dataIndex: 'revenue',
-            key: 'revenue',
+            dataIndex: 'action',
+            key: 'action',
             render: (_, record) => {
                 return (
                     <>

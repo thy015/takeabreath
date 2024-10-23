@@ -6,8 +6,7 @@ const signUpOwner = async (req, res) => {
 
   const { name, password, email, birthday, phone, idenCard} =
     req.body;
-
-  console.log("[body]", { name, password, email, birthday, phone, idenCard })
+ 
 
   if (!name || !password || !email  || !phone ||!idenCard) {
 

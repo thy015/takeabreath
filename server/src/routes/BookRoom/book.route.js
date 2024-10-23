@@ -8,7 +8,7 @@ bookRouter.get("/invoicewaiting",bookController.getInvoicesWaiting);
 bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post('/',bookController.bookRoom)
 bookRouter.get(
-  "/bookingHistory/:cusID",
+  "/bookingHistory/:cusID",)
 bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post('/',bookController.bookRoom)
 bookRouter.get(

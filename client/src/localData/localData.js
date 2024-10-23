@@ -77,4 +77,38 @@ export const footerData = ()=>{
 ]
 }
 
+export const pressReleasedData=()=>{
+  const {t}=useTranslation()
+  return[
+    {
+      imgLink:'https://wallpapers.com/images/hd/hotels-in-milan-e5sq32idgh92ijfh.jpg',
+      imgAlt:'topic1',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-1-press-released'),
+      describe:t('describe-topic-1-press-released')
+    },
+    {
+      imgLink:'https://media.discordapp.net/attachments/1296366202309972010/1296368393531822110/5f7036ba-43e6-4fb4-8a7b-27d2b5269c14.png?ex=6719f1a6&is=6718a026&hm=455fc5c9274234df71b98c51439fef5d7050aa97f1dd403e607ecd12fb835590&=&format=webp&quality=lossless&width=1050&height=700',
+      imgAlt:'topic1',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-1-press-released'),
+      describe:t('describe-topic-1-press-released')
+    },
+    {
+      imgLink:'https://img.freepik.com/free-photo/view-luxurious-hotel-hallway_23-2150683497.jpg',
+      imgAlt:'topic3',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-3-press-released'),
+      describe:t('describe-topic-3-press-released')
+    },
+    {
+      imgLink:'https://media.discordapp.net/attachments/1296366202309972010/1296368393531822110/5f7036ba-43e6-4fb4-8a7b-27d2b5269c14.png?ex=6719f1a6&is=6718a026&hm=455fc5c9274234df71b98c51439fef5d7050aa97f1dd403e607ecd12fb835590&=&format=webp&quality=lossless&width=1050&height=700',
+      imgAlt:'topic1',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-1-press-released'),
+      describe:t('describe-topic-1-press-released')
+    },
+  ]
+}
+
 

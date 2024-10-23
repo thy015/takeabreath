@@ -34,6 +34,7 @@ import AdminVoucher from "../pages/admin/AdminVoucher";
 import BookingHistory from "../pages/user/BookingHistory";
 import Hotel from "../pages/owner/Hotel/Hotel";
 import { CreateHotel } from "../pages/admin/Hotels/CreateHotel";
+import AboutUs from "../pages/user/AboutUs";
 export const routers = [
   {
     path: "/",
@@ -146,6 +147,13 @@ export const routers = [
     page: SSO,
     isShowHeader: false,
     isShowFooter: false,
+  },
+  {
+
+    path: "/about-us",
+    page: AboutUs,
+    isShowHeader: true,
+    isShowFooter: true,
   },
   {
 

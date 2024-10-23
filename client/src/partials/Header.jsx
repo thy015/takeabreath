@@ -200,9 +200,11 @@ const Header = ({ children }) => {
             <li className="w-20">
            <p className={hoverEffect}> {t('partners')}</p>
              </li>
+             <Link to='/about-us' className='no-underline'>
              <li className='w-32'>
               <p className={hoverEffect}> {t('about-us')}</p>
              </li>
+             </Link>
             
 
               <li>        

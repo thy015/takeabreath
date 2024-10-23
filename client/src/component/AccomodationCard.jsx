@@ -173,7 +173,7 @@ const PressReleasesCarousel=({cardData})=>{
   <Slider {...settings}>
   {cardData.map((c,index)=>(
     <div key={index}>
-      <Card style={{ width: '280px',border:'none', textAlign:'left'}}>
+      <Card style={{ width: '280px',border:'none', textAlign:'left', paddingRight:'40px'}}>
     <Card.Img src={c.imgLink} alt={c.imgAlt} style={{borderRadius:'none'}}/>
     <Card.Body>
       <Card.Text>{c.dateReleased}</Card.Text>

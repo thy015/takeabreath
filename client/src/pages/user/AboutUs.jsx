@@ -69,15 +69,28 @@ const AboutUs = () => {
         </div>
       </div>
       {/* 3rd section */}
-      <div className="h-[500px]">
-        <div> Press Releases</div>
+      <div className="h-[600px] ">
         <div className="row g-0">
-          <div className="col-2"></div>
-          <div className="col-8">
+          <div className="col-2">
+          <img src="/icon/punctuation.png" className="rotate-180 scale-y-[-1] float-right"></img>
+          </div>
+          <div className="col-8 p-5">
+          <div className="relative flex justify-start pb-4">
+        <div className="italic text-5xl font-oswald absolute transform translate-x-1 translate-y-0.5 text-slate-300"> Press Releases</div>
+        <div className="italic text-5xl font-oswald relative text-[#20367B] "> Press Releases</div>
+        </div>
           <PressReleasesCarousel cardData={pressReleasedDataCard}></PressReleasesCarousel>
           </div>
-          <div className="col-2"></div>
+          <div className="col-2 flex justify-start items-end">
+          <img src="/icon/punctuation.png" className="scale-y-[-1]"></img>
+          </div>
         </div>
+    </div>
+    {/* 4th section */}
+    <div className="h-[400px] w-full">
+      <div className="h-full w-full object-cover ">
+<img src="https://images.pexels.com/photos/1838554/pexels-photo-1838554.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt='women on beach' className="object-cover h-full w-full"/>
+      </div>
     </div>
     </div>
   );

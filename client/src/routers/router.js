@@ -138,7 +138,7 @@ export const routers = [
 
     path: "/test",
     page: Test,
-    isShowHeader: false,
+    isShowHeader: true,
     isShowFooter: false,
   },
   {

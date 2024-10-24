@@ -82,7 +82,7 @@ const Login = () => {
             }
           })
           openNotification(true, "Login Successful", "")
-          navigate(redirectPath)
+          navigate(res.data.redirect)
         }
       }).catch(err => {
         console.log(err)

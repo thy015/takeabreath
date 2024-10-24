@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaCar, FaCog, FaParking, FaInfoCircle } from "react-icons/fa"; // FontAwesome for icons
+import { FaCar, FaCog, FaParking, FaInfoCircle } from "react-icons/fa"; 
 
 const BookingPage = () => {
   const [isOpen, setIsOpen] = useState(false); // For dropdown

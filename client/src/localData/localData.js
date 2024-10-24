@@ -110,5 +110,33 @@ export const pressReleasedData=()=>{
     },
   ]
 }
-
+export const ourAchievementsData=()=>{
+  const {t}=useTranslation()
+  return [
+    {
+      imgLink:'https://thevendry.com/cdn-cgi/image/height=1920,width=1920,fit=contain,metadata=none/https://s3.us-east-1.amazonaws.com/uploads.thevendry.co/24983/1670338672844_Be_Fireside_at_Hotel_Valencia_Santana_Row.jpg',
+      imgAlt:'topic1',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-1-our-achievements'),
+    },
+    {
+      imgLink:'https://news.airbnb.com/wp-content/uploads/sites/4/2021/07/2008_March@2X.jpg?fit=616%2C616&resize=616%2C616',
+      imgAlt:'topic2',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-2-our-achievements'),
+    },
+    {
+      imgLink:'https://symphony.cdn.tambourine.com/hotel-vandivort/media/hvandivort-rooms-thequeens-6205952de75a2.webp',
+      imgAlt:'topic3',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-3-our-achievements'),
+    },
+    {
+      imgLink:'/img/TAB.png',
+      imgAlt:'topic4',
+      dateReleased:'JANUARY 26,2024',
+      title:t('title-topic-4-our-achievements'),
+    },
+  ]
+}
 

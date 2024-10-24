@@ -150,6 +150,7 @@ const PressReleasesCarousel=({cardData})=>{
   // setting carousels
   const settings={
     dots: true,
+    arrows:false,
     infinite: true,
     speed: 500,
     slidesToShow:3,
@@ -187,4 +188,55 @@ const PressReleasesCarousel=({cardData})=>{
   </Slider>
   )
 }
-export { PropertyCard, AccommodationCard,PressReleasesCarousel };
+
+const OurAchievementsCard=({cardData})=>{
+  // setting carousels
+  const settings={
+    arrows:true,
+    infinite: true,
+    speed: 500,
+    slidesToShow:4,
+    slidesToScroll:1,
+    prevArrow: (
+      <button className="slick-prev slick-arrow" aria-label="Previous" style={{ color: 'black', fontSize: '20px' }}>
+        &#10094; {/* Mũi tên trái */}
+      </button>
+    ),
+    nextArrow: (
+      <button className="slick-next slick-arrow" aria-label="Next" style={{ color: 'black', fontSize: '20px' }}>
+        &#10095; {/* Mũi tên phải */}
+      </button>
+    ),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  }
+  return(
+  <Slider {...settings}>
+  {cardData.map((c,index)=>(
+    <div key={index}>
+      <Card style={{ width: '320px',border:'none', textAlign:'left', padding:'0 20px'}}>
+    <img src={c.imgLink} alt={c.imgAlt} style={{borderTopLeftRadius:'20px',width:'90%',borderBottomLeftRadius:'20px',height:'160px',objectFit:'cover'}}/>
+    <Card.Body>
+      <Card.Text>{c.dateReleased}</Card.Text>
+      <Card.Title>{c.title}</Card.Title>
+      <Button variant="light">READ MORE</Button>
+    </Card.Body>
+    </Card>
+    </div>
+  ))}
+  </Slider>
+  )
+}
+export { PropertyCard, AccommodationCard,PressReleasesCarousel,OurAchievementsCard };

@@ -4,13 +4,18 @@
 
 .ant-carousel .slick-prev,
 .ant-carousel .slick-next {
-  color: #1d4ed8;
+  color: transparent!important;
 }
-
-.ant-carousel .slick-arrow {
-  margin: -20px -40px;
+.slick-prev:before, .slick-prev:focus:before, .slick-next:before, .slick-next:focus:before {
+  opacity: 1;
+  color: #1d4ed8!important;
 }
-
+.slick-prev:before, .slick-prev:focus:before{
+  margin-left: 5px;
+}
+.slick-next:before, .slick-next:focus:before {
+  margin-left: -5px;
+}
 .card-no-border {
   border: none !important;
   padding: 0;

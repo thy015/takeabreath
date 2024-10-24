@@ -1,3 +1,4 @@
+
 const { Hotel, Room } = require("../../models/hotel.model");
 const { Invoice } = require("../../models/invoice.model");
 const { Owner } = require("../../models/signUp.model");
@@ -6,27 +7,30 @@ const isBetween = require("dayjs/plugin/isBetween");
 
 dayjs.extend(isBetween);
 const createRoom = async (req, res) => {
-  const { numberOfBeds, typeOfRoom, money, hotelID, capacity, roomImages } =
-    req.body;
+
+  const { numberOfBeds, numberOfRooms, typeOfRoom, money, hotelID, capacity, imgLink, roomName } = req.body;
 
   try {
     // Validate input
-    if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity) {
+    if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity || !roomName) {
       return res.status(403).json({ message: "Input is required" });
     }
 
     // Create the room
-    const createdRoom = await Hotel.create({
+    const createdRoom = await Room.create({
+      roomName,
       numberOfBeds,
+      numberOfRooms,
       typeOfRoom,
       money,
       capacity,
       hotelID,
-      roomImages,
+      imgLink,
+      ownerID: req.ownerID
     });
 
     if (createdRoom) {
-      const hotel = await Hotel.findById(hotelID);
+      const hotel = await Hotel.findById(createdRoom.hotelID);
       if (hotel) {
         // Update hotel minPrice if necessary
         if (hotel.minPrice === 0 || hotel.minPrice > money) {
@@ -45,6 +49,54 @@ const createRoom = async (req, res) => {
         data: createdRoom,
       });
     }
+  } catch (e) {
+    console.error("Error in createRoom:", e);
+    return res.status(500).json({ message: e.message });
+  }
+};
+const updateRoom = async (req, res) => {
+  const id = req.params.id
+  const { numberOfBeds, numberOfRooms, typeOfRoom, money, hotelID, capacity, imgLink, roomName } = req.body;
+  if (!id)
+    return res.status(403).json({
+      message: "Bị mất id phòng",
+    });
+  try {
+    // Validate input
+    if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity || !roomName) {
+      return res.status(403).json({ message: "Input is required" });
+    }
+
+    // Update room
+    const room = await Room.findById({_id:id})
+
+    if(room.hotelID != hotelID){
+      // trừ số lượng trong hotel
+      const oldHotel = await Hotel.findById(room.hotelID);
+      oldHotel.numberOfRooms = oldHotel.numberOfRooms - 1;
+      await oldHotel.save();
+      // them vao hotel moi
+      const newHotel = await Hotel.findById(hotelID);
+      newHotel.numberOfRooms = newHotel.numberOfRooms + 1;
+      await newHotel.save();
+    }
+    room.roomName=roomName
+    room.numberOfBeds=numberOfBeds
+    room.numberOfRooms=numberOfRooms
+    room.typeOfRoom=typeOfRoom
+    room.money=money
+    room.capacity=capacity
+    room.hotelID=hotelID
+    room.imgLink=imgLink
+    await room.save()
+
+    await room.populate("hotelID")
+      // Respond with success
+      return res.status(201).json({
+        status: "OK",
+        message: "Room created successfully",
+        data: room,
+      });
   } catch (e) {
     console.error("Error in createRoom:", e);
     return res.status(500).json({ message: e.message });
@@ -117,6 +169,7 @@ const createHotel = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 const updateHotels = async (req, res) => {
   const { hotelName, address, city, nation, hotelType, phoneNum, imgLink } =
     req.body;
@@ -132,7 +185,6 @@ const updateHotels = async (req, res) => {
     if (!hotel) {
       return res.status(404).json({ message: "Hotel not found" });
     }
-
     hotel.hotelName = hotelName;
     hotel.address = address;
     hotel.city = city;
@@ -245,10 +297,70 @@ const queryHotel = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+const deleteHotel = async (req, res) => {
+  try {
+    const hotel = req.params.id;
+    const countRoom = await Room.countDocuments({hotelID:hotel})
+
+    if(countRoom>0){
+      return res.status(400).json({
+        message: "Khách sạn đã liên kết tới phòng khác nên không xóa được !",
+      });
+    }
+    const deletedProduct = await Hotel.findByIdAndDelete(hotel);
+    if (!deletedProduct) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+  } catch (e) {
+    console.log("Problem in hotel query controller: " + e);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const deleteRoom = async (req, res) => {
+  const id = req.params.id
+  if (!id)
+    return res.status(403).json({
+      message: "Bị mất id phòng",
+    });
+  try {
+    const invoice = await Invoice.countDocuments({ roomID: id })
+
+    if (invoice > 0) {
+      return res.status(400).json({
+        message: "Phòng đã được đặt không thể xóa !",
+      });
+    }
+    const roomDelete = await Room.findByIdAndDelete({ _id: id })
+    if (roomDelete) {
+      const hotel = await Hotel.findById({_id:roomDelete.hotelID})
+      if(hotel){
+        hotel.numberOfRooms -= 1
+        await hotel.save()
+      }
+      return res.status(200).json({ messgae: "Xóa phòng thành công !" })
+    } else {
+      return res.status(400).json({ messgae: "Xóa phòng không thành công !" })
+    }
+  } catch (er) {
+    return res.status(500).json({
+      message: er.message,
+    });
+  }
+
+
+
+
+}
 module.exports = {
   createHotel,
   createRoom,
   getHotelsByOwner,
   queryHotel,
   updateHotels,
+  deleteHotel,
+  deleteRoom,
+  updateRoom
 };

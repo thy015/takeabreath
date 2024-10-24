@@ -9,15 +9,19 @@ const items = [
         label: (<p className='font-bold'>Khách sạn</p>),
     },
     {
+        key: "Room",
+        label: (<p className='font-bold'>Room</p>),
+    },
+    {
         key: "Vouchers",
         label: (<p className='font-bold'>Voucher</p>),
     },
+   
     
 ]
 
 
 function SideBar() {
-
     const navigate = useNavigate()
     const hanldeClickItem = ({ item, key, keyPath, domEvent})=>{
         console.log({ item, key, keyPath, domEvent})

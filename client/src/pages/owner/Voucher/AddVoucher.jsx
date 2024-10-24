@@ -25,7 +25,6 @@ function AddVoucher() {
     }
     //Fetch data 
     const onFinish = (values) => {
-        console.log(values.date)
         const dateVoucher = values.date
         const stringDateStart = dateVoucher[0].format('YYYY/MM/DD')
         const stringDateEnd = dateVoucher[1].format('YYYY/MM/DD')

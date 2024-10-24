@@ -35,8 +35,6 @@ function Vouchers() {
           })
         })
         setListVoucher(dataList)
-        openNotification(true,"Get data successfully","")
-        
       })
       .catch(err => {
         openNotification(false,err.response.data.message,"")

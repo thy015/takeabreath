@@ -71,8 +71,23 @@ ListRouter.get("/room", async (req, res) => {
   }
 });
 
+ListRouter.get("/list-room",verifyOwner,async (req,res)=>{
+  try{
+    console.log(req.ownerID )
+    const ownerId= req.ownerID 
+    const rooms = await Room.find({
+      ownerID:ownerId
+    }).populate("hotelID")
+    res.status(200).json({status:true,rooms: rooms});
+  } catch (e) {
+    res.status(500).json({message:e.message});
+  }
+})
+
 ListRouter.post("/createRoom", verifyOwner, hotelListController.createRoom);
-// ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
+ListRouter.post("/updateRoom/:id", verifyOwner, hotelListController.updateRoom);
+ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
+ListRouter.delete("/deleteRoom/:id", hotelListController.deleteRoom);
 module.exports = ListRouter;
 
 //This is the start of swagger docs

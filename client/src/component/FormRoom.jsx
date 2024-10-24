@@ -44,11 +44,10 @@ function FormRoom({ isVisible, close }) {
             money: selectedRoom.money ?? "",
             hotelID: selectedRoom?.hotelID?._id ?? "",
         });
+        setImages(selectedRoom.imgLink??[])
     }, [isVisible, selectedRoom, form])
-
     const handleImage = async (e) => {
         e.stopPropagation()
-        let images = []
         const files = e.target.files
         let formData = new FormData()
         for (let i of files) {
@@ -66,12 +65,11 @@ function FormRoom({ isVisible, close }) {
         }
     }
     const handleDelete = async (item) => {
-        setImages(pre => pre.filter(image => image.public_id !== item.public_id))
+        setImages(pre => pre.filter(image => image !== item))
     }
     const hanldeInsert = async () => {
         form.submit()
     }
-
     const onFinish = async (values) => {
         const formInput = {
             ...values,
@@ -198,22 +196,21 @@ function FormRoom({ isVisible, close }) {
                     <Form.Item
                         label={"Chọn hình"}
                         name={"imgLink"}
-                        rules={[{ required: true, message: 'Vui lòng chọn hình !' }]}
                     >
                         <Input type="file" className='w-[87%]' onChange={handleImage} multiple />
                     </Form.Item>
                 </Form>
                 <div className=' flex gap-4 justify-center items-center'>
                     {images?.map(item => (
-                        <div key={item} className="relative w-1/3 h-1/3">
-                            <Image src={item} className='object-cover rounded-md' />
-                            <button
-                                className="absolute top-2 right-2 bg-red-500 text-center items-center text-white rounded-full p-1 w-[20px] h-[20px] flex  justify-center"
-                                onClick={() => handleDelete(item)}
-                            >
-                                x
-                            </button>
-                        </div>
+                        <div className="relative inline-block overflow-hidden">
+                        <Image src={item} className="object-cover rounded-md" alt="item" />
+                        <button
+                            className="absolute top-1 right-1 bg-red-500 text-center items-center text-white rounded-full p-1 w-[20px] h-[20px] flex justify-center"
+                            onClick={() => handleDelete(item)}
+                        >
+                            x
+                        </button>
+                    </div>
                     ))}
 
                 </div>

@@ -44,7 +44,7 @@ function Hotel() {
         setVisible(true)
     }
 
-    const columns = [
+    const columns = [   
         {
             title: 'Tên khách sạn',
             dataIndex: 'hotelName',

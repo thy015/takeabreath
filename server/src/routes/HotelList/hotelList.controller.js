@@ -71,6 +71,16 @@ const updateRoom = async (req, res) => {
     // Update room
     const room = await Room.findById({_id:id})
 
+    if(room.hotelID != hotelID){
+      // trừ số lượng trong hotel
+      const oldHotel = await Hotel.findById(room.hotelID);
+      oldHotel.numberOfRooms = oldHotel.numberOfRooms - 1;
+      await oldHotel.save();
+      // them vao hotel moi
+      const newHotel = await Hotel.findById(hotelID);
+      newHotel.numberOfRooms = newHotel.numberOfRooms + 1;
+      await newHotel.save();
+    }
     room.roomName=roomName
     room.numberOfBeds=numberOfBeds
     room.numberOfRooms=numberOfRooms
@@ -272,6 +282,13 @@ const queryHotel = async (req, res) => {
 const deleteHotel = async (req, res) => {
   try {
     const hotel = req.params.id;
+    const countRoom = await Room.countDocuments({hotelID:hotel})
+
+    if(countRoom>0){
+      return res.status(400).json({
+        message: "Khách sạn đã liên kết tới phòng khác nên không xóa được !",
+      });
+    }
     const deletedProduct = await Hotel.findByIdAndDelete(hotel);
     if (!deletedProduct) {
       return res.status(404).json({
@@ -304,6 +321,11 @@ const deleteRoom = async (req, res) => {
     }
     const roomDelete = await Room.findByIdAndDelete({ _id: id })
     if (roomDelete) {
+      const hotel = await Hotel.findById({_id:roomDelete.hotelID})
+      if(hotel){
+        hotel.numberOfRooms -= 1
+        await hotel.save()
+      }
       return res.status(200).json({ messgae: "Xóa phòng thành công !" })
     } else {
       return res.status(400).json({ messgae: "Xóa phòng không thành công !" })

@@ -31,7 +31,9 @@ const CreateHotel = ({ visible, handleCancel }) => {
       phoneNum: hotelSelected.phoneNum ?? "",
       nation: hotelSelected.nation ?? "",
     });
+    setImages(hotelSelected.imgLink ??[])
   }, [visible, hotelSelected, form])
+  
   if (ownerLoad) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }

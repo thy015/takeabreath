@@ -106,6 +106,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
         message.error("Booking failed", message.error(res.data.message));
       }
     } catch (e) {
+      console.log(e)
       console.log("[ERROR]", e.response.message);
     }
     

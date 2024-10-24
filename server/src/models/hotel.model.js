@@ -10,6 +10,7 @@ const hotelSchema = new mongoose.Schema({
   imgLink: { type: [String], required: false },
   rate: { type: Number, required: false, default: 0 },
   numberOfRates: { type: Number, required: false, default: 0 },
+  numberOfRooms: { type: Number, required: false, default: 0 },
   revenue: { type: Number, required: false, default: 0 },
   ownerID: {
     type: mongoose.Schema.Types.ObjectId,

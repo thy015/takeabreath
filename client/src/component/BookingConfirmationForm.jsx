@@ -267,7 +267,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         <div>
                         
                           <div className="mt-8">
-                            Click the button below to complete the payment
+                           <img src='https://lavendercottagecattery.co.uk/wp-content/uploads/2022/10/CITYPNG.COMDownload-PayPal-Yellow-Payment-Button-PNG-2100x770-2.png'/>
                           </div>
                         </div>
                       )}

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
 import BookingConfirmationForm from "../../component/BookingConfirmationForm"
@@ -11,7 +11,9 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
   const { totalCheckInDay } = useSelector((state) => state.inputDay)
   const dispatch=useDispatch()
   const [counts, setCounts] = useState({});
-
+      useEffect(()=>{
+        console.log('Remount when change room number')
+      },[roomData])
       //open modal : Phuc
       const [isShow, setShow] = useState(false)
 
@@ -82,6 +84,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                       <li>Room Type: {room.typeOfRoom}</li>
                       <li>Capacity: {room.capacity}</li>
                       <li>Total Bed: {room.numberOfBeds}</li>
+                      <li>Number of rooms: {room.countRoom}</li>
                       <li>Amenities: ....</li>
                     </ul>
                   </div>
@@ -101,7 +104,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                     <div>{returnCount}</div>
                     <Button
                       onClick={() => increment(room._id)}
-                      disabled={counts[room._id] === 5}
+                      disabled={counts[room._id] === room.countRoom}
                     >
                       +
                     </Button>
@@ -114,7 +117,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                         <span>{formatMoney(countRoomPrice)} VND</span>
                       </li>
                       <li className="flex justify-between w-full mb-2">
-                        {/* need handle number of night */}
+
                         <span>For <span className="text-success">{totalCheckInDay} night </span>: </span>
                         <span>{formatMoney(rangeRoomPrice)} VND</span>
                       </li>

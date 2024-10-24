@@ -31,7 +31,10 @@ import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/AdminVoucher";
+import BookingHistory from "../pages/user/BookingHistory";
 import Hotel from "../pages/owner/Hotel/Hotel";
+import { CreateHotel } from "../pages/admin/Hotels/CreateHotel";
+import AboutUs from "../pages/user/AboutUs";
 import Room from "../pages/owner/Room/Room"
 export const routers = [
   {
@@ -93,6 +96,12 @@ export const routers = [
     isShowFooter: true,
   },
   {
+    path: "/mybooking",
+    page: BookingHistory,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
+  {
     path: "/booking-success",
     page: SuccessPayment,
     isShowHeader: true,
@@ -132,7 +141,7 @@ export const routers = [
 
     path: "/test",
     page: Test,
-    isShowHeader: false,
+    isShowHeader: true,
     isShowFooter: false,
   },
   {
@@ -141,6 +150,13 @@ export const routers = [
     page: SSO,
     isShowHeader: false,
     isShowFooter: false,
+  },
+  {
+
+    path: "/about-us",
+    page: AboutUs,
+    isShowHeader: true,
+    isShowFooter: true,
   },
   {
 

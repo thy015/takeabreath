@@ -4,6 +4,9 @@ import { MdRoom } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { RateStar } from "./Rate";
 import { useSelector } from 'react-redux'
+import Slider from 'react-slick'
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 // hotel display page
 const AccommodationCard = ({ hotel, onClick }) => {
@@ -52,7 +55,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
                 </span>
               </div>
               <div className="text-muted  ">{hotel.address}</div>
-              <div>Room total: {hotel.numberOfRooms}</div>
+              {/* <div>Room total: {hotel.numberOfRooms}</div> */}
             </Card.Text>
 
             {/* later for approriate room display */}
@@ -124,24 +127,18 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
           </div>
       
         </div>
-        <div className="mt-3" style={{ fontWeight: "bold", fontSize: "16px" }}>
+        <div className="mt-2" style={{ fontWeight: "bold", fontSize: "16px" }}>
             Start from ....{property.minPrice} vnd
           </div>
         {showButton && (
-          <div>
-            <Link to={edit}>
-              <button className="bg-gray-700 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-gray-400 ">
-                Sửa
-              </button>
-            </Link>
+          <div className="flex justify-end">
+            
             <Link to={link_button}>
-              <button className="bg-green-700 text-white font-bold py-1 px-2 rounded hover:bg-green-400 ">
+              <button className="bg-green-700 text-white font-bold py-1 px-2 rounded hover:bg-green-400">
                 Phòng
               </button>
             </Link>
-            <button onClick={showDeleteModal} className="bg-orange-600 text-white font-bold py-1 px-2 mx-2 rounded hover:bg-red-400">
-             Xóa
-            </button>
+
           </div>
         )}
       </Card.Body>
@@ -149,4 +146,97 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
   );
 };
 
-export { PropertyCard, AccommodationCard };
+const PressReleasesCarousel=({cardData})=>{
+  // setting carousels
+  const settings={
+    dots: true,
+    arrows:false,
+    infinite: true,
+    speed: 500,
+    slidesToShow:3,
+    slidesToScroll:3,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  }
+  return(
+  <Slider {...settings}>
+  {cardData.map((c,index)=>(
+    <div key={index}>
+      <Card style={{ width: '280px',border:'none', textAlign:'left', paddingRight:'40px'}}>
+    <Card.Img src={c.imgLink} alt={c.imgAlt} style={{borderRadius:'none'}}/>
+    <Card.Body>
+      <Card.Text>{c.dateReleased}</Card.Text>
+      <Card.Title>{c.title}</Card.Title>
+      <Card.Text>{c.describe}</Card.Text>
+      <Button variant="light">READ MORE</Button>
+    </Card.Body>
+    </Card>
+    </div>
+  ))}
+  </Slider>
+  )
+}
+
+const OurAchievementsCard=({cardData})=>{
+  // setting carousels
+  const settings={
+    arrows:true,
+    infinite: true,
+    speed: 500,
+    slidesToShow:4,
+    slidesToScroll:1,
+    prevArrow: (
+      <button className="slick-prev slick-arrow" aria-label="Previous" style={{ color: 'black', fontSize: '20px' }}>
+        &#10094; {/* Mũi tên trái */}
+      </button>
+    ),
+    nextArrow: (
+      <button className="slick-next slick-arrow" aria-label="Next" style={{ color: 'black', fontSize: '20px' }}>
+        &#10095; {/* Mũi tên phải */}
+      </button>
+    ),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  }
+  return(
+  <Slider {...settings}>
+  {cardData.map((c,index)=>(
+    <div key={index}>
+      <Card style={{ width: '320px',border:'none', textAlign:'left', padding:'0 20px'}}>
+    <img src={c.imgLink} alt={c.imgAlt} style={{borderTopLeftRadius:'20px',width:'90%',borderBottomLeftRadius:'20px',height:'160px',objectFit:'cover'}}/>
+    <Card.Body>
+      <Card.Text>{c.dateReleased}</Card.Text>
+      <Card.Title>{c.title}</Card.Title>
+      <Button variant="light">READ MORE</Button>
+    </Card.Body>
+    </Card>
+    </div>
+  ))}
+  </Slider>
+  )
+}
+export { PropertyCard, AccommodationCard,PressReleasesCarousel,OurAchievementsCard };

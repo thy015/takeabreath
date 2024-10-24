@@ -33,6 +33,8 @@ signUpRouter.post("/signInCus", signUpController.loginCustomer);
 signUpRouter.post("/signUpCus", signUpController.registerCustomer);
 signUpRouter.get('/logout',signUpController.logout)
 
+signUpRouter.post("/login-with-sso",signUpController.loginWithSSO)
+
 signUpRouter.get('/verifyAdmin',verifyAdmin,(req,res)=>{
   return res.json(req.user)
 })

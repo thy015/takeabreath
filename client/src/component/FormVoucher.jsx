@@ -45,7 +45,7 @@ const FormVoucher=({record})=> {
                             }
                         ]}
                     >
-                        <Input className=' px-[10px] input-addvoucher'  placeholder={record.voucherName} />
+                        <Input  className=' px-[10px] input-addvoucher'  placeholder={record.voucherName} />
                    
                     </FormItem>
 

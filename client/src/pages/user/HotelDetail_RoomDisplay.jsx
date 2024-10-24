@@ -69,7 +69,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                   <div>
                     <Card.Img
                       className="object-cover h-full rounded-md shadow-md"
-                      src={room.imgLink}
+                      src={room.imgLink[0]}
                     />
                   </div>
                 </Card>

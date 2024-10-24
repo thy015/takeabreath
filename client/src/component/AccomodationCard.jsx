@@ -24,7 +24,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
         <Col md={4}>
           <Card.Img
             className="object-cover h-[250px] rounded-tl-[12px] rounded-tr-none rounded-br-none p-3"
-            src={hotel.imgLink}
+            src={hotel.imgLink[0]}
             alt="HOTEL IMG"
           />
         </Col>

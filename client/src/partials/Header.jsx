@@ -1,5 +1,5 @@
 import { Button, Dropdown, Row, Col } from "antd";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,8 @@ import axios from "axios";
 import { openNotification } from "../hooks/notification";
 import { useTranslation } from "react-i18next";
 import ChangeLangButton from "../component/ChangeLangButton";
+import styled from 'styled-components'
+
 const Header = ({ children }) => {
 
   const { t } = useTranslation();
@@ -52,7 +54,6 @@ const Header = ({ children }) => {
     }
   }
 
-  console.log(setText())
   const Logout = () => {
     axios.get("http://localhost:4000/api/auth/logout")
       .then(res => {
@@ -152,11 +153,26 @@ const Header = ({ children }) => {
       ),
     }
   ];
-
-
   setLogout()
+  //handle scroll 
+  const [scrollProgress,setScrollProgress]=useState(0)
+  const handleScroll=()=>{
+    const scrollTop=window.scrollY
+    const windowHeight=document.documentElement.scrollHeight - document.documentElement.clientHeight
+    const scrollPercent=(scrollTop/windowHeight)*100
+    setScrollProgress(scrollPercent)
+  }
+  useEffect(()=>{
+    window.addEventListener('scroll',handleScroll)
+
+    return()=>{
+      window.removeEventListener('scroll',handleScroll)
+    }
+  },[])
   return (
-    <div>
+    <div >
+      <div className="fixed z-50 w-full">
+     
       <Row justify={"center"} className="bg-[#114098]">
         <Col span={2}></Col>
         <Col span={20}>
@@ -200,9 +216,11 @@ const Header = ({ children }) => {
             <li className="w-20">
            <p className={hoverEffect}> {t('partners')}</p>
              </li>
+             <Link to='/about-us' className='no-underline'>
              <li className='w-32'>
               <p className={hoverEffect}> {t('about-us')}</p>
              </li>
+             </Link>
             
 
               <li>        
@@ -246,11 +264,24 @@ const Header = ({ children }) => {
           </div>
         </Col>
         <Col span={2}></Col>
-      </Row>
+         {/* //progress bar */}
+      </Row>   
+      <ProgressBar style={{width:`${scrollProgress}%`, marginTop:'-5px'}}></ProgressBar>
 
+      </div>
+      <div className="pt-[120px]">
       {children}
+      </div>
     </div>
   );
 };
-
+const ProgressBar=styled.div`
+position:fixed;
+left:0;
+width:0;
+height:5px;
+z-index:50;
+transition: width 0.2s ease-in-out;
+background-color: #15b3b6;
+`
 export default Header;

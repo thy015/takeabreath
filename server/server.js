@@ -26,7 +26,7 @@ const VoucherRoute = require("./src/routes/Voucher/voucher.route")
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("combined"));
-// useSSOCallback(app)
+useSSOCallback(app)
 
 const allowedOrigins = ["http://localhost:3000",
   "https://wowo.htilssu.id.vn/assets/remoteEntry.js"];

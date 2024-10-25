@@ -8,31 +8,31 @@ import { Fragment, useContext, useEffect } from "react";
 import { AuthContext } from "./hooks/auth.context";
 
 function App() {
-  const { auth, setAuth } = useContext(AuthContext);
-  axios.defaults.withCredentials = true;
+  // const { auth, setAuth } = useContext(AuthContext);
+  // axios.defaults.withCredentials = true;
 
-  useEffect(() => {
-    const fetchUser = () => {
-      axios
-        .get("http://localhost:4000/api/auth/verify")
-        .then((res) => {
-          const userRes = res.data;
-          setAuth({
-            isAuthenticated: true,
-            user: {
-              id: userRes.id,
-              email: userRes.email,
-              name: userRes.name,
-            },
-          });
-        })
-        .catch((err) => {
-          console.log("[APP]", err);
-        });
-    };
+  // useEffect(() => {
+  //   const fetchUser = () => {
+  //     axios
+  //       .get("http://localhost:4000/api/auth/verify")
+  //       .then((res) => {
+  //         const userRes = res.data;
+  //         setAuth({
+  //           isAuthenticated: true,
+  //           user: {
+  //             id: userRes.id,
+  //             email: userRes.email,
+  //             name: userRes.name,
+  //           },
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         console.log("[APP]", err);
+  //       });
+  //   };
 
-    fetchUser();
-  }, []);
+  //   fetchUser();
+  // }, []);
 
   return (
     <div className="App">

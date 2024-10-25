@@ -4,6 +4,7 @@ import inputDaySlice from './inputDaySlice'
 import blinkingReducer from './blinkingSlice'
 import hotelsReducer from './hotelsSclice'
 import roomReducer from './roomsSlice'
+import revenueReducer from './revenueSlice'
 import {thunk} from 'redux-thunk'
 
 export const store = configureStore ({
@@ -12,7 +13,8 @@ export const store = configureStore ({
     inputDay:inputDaySlice,
     blinking:blinkingReducer,
     hotel:hotelsReducer,
-    room:roomReducer
+    room:roomReducer,
+    invoice:revenueReducer
   },
   middleware:(getDefaultMiddleware)=>getDefaultMiddleware().concat(thunk),
   devTools:window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

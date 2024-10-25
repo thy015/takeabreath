@@ -5,16 +5,20 @@ import { Menu, ConfigProvider } from 'antd'
 
 const items = [
     {
+        key: "Revenue",
+        label: (<p className='font-bold'>Thống kê doanh thu</p>),
+    },
+    {
         key: "Hotel",
         label: (<p className='font-bold'>Khách sạn</p>),
     },
     {
         key: "Room",
-        label: (<p className='font-bold'>Room</p>),
+        label: (<p className='font-bold'>Phòng</p>),
     },
     {
         key: "Vouchers",
-        label: (<p className='font-bold'>Voucher</p>),
+        label: (<p className='font-bold'>Phiếu giảm giá</p>),
     },
    
     
@@ -24,7 +28,6 @@ const items = [
 function SideBar() {
     const navigate = useNavigate()
     const hanldeClickItem = ({ item, key, keyPath, domEvent})=>{
-        console.log({ item, key, keyPath, domEvent})
         navigate(key)
     }
     return (
@@ -57,7 +60,7 @@ function SideBar() {
                     }}
                     items={items}
                     onClick={hanldeClickItem}
-                    defaultSelectedKeys={['Hotel']}
+                    defaultSelectedKeys={['Revenue']}
                 />
             </div>
         </ConfigProvider>

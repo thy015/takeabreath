@@ -7,7 +7,8 @@ const customerSchema = new mongoose.Schema({
     password: { type: String, required: true },
     birthday: { type: Date, required: false },
     avatarLink: { type: String, required: false },
+    isActive:{type:Boolean,required:false,default:true}
 });
 
-const Customer = mongoose.model("Customer", customerSchema); 
+const Customer = mongoose.model("Customer", customerSchema);
 module.exports = Customer; 

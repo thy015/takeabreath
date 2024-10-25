@@ -5,7 +5,7 @@ const { generalAccessTokens } = require("../../middleware/jwt");
 const signUpOwner = async (req, res) => {
 
   const { name, password, email, birthday, phone, idenCard } =
-    req.body;
+      req.body;
 
 
   if (!name || !password || !email || !phone || !idenCard) {
@@ -45,8 +45,8 @@ const signUpOwner = async (req, res) => {
     });
   } catch (e) {
     return res
-      .status(500)
-      .json({ message: "Internal Server Error" });
+        .status(500)
+        .json({ message: "Internal Server Error" });
   }
 };
 
@@ -161,13 +161,13 @@ const loginCustomer = async (req, res) => {
     });
 
     return res.cookie("token", token, { httpOnly: true, secure: true })
-      .json({
-        login: true,
-        redirect: "/",
-        name: customer.cusName,
-        id: customer._id,
-        email: customer.email
-      });
+        .json({
+          login: true,
+          redirect: "/",
+          name: customer.cusName,
+          id: customer._id,
+          email: customer.email
+        });
   } else {
     return res.status(400).json({ login: false, message: "User Invalid" });
   }
@@ -205,102 +205,38 @@ const registerCustomer = async (req, res) => {
     });
   } catch (e) {
     return res
-      .status(500)
-      .json({ message: e.message || "Internal Server Error" });
+        .status(500)
+        .json({ message: e.message || "Internal Server Error" });
   }
 };
 
-const loginWithSSO = async (req, res) => {
-  const { firstName, lastName, id, userId,partnerId, role, email, dob } = req.body
-  let name = ""
-  if(!userId){
-    name= "Onwer Name"
-  }else{
-    name=firstName+" "+lastName
-  }
-
-  if(role ==="partner"){
-    let owner ={}
-    const ownerExsisted = await Owner.findOne({
-      email:email
-    })
-
-    if(!ownerExsisted){
-      const newOwner = Owner({
-        ownerName:"Owner Name",
-        email:email,
-        birthday:dob,
-        idenCard:"Unknown",
-        phoneNum:"Unknown",
-        password:"Unknown"
-      })
-
-      await newOwner.save()
-      owner = newOwner
-    }else{
-      owner =ownerExsisted
+const signInSSO=async(req,res)=>{
+  const {token}=req.body
+  const user=res.locals.user
+  console.log(user)
+  if(!token){
+    return res.status(403).json({message:'required token in signUp controller'})}
+  let redirectPath;
+  try {
+    if (user) {
+      if (user.role === 'partner') {
+        redirectPath = '/bonus-signup-owner'
+      } else if (user.role === 'user') {
+        redirectPath = '/'
+      }
     }
-
-    const token = await generalAccessTokens({
-      id:owner._id,
-      name: owner.ownerName,
-      email: owner.email,
-      role: role,
-      birthday: owner.birthday,
-      idSSO:id
-    })
-
-    console.log("[TOKEN OWNER]",token)
-    return res.cookie("token", token, { httpOnly: true, secure: true })
-    .json({
-      login: true,
-      redirect: role,
-      name: owner.ownerName,
-      id: owner._id,
-      email: owner.email
-    })
-
-  }else if(role === "user"){
-
-    let customer = {}
-    const customerExsisted = await Customer.findOne({
-      email:email
-    })
-    if(!customerExsisted){
-      const newCus = new Customer({
-        cusName:name,
-        email:email,
-        password:"Unknown",
-        birthday:dob
-      })
-      await newCus.save()
-      customer = newCus
-    }else{
-      customer=customerExsisted
-    }
-
-    const token = await generalAccessTokens({
-      id:customer._id,
-      name: customer.cusName,
-      email: customer.email,
-      role: role,
-      birthday: customer.birthday,
-      idSSO:id
-    })
-
-    console.log("[TOKEN CUSTOMER]",token)
-    return res.cookie("token", token, { httpOnly: true, secure: true })
-    .json({
-      login: true,
-      redirect: role,
-      name: customer.cusName,
-      id: customer._id,
-      email: customer.email
-    })
+    return res
+        .status(200)
+        .cookie("token", token, {httpOnly: true, secure: true})
+        .json({
+          data: user,
+          redirectPath: redirectPath
+        });
+  } catch (e) {
+    return res.status(500).json({message: "Internal server error signUp controller"})
   }
-
- 
 }
+
 
 const logout = async (req, res) => {
   res.clearCookie('token')
@@ -365,11 +301,11 @@ function validateBirthDate(birthday) {
   const currentDay = new Date();
   const dob = new Date(birthday);
   console.log(dob)
-  const age = currentDay.getFullYear() - dob.getFullYear();
+  let age = currentDay.getFullYear() - dob.getFullYear();
   const monthDiff = currentDay.getMonth() - dob.getMonth();
   if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && currentDay.getDate() < dob.getDate())
+      monthDiff < 0 ||
+      (monthDiff === 0 && currentDay.getDate() < dob.getDate())
   ) {
     age--;
   }
@@ -397,5 +333,5 @@ module.exports = {
   loginCustomer,
   registerCustomer,
   logout,
-  loginWithSSO
+  signInSSO
 };

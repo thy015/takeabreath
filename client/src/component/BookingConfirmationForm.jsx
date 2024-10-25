@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import {
@@ -50,27 +50,19 @@ function BookingConfirmationForm({isShow, onCancel}) {
         completedPayment,
       } = useSelector((state) => state.inputDay);
       //radio
-      
-      const paymentRef=useRef(null)
-      
-      const handlePaymentChange = (e) => {
-        const selectedValue = e.target.value;
-        setPayment(selectedValue);
+  const handlePaymentChange = (e) => {
+    const selectedValue = e.target.value;
+    setPayment(selectedValue);
+  };
 
-        if(paymentRef.current){
-          paymentRef.current.scrollIntoView
-          ({behavior:'smooth', block:'end'})
-        }
-      };
-
-      const checkFormValidity=async()=>{
-        try{
-          await form.validateFields()
-          setIsFormValid(true)
-        }catch(e){
-          setIsFormValid(false)
-        }
-      }
+  const checkFormValidity=async()=>{
+    try{
+      await form.validateFields()
+      setIsFormValid(true)
+    }catch(e){
+      setIsFormValid(false)
+    }
+  }
       //2nd modal
   const handlePaymentConfirmation = () => {
     message.success("Payment successful!");
@@ -239,7 +231,6 @@ function BookingConfirmationForm({isShow, onCancel}) {
                     name="paymentMethod"
                     label="Select payment method"
                     paymentMethod={payment}
-                    ref={paymentRef}
                   >
                     <Radio.Group
                       className="ml-[10px]"
@@ -281,14 +272,9 @@ function BookingConfirmationForm({isShow, onCancel}) {
                           </div>
                         </div>
                       )}
-                      {payment==='wowo' &&(
-                        <div className="w-[320px]">
-                        <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H"/>
-                        </div>
-                      )}
                     </Radio.Group>
                   </FormItem>
-                  {/* <FormItem
+                  <FormItem
                     name="voucher"
                     label="Select voucher"
                     className="mb-[10px]"
@@ -304,7 +290,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         Voucher 1
                       </Option>
                     </Select>
-                  </FormItem> */}
+                  </FormItem>
                 </Form>
               </div>
             </ConfigProvider>

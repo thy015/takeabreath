@@ -5,6 +5,7 @@ import { Spin, Alert, Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
+
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 import { useSelector } from "react-redux";
 
@@ -86,21 +87,23 @@ const HotelDisplay_HotelDetail = () => {
             {/* Fake 3 img until group img to a link */}
             <div>
               <Row gutter={6}>
-                <Col span={10}>
-                  <img
-                    src={data.imgLink}
-                    alt={`Image of ${data.hotelName}`}
-                    className="w-full h-auto mb-2"
-                  />
-                  <img
-                    src={data.imgLink}
-                    alt={`Image of ${data.hotelName}`}
-                    className="w-full h-auto "
-                  />
-                </Col>
+                {data.imgLink.length > 0 &&
+                  <Col span={10}>
+                 { data.imgLink.map((item, index) => (
+
+                    <img
+                      src={item}
+                      alt={`Image of ${data.hotelName}`}
+                      className="w-full h-auto mb-2"
+                    />
+
+                    ))}
+                  </Col>
+                }
+
                 <Col span={14}>
                   <img
-                    src={data.imgLink}
+                    src={data.imgLink.length >= 3 ? data.imgLink[2] : data.imgLink[0]}
                     alt={`Image of ${data.hotelName}`}
                     className="w-full mb-6 h-full"
                   />
@@ -142,7 +145,7 @@ const HotelDisplay_HotelDetail = () => {
               </div>
             </div>
           </div>
-          <div className="h-[44.5%] mt-3 w-full border object-cover">
+          <div className="h-[47.5%] mt-3 w-full border object-cover">
             {/* need map api */}
             <img
               className="h-full w-full"
@@ -150,12 +153,10 @@ const HotelDisplay_HotelDetail = () => {
             />
           </div>
         </Col>
-       
+
       </Row>
       {/* Feature display */}
       <div> <h4 className="flex mt-12 font-semibold">Feature</h4> </div>
-      {/* Comment */}
-      <div> <h4 className="flex mt-12 font-semibold">Comments</h4> </div>
       <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
       {/* Room display */}
       <div>
@@ -174,6 +175,7 @@ const HotelDisplay_HotelDetail = () => {
           ></HotelDetail_RoomDisplay>
         )}
      </div>
+
     </div>
   );
 };

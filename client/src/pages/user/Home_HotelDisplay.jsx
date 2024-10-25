@@ -46,9 +46,9 @@ const PropertyGrid = () => {
       </div>
     );
   }
-  
+
   return (
-    <Carousel arrows swipeToSlide dotPosition="bottom" dots={{className:'dotsConfig'}}> 
+    <Carousel arrows swipeToSlide>
       {slides}
     </Carousel>
   );

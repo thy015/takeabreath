@@ -2,7 +2,7 @@ const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
 const {Hotel,Room} = require("../../models/hotel.model");
-// const { verifyOwner } = require("../../middleware/verify");
+const { verifyOwner } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
   try {
@@ -53,7 +53,7 @@ ListRouter.post("/updateHotel/:id", hotelListController.updateHotels);
 // all hotel from owner that logged in
 ListRouter.get(
   "/hotelOwner",
-  // verifyOwner,
+  verifyOwner,
   hotelListController.getHotelsByOwner
 );
 
@@ -71,9 +71,7 @@ ListRouter.get("/room", async (req, res) => {
   }
 });
 
-ListRouter.get("/list-room",
-  // verifyOwner,
-  async (req,res)=>{
+ListRouter.get("/list-room",verifyOwner,async (req,res)=>{
   try{
     console.log(req.ownerID )
     const ownerId= req.ownerID 
@@ -86,12 +84,8 @@ ListRouter.get("/list-room",
   }
 })
 
-ListRouter.post("/createRoom",
-  // verifyOwner, 
-  hotelListController.createRoom);
-ListRouter.post("/updateRoom/:id"
-  // , verifyOwner
-  , hotelListController.updateRoom);
+ListRouter.post("/createRoom", verifyOwner, hotelListController.createRoom);
+ListRouter.post("/updateRoom/:id", verifyOwner, hotelListController.updateRoom);
 ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
 ListRouter.delete("/deleteRoom/:id", hotelListController.deleteRoom);
 module.exports = ListRouter;

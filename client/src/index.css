@@ -10,10 +10,6 @@
   opacity: 1;
   color: #1d4ed8!important;
 }
-.dotConfigs{
-  margin-top: 30px; /* Add some space between dots and cards */
-}
-
 .slick-prev:before, .slick-prev:focus:before{
   margin-left: 5px;
 }

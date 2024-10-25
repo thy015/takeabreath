@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
 import { AuthContext } from "../../hooks/auth.context";
+import { useLocation } from "react-router-dom";
 import ChangeLangButton from "../../component/ChangeLangButton";
 import { useTranslation } from "react-i18next";
 const Login = () => {
@@ -18,6 +19,13 @@ const Login = () => {
   const { auth, setAuth } = useContext(AuthContext)
   // get the redirect url from the location
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  const [redirectPath, setRedirectPath] = useState("");
+    useEffect(()=>{
+      const path=location.state?.from 
+      setRedirectPath(path)
+    },[location])
     
   const [formData, setFormData] = useState({
     email: "",
@@ -56,6 +64,11 @@ const Login = () => {
       return;
     }
 
+
+    // if (password.length <= 8) {
+    //   openNotification(false, 'Password should be at least 8 characters');
+    //   return;
+    // }
     axios.post("http://localhost:4000/api/auth/signInCus", { email, password })
       .then(res => {
         if (res.data.login) {
@@ -69,7 +82,7 @@ const Login = () => {
             }
           })
           openNotification(true, "Login Successful", "")
-          navigate(-1)
+          navigate(redirectPath)
         }
       }).catch(err => {
         console.log(err)

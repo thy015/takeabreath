@@ -220,7 +220,7 @@ const signInSSO=async(req,res)=>{
   try {
     if (user) {
       if (user.role === 'partner') {
-        redirectPath = '/bonus-signup-owner'
+        redirectPath = '/owner'
       } else if (user.role === 'user') {
         redirectPath = '/'
       }
@@ -239,6 +239,10 @@ const signInSSO=async(req,res)=>{
 
 
 const logout = async (req, res) => {
+  console.log("[Token sso]",req.cookies.Token)
+  if(req.cookies.Token){
+    res.clearCookie('Token')
+  }
   res.clearCookie('token')
   return res.json({ logout: true })
 }

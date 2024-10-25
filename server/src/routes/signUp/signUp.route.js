@@ -40,7 +40,7 @@ signUpRouter.get('/verifyAdmin',verifyAdmin,(req,res)=>{
 })
 
 signUpRouter.get('/verify',verifyLogin,(req,res)=>{
-  return res.json(req.user)
+  return res.json({user: req.user})
 })
 
 module.exports = signUpRouter;

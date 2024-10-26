@@ -16,7 +16,10 @@ const items = [
         key: "Vouchers",
         label: (<p className='font-bold'>Voucher</p>),
     },
-   
+    {
+        key: "Revenue",
+        label: (<p className='font-bold'>My Revenue</p>),
+    },
     
 ]
 

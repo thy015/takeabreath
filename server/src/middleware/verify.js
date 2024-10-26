@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const { Admin, Owner } = require('../models/signUp.model')
 const verifyAdmin = async (req, res, next) => {
     const token = req.cookies.token
+    const user = res.locals.user
+
     if (!token)
         return res.status(401).json({ message: "Unauthorized" })
     const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
@@ -19,48 +21,70 @@ const verifyAdmin = async (req, res, next) => {
 }
 
 const verifyOwner = async (req, res, next) => {
-    const token = req.cookies.token
-    console.log("[TOKEN]", token)
-    if (!token)
-        return res.status(401).json({ message: "Unauthorized" })
-    const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
-    console.log("[DECODE]", decode)
-    if (decode.idSSO) {
-        req.ownerID = decode.payload.id
+    const user = res.locals.user
+    if (user) {
+        req.ownerID = user.partnerId
+        next()
+    } else {
+        const token = req.cookies.token
+        if (!token)
+            return res.status(401).json({ message: "Unauthorized" })
+        const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
+        if (decode.idSSO) {
+            req.ownerID = decode.payload.id
+            next()
+            return
+        }
+        const emailOwner = decode.payload.email
+        const ownerExsisted = await Owner.findOne({
+            email: emailOwner
+        })
+
+        if (!ownerExsisted)
+            return res.status(404).json({ message: "You aren't an owner !" })
+        const userPayload = decode.payload
+        req.ownerID = userPayload.id
         next()
         return
     }
-    const emailOwner = decode.payload.email
-    const ownerExsisted = await Owner.findOne({
-        email: emailOwner
-    })
+    return res.status(404).json({ message: "Problem in verify owner !" })
 
-    if (!ownerExsisted)
-        return res.status(401).json({ message: "You aren't an owner !" })
-    const userPayload = decode.payload
-    req.ownerID = userPayload.id
-    next()
 }
 
 
 const verifyLogin = async (req, res, next) => {
     const token = req.cookies.token
-    if (!token) {
-        return res.status(401).json({
-            message: "Unauthorized"
-        })
-    }
-    try {
-        const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
-        const userPayload = decode.payload
-        req.user = userPayload
+    const user = res.locals.user
+    if (user) {
+        const userDecode = {
+            id:user.partnerId ??user.userId,
+            email:user.email
+        }
+        req.user= userDecode
         next()
-    } catch (err) {
-        return res.status(401).json({
-            message: err
-        })
+        return
+    } else {
+        if (!token) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+        try {
+            const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
+            const userPayload = decode.payload
+            req.user = userPayload
+            next()
+            return
+        } catch (err) {
+            return res.status(401).json({
+                message: err
+            })
+        }
     }
 
+    return res.status(404).json({
+        message: "Problem in verify login !"
+    })
 
 }
 

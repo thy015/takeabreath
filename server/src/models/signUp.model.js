@@ -21,7 +21,7 @@ const ownerSchema = new mongoose.Schema({
         }}, //08/27
     }
   ],
-  awaitFund:{type:String,required:false,default:0},
+  awaitFund:{type:Number,required:false,default:0},
   regDay: { type: Date, default: Date.now, required: false },
 });
 

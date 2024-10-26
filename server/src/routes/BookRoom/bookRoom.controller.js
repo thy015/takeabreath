@@ -1,6 +1,6 @@
 
 const { Invoice,Receipt} = require("../../models/invoice.model");
-const { Room } = require("../../models/hotel.model");
+const { Room, Hotel} = require("../../models/hotel.model");
 const timezone =require('dayjs/plugin/timezone')
 const dayjs=require('dayjs')
 const utc=require('dayjs/plugin/utc')
@@ -14,11 +14,14 @@ const bookRoom = async (req, res) => {
     if(!idHotel||!idCus||!idRoom||!dataBooking){
       return res.status(403).json({message:"Missing data"})
     }
+    const hotel =await Hotel.findById(idHotel)
+    const idOwner=hotel.ownerID
     if(dataBooking.paymentMethod==="paypal"){
       const convertCheckInDay = dayjs(dataBooking.checkInDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       const convertCheckOutDay=dayjs(dataBooking.checkOutDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       console.log('Convert check in and out day',convertCheckInDay,convertCheckOutDay)
       const invoice = await Invoice.create({
+        ownerID:idOwner,
         hotelID:idHotel,
         cusID:idCus,
         roomID:idRoom,
@@ -64,7 +67,7 @@ const completedTran = async (req, res) => {
     return res.status(403).json({message:"Missing data"})
   }
   console.log(order,invoiceID)
- 
+
   try{
     const invoice = await Invoice.findById(invoiceID);
     if (!invoice) {
@@ -89,7 +92,7 @@ const completedTran = async (req, res) => {
       }
     } //not completed payment
     else{
-      return res.status(403).json({message:"Payment failed"})
+      return res.status(400).json({message:"Payment failed"})
     }
   }catch(e){
     console.log("[ERROR]",e)

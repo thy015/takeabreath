@@ -45,6 +45,7 @@ const verifyOwner = async (req, res, next) => {
         const userPayload = decode.payload
         req.ownerID = userPayload.id
         next()
+        return
     }
     return res.status(404).json({ message: "Problem in verify owner !" })
 

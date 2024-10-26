@@ -17,6 +17,7 @@ function Hotel() {
         axios.get("http://localhost:4000/api/hotelList/hotelOwner")
             .then(res => res.data)
             .then(data => {
+                console.log(data)
                 const hotels = data.data.map((item => (
                     {
                         ...item,
@@ -25,7 +26,7 @@ function Hotel() {
                 )))
                 dispatch(setHotels(hotels))
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log("HOTEL",err))
     }, [])
 
     const handleDelete = (record) => {

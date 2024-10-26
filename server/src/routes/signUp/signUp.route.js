@@ -12,6 +12,23 @@ signUpRouter.get("/owner", async (req, res) => {
     res.status(500).json(e);
   }
 });
+//get spec owner
+signUpRouter.get('/owner/:id',async (req,res)=>{
+  const id = req.params.id;
+  if(!id){
+    res.status(403).json({message:"No such ID signUproute"});
+  }
+  try{
+    const specOwner=await Owner.findById(id)
+    if(!specOwner){
+      res.status(404).json({message:'Theres no owner signUproute'});
+    }
+    res.status(200).json({specOwner});
+  }catch(e){
+    res.status(500).json(e);
+  }
+})
+
 signUpRouter.delete('/owner/:id',signUpController.deleteOwner)
 signUpRouter.put('/owner/:id',signUpController.updateOwner)
 

@@ -4,6 +4,7 @@ const { Room } = require("../../models/hotel.model");
 const timezone =require('dayjs/plugin/timezone')
 const dayjs=require('dayjs')
 const utc=require('dayjs/plugin/utc')
+const {Owner} = require("../../models/signUp.model");
 dayjs.extend(timezone)
 dayjs.extend(utc)
 
@@ -70,6 +71,7 @@ const completedTran = async (req, res) => {
       return res.status(404).json({message: "Invoice not found"});
     }
     const roomMatch = await Room.findById(invoice.roomID);
+    const directPartner=await Owner.findById(invoice.ownerID)
     if (!roomMatch) {
       return res.status(404).json({message: "Room not found"});
     } 
@@ -77,6 +79,8 @@ const completedTran = async (req, res) => {
       if(invoice && invoice.invoiceState==="waiting"){
         invoice.invoiceState="paid"
         await invoice.save()
+        directPartner.awaitFund += invoice.guestInfo.totalPrice
+        await directPartner.save()
         return res.status(200).json({message:"Payment success"})
       } else if(invoice && invoice.invoiceState==="paid"){
         return res.status(200).json({message:"Payment already success"})

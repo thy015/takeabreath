@@ -7,7 +7,21 @@ const ownerSchema = new mongoose.Schema({
   phoneNum: { type: String, required: true },
   idenCard: { type: String, required: true },
   avatarLink: { type: String, required: false },
-  idenCard:{type:String,required:true},
+  paymentCard:[
+    {
+      paymentMethod: {type: String, required: true, enum: ['Visa','Paypal','Wowo']},
+      cardNumber:{type: String, required: function () {
+          return this.paymentMethod === 'Visa'
+        }},
+      cardCVV:{type: Number,  required: function () {
+          return this.paymentMethod === 'Visa'
+        }},       //234
+      cardExpiration:{type: Date,  required: function () {
+          return this.paymentMethod === 'Visa'
+        }}, //08/27
+    }
+  ],
+  awaitFund:{type:String,required:false,default:0},
   regDay: { type: Date, default: Date.now, required: false },
 });
 

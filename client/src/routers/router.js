@@ -36,6 +36,7 @@ import Hotel from "../pages/owner/Hotel/Hotel";
 import { CreateHotel } from "../pages/admin/Hotels/CreateHotel";
 import AboutUs from "../pages/user/AboutUs";
 import Room from "../pages/owner/Room/Room"
+import {OwnerRevenue} from "../pages/owner/Revenue/OwnerRevenue";
 export const routers = [
   {
     path: "/",
@@ -130,8 +131,8 @@ export const routers = [
       { path: "Vouchers", page: Vouchers},
       { path: "AddVoucher", page: AddVoucher}, 
       { path: "Hotel", page: Hotel}, 
-      { path: "Room", page: Room}, 
-    
+      { path: "Room", page: Room},
+      {path:'Revenue',page:OwnerRevenue}
     ],
     isOwner:true,
     isShowHeader: false,

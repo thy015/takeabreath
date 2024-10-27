@@ -68,9 +68,9 @@ const updateRoom = async (req, res) => {
     }
 
     // Update room
-    const room = await Room.findById({_id:id})
+    const room = await Room.findById({ _id: id })
 
-    if(room.hotelID != hotelID){
+    if (room.hotelID != hotelID) {
       // trừ số lượng trong hotel
       const oldHotel = await Hotel.findById(room.hotelID);
       oldHotel.numberOfRooms = oldHotel.numberOfRooms - 1;
@@ -80,23 +80,23 @@ const updateRoom = async (req, res) => {
       newHotel.numberOfRooms = newHotel.numberOfRooms + 1;
       await newHotel.save();
     }
-    room.roomName=roomName
-    room.numberOfBeds=numberOfBeds
-    room.numberOfRooms=numberOfRooms
-    room.typeOfRoom=typeOfRoom
-    room.money=money
-    room.capacity=capacity
-    room.hotelID=hotelID
-    room.imgLink=imgLink
+    room.roomName = roomName
+    room.numberOfBeds = numberOfBeds
+    room.numberOfRooms = numberOfRooms
+    room.typeOfRoom = typeOfRoom
+    room.money = money
+    room.capacity = capacity
+    room.hotelID = hotelID
+    room.imgLink = imgLink
     await room.save()
 
     await room.populate("hotelID")
-      // Respond with success
-      return res.status(201).json({
-        status: "OK",
-        message: "Room created successfully",
-        data: room,
-      });
+    // Respond with success
+    return res.status(201).json({
+      status: "OK",
+      message: "Room created successfully",
+      data: room,
+    });
   } catch (e) {
     console.error("Error in createRoom:", e);
     return res.status(500).json({ message: e.message });
@@ -108,7 +108,20 @@ const getHotelsByOwner = async (req, res) => {
   try {
     // Fetch hotels by ownerID from the request
     const hotels = await Hotel.find({ ownerID: req.ownerID });
-    return res.status(200).json({ status: "OK", data: hotels });
+    const getCountHotel = await Promise.all(
+      hotels.map(async (item) => {
+        const count = await Invoice.countDocuments({
+          hotelID: item._id
+        });
+        
+        // Thêm thuộc tính revenue vào object hotel
+        return { ...item.toObject(), revenue: count };
+      })
+    );
+    
+    // getCountHotel bây giờ là danh sách các khách sạn đã có thuộc tính `revenue`
+    console.log(getCountHotel);
+    return res.status(200).json({ status: "OK", data: getCountHotel });
   } catch (e) {
     console.error("Error in getHotelsByOwner:", e);
     return res.status(500).json({ message: e.message });
@@ -247,31 +260,34 @@ const queryHotel = async (req, res) => {
       const bookedRooms = roomInvoices.reduce((count, invoice) => {
         const invoiceStart = dayjs(invoice.guestInfo.checkInDay);
         const invoiceEnd = dayjs(invoice.guestInfo.checkOutDay);
-        const totalRoomsBooked = invoice.guestInfo.totalRoom || 1
-        console.log(`Processing invoice for room ${room._id}`);
-        console.log("Invoice check-in and check-out:", invoiceStart, invoiceEnd);
-        console.log("Number of rooms booked in this invoice:", totalRoomsBooked);
-        const isOverlapping=
+        console.log("Invoice start and end", invoiceStart, invoiceEnd);
+        console.log(
+          "Check 1",
+          dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)")
+        );
+        console.log(
+          "Check 2",
+          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
+        );
+        if (
           dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)") ||
-          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")||
-            (invoiceStart.isBefore(start) && invoiceEnd.isAfter(end))
-        if(isOverlapping){
-          count+=totalRoomsBooked
+          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
+        ) {
+          count++;
         }
         console.log("count", count);
         return count;
       }, 0);
-      console.log(bookedRooms.numberOfRooms)
       const countRoom = availableRooms - bookedRooms;
       if (countRoom > 0) {
         availableRoomDays.push({
           ...room.toObject(),
-          countRoom  //return for the countRoom below
+          countRoom: countRoom //return for the countRoom below
         });
       } else {
         unavailableRooms.push({
           ...room.toObject(),
-          countRoom:0
+          countRoom: 0
         });
       }
     });
@@ -282,8 +298,7 @@ const queryHotel = async (req, res) => {
         roomData: availableRoomDays,
         unavailableRooms: unavailableRooms,
         hotelData: hotels,
-        countRoom:availableRoomDays.map(room=>
-            ({hotelID:room.hotelID,roomID:room._id,countRoom:room.countRoom}))
+        countRoom: availableRoomDays.map(room => ({ hotelID: room.hotelID, roomID: room._id, countRoom: room.countRoom }))
       });
     } else {
       return res.status(200).json({
@@ -298,9 +313,9 @@ const queryHotel = async (req, res) => {
 const deleteHotel = async (req, res) => {
   try {
     const hotel = req.params.id;
-    const countRoom = await Room.countDocuments({hotelID:hotel})
+    const countRoom = await Room.countDocuments({ hotelID: hotel })
 
-    if(countRoom>0){
+    if (countRoom > 0) {
       return res.status(400).json({
         message: "Khách sạn đã liên kết tới phòng khác nên không xóa được !",
       });
@@ -333,8 +348,8 @@ const deleteRoom = async (req, res) => {
     }
     const roomDelete = await Room.findByIdAndDelete({ _id: id })
     if (roomDelete) {
-      const hotel = await Hotel.findById({_id:roomDelete.hotelID})
-      if(hotel){
+      const hotel = await Hotel.findById({ _id: roomDelete.hotelID })
+      if (hotel) {
         hotel.numberOfRooms -= 1
         await hotel.save()
       }

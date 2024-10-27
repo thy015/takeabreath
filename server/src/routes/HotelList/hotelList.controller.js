@@ -247,29 +247,26 @@ const queryHotel = async (req, res) => {
       const bookedRooms = roomInvoices.reduce((count, invoice) => {
         const invoiceStart = dayjs(invoice.guestInfo.checkInDay);
         const invoiceEnd = dayjs(invoice.guestInfo.checkOutDay);
-        console.log("Invoice start and end", invoiceStart, invoiceEnd);
-        console.log(
-          "Check 1",
-          dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)")
-        );
-        console.log(
-          "Check 2",
-          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
-        );
-        if (
+        const totalRoomsBooked = invoice.guestInfo.totalRoom || 1
+        console.log(`Processing invoice for room ${room._id}`);
+        console.log("Invoice check-in and check-out:", invoiceStart, invoiceEnd);
+        console.log("Number of rooms booked in this invoice:", totalRoomsBooked);
+        const isOverlapping=
           dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)") ||
-          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
-        ) {
-          count++;
+          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")||
+            (invoiceStart.isBefore(start) && invoiceEnd.isAfter(end))
+        if(isOverlapping){
+          count+=totalRoomsBooked
         }
         console.log("count", count);
         return count;
       }, 0);
+      console.log(bookedRooms.numberOfRooms)
       const countRoom = availableRooms - bookedRooms;
       if (countRoom > 0) {
         availableRoomDays.push({
           ...room.toObject(),
-          countRoom:countRoom //return for the countRoom below
+          countRoom  //return for the countRoom below
         });
       } else {
         unavailableRooms.push({
@@ -285,7 +282,8 @@ const queryHotel = async (req, res) => {
         roomData: availableRoomDays,
         unavailableRooms: unavailableRooms,
         hotelData: hotels,
-        countRoom:availableRoomDays.map(room=>({hotelID:room.hotelID,roomID:room._id,countRoom:room.countRoom}))
+        countRoom:availableRoomDays.map(room=>
+            ({hotelID:room.hotelID,roomID:room._id,countRoom:room.countRoom}))
       });
     } else {
       return res.status(200).json({

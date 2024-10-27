@@ -1,20 +1,43 @@
-import React, { useState } from "react";
-import { FaCar, FaCog, FaParking, FaInfoCircle } from "react-icons/fa"; 
+import { FaCar, FaCog, FaParking, FaInfoCircle } from "react-icons/fa";
+import {AuthContext} from "../../hooks/auth.context";
+import {useContext, useEffect, useState} from "react";
+import styled from "styled-components";
+import axios from "axios";
 
 const BookingPage = () => {
   const [isOpen, setIsOpen] = useState(false); // For dropdown
   const [isHistoryOpen, setIsHistoryOpen] = useState(false); // For history dropdown
+  const [isLogin, setIsLogin] = useState(false);
+  const auth =useContext(AuthContext);
+  axios.defaults.withCredentials = true
+  useEffect(() => {
+    if(auth.isAuthenticated) {
+      const id = auth?.user?.id;
+      const fetchBookingHis = async (req, res) => {
+        try{
+          const res=await axios.post(`http://localhost:4000/api/booking/bookingHistory/${id}`)
+              .then((res)=>{
+                console.log(res.data)
+                setIsLogin(res.data)
+              }).catch((e)=>{
+                console.log(e.message)
+              })
+        }catch(e){
+          console.log(e.message)
+        }
+      }
+      fetchBookingHis()
+    }
+  },[auth.isAuthenticated,auth?.user?.id])
 
-  const a = "flex items-center w-full border-t border-gray-200 pt-2 mb-2";
-  const b = "bg-white shadow-md p-4 rounded-lg";
-  const c = "block text-left py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 no-underline";
+
 
   return (
     <div className="container mx-auto p-4">
       <section className="mb-10">
         <div className="justify-between flex">
-          <h2 className="text-3xl font-bold mb-4">Bookings & Trips</h2>
-          <a href="" className="no-underline mt-1.5">Can't find your booking?</a>
+          <h2 className="text-3xl font-bold mb-4">Bookings History</h2>
+          <a href="" className="no-underline mt-1.5 ">Can't find your booking?</a>
         </div>
         <div className="relative">
           <img
@@ -58,10 +81,10 @@ const BookingPage = () => {
               </button>
               {isOpen && (
                 <div className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1">
-                    <a href="#" className={c}>Change dates</a>
-                    <a href="#" className={c}>Message the property</a>
-                    <a href="#" className={c}>Contact Customer Service</a>
+                  <div className="py-1 flex flex-col no-underline text-left p-4">
+                    <div className>Change dates</div>
+                    <div className>Message the property</div>
+                    <div className>Contact Customer Service</div>
                   </div>
                 </div>
               )}
@@ -69,18 +92,18 @@ const BookingPage = () => {
           </div>
 
           <div className="mt-4 space-y-4">
-            <button className={a}>
+            <DecoratedButton>
               <FaCar />
               <span className="ml-2">Save up to 10% on transportation options</span>
-            </button>
-            <button className={a}>
+            </DecoratedButton>
+            <DecoratedButton>
               <FaCog />
               <span className="ml-2">Manage your booking</span>
-            </button>
-            <button className={a}>
+            </DecoratedButton>
+            <DecoratedButton>
               <FaParking />
               <span className="ml-2">Parking information</span>
-            </button>
+            </DecoratedButton>
           </div>
         </div>
       </section>
@@ -117,9 +140,9 @@ const BookingPage = () => {
               </button>
               {isHistoryOpen && (
                 <div className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1">
-                    <a href="#" className={c}>Book again</a>
-                    <a href="#" className={c}>Remove booking</a>
+                  <div className="py-1 flex flex-col no-underline text-left p-4">
+                    <div>Book again</div>
+                    <div>Remove booking</div>
                   </div>
                 </div>
               )}
@@ -127,10 +150,10 @@ const BookingPage = () => {
           </div>
 
           <div className="mt-4 space-y-4">
-            <button className={a}>
+            <DecoratedButton>
               <FaInfoCircle />
               <span className="ml-2">Cancellation and rebooking info</span>
-            </button>
+            </DecoratedButton>
           </div>
         </div>
       </section>
@@ -139,3 +162,13 @@ const BookingPage = () => {
 };
 
 export default BookingPage;
+
+const DecoratedButton=styled.button`
+  display: flex;
+  align-items: center;
+  width:100%;
+  border-top: 1px gray;
+  padding-top: 8px;
+  margin-bottom: 8px;
+  
+`

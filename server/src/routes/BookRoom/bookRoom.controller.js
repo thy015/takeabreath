@@ -111,9 +111,22 @@ const queryBookingHistory = async (req, res) => {
     paidRoomsInvoice = bookedRooms.filter((iv) => iv.invoiceState === 'paid');
     if (paidRoomsInvoice.length > 0) {
       console.log(paidRoomsInvoice)
-      return res.status(200).json({paidRoomsInvoice});
+      const bookingInfo=await Promise.all(
+          paidRoomsInvoice.map(async(invoice)=>{
+            const roomInfo=await Room.findById(invoice.roomID)
+            const hotelInfo=await Hotel.findById(invoice.hotelID)
+            return{
+              invoiceInfo:invoice,
+              roomInfo:roomInfo,
+              hotelInfo:hotelInfo
+            }
+          })
+      )
+      return res.status(200).json({
+        data:bookingInfo
+      });
     } else {
-      return res.status(200).json({paidRoomsInvoice});
+      return res.status(200).json({data:bookingInfo});
     }
   } catch (e) {
     return res.status(500).json({ message: "Error in controller", error: e });

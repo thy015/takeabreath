@@ -24,11 +24,7 @@ const items = [
     {
         key: "Card",
         label: (<p className='font-bold'>Quản lý thẻ</p>),
-    },
-    {
-        key: "Revenue",
-        label: (<p className='font-bold'>My Revenue</p>),
-    },
+    }
     
 ]
 

@@ -5,7 +5,7 @@ const { generalAccessTokens } = require("../../middleware/jwt");
 const signUpOwner = async (req, res) => {
 
   const { name, password, email, birthday, phone, idenCard } =
-      req.body;
+    req.body;
 
 
   if (!name || !password || !email || !phone || !idenCard) {
@@ -45,8 +45,8 @@ const signUpOwner = async (req, res) => {
     });
   } catch (e) {
     return res
-        .status(500)
-        .json({ message: "Internal Server Error" });
+      .status(500)
+      .json({ message: "Internal Server Error" });
   }
 };
 
@@ -161,13 +161,13 @@ const loginCustomer = async (req, res) => {
     });
 
     return res.cookie("token", token, { httpOnly: true, secure: true })
-        .json({
-          login: true,
-          redirect: "/",
-          name: customer.cusName,
-          id: customer._id,
-          email: customer.email
-        });
+      .json({
+        login: true,
+        redirect: "/",
+        name: customer.cusName,
+        id: customer._id,
+        email: customer.email
+      });
   } else {
     return res.status(400).json({ login: false, message: "User Invalid" });
   }
@@ -205,17 +205,18 @@ const registerCustomer = async (req, res) => {
     });
   } catch (e) {
     return res
-        .status(500)
-        .json({ message: e.message || "Internal Server Error" });
+      .status(500)
+      .json({ message: e.message || "Internal Server Error" });
   }
 };
 
-const signInSSO=async(req,res)=>{
-  const {token}=req.body
-  const user=res.locals.user
+const signInSSO = async (req, res) => {
+  const { token } = req.body
+  const user = res.locals.user
   console.log(user)
-  if(!token){
-    return res.status(403).json({message:'required token in signUp controller'})}
+  if (!token) {
+    return res.status(403).json({ message: 'required token in signUp controller' })
+  }
   let redirectPath;
   try {
     if (user) {
@@ -226,21 +227,21 @@ const signInSSO=async(req,res)=>{
       }
     }
     return res
-        .status(200)
-        .cookie("token", token, {httpOnly: true, secure: true})
-        .json({
-          data: user,
-          redirectPath: redirectPath
-        });
+      .status(200)
+      .cookie("token", token, { httpOnly: true, secure: true })
+      .json({
+        data: user,
+        redirectPath: redirectPath
+      });
   } catch (e) {
-    return res.status(500).json({message: "Internal server error signUp controller"})
+    return res.status(500).json({ message: "Internal server error signUp controller" })
   }
 }
 
 
 const logout = async (req, res) => {
-  console.log("[Token sso]",req.cookies.Token)
-  if(req.cookies.Token){
+  console.log("[Token sso]", req.cookies.Token)
+  if (req.cookies.Token) {
     res.clearCookie('Token')
   }
   res.clearCookie('token')
@@ -288,19 +289,42 @@ const deleteOwner = async (req, res) => {
   }
 }
 
-const insertCartOwner = async (req,res)=>{
-  const {onwerID} = req.user
-  if(!onwerID)
-    return res.status(403).json({message:"Bị mất dữ liệu người dùng !"})
-  const {numberCard,cvv,expDay} = req.body
+const insertCartOwner = async (req, res) => {
+  const ownerID = req.ownerID
+  if (!ownerID)
+    return res.status(403).json({ message: "Bị mất dữ liệu người dùng !" })
+  const { numberCard, cvv, expDay } = req.body
 
-  if(!numberCard||!cvv ||!expDay)
-    return res.status(403).json({message:"Bị mất dữ liệu thẻ !"})
+  if (!numberCard || !cvv || !expDay)
+    return res.status(403).json({ message: "Bị mất dữ liệu thẻ !" })
 
-  const owner = await Owner.findByIdAndUpdate({_id:ownerID},{
-    
-  })
+  try {
+    const owner = await Owner.findById({ _id: ownerID })
+    const paymentCard = owner.paymentCard
+    const newCards = [...paymentCard, {
+      paymentMethod: "Visa",
+      cardNumber: numberCard,
+      cardCVV: cvv,
+      cardExpiration: expDay
+    }]
+    owner.set({
+      paymentCard: newCards
+    })
 
+    await owner.save()
+    return res.status(200).json({ message: "Thêm thẻ thành công",cards:newCards })
+  }catch(err){
+    return res.status(500).json({message: err.message})
+  }
+ 
+}
+
+const getListCard = async (req,res)=>{
+  const ownerID = req.ownerID
+  const owner = await Owner.findById({_id:ownerID})
+  const paymentCard = owner.paymentCard
+
+  return res.status(200).json({cards:paymentCard})
 }
 
 const updateOwner = async (req, res) => {
@@ -323,8 +347,8 @@ function validateBirthDate(birthday) {
   let age = currentDay.getFullYear() - dob.getFullYear();
   const monthDiff = currentDay.getMonth() - dob.getMonth();
   if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && currentDay.getDate() < dob.getDate())
+    monthDiff < 0 ||
+    (monthDiff === 0 && currentDay.getDate() < dob.getDate())
   ) {
     age--;
   }
@@ -348,6 +372,8 @@ module.exports = {
   updateCus,
   deleteOwner,
   updateOwner,
+  insertCartOwner,
+  getListCard,
   //phuc
   loginCustomer,
   registerCustomer,

@@ -1,10 +1,14 @@
 import React from 'react'
+import { useDispatch } from "react-redux"
 import { Modal, Form, Input, InputNumber, DatePicker, Col, Row } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import dayjs from 'dayjs'
+import axios from "axios"
+import  {setCards} from '../hooks/redux/cardSlice'
 import { openNotification } from '../hooks/notification'
 
 function FormCard({ visible, close }) {
+    const dispatch = useDispatch()
     const [form ] = useForm()
     const onFinish = (value) => {
         const {numberCard,cvv,expDay} = value
@@ -19,7 +23,17 @@ function FormCard({ visible, close }) {
             return
         }
 
-        
+        axios.post("http://localhost:4000/api/auth/insert-card",{numberCard,cvv,expDay})
+            .then(res=>res.data)
+            .then(data=>{
+                dispatch(setCards(data.cards))
+                openNotification(true, data.message,"")
+                close()
+            })
+            .catch(err=>{
+                console.log(err)
+                openNotification(false,"Thêm thẻ không thành công","")
+            })
     }
 
 

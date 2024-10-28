@@ -72,7 +72,7 @@ ListRouter.get("/room", async (req, res) => {
 });
 
 ListRouter.get("/list-room",
-    //verifyOwner,
+    verifyOwner,
     async (req,res)=>{
       try{
         const ownerId= req.ownerID

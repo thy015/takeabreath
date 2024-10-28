@@ -100,23 +100,33 @@ const completedTran = async (req, res) => {
   }
 };
 
-const getRoomsBookedCustomer = async (req, res) => {
-  const cusID = req.params.cusID; // Extract cusID from req.params
-  if (!cusID) {
+const queryBookingHistory = async (req, res) => {
+  const id = req.params.id; // Extract cusID from req.params
+  if (!id) {
     return res.status(403).json({ message: "Missing customer ID" });
   }
   try {
-    const bookedRooms = await Invoice.find({ cusID: cusID });
-    const paidRoomsInvoice = bookedRooms.filter((room) => room.isPaid === true);
-    const roomIDs = paidRoomsInvoice.map((invoice) => invoice.roomID);
-
-    const paidRooms = await Room.find({ _id: { $in: roomIDs } });
-    const receiptIDs = await Receipt.find({ invoiceID: { $in: paidRoomsInvoice.map(inv => inv._id) } });
-
-    if (paidRooms.length > 0) {
-      return res.status(200).json({ paidRooms, bookedRooms, receiptIDs });
+    const bookedRooms = await Invoice.find({ cusID: id });
+    let paidRoomsInvoice=[]
+    paidRoomsInvoice = bookedRooms.filter((iv) => iv.invoiceState === 'paid');
+    if (paidRoomsInvoice.length > 0) {
+      console.log(paidRoomsInvoice)
+      const bookingInfo=await Promise.all(
+          paidRoomsInvoice.map(async(invoice)=>{
+            const roomInfo=await Room.findById(invoice.roomID)
+            const hotelInfo=await Hotel.findById(invoice.hotelID)
+            return{
+              invoiceInfo:invoice,
+              roomInfo:roomInfo,
+              hotelInfo:hotelInfo
+            }
+          })
+      )
+      return res.status(200).json({
+        data:bookingInfo
+      });
     } else {
-      return res.status(200).json({ message: "There's no room booked successfully" });
+      return res.status(200).json({data:bookingInfo});
     }
   } catch (e) {
     return res.status(500).json({ message: "Error in controller", error: e });
@@ -154,7 +164,7 @@ const getInvoicesWaiting = async (req, res) => {
 module.exports = {
   bookRoom,
   getInvoicesWithReceipts,
-  getRoomsBookedCustomer,
+  queryBookingHistory,
   completedTran,
   getInvoicesPaid,
   getInvoicesWaiting

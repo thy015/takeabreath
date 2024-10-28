@@ -4,12 +4,13 @@ const {Voucher} = require("../../models/voucher.model")
 const {verifyOwner} = require("../../middleware/verify")
 const {addVoucher,getListVoucher,deleteVoucher,updateVoucher} = require("./voucher.controller")
 
-VoucherRoute.all("*",verifyOwner)
-
+// owner
 VoucherRoute.post("/add-voucher",addVoucher)
 VoucherRoute.get("/list-voucher",getListVoucher)
 VoucherRoute.delete("/list-voucher/:id",deleteVoucher)
 VoucherRoute.post("/list-voucher/update/:id",updateVoucher)
+//admin
+
 module.exports=VoucherRoute
 
 //this is the start of swagger docs

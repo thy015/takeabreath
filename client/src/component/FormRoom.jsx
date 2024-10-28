@@ -146,7 +146,7 @@ function FormRoom({ isVisible, close }) {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label={"Không gian"}
+                        label={"Sức chứa"}
                         name={"capacity"}
                         rules={[{ required: true, message: 'Vui lòng nhâp không gian phòng !' }]}
                     >

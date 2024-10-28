@@ -147,13 +147,13 @@ const loginCustomer = async (req, res) => {
 
   const customer = await Customer.findOne({ email: email });
   if (customer) {
-    if(customer.isActive==false)
+    if(customer.isActive===false)
     {
-      return res.status(401).json({ login: false, message: "Tài khoản đã bị khóa vì: "+customer.reasonInact });
+      return res.status(401).json({ login: false, message: `Tài khoản đã bị khóa vì: `+customer.reasonInact+`   Liên hệ mở khóa tại: thymai.1510@gmail.com`});
     }
     const isCorrectPass = await bcrypt.compare(password, customer.password);
     if (!isCorrectPass) {
-      return res.status(401).json({ login: false, message: "Pasword incorret" });
+      return res.status(401).json({ login: false, message: "Password incorrect" });
     }
   
     const token = await generalAccessTokens({

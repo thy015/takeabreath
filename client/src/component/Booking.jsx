@@ -27,17 +27,17 @@ import timezone from 'dayjs/plugin/timezone'
 const Booking = ({tailwind_prop}) => {
   const {t}=useTranslation()
 // onSearchResults
-const dispatch=useDispatch()
-const navigate=useNavigate()
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
   //day handle
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
-  
+
   dayjs.extend(isBetween)
   dayjs.extend(customParseFormat);
   dayjs.extend(utc)
   dayjs.extend(timezone)
-  
+
 
   const disabledDate = (current) => {
     return current && current < dayjs().startOf("day");
@@ -58,49 +58,49 @@ const navigate=useNavigate()
   const items = [
     {
       label: (
-        <div className="p-4">
-          <div className="flex items-center justify-between">
-            <span >{t('adults')}</span>
-            <div className="flex items-center">
-              <Button
-                onClick={aDecrement}
-                size="small"
-                className="mr-2 ml-10"
-                disabled={aCount === 1}
-              >
-                -
-              </Button>
-              <span>{aCount}</span>
-              <Button onClick={aIncrement} size="small" className="ml-2">
-                +
-              </Button>
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <span >{t('adults')}</span>
+              <div className="flex items-center">
+                <Button
+                    onClick={aDecrement}
+                    size="small"
+                    className="mr-2 ml-10"
+                    disabled={aCount === 1}
+                >
+                  -
+                </Button>
+                <span>{aCount}</span>
+                <Button onClick={aIncrement} size="small" className="ml-2">
+                  +
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
       ),
       key: "0",
     },
     {
       label: (
-        <div className="p-4">
-          <div className="flex items-center justify-between">
-            <span className="mr-4 ml-1">{t('childrens')}</span>
-            <div className="flex items-center">
-              <Button
-                onClick={cDecrement}
-                size="small"
-                className="mr-2"
-                disabled={cCount === 0}
-              >
-                -
-              </Button>
-              <span>{cCount}</span>
-              <Button onClick={cIncrement} size="small" className="ml-2">
-                +
-              </Button>
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <span className="mr-4 ml-1">{t('childrens')}</span>
+              <div className="flex items-center">
+                <Button
+                    onClick={cDecrement}
+                    size="small"
+                    className="mr-2"
+                    disabled={cCount === 0}
+                >
+                  -
+                </Button>
+                <span>{cCount}</span>
+                <Button onClick={cIncrement} size="small" className="ml-2">
+                  +
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
       ),
       key: "1",
     },
@@ -111,15 +111,15 @@ const navigate=useNavigate()
   const [filteredCities, setFilteredCities] = useState([]);
 
   const { data, error, loading } = useGet(
-    "http://localhost:4000/api/hotelList/hotel"
+      "http://localhost:4000/api/hotelList/hotel"
   );
   useEffect(() => {
     if (data && selectedCity) {
       const filteredCity = Array.from(new Set(data
-        .map((hotel) => hotel.city)
-        .filter((city) =>
-          city.toLowerCase().includes(selectedCity.toLowerCase())))
-        ).slice(0,5)
+          .map((hotel) => hotel.city)
+          .filter((city) =>
+              city.toLowerCase().includes(selectedCity.toLowerCase())))
+      ).slice(0,5)
       setFilteredCities(filteredCity);
     } else if (data) {
       //no input yet, show all
@@ -148,13 +148,13 @@ const navigate=useNavigate()
 
   if (error) {
     return (
-      <Alert
-          className={'mt-12'}
-        message="Error"
-        description="Failed to load properties."
-        type="error"
-        showIcon
-      />
+        <Alert
+            className={'mt-12'}
+            message="Error"
+            description="Failed to load properties."
+            type="error"
+            showIcon
+        />
     );
   }
 
@@ -165,15 +165,15 @@ const navigate=useNavigate()
 // handle - passing data
 
   const handleSearch=async()=>{
-    
+
     const people=aCount+cCount
     if (!selectedCity || !dayStart || !dayEnd||!people) {
       return openNotification(false,'Missing information','Please fill out all information before searching');
     }
-   
+
 //format before dispatch 
-const formattedDayStart = dayjs(dayStart).tz('Asia/Ho_Chi_Minh').format(); // GMT+7
-const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
+    const formattedDayStart = dayjs(dayStart).tz('Asia/Ho_Chi_Minh').format(); // GMT+7
+    const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
     dispatch(setInputDay({
       dayStart:formattedDayStart,
       dayEnd:formattedDayEnd,
@@ -181,7 +181,7 @@ const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
     }))
     console.log(formattedDayStart)
     console.log(formattedDayEnd)
-   
+
     const searchData={
       city:selectedCity,
       dayStart:formattedDayStart,
@@ -191,15 +191,15 @@ const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
     console.log(searchData)
     try{
       const res= await axios.post('http://localhost:4000/api/hotelList/query'
-        ,searchData)
-        console.log(res.data)
-        
-        dispatch(setSearchResult({ 
-          hotelData: res.data.hotelData, 
-          roomData: res.data.roomData,
-          countRoom:res.data.countRoom
-         }))
-        navigate('/booking')
+          ,searchData)
+      console.log(res.data)
+
+      dispatch(setSearchResult({
+        hotelData: res.data.hotelData,
+        roomData: res.data.roomData,
+        countRoom:res.data.countRoom
+      }))
+      navigate('/booking')
     }
     catch(e){
       console.log(e)
@@ -208,72 +208,72 @@ const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
   }
 
   return (
-    <div className={tailwind_prop}>
-    <div
-      className=" 
+      <div className={tailwind_prop}>
+        <div
+            className="
      bg-white border-4 border-yellow-400 rounded-lg 
      overflow-hidden items-center shadow-md w-full"
-    >
-      <Row gutter={0} className="w-full items-center">
-        <Col span={6}>
-          <Dropdown
-            menu={{
-              items: filteredCities.map((city, index) => ({
-                key: index,
-                label: <div onClick={() => handleCitySelect(city)}>{city}</div>,
-              })),
-            }}
-            trigger={["click"]}
-            open={showCities}
-            onOpenChange={(flag) => setShowCities(flag)}
-          >
-            <Input
-              placeholder={t('where-you-want-to-go')}
-              prefix={<img src="/icon/double-bed.png" alt="Bed Icon" />}
-              className="rounded-none h-full"
-              bordered={false}
-              value={selectedCity}
-              onChange={handleCitySearch}
-            />
-          </Dropdown>
-        </Col>
-        <Col span={8}>
-          <RangePicker
-            placeholder={[t('check-in'),t('check-out')]}
-            suffixIcon={<CalendarOutlined />}
-            disabledDate={disabledDate}
-            onChange={handleDateChange}
-            className="rounded-none "
-            bordered={false}
-          />
-        </Col>
-        <Col span={6}>
-          <Dropdown
-            menu={{
-              items
-            }}
-            trigger={["click"]}
-            arrow
-            placement="bottomRight"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="h-full w-full rounded-none justify-center flex items-center">
-              {aCount + cCount} {t('people')}
-            </div>
-          </Dropdown>
-        </Col>
-        <Col span={4} className={tailwind_prop}>
-          <Button
-            type="primary"
-            onClick={handleSearch}
-            className="h-full w-full rounded-none text-[18px]"
-          >
-           {t('search')}
-          </Button>
-        </Col>
-      </Row>
-    </div>
-    </div>
+        >
+          <Row gutter={0} className="w-full items-center">
+            <Col span={6}>
+              <Dropdown
+                  menu={{
+                    items: filteredCities.map((city, index) => ({
+                      key: index,
+                      label: <div onClick={() => handleCitySelect(city)}>{city}</div>,
+                    })),
+                  }}
+                  trigger={["click"]}
+                  open={showCities}
+                  onOpenChange={(flag) => setShowCities(flag)}
+              >
+                <Input
+                    placeholder={t('where-you-want-to-go')}
+                    prefix={<img src="/icon/double-bed.png" alt="Bed Icon" />}
+                    className="rounded-none h-full"
+                    bordered={false}
+                    value={selectedCity}
+                    onChange={handleCitySearch}
+                />
+              </Dropdown>
+            </Col>
+            <Col span={8}>
+              <RangePicker
+                  placeholder={[t('check-in'),t('check-out')]}
+                  suffixIcon={<CalendarOutlined />}
+                  disabledDate={disabledDate}
+                  onChange={handleDateChange}
+                  className="rounded-none "
+                  bordered={false}
+              />
+            </Col>
+            <Col span={6}>
+              <Dropdown
+                  menu={{
+                    items
+                  }}
+                  trigger={["click"]}
+                  arrow
+                  placement="bottomRight"
+                  onClick={(e) => e.stopPropagation()}
+              >
+                <div className="h-full w-full rounded-none justify-center flex items-center">
+                  {aCount + cCount} {t('people')}
+                </div>
+              </Dropdown>
+            </Col>
+            <Col span={4} className={tailwind_prop}>
+              <Button
+                  type="primary"
+                  onClick={handleSearch}
+                  className="h-full w-full rounded-none text-[18px]"
+              >
+                {t('search')}
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </div>
   );
 };
 

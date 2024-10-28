@@ -62,7 +62,8 @@ function Revienue() {
             title: "Ngày Đặt",
             dataIndex: "createDay", // Đảm bảo đúng tên thuộc tính
             key: "createAt",
-            render: (text) => formatDay(text)
+            render: (text) => formatDay(text),
+            sorter: (a,b) => new Date(a) - new Date(b)
         },
         {
             title: "Khách Sạn",

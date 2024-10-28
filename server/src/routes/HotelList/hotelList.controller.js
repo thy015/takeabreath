@@ -120,7 +120,6 @@ const getHotelsByOwner = async (req, res) => {
     );
     
     // getCountHotel bây giờ là danh sách các khách sạn đã có thuộc tính `revenue`
-    console.log(getCountHotel);
     return res.status(200).json({ status: "OK", data: getCountHotel });
   } catch (e) {
     console.error("Error in getHotelsByOwner:", e);
@@ -314,18 +313,29 @@ const deleteHotel = async (req, res) => {
   try {
     const hotel = req.params.id;
     const countRoom = await Room.countDocuments({ hotelID: hotel })
-
+    const countInvoice = await Invoice.countDocuments({hotelID: hotel})
     if (countRoom > 0) {
       return res.status(400).json({
         message: "Khách sạn đã liên kết tới phòng khác nên không xóa được !",
       });
     }
+
+    if (countInvoice > 0) {
+      return res.status(400).json({
+        message: "Khách sạn đã liên kết tới đơn đặt phòng khác nên không xóa được !",
+      });
+    }
+
     const deletedProduct = await Hotel.findByIdAndDelete(hotel);
     if (!deletedProduct) {
       return res.status(404).json({
         message: "Product not found",
       });
     }
+    return res.status(200).json({
+      message: "",
+    });
+
   } catch (e) {
     console.log("Problem in hotel query controller: " + e);
     return res.status(500).json({ message: "Internal server error" });

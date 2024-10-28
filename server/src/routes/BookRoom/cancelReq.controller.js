@@ -1,6 +1,7 @@
 
 
 const { reqCancel}=require("../../models/cancelReq.model");
+const { Customer } = require("../../models/signUp.model");
 const reqCancelRoom = async (req, res) => {
   const { receiptID } = req.body;
   const cusID = req.cusID;
@@ -223,6 +224,66 @@ const getReqCancelRoomProcess = async (req, res) => {
     });
   }
 };
+const inactiveCus = async (req, res) => {
+  const cusID = req.params.id;
+  const { reason } = req.body;
+
+  const cus = await Customer.findById(cusID);
+  if (!cus) {
+    return res.status(404).json({ message: "Customer not found" });
+  }
+  if (!reason) {
+    return res.status(400).json({ message: "Please provide a reason" });
+  }
+
+  try {
+    cus.isActive = false;
+    cus.reasonInact = reason;
+    await cus.save();
+
+    return res.status(200).json({
+      status: "OK",
+      message: "Inactive customer successfully",
+      data: cus,
+    });
+  } catch (e) {
+    console.error("Error in inactivating customer: ", e);
+    return res.status(500).json({
+      status: "BAD",
+      message: "Error in inactivating customer",
+      error: e.message,
+    });
+  }
+};
+
+// Activate customer
+const activeCus = async (req, res) => {
+  const cusID = req.params.id;
+
+  const cus = await Customer.findById(cusID);
+  if (!cus) {
+    return res.status(404).json({ message: "Customer not found" });
+  }
+
+  try {
+    cus.isActive = true;
+    cus.reasonInact = "";
+    await cus.save();
+
+    return res.status(200).json({
+      status: "OK",
+      message: "Active customer successfully",
+      data: cus,
+    });
+  } catch (e) {
+    console.error("Error in activating customer: ", e);
+    return res.status(500).json({
+      status: "BAD",
+      message: "Error in activating customer",
+      error: e.message,
+    });
+  }
+};
 
 module.exports = {
   reqCancelRoom,
@@ -231,4 +292,6 @@ module.exports = {
   getReqCancelRoomRejected,
   handleCancelRoomAccept,
   handleCancelRoomReject,
+  inactiveCus,
+  activeCus,
 };

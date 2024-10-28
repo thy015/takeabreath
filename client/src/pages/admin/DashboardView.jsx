@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { FaRegCalendarMinus, FaEllipsisV } from "react-icons/fa";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import axios from 'axios';
-
+import {ExportToExcel} from './../../component/ExportToExcel'
 const Main = () => {
-    const [invoices, setInvoices] = useState([]);
+    const fileName = "BaoCaoDoanhThu";
     const [totalDiscount, setTotalDiscount] = useState(0);
     const [totalDiscountMonth, setTotalDiscountMonth] = useState(0);
     const [totalDiscountYear, setTotalDiscountYear] = useState(0);
     const [monthlyData, setMonthlyData] = useState([]); 
+    
 const[numb,setNumb]=useState(0);
     const formatToVND = (amount) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -21,16 +22,12 @@ const[numb,setNumb]=useState(0);
         axios.get('http://localhost:4000/api/booking/invoicepaid')
             .then(response => {
                 const  data = response.data;
-                setInvoices(data);
-setNumb(data.length);
+                setNumb(data.length);
                 const currentDate = new Date();
                 const currentYear = currentDate.getFullYear();
                 const previousYear = currentYear - 1;
-
-      
                 const monthlyRevenueCurrentYear = Array(12).fill(0);
                 const monthlyRevenuePreviousYear = Array(12).fill(0);
-
                 data.forEach(invoice => {
                     const invoiceDate = new Date(invoice.createDay);
                     const month = invoiceDate.getMonth();
@@ -46,7 +43,7 @@ setNumb(data.length);
 
       
                 const chartData = Array.from({ length: 12 }, (v, i) => ({
-                    month: new Intl.DateTimeFormat('vi-VN', { month: 'long' }).format(new Date(currentYear, i)),
+                    Tháng: new Intl.DateTimeFormat('vi-VN', { month: 'long' }).format(new Date(currentYear, i)),
                     currentYear: monthlyRevenueCurrentYear[i],
                     previousYear: monthlyRevenuePreviousYear[i],
                 }));
@@ -75,12 +72,12 @@ setNumb(data.length);
 
        
     }, []);
-
+console.log("monthly data la "+monthlyData)
     return (
         <div className='px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]'>
             <div className='flex items-center justify-between'>
                 <h1 className='text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer'>Trang Chủ</h1>
-                <button className='bg-[#003580] h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px]'>Tạo Báo Cáo</button>
+                <ExportToExcel apiData={monthlyData} fileName={fileName} />
             </div>
             <div className='grid grid-cols-4 gap-[30px] mt-[25px] pb-[15px]'>
        
@@ -121,25 +118,26 @@ setNumb(data.length);
                     </div>
 
                     <div className="w-full">
-                        <LineChart
-                            width={1220}
-                            height={500}
-                            data={monthlyData} 
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="month" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Line type="monotone" dataKey="currentYear" stroke="#8884d8" activeDot={{ r: 8 }} name="Doanh thu năm hiện tại" />
-                            <Line type="monotone" dataKey="previousYear" stroke="#82ca9d" name="Doanh thu năm trước" />
-                        </LineChart>
+                    <LineChart
+    width={1220}
+    height={500}
+    data={monthlyData} 
+    margin={{
+        top: 5,
+        right: 35,
+        left: 35,
+        bottom: 5,
+    }}
+>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis dataKey="Tháng" />
+    <YAxis />
+    <Tooltip formatter={(value) => formatToVND(value)} />
+    <Legend />
+    <Line type="monotone" dataKey="currentYear" stroke="#8884d8" activeDot={{ r: 8 }} name="Doanh thu năm hiện tại" />
+    <Line type="monotone" dataKey="previousYear" stroke="#82ca9d" name="Doanh thu năm trước" />
+</LineChart>
+
                     </div>
                 </div>
 

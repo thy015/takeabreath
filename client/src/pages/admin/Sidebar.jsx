@@ -42,7 +42,7 @@ const Sidebar = () => {
     { label: "Khách Hàng", to: "customers", icon: FaUser },
     { label: "Phòng", to: "rooms", icon: FaRestroom },
     { label: "Vouchers", to: "vouchers", icon: FaTicketAlt },
-    { label: "Hóa Đơn", to: "", icon: FaReceipt },
+    { label: "Hóa Đơn", to: "invoices", icon: FaReceipt },
     { label: "Yêu Cầu", to: "requests", icon: FaHand },
   
   ];

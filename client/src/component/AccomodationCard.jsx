@@ -127,11 +127,13 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
           </div>
       
         </div>
+        {!showButton && (
         <div className="mt-2" style={{ fontWeight: "bold", fontSize: "16px" }}>
             Start from ....{property.minPrice} vnd
           </div>
-        {showButton && (
-          <div className="flex justify-end">
+       )}
+       {showButton && (
+          <div className="flex justify-center mt-7">
             
             <Link to={link_button}>
               <button className="bg-green-700 text-white font-bold py-1 px-2 rounded hover:bg-green-400">
@@ -140,7 +142,7 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
             </Link>
 
           </div>
-        )}
+       )}
       </Card.Body>
     </Card>
   );

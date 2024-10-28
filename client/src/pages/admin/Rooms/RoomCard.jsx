@@ -1,32 +1,28 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
-const RoomCard = ({ room }) => {
+const RoomCard = ({ room, hotelMap }) => {
   return (
-   
-      <Card className="shadow-sm h-full mt-1" style={{ borderRadius: "12px" }}>
-        <Card.Img
-          variant="top"
-          src={room.imgLink} 
-          style={{
-            borderRadius: "12px 12px 0 0",
-            height: "180px",
-            objectFit: "cover",
-          }}
-        />
-      
-        <Card.Body className="h-[180px] flex flex-col flex-grow-1">
-          <Card.Title>{room.roomName}</Card.Title>
-          <Card.Text>Type of room: {room.typeOfRoom}</Card.Text>
-          <Card.Text>Capacity: {room.capacity}</Card.Text>
-          <Card.Text>Beds: {room.numberOfBeds}</Card.Text>
-          <div  style={{ fontWeight: "bold", fontSize: "16px" }}>
-            Price: {room.money} VND
-          </div>
-        </Card.Body>
-      </Card>
- 
+    <Card className="shadow-sm h-full mt-1" style={{ borderRadius: "12px" }}>
+      <Card.Img
+        variant="top"
+        src={room.imgLink}
+        style={{
+          borderRadius: "12px 12px 0 0",
+          height: "180px",
+          objectFit: "cover",
+        }}
+      />
+      <Card.Body className="h-[200px] flex flex-col flex-grow-1">
+        <Card.Title>{room.roomName}</Card.Title>
+        <Card.Text>Loại phòng: {room.typeOfRoom}</Card.Text>
+        <Card.Text>Sức chứa: {room.capacity}</Card.Text>
+        <Card.Text>Số giường ngủ: {room.numberOfBeds}</Card.Text>
+        <Card.Text className="font-bold">
+          Khách sạn: {hotelMap[room.hotelID] || "Unknown Hotel"}
+        </Card.Text>
+      </Card.Body>
+    </Card>
   );
 };
 

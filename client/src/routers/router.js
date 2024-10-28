@@ -35,7 +35,8 @@ import BookingHistory from "../pages/user/BookingHistory";
 import Hotel from "../pages/owner/Hotel/Hotel";
 import { CreateHotel } from "../pages/admin/Hotels/CreateHotel";
 import AboutUs from "../pages/user/AboutUs";
-import Room from "../pages/owner/Room/Room"
+import Room from "../pages/owner/Room/Room";
+import invoiceAdmin from"../pages/admin/invoiceAdmin";
 export const routers = [
   {
     path: "/",
@@ -59,6 +60,7 @@ export const routers = [
       {path:"requests",page:cancelReqAdmin},
       {path:"hotel/:id/updateHotel",page:UpdateHotel},
       {path:"vouchers",page:AdminVoucher},
+      {path:"invoices",page:invoiceAdmin},
     ],
     isAdmin: true,
     isShowHeader: false,

@@ -42,7 +42,13 @@ const customerSchema = new mongoose.Schema({
   refundAmount: {
     type: Number,
     default: 0
-  }
+  },
+  isActive:{
+    type:Boolean,default:true,required:true
+  },
+  reasonInact:{
+    type:String,required:false
+  },
 });
 
 //kết nối với db có sẵn chứ ko cho tạo

@@ -6,7 +6,8 @@ const { authenCusToken, authenAdminToken } = require('../../middleware/jwt');
 reqCancelRouter.get('/processing',reqCancelController.getReqCancelRoomProcess)
 reqCancelRouter.get('/accepted',reqCancelController.getReqCancelRoomAccepted)
 reqCancelRouter.get('/rejected',reqCancelController.getReqCancelRoomRejected)
-
+reqCancelRouter.put('/active/:id', reqCancelController.activeCus);
+reqCancelRouter.put('/inactive/:id', reqCancelController.inactiveCus);
 reqCancelRouter.post('/cusSend',authenCusToken,reqCancelController.reqCancelRoom)
 reqCancelRouter.post('/admin/accept/:reqCancelID',authenAdminToken,reqCancelController.handleCancelRoomAccept)
 reqCancelRouter.post('/admin/reject/:reqCancelID',authenAdminToken,reqCancelController.handleCancelRoomReject)

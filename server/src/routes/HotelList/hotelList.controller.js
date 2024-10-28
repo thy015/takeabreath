@@ -266,8 +266,8 @@ const queryHotel = async (req, res) => {
         console.log("Number of rooms booked in this invoice:", totalRoomsBooked);
         const isOverlapping=
             dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)") ||
-            dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")||
-            (invoiceStart.isBefore(start) && invoiceEnd.isAfter(end))
+            dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
+
         if(isOverlapping){
           count+=totalRoomsBooked
         }

@@ -56,6 +56,15 @@ ListRouter.get(
     verifyOwner,
     hotelListController.getHotelsByOwner
 );
+ListRouter.get('/hotelCities',async(req,res)=>{
+  try{
+    const hotels=await Hotel.find()
+    const cities=[...new Set( hotels.map((ht)=>ht.city))]
+    return res.status(200).json({cities})
+  }catch(e){
+    return res.status(500).json({message:'e in hotelList route'})
+  }
+})
 
 ListRouter.get("/room", async (req, res) => {
   try {

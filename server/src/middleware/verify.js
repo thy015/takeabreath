@@ -44,6 +44,7 @@ const verifyOwner = async (req, res, next) => {
             return res.status(404).json({ message: "You aren't an owner !" })
         const userPayload = decode.payload
         req.ownerID = userPayload.id
+
         next()
         return
     }

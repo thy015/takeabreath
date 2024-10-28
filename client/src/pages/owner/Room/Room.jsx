@@ -121,7 +121,6 @@ function Room() {
   return (
 
     <div className='h-full '>
-      {console.log(rooms)}
       <div className='max-w-[170px] text-left p-[20px]'>
         <Link >
           <Button

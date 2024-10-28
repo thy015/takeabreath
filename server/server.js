@@ -26,24 +26,24 @@ const VoucherRoute = require("./src/routes/Voucher/voucher.route")
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("combined"));
-// useSSOCallback(app)
+useSSOCallback(app)
 
 const allowedOrigins = ["http://localhost:3000",
   "https://wowo.htilssu.id.vn/assets/remoteEntry.js"];
 
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true
-  })
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true
+    })
 );
 // swagger config
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
@@ -57,15 +57,15 @@ app.use("/api/voucher", VoucherRoute);
 //mongo connect
 
 mongoose
-  .connect(
-    `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
-  )
-  .then(() => {
-    console.log("Connect successfully");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+    .connect(
+        `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
+    )
+    .then(() => {
+      console.log("Connect successfully");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
 app.use(express.static("public"));
 

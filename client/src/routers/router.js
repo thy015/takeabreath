@@ -135,7 +135,6 @@ export const routers = [
       { path: "Room", page: Room}, 
       { path: "Revenue", page: Revienue}, 
       { path: "Card", page: Card}, 
-      
     ],
     isOwner:true,
     isShowHeader: false,

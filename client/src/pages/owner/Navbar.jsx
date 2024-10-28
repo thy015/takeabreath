@@ -12,6 +12,7 @@ function Navbar() {
     const showProfile = () => {
       setOpen(!open);
     };
+    console.log(auth)
     const hanldeLogout = ()=>{
       axios.get("http://localhost:4000/api/auth/logout")
       .then(res => {
@@ -46,7 +47,7 @@ function Navbar() {
             className="flex items-center gap-[15px] relative"
             onClick={showProfile}
           >
-            <p className="pt-[10px]">{auth?.user?.name}</p>
+            <p className="pt-[10px]">{auth.user.name.length >0 ? auth.user.name :auth.user.email }</p>
             <div className="h-[50px] w-[50px] bg-[#4E73DF] cursor-pointer flex items-center justify-center relative z-40">
               <img src="/img/profile.png" alt="" />
             </div>

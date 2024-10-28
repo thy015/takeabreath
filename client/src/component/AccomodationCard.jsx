@@ -100,6 +100,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
 // homepage display
 const PropertyCard = ({ property, link_button, showButton = false, edit, showDeleteModal }) => {
   return (
+    <Link to={`/hotel/${property._id}`} className="link-property">
     <Card className="shadow-sm h-full rounded-[12px]">
       <Card.Img
         className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
@@ -143,6 +144,7 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
         )}
       </Card.Body>
     </Card>
+    </Link>
   );
 };
 

@@ -10,7 +10,7 @@ const PropertyGrid = () => {
   const slides = [];
 
   const { data, error, loading } = useGet(
-    "http://localhost:4000/api/hotelList/hotel"
+      "http://localhost:4000/api/hotelList/hotel"
   );
 
   if (loading) {
@@ -19,12 +19,12 @@ const PropertyGrid = () => {
 
   if (error) {
     return (
-      <Alert
-        message="Error"
-        description="Failed to load properties."
-        type="error"
-        showIcon
-      />
+        <Alert
+            message="Error"
+            description="Failed to load properties."
+            type="error"
+            showIcon
+        />
     );
   }
 
@@ -35,22 +35,22 @@ const PropertyGrid = () => {
   // display hotel data 4 slide 1 page
   for (let i = 0; i < data.length; i += 4) {
     slides.push(
-      <div key={i}>
-        <Row gutter={[16, 16]}>
-          {data.slice(i, i + 4).map((property, index) => (
-            <Col key={index} xs={24} sm={12} md={6}>
-              <PropertyCard property={property} link_property={`/hotel/${property._id}`} />
-            </Col>
-          ))}
-        </Row>
-      </div>
+        <div key={i}>
+          <Row gutter={[16, 16]}>
+            {data.slice(i, i + 4).map((property, index) => (
+                <Col key={index} xs={24} sm={12} md={6}>
+                  <PropertyCard property={property} />
+                </Col>
+            ))}
+          </Row>
+        </div>
     );
   }
 
   return (
-    <Carousel arrows swipeToSlide>
-      {slides}
-    </Carousel>
+      <Carousel arrows swipeToSlide dotPosition="bottom" dots={{className:'dotsConfig'}}>
+        {slides}
+      </Carousel>
   );
 };
 

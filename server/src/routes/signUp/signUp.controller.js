@@ -149,7 +149,7 @@ const loginCustomer = async (req, res) => {
   if (customer) {
     const isCorrectPass = await bcrypt.compare(password, customer.password);
     if (!isCorrectPass) {
-      return res.status(401).json({ login: false, message: "Pasword incorret" });
+      return res.status(401).json({ login: false, message: "Password incorrect" });
     }
 
     const token = await generalAccessTokens({

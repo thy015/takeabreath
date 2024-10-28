@@ -72,7 +72,7 @@ ListRouter.get("/room", async (req, res) => {
 });
 
 ListRouter.get("/list-room",
-    //verifyOwner,
+    verifyOwner,
     async (req,res)=>{
       try{
         const ownerId= req.ownerID
@@ -93,6 +93,7 @@ ListRouter.post("/updateRoom/:id"
     , hotelListController.updateRoom);
 ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
 ListRouter.delete("/deleteRoom/:id", hotelListController.deleteRoom);
+ListRouter.get("/list-invoice-owner",verifyOwner,hotelListController.getInvoicesOwner)
 module.exports = ListRouter;
 
 //This is the start of swagger docs

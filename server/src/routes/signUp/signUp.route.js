@@ -2,7 +2,7 @@ const express = require("express");
 const signUpController = require("./signUp.controller");
 const signUpRouter = express.Router();
 const {Owner,Customer}=require('../../models/signUp.model');
-const { verifyLogin, verifyAdmin } = require("../../middleware/verify");
+const { verifyLogin, verifyAdmin,verifyOwner } = require("../../middleware/verify");
 // CRUD Owner
 signUpRouter.get("/owner", async (req, res) => {
   try {
@@ -49,6 +49,11 @@ signUpRouter.put('/customer/:id',signUpController.updateCus)
 signUpRouter.post("/signInCus", signUpController.loginCustomer);
 signUpRouter.post("/signUpCus", signUpController.registerCustomer);
 signUpRouter.get('/logout',signUpController.logout)
+
+
+//owner
+signUpRouter.post("/insert-card",verifyOwner,signUpController.insertCartOwner)
+signUpRouter.get("/list-card",verifyOwner,signUpController.getListCard)
 
 signUpRouter.post("/signInSSO",signUpController.signInSSO)
 

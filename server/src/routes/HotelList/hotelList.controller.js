@@ -362,10 +362,18 @@ const deleteRoom = async (req, res) => {
       message: er.message,
     });
   }
+}
 
+const getInvoicesOwner = async (req,res)=>{
+  const {ownerID} = req
+  const hotels = await Hotel.find({ownerID:ownerID})
+  const hotelIDs = hotels.map(hotel=>hotel._id)
+  
+  const invoices = await Invoice.find({
+    "hotelID":{$in:hotelIDs}
+  }).populate("roomID hotelID cusID")
 
-
-
+  return res.json({status:true,invoice:invoices})
 }
 module.exports = {
   createHotel,
@@ -375,5 +383,6 @@ module.exports = {
   updateHotels,
   deleteHotel,
   deleteRoom,
-  updateRoom
+  updateRoom,
+  getInvoicesOwner
 };

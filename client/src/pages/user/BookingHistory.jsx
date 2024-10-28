@@ -13,6 +13,7 @@ const BookingPage = () => {
   const { auth } = useContext(AuthContext);
 
   const id = auth?.user?.id;
+  console.log(id)
   if (!id) {
     return <Alert message="Please try logging in first" type="info" showIcon />;
   }

@@ -214,99 +214,40 @@ const registerCustomer = async (req, res) => {
   }
 };
 
-const loginWithSSO = async (req, res) => {
-  const { firstName, lastName, id, userId,partnerId, role, email, dob } = req.body
-  let name = ""
-  if(!userId){
-    name= "Onwer Name"
-  }else{
-    name=firstName+" "+lastName
+const signInSSO = async (req, res) => {
+  const { token } = req.body
+  const user = res.locals.user
+  console.log(user)
+  if (!token) {
+    return res.status(403).json({ message: 'required token in signUp controller' })
   }
-
-  if(role ==="partner"){
-    let owner ={}
-    const ownerExsisted = await Owner.findOne({
-      email:email
-    })
-
-    if(!ownerExsisted){
-      const newOwner = Owner({
-        ownerName:"Owner Name",
-        email:email,
-        birthday:dob,
-        idenCard:"Unknown",
-        phoneNum:"Unknown",
-        password:"Unknown"
-      })
-
-      await newOwner.save()
-      owner = newOwner
-    }else{
-      owner =ownerExsisted
+  let redirectPath;
+  try {
+    if (user) {
+      if (user.role === 'partner') {
+        redirectPath = '/owner'
+      } else if (user.role === 'user') {
+        redirectPath = '/'
+      }
     }
-
-    const token = await generalAccessTokens({
-      id:owner._id,
-      name: owner.ownerName,
-      email: owner.email,
-      role: role,
-      birthday: owner.birthday,
-      idSSO:id
-    })
-
-    console.log("[TOKEN OWNER]",token)
-    return res.cookie("token", token, { httpOnly: true, secure: true })
-    .json({
-      login: true,
-      redirect: role,
-      name: owner.ownerName,
-      id: owner._id,
-      email: owner.email
-    })
-
-  }else if(role === "user"){
-
-    let customer = {}
-    const customerExsisted = await Customer.findOne({
-      email:email
-    })
-    if(!customerExsisted){
-      const newCus = new Customer({
-        cusName:name,
-        email:email,
-        password:"Unknown",
-        birthday:dob
-      })
-      await newCus.save()
-      customer = newCus
-    }else{
-      customer=customerExsisted
-    }
-
-    const token = await generalAccessTokens({
-      id:customer._id,
-      name: customer.cusName,
-      email: customer.email,
-      role: role,
-      birthday: customer.birthday,
-      idSSO:id
-    })
-
-    console.log("[TOKEN CUSTOMER]",token)
-    return res.cookie("token", token, { httpOnly: true, secure: true })
-    .json({
-      login: true,
-      redirect: role,
-      name: customer.cusName,
-      id: customer._id,
-      email: customer.email
-    })
+    return res
+      .status(200)
+      .cookie("token", token, { httpOnly: true, secure: true })
+      .json({
+        data: user,
+        redirectPath: redirectPath
+      });
+  } catch (e) {
+    return res.status(500).json({ message: "Internal server error signUp controller" })
   }
-
- 
 }
 
+
 const logout = async (req, res) => {
+  console.log("[Token sso]", req.cookies.Token)
+  if (req.cookies.Token) {
+    res.clearCookie('Token')
+  }
   res.clearCookie('token')
   return res.json({ logout: true })
 }
@@ -352,6 +293,44 @@ const deleteOwner = async (req, res) => {
   }
 }
 
+const insertCartOwner = async (req, res) => {
+  const ownerID = req.ownerID
+  if (!ownerID)
+    return res.status(403).json({ message: "Bị mất dữ liệu người dùng !" })
+  const { numberCard, cvv, expDay } = req.body
+
+  if (!numberCard || !cvv || !expDay)
+    return res.status(403).json({ message: "Bị mất dữ liệu thẻ !" })
+
+  try {
+    const owner = await Owner.findById({ _id: ownerID })
+    const paymentCard = owner.paymentCard
+    const newCards = [...paymentCard, {
+      paymentMethod: "Visa",
+      cardNumber: numberCard,
+      cardCVV: cvv,
+      cardExpiration: expDay
+    }]
+    owner.set({
+      paymentCard: newCards
+    })
+
+    await owner.save()
+    return res.status(200).json({ message: "Thêm thẻ thành công",cards:newCards })
+  }catch(err){
+    return res.status(500).json({message: err.message})
+  }
+ 
+}
+
+const getListCard = async (req,res)=>{
+  const ownerID = req.ownerID
+  const owner = await Owner.findById({_id:ownerID})
+  const paymentCard = owner.paymentCard
+
+  return res.status(200).json({cards:paymentCard})
+}
+
 const updateOwner = async (req, res) => {
   const id = req.params.id
   const newData = req.body
@@ -369,7 +348,7 @@ function validateBirthDate(birthday) {
   const currentDay = new Date();
   const dob = new Date(birthday);
   console.log(dob)
-  const age = currentDay.getFullYear() - dob.getFullYear();
+  let age = currentDay.getFullYear() - dob.getFullYear();
   const monthDiff = currentDay.getMonth() - dob.getMonth();
   if (
     monthDiff < 0 ||
@@ -397,9 +376,11 @@ module.exports = {
   updateCus,
   deleteOwner,
   updateOwner,
+  insertCartOwner,
+  getListCard,
   //phuc
   loginCustomer,
   registerCustomer,
   logout,
-  loginWithSSO
+  signInSSO
 };

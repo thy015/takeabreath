@@ -1,9 +1,10 @@
 
 const { Invoice,Receipt} = require("../../models/invoice.model");
-const { Room } = require("../../models/hotel.model");
+const { Room, Hotel} = require("../../models/hotel.model");
 const timezone =require('dayjs/plugin/timezone')
 const dayjs=require('dayjs')
 const utc=require('dayjs/plugin/utc')
+const {Owner} = require("../../models/signUp.model");
 dayjs.extend(timezone)
 dayjs.extend(utc)
 
@@ -13,11 +14,14 @@ const bookRoom = async (req, res) => {
     if(!idHotel||!idCus||!idRoom||!dataBooking){
       return res.status(403).json({message:"Missing data"})
     }
+    const hotel =await Hotel.findById(idHotel)
+    const idOwner=hotel.ownerID
     if(dataBooking.paymentMethod==="paypal"){
       const convertCheckInDay = dayjs(dataBooking.checkInDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       const convertCheckOutDay=dayjs(dataBooking.checkOutDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       console.log('Convert check in and out day',convertCheckInDay,convertCheckOutDay)
       const invoice = await Invoice.create({
+        ownerID:idOwner,
         hotelID:idHotel,
         cusID:idCus,
         roomID:idRoom,
@@ -63,13 +67,14 @@ const completedTran = async (req, res) => {
     return res.status(403).json({message:"Missing data"})
   }
   console.log(order,invoiceID)
- 
+
   try{
     const invoice = await Invoice.findById(invoiceID);
     if (!invoice) {
       return res.status(404).json({message: "Invoice not found"});
     }
     const roomMatch = await Room.findById(invoice.roomID);
+    const directPartner=await Owner.findById(invoice.ownerID)
     if (!roomMatch) {
       return res.status(404).json({message: "Room not found"});
     } 
@@ -77,6 +82,8 @@ const completedTran = async (req, res) => {
       if(invoice && invoice.invoiceState==="waiting"){
         invoice.invoiceState="paid"
         await invoice.save()
+        directPartner.awaitFund += invoice.guestInfo.totalPrice
+        await directPartner.save()
         return res.status(200).json({message:"Payment success"})
       } else if(invoice && invoice.invoiceState==="paid"){
         return res.status(200).json({message:"Payment already success"})
@@ -85,7 +92,7 @@ const completedTran = async (req, res) => {
       }
     } //not completed payment
     else{
-      return res.status(403).json({message:"Payment failed"})
+      return res.status(400).json({message:"Payment failed"})
     }
   }catch(e){
     console.log("[ERROR]",e)

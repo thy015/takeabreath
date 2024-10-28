@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Table, Popconfirm, Typography, Space } from 'antd'
+import { AudioOutlined } from '@ant-design/icons';
+import { Button, Table, Popconfirm, Typography, Space, Input } from 'antd'
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { CreateHotel } from '../../admin/Hotels/CreateHotel'
-import { setHotels, deleteHotel, seletedHotel } from '../../../hooks/redux/hotelsSclice';
+import { setHotels, deleteHotel, seletedHotel,searchHotels } from '../../../hooks/redux/hotelsSclice';
 import axios from 'axios'
 import { openNotification } from '../../../hooks/notification';
 
 function Hotel() {
     const dispatch = useDispatch()
     const hotels = useSelector(state => state.hotel.hotels)
+    const hotelSearch = useSelector(state=>state.hotel.hotelSearch)
     const [visible, setVisible] = useState(false)
     useEffect(() => {
         axios.get("http://localhost:4000/api/hotelList/hotelOwner")
             .then(res => res.data)
             .then(data => {
+                console.log(data)
                 const hotels = data.data.map((item => (
                     {
                         ...item,
@@ -25,7 +28,7 @@ function Hotel() {
                 )))
                 dispatch(setHotels(hotels))
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log("HOTEL",err))
     }, [])
 
     const handleDelete = (record) => {
@@ -97,6 +100,7 @@ function Hotel() {
             title: 'Số lượng đã đặt',
             dataIndex: 'revenue',
             key: 'revenue',
+            sorter: (a, b) => a.revenue - b.revenue
         },
         ,
         {
@@ -125,10 +129,22 @@ function Hotel() {
         },
     ];
 
+    const onSearch = (value, _e, info) =>{
+        dispatch(searchHotels(value))
+    }
+
+    const suffix = (
+        <AudioOutlined
+          style={{
+            fontSize: 16,
+            color: '#1677ff',
+          }}
+        />
+      );
     return (
         <>
             <div className='h-full '>
-                <div className='max-w-[170px] text-left p-[20px]'>
+                <div className='w-full text-left py-[20px] px-[40px] d-flex justify-between items-center'>
                     <Link>
                         <Button
                             onClick={() => setVisible(true)}
@@ -138,11 +154,18 @@ function Hotel() {
                             Thêm khách sạn
                         </Button>
                     </Link>
+                    <Input.Search  
+                        placeholder='Tim kiếm theo tên'
+                        className='max-w-[200px]'
+                        allowClear
+                        enterButton
+                        onSearch={onSearch}
+                    />
                 </div>
                 <div>
                     <Table
                         bordered
-                        dataSource={hotels}
+                        dataSource={hotelSearch}
                         columns={columns}
                         scroll={{
                             x: 'max-content',

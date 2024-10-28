@@ -1,0 +1,89 @@
+import React from 'react'
+import { useDispatch } from "react-redux"
+import { Modal, Form, Input, InputNumber, DatePicker, Col, Row } from 'antd'
+import { useForm } from 'antd/es/form/Form'
+import dayjs from 'dayjs'
+import axios from "axios"
+import  {setCards} from '../hooks/redux/cardSlice'
+import { openNotification } from '../hooks/notification'
+
+function FormCard({ visible, close }) {
+    const dispatch = useDispatch()
+    const [form ] = useForm()
+    const onFinish = (value) => {
+        const {numberCard,cvv,expDay} = value
+        const currentDay = dayjs()
+        console.log(numberCard.length)
+        if(numberCard.length !== 16){
+            openNotification(false,"Số thẻ phải đủ 16 số","")
+            return
+        }
+        if( expDay.isBefore(currentDay)){
+            openNotification(false,"Ngày hết hạn phải ở tương lai","")
+            return
+        }
+
+        axios.post("http://localhost:4000/api/auth/insert-card",{numberCard,cvv,expDay})
+            .then(res=>res.data)
+            .then(data=>{
+                dispatch(setCards(data.cards))
+                openNotification(true, data.message,"")
+                close()
+            })
+            .catch(err=>{
+                console.log(err)
+                openNotification(false,"Thêm thẻ không thành công","")
+            })
+    }
+
+
+    return (
+        <Modal
+            open={visible}
+            title={(<p className='font-bold text-[20px]'>Thêm thẻ</p>)}
+            okText="Thêm thẻ"
+            cancelText="Quay lại"
+            onOk={()=>{form.submit()}}
+            onCancel={close}
+        >
+            <Form
+                form={form}
+                onFinish={onFinish}
+                layout="horizontal"
+                labelAlign='lefts'
+            >
+                <Form.Item
+                    label="Nhập số thẻ"
+                    name="numberCard"
+                    maxLength= {16}
+                >
+                    <Input className='ml-[7px]' placeholder='Nhập số thẻ' />
+                </Form.Item>
+                <Row>
+                    <Col span={14} >
+                        <Form.Item
+                            label="Ngày hết hạn"
+                            name={"expDay"}
+                        >
+                            <DatePicker />
+                        </Form.Item>
+                    </Col>
+                    <Col span={10}>
+                        <Form.Item
+                            labelCol={{
+                                span: 14
+                            }}
+                            label="Số CVV"
+                            name={"cvv"}
+                        >
+                            <InputNumber maxLength={3} placeholder='Nhập CVV' />
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+
+        </Modal>
+    )
+}
+
+export default FormCard

@@ -2,7 +2,7 @@ const express = require("express");
 const signUpController = require("./signUp.controller");
 const signUpRouter = express.Router();
 const {Owner,Customer}=require('../../models/signUp.model');
-const { verifyLogin, verifyAdmin } = require("../../middleware/verify");
+const { verifyLogin, verifyAdmin,verifyOwner } = require("../../middleware/verify");
 // CRUD Owner
 signUpRouter.get("/owner", async (req, res) => {
   try {
@@ -12,6 +12,23 @@ signUpRouter.get("/owner", async (req, res) => {
     res.status(500).json(e);
   }
 });
+//get spec owner
+signUpRouter.get('/owner/:id',async (req,res)=>{
+  const id = req.params.id;
+  if(!id){
+    res.status(403).json({message:"No such ID signUproute"});
+  }
+  try{
+    const specOwner=await Owner.findById(id)
+    if(!specOwner){
+      res.status(404).json({message:'Theres no owner signUproute'});
+    }
+    res.status(200).json({specOwner});
+  }catch(e){
+    res.status(500).json(e);
+  }
+})
+
 signUpRouter.delete('/owner/:id',signUpController.deleteOwner)
 signUpRouter.put('/owner/:id',signUpController.updateOwner)
 
@@ -33,14 +50,19 @@ signUpRouter.post("/signInCus", signUpController.loginCustomer);
 signUpRouter.post("/signUpCus", signUpController.registerCustomer);
 signUpRouter.get('/logout',signUpController.logout)
 
-signUpRouter.post("/login-with-sso",signUpController.loginWithSSO)
+
+//owner
+signUpRouter.post("/insert-card",verifyOwner,signUpController.insertCartOwner)
+signUpRouter.get("/list-card",verifyOwner,signUpController.getListCard)
+
+signUpRouter.post("/signInSSO",signUpController.signInSSO)
 
 signUpRouter.get('/verifyAdmin',verifyAdmin,(req,res)=>{
   return res.json(req.user)
 })
 
 signUpRouter.get('/verify',verifyLogin,(req,res)=>{
-  return res.json(req.user)
+  return res.json({user: req.user})
 })
 
 module.exports = signUpRouter;

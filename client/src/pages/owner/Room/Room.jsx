@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, Table, Space, Typography, Popconfirm } from 'antd'
+import { Button, Table, Space, Typography, Popconfirm,Input } from 'antd'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FormRoom from '../../../component/FormRoom'
 import axios from 'axios'
 import { openNotification } from '../../../hooks/notification'
 import { setHotels } from '../../../hooks/redux/hotelsSclice'
-import { setRooms,deleteRoom,selectedRoom } from '../../../hooks/redux/roomsSlice'
+import { setRooms, deleteRoom, selectedRoom, searchRoom } from '../../../hooks/redux/roomsSlice'
 function Room() {
   const dispatch = useDispatch()
-  const rooms = useSelector(state => state.room.rooms)
+  const rooms = useSelector(state => state.room.roomSearch)
 
   useEffect(() => {
     axios.get("http://localhost:4000/api/hotelList/list-room")
@@ -21,7 +21,7 @@ function Room() {
           return {
             ...item,
             key: item._id,
-            nameHotel:item.hotelID.hotelName
+            nameHotel: item.hotelID.hotelName
           }
         })
         dispatch(setRooms(setRoom))
@@ -32,24 +32,28 @@ function Room() {
       })
   }, [])
 
-  
-  
-  const handleDelete = (record)=>{
+
+
+  const handleDelete = (record) => {
     axios.delete(`http://localhost:4000/api/hotelList/deleteRoom/${record._id}`)
-      .then(res=>res.data)
-      .then(data=>{
+      .then(res => res.data)
+      .then(data => {
         dispatch(deleteRoom(record._id))
-        openNotification(true,"Xóa phòng thành công","")
+        openNotification(true, "Xóa phòng thành công", "")
       })
-      .catch(err=>{
+      .catch(err => {
         console.log(err)
-        openNotification(false,"Xóa phòng thất bại !","Vui long thử lại sau")
+        openNotification(false, "Xóa phòng thất bại !", "Vui long thử lại sau")
       })
   }
 
-  const handleUpdate =(record)=>{
+  const handleUpdate = (record) => {
     dispatch(selectedRoom(record))
     setVisible(true)
+  }
+
+  const onSearch = (value)=>{
+    dispatch(searchRoom(value))
   }
 
   const column = [
@@ -121,7 +125,7 @@ function Room() {
   return (
 
     <div className='h-full '>
-      <div className='max-w-[170px] text-left p-[20px]'>
+      <div className='w-full text-left py-[20px] px-[40px] d-flex justify-between items-center'>
         <Link >
           <Button
             onClick={() => setVisible(true)}
@@ -131,6 +135,13 @@ function Room() {
             Thêm phòng
           </Button>
         </Link>
+        <Input.Search
+            placeholder='Tim kiếm theo tên'
+            className='max-w-[200px]'
+            allowClear
+            enterButton
+            onSearch={onSearch}
+          />
       </div>
 
       <Table
@@ -145,10 +156,10 @@ function Room() {
       <FormRoom
 
         isVisible={visible}
-        close={() =>{
+        close={() => {
           dispatch(selectedRoom({}))
           setVisible(false)
-          }}
+        }}
       >
       </FormRoom>
     </div>

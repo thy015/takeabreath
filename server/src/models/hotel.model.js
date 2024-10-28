@@ -22,7 +22,8 @@ const hotelSchema = new mongoose.Schema({
 const roomSchema = new mongoose.Schema({
   roomName: { type: String, required: true },
   numberOfRooms: { type: Number, required: false, default: 0 },
-  typeOfRoom: { type: String, required: true },
+  typeOfRoom: { type: String, required: true ,
+    enum:['Suite','Standard','']},
   capacity: { type: Number, required: true },
   numberOfBeds: { type: Number, required: true },
   money: { type: Number, required: true },

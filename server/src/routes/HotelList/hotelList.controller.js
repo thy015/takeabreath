@@ -241,8 +241,8 @@ const queryHotel = async (req, res) => {
     if (rooms.length === 0) {
       // no room => return null
       return res
-        .status(200)
-        .json({ message: "No room in this hotel", data: [] });
+          .status(200)
+          .json({ message: "No room in this hotel", data: [] });
     }
 
     const roomsID = rooms.map((r) => r._id);
@@ -254,40 +254,37 @@ const queryHotel = async (req, res) => {
     rooms.forEach((room) => {
       let availableRooms = room.numberOfRooms;
       const roomInvoices = invoices.filter((invoice) =>
-        invoice.roomID.equals(room._id)
+          invoice.roomID.equals(room._id)
       );
       // count booked room
       const bookedRooms = roomInvoices.reduce((count, invoice) => {
         const invoiceStart = dayjs(invoice.guestInfo.checkInDay);
         const invoiceEnd = dayjs(invoice.guestInfo.checkOutDay);
-        console.log("Invoice start and end", invoiceStart, invoiceEnd);
-        console.log(
-          "Check 1",
-          dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)")
-        );
-        console.log(
-          "Check 2",
-          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
-        );
-        if (
-          dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)") ||
-          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
-        ) {
-          count++;
+        const totalRoomsBooked = invoice.guestInfo.totalRoom || 1
+        console.log(`Processing invoice for room ${room._id}`);
+        console.log("Invoice check-in and check-out:", invoiceStart, invoiceEnd);
+        console.log("Number of rooms booked in this invoice:", totalRoomsBooked);
+        const isOverlapping=
+            dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)") ||
+            dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")||
+            (invoiceStart.isBefore(start) && invoiceEnd.isAfter(end))
+        if(isOverlapping){
+          count+=totalRoomsBooked
         }
         console.log("count", count);
         return count;
       }, 0);
+      console.log(bookedRooms.numberOfRooms)
       const countRoom = availableRooms - bookedRooms;
       if (countRoom > 0) {
         availableRoomDays.push({
           ...room.toObject(),
-          countRoom: countRoom //return for the countRoom below
+          countRoom  //return for the countRoom below
         });
       } else {
         unavailableRooms.push({
           ...room.toObject(),
-          countRoom: 0
+          countRoom:0
         });
       }
     });
@@ -298,7 +295,8 @@ const queryHotel = async (req, res) => {
         roomData: availableRoomDays,
         unavailableRooms: unavailableRooms,
         hotelData: hotels,
-        countRoom: availableRoomDays.map(room => ({ hotelID: room.hotelID, roomID: room._id, countRoom: room.countRoom }))
+        countRoom:availableRoomDays.map(room=>
+            ({hotelID:room.hotelID,roomID:room._id,countRoom:room.countRoom}))
       });
     } else {
       return res.status(200).json({

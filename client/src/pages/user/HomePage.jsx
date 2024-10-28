@@ -21,6 +21,7 @@ const HomePage = () => {
     slides.push(cardItems.slice(i, i + itemsPerSlide));
   }
 
+
   return (
     <div>
       <div className="relative">

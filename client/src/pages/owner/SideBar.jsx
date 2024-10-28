@@ -20,6 +20,11 @@ const items = [
         key: "Vouchers",
         label: (<p className='font-bold'>Phiếu giảm giá</p>),
     },
+    ,
+    {
+        key: "Card",
+        label: (<p className='font-bold'>Quản lý thẻ</p>),
+    },
    
     
 ]

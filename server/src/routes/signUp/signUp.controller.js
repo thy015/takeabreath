@@ -348,6 +348,21 @@ const deleteOwner = async (req, res) => {
   }
 }
 
+const insertCartOwner = async (req,res)=>{
+  const {onwerID} = req.user
+  if(!onwerID)
+    return res.status(403).json({message:"Bị mất dữ liệu người dùng !"})
+  const {numberCard,cvv,expDay} = req.body
+
+  if(!numberCard||!cvv ||!expDay)
+    return res.status(403).json({message:"Bị mất dữ liệu thẻ !"})
+
+  const owner = await Owner.findByIdAndUpdate({_id:ownerID},{
+    
+  })
+
+}
+
 const updateOwner = async (req, res) => {
   const id = req.params.id
   const newData = req.body

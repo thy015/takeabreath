@@ -55,16 +55,17 @@ const verifyOwner = async (req, res, next) => {
 
 const verifyLogin = async (req, res, next) => {
     const token = req.cookies.token
-    const user = res.locals.user
-    if (user) {
-        const userDecode = {
-            id:user.partnerId ??user.userId,
-            email:user.email
-        }
-        req.user= userDecode
-        next()
-        return
-    } else {
+    // const user = res.locals.user
+    // if (user) {
+    //     const userDecode = {
+    //         id:user.partnerId ??user.userId,
+    //         email:user.email
+    //     }
+    //     req.user= userDecode
+    //     next()
+    //     return
+    // } else {
+
         if (!token) {
             return res.status(401).json({
                 message: "Unauthorized"
@@ -83,11 +84,11 @@ const verifyLogin = async (req, res, next) => {
         }
     }
 
-    return res.status(404).json({
-        message: "Problem in verify login !"
-    })
-
-}
+//     return res.status(404).json({
+//         message: "Problem in verify login !"
+//     })
+//
+// }
 
 
 module.exports = {

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { Owner, Admin, Customer } = require("../../models/signUp.model");
+const { Owner, Admin, Customer, CustomerSSO} = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../middleware/jwt");
 //owner
 const signUpOwner = async (req, res) => {
@@ -227,16 +227,51 @@ const signInSSO = async (req, res) => {
       if (user.role === 'partner') {
         redirectPath = '/owner'
       } else if (user.role === 'user') {
+        const ssoFindCus=await CustomerSSO.find({ssoID:user.id})
+        if(ssoFindCus){
+          //đã đăng nhập trước đây rồi SSO
+          const systemToken = ssoFindCus.generalAccessTokens({
+            id: ssoFindCus._id,
+            name: ssoFindCus.name,
+            email: ssoFindCus.email,
+            createdAt: ssoFindCus.createdAt,
+            ssoID: ssoFindCus.ssoID,
+          })
+          redirectPath = '/'
+          return res
+              .status(200)
+              .cookie("token", systemToken, { httpOnly: true, secure: true })
+              .json({
+                data: ssoFindCus,
+                redirectPath: redirectPath
+              });
+        }
+        // chưa đăng nhập
+        const ssoSaveCus = await CustomerSSO.create({
+          ssoID: user.id,
+          name: `${user.lastName} ${user.firstName}`,
+          createdAt: user.createdAt,
+          email: user.email,
+        });
         redirectPath = '/'
+
+        const systemToken = ssoSaveCus.generalAccessTokens({
+          id: ssoSaveCus._id,
+          name: ssoSaveCus.name,
+          email: ssoSaveCus.email,
+          createdAt: ssoSaveCus.createdAt,
+          ssoID: ssoSaveCus.ssoID,
+        })
+        return res
+            .status(200)
+            .cookie("token", systemToken, { httpOnly: true, secure: true })
+            .json({
+              data: ssoSaveCus,
+              redirectPath: redirectPath
+            });
       }
     }
-    return res
-      .status(200)
-      .cookie("token", token, { httpOnly: true, secure: true })
-      .json({
-        data: user,
-        redirectPath: redirectPath
-      });
+
   } catch (e) {
     return res.status(500).json({ message: "Internal server error signUp controller" })
   }

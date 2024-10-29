@@ -64,12 +64,21 @@ const customerSchema = new mongoose.Schema({
     type:String,required:false
   },
 });
-
+//SSO
+const customerSSOSchema=new mongoose.Schema({
+  name:{type:String,required:true},
+  email:{type:String,required:true},
+  createdAt:{type:Date,required:true},
+  ssoID:{type:String,required:true},
+})
 //kết nối với db có sẵn chứ ko cho tạo
 const Admin = mongoose.connection.collection("admin");
 const Customer = mongoose.model('Customer', customerSchema);
+const CustomerSSO =mongoose.model('sso-customer',customerSSOSchema)
+
 module.exports = {
   Owner,
   Admin,
-  Customer
+  Customer,
+  CustomerSSO,
 };

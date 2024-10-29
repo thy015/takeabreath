@@ -14,7 +14,7 @@ const SSO = () => {
 
   useEffect(() => {
     if (decodedToken && !isExpired) {
-      axios.post("http://localhost:4000/api/auth/login-with-sso", decodedToken)
+      axios.post("http://localhost:4000/api/auth/login-with-sso", {decodedToken},{withCredentials:true})
         .then(res=>{
           setAuth({
             isAuthenticated:true,

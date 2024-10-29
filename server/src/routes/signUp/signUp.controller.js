@@ -214,79 +214,14 @@ const registerCustomer = async (req, res) => {
   }
 };
 
-const signInSSO = async (req, res) => {
-  const { token } = req.body
-  const user = res.locals.user
-  console.log(user)
-  if (!token) {
-    return res.status(403).json({ message: 'required token in signUp controller' })
-  }
-  let redirectPath;
-  try {
-    if (user) {
-      if (user.role === 'partner') {
-        redirectPath = '/owner'
-      } else if (user.role === 'user') {
-        const ssoFindCus=await Customer.find({ssoID:user.id})
-        if(ssoFindCus){
-          //đã đăng nhập trước đây rồi SSO
-          const token = ssoFindCus.generalAccessTokens({
-            id: ssoFindCus._id,
-            name: ssoFindCus.name,
-            email: ssoFindCus.email,
-            ssoID: ssoFindCus.ssoID,
-          })
-          redirectPath = '/'
-          return res
-              .status(200)
-              .cookie("token", token, { httpOnly: true, secure: true })
-              .json({
-                data: ssoFindCus,
-                redirectPath: redirectPath
-              });
-        }
-        // chưa đăng nhập
-        const ssoSaveCus = await Customer.create({
-          ssoID: user.id,
-          cusName: `${user.lastName} ${user.firstName}`,
-          createdAt: user.createdAt,
-          email: user.email,
-          birthday:user.dob
-        });
-        redirectPath = '/'
-
-        const systemToken = ssoSaveCus.generalAccessTokens({
-          id: ssoSaveCus._id,
-          name: ssoSaveCus.name,
-          email: ssoSaveCus.email,
-          createdAt: ssoSaveCus.createdAt,
-          ssoID: ssoSaveCus.ssoID,
-        })
-        return res
-            .status(200)
-            .cookie("token", systemToken, { httpOnly: true, secure: true })
-            .json({
-              data: ssoSaveCus,
-              redirectPath: redirectPath
-            });
-      }
-    }
-
-  } catch (e) {
-    return res.status(500).json({ message: "Internal server error signUp controller" })
-  }
-}
-
 const loginWithSSO = async (req, res) => {
-  const { firstName, lastName, id, userId,partnerId, role, email, dob } = req.body
-  let name = ""
-  if(!userId){
-    name= "Onwer Name"
-  }else{
-    name=firstName+" "+lastName
+  const { decodedToken } = req.body
+
+  if(!decodedToken){
+    return res.status(403).json({message: 'missing token in signUp controller'})
   }
-  console.log("RES.BODY",req.body)
-  if(role ==="partner"){
+  console.log(decodedToken)
+  if(decodedToken.role ==="partner"){
     let owner ={}
     const ownerExsisted = await Owner.findOne({
       email:email
@@ -327,46 +262,60 @@ const loginWithSSO = async (req, res) => {
       email: owner.email
     })
 
-  }else if(role === "user"){
+  }else if(decodedToken.role === "user"){
 
-    let customer = {}
     const customerExsisted = await Customer.findOne({
-      email:email
+      email:decodedToken.email
     })
     if(!customerExsisted){
-      const newCus = new Customer({
-        cusName:name,
-        email:email,
-        password:"Unknown",
-        birthday:dob
+      const newCus = await Customer.create({
+        cusName:`${decodedToken.firstName} ${decodedToken.lastName}`,
+        email:decodedToken.email,
+        ssoID: decodedToken.userId,
+        createdAt: decodedToken.createdAt,
+        birthday:decodedToken.dob
       })
-      await newCus.save()
-      customer = newCus
+      // system token
+      const token = await generalAccessTokens({
+        id:newCus._id,
+        name: newCus.cusName,
+        email: newCus.email,
+        birthday: newCus.birthday,
+        ssoID:newCus.ssoID
+      })
+
+      console.log("[SYS TOKEN CUSTOMER]",token)
+      return res.cookie("token", token, { httpOnly: true, secure: true })
+          .json({
+            login: true,
+            id:newCus._id,
+            name: newCus.cusName,
+            email: newCus.email,
+            birthday: newCus.birthday,
+            ssoID:newCus.ssoID
+          })
     }else{
-      customer=customerExsisted
+      // already log
+      const token = await generalAccessTokens({
+        id:customerExsisted._id,
+        name: customerExsisted.cusName,
+        email: customerExsisted.email,
+        birthday: customerExsisted.birthday,
+        ssoID:customerExsisted.ssoID
+      })
+
+      console.log("[SYS TOKEN CUSTOMER]",token)
+      return res.cookie("token", token, { httpOnly: true, secure: true })
+          .json({
+            login: true,
+            id:customerExsisted._id,
+            name: customerExsisted.cusName,
+            email: customerExsisted.email,
+            birthday: customerExsisted.birthday,
+            ssoID:customerExsisted.ssoID
+          })
     }
-
-    const token = await generalAccessTokens({
-      id:customer._id,
-      name: customer.cusName,
-      email: customer.email,
-      role: role,
-      birthday: customer.birthday,
-      idSSO:id
-    })
-
-    console.log("[TOKEN CUSTOMER]",token)
-    return res.cookie("token", token, { httpOnly: true, secure: true })
-    .json({
-      login: true,
-      redirect: role,
-      name: customer.cusName,
-      id: customer._id,
-      email: customer.email
-    })
   }
-
- 
 }
 
 
@@ -510,5 +459,4 @@ module.exports = {
   registerCustomer,
   logout,
   loginWithSSO,
-  signInSSO,
 };

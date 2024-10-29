@@ -55,6 +55,7 @@ signUpRouter.get('/logout',signUpController.logout)
 signUpRouter.post("/insert-card",verifyOwner,signUpController.insertCartOwner)
 signUpRouter.get("/list-card",verifyOwner,signUpController.getListCard)
 
+signUpRouter.post("/login-with-sso",signUpController.loginWithSSO)
 signUpRouter.post("/signInSSO",signUpController.signInSSO)
 
 signUpRouter.get('/verifyAdmin',verifyAdmin,(req,res)=>{

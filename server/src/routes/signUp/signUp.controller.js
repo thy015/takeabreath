@@ -242,6 +242,98 @@ const signInSSO = async (req, res) => {
   }
 }
 
+const loginWithSSO = async (req, res) => {
+  const { firstName, lastName, id, userId,partnerId, role, email, dob } = req.body
+  let name = ""
+  if(!userId){
+    name= "Onwer Name"
+  }else{
+    name=firstName+" "+lastName
+  }
+  console.log("RES.BODY",req.body)
+  if(role ==="partner"){
+    let owner ={}
+    const ownerExsisted = await Owner.findOne({
+      email:email
+    })
+
+    if(!ownerExsisted){
+      const newOwner = Owner({
+        ownerName:"Owner Name",
+        email:email,
+        birthday:dob,
+        idenCard:"Unknown",
+        phoneNum:"Unknown",
+        password:"Unknown"
+      })
+
+      await newOwner.save()
+      owner = newOwner
+    }else{
+      owner =ownerExsisted
+    }
+
+    const token = await generalAccessTokens({
+      id:owner._id,
+      name: owner.ownerName,
+      email: owner.email,
+      role: role,
+      birthday: owner.birthday,
+      idSSO:id
+    })
+
+    console.log("[TOKEN OWNER]",token)
+    return res.cookie("token", token, { httpOnly: true, secure: true })
+    .json({
+      login: true,
+      redirect: role,
+      name: owner.ownerName,
+      id: owner._id,
+      email: owner.email
+    })
+
+  }else if(role === "user"){
+
+    let customer = {}
+    const customerExsisted = await Customer.findOne({
+      email:email
+    })
+    if(!customerExsisted){
+      const newCus = new Customer({
+        cusName:name,
+        email:email,
+        password:"Unknown",
+        birthday:dob
+      })
+      await newCus.save()
+      customer = newCus
+    }else{
+      customer=customerExsisted
+    }
+
+    const token = await generalAccessTokens({
+      id:customer._id,
+      name: customer.cusName,
+      email: customer.email,
+      role: role,
+      birthday: customer.birthday,
+      idSSO:id
+    })
+
+    console.log("[TOKEN CUSTOMER]",token)
+    return res.cookie("token", token, { httpOnly: true, secure: true })
+    .json({
+      login: true,
+      redirect: role,
+      name: customer.cusName,
+      id: customer._id,
+      email: customer.email
+    })
+  }
+
+ 
+}
+
 
 const logout = async (req, res) => {
   console.log("[Token sso]", req.cookies.Token)
@@ -382,5 +474,6 @@ module.exports = {
   loginCustomer,
   registerCustomer,
   logout,
-  signInSSO
+  loginWithSSO,
+  signInSSO,
 };

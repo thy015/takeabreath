@@ -74,6 +74,15 @@ ListRouter.get('/roomTypes',async(req,res)=>{
     console.log('E in hotelList route',e.message )
   }
 })
+ListRouter.get('/hotelTypes',async(req,res)=>{
+  try{
+    const hotels=await Hotel.find()
+    const types=[...new Set(hotels.map(ht=>ht.hotelType))]
+    return res.status(200).json({types})
+  }catch(e){
+    console.log('E in hotelList route',e.message )
+  }
+})
 ListRouter.get("/room", async (req, res) => {
   try {
     const { hotelID } = req.query;

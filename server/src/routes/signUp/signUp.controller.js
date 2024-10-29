@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { Owner, Admin, Customer, CustomerSSO} = require("../../models/signUp.model");
+const { Owner, Admin, Customer} = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../middleware/jwt");
 //owner
 const signUpOwner = async (req, res) => {
@@ -227,31 +227,31 @@ const signInSSO = async (req, res) => {
       if (user.role === 'partner') {
         redirectPath = '/owner'
       } else if (user.role === 'user') {
-        const ssoFindCus=await CustomerSSO.find({ssoID:user.id})
+        const ssoFindCus=await Customer.find({ssoID:user.id})
         if(ssoFindCus){
           //đã đăng nhập trước đây rồi SSO
-          const systemToken = ssoFindCus.generalAccessTokens({
+          const token = ssoFindCus.generalAccessTokens({
             id: ssoFindCus._id,
             name: ssoFindCus.name,
             email: ssoFindCus.email,
-            createdAt: ssoFindCus.createdAt,
             ssoID: ssoFindCus.ssoID,
           })
           redirectPath = '/'
           return res
               .status(200)
-              .cookie("token", systemToken, { httpOnly: true, secure: true })
+              .cookie("token", token, { httpOnly: true, secure: true })
               .json({
                 data: ssoFindCus,
                 redirectPath: redirectPath
               });
         }
         // chưa đăng nhập
-        const ssoSaveCus = await CustomerSSO.create({
+        const ssoSaveCus = await Customer.create({
           ssoID: user.id,
-          name: `${user.lastName} ${user.firstName}`,
+          cusName: `${user.lastName} ${user.firstName}`,
           createdAt: user.createdAt,
           email: user.email,
+          birthday:user.dob
         });
         redirectPath = '/'
 

@@ -242,8 +242,8 @@ const queryHotel = async (req, res) => {
     if (rooms.length === 0) {
       // no room => return null
       return res
-          .status(404)
-          .json({ message: "No room in this hotel" });
+          .status(200)
+          .json({ message: `Không có phòng khả dụng ở thành phố ${city}`});
     }
 
     const roomsID = rooms.map((r) => r._id);

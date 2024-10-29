@@ -121,6 +121,7 @@ const Booking = ({tailwind_prop}) => {
               city.toLowerCase().includes(selectedCity.toLowerCase())))
       ).slice(0,5)
       setFilteredCities(filteredCity);
+      console.log(filteredCity)
     } else {
       setFilteredCities([]);
     }
@@ -160,52 +161,49 @@ const Booking = ({tailwind_prop}) => {
 
 // handle - passing data
 
-  const handleSearch=async()=>{
+  const handleSearch=async()=> {
 
-    const people=aCount+cCount
-    if (!selectedCity || !dayStart || !dayEnd||!people) {
-      return openNotification(false,'Missing information','Please fill out all information before searching');
+    const people = aCount + cCount
+    if (!selectedCity || !dayStart || !dayEnd || !people) {
+      return openNotification(false, 'Missing information', 'Please fill out all information before searching');
     }
 
 //format before dispatch
     const formattedDayStart = dayjs(dayStart).tz('Asia/Ho_Chi_Minh').format(); // GMT+7
     const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
     dispatch(setInputDay({
-      dayStart:formattedDayStart,
-      dayEnd:formattedDayEnd,
-      city:selectedCity
+      dayStart: formattedDayStart,
+      dayEnd: formattedDayEnd,
+      city: selectedCity
     }))
     console.log(formattedDayStart)
     console.log(formattedDayEnd)
 
-    const searchData={
-      city:selectedCity,
-      dayStart:formattedDayStart,
-      dayEnd:formattedDayEnd,
-      people:people
+    const searchData = {
+      city: selectedCity,
+      dayStart: formattedDayStart,
+      dayEnd: formattedDayEnd,
+      people: people
     }
     console.log(searchData)
-    try{
-      const res= await axios.post('http://localhost:4000/api/hotelList/query'
-          ,searchData)
+    try {
+      const res = await axios.post('http://localhost:4000/api/hotelList/query', searchData);
       console.log(res.data)
-      if (res.status === 200) {
+      if (res.status === 200 && res.data.hotelData && res.data.roomData && res.data.countRoom) {
         dispatch(setSearchResult({
           hotelData: res.data.hotelData,
           roomData: res.data.roomData,
           countRoom: res.data.countRoom
-        }))
-        navigate('/booking')
-      } else{
-        openNotification(false,'Error', res.data.message);
+        }));
+        navigate('/booking');
+      } else {
+        openNotification(false, 'Error', res.data.message);
       }
-    }
-    catch(e){
-      console.log(e)
-      console.log('Error while passing data')
+    } catch (e) {
+      console.log(e);
+      console.log(e.message + ' E in passing data');
     }
   }
-
   return (
       <div className={tailwind_prop}>
         <div
@@ -219,7 +217,9 @@ const Booking = ({tailwind_prop}) => {
                   menu={{
                     items: filteredCities.map((city, index) => ({
                       key: index,
-                      label: <div onClick={() => handleCitySelect(city)}>{city}</div>,
+                      label: (<div onClick={() => handleCitySelect(city)} className='w-full'>
+                        {city}
+                      </div>),
                     })),
                   }}
                   trigger={["click"]}

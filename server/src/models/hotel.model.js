@@ -23,7 +23,7 @@ const roomSchema = new mongoose.Schema({
   roomName: { type: String, required: true },
   numberOfRooms: { type: Number, required: false, default: 0 },
   typeOfRoom: { type: String, required: true ,
-    enum:['Suite','Standard','']},
+    enum:['Suite','Standard','Deluxe','Family','Honeymoon','Accessible','Presidential','Studio','Queen','Apartment','Twin']},
   capacity: { type: Number, required: true },
   numberOfBeds: { type: Number, required: true },
   money: { type: Number, required: true },

@@ -221,6 +221,7 @@ const updateHotels = async (req, res) => {
 
 const queryHotel = async (req, res) => {
   const { city, dayStart, dayEnd, people } = req.body;
+  console.log('city in be',city)
   if (!city || !dayStart || !dayEnd || !people) {
     return res.status(403).json({ message: "All fields are required" });
   }
@@ -231,18 +232,18 @@ const queryHotel = async (req, res) => {
 
     // handle city
     const hotels = await Hotel.find({ city: city });
-
+    console.log(hotels)
     if (hotels.length === 0) {
       return res.status(400).json({ message: "No hotel in this city" });
     }
     const hotelIDs = hotels.map((h) => h._id);
     const rooms = await Room.find({ hotelID: { $in: hotelIDs } });
-
+    console.log(rooms)
     if (rooms.length === 0) {
       // no room => return null
       return res
           .status(200)
-          .json({ message: "No room in this hotel", data: [] });
+          .json({ message: `Không có phòng khả dụng ở thành phố ${city}`});
     }
 
     const roomsID = rooms.map((r) => r._id);
@@ -266,8 +267,8 @@ const queryHotel = async (req, res) => {
         console.log("Number of rooms booked in this invoice:", totalRoomsBooked);
         const isOverlapping=
             dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)") ||
-            dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")||
-            (invoiceStart.isBefore(start) && invoiceEnd.isAfter(end))
+            dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
+
         if(isOverlapping){
           count+=totalRoomsBooked
         }
@@ -308,6 +309,8 @@ const queryHotel = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 const deleteHotel = async (req, res) => {
   try {
     const hotel = req.params.id;

@@ -43,7 +43,7 @@ const filters = cardItems.map((c) => c.title);
     );
   }
 
-  if (!searchResults && (!data || data.length === 0)) {
+  if (!searchResults && (!data || data.length === 0) ) {
     return <Alert message="No hotel data found" type="info" showIcon />;
   }
   console.log(data);

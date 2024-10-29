@@ -111,26 +111,23 @@ const Booking = ({tailwind_prop}) => {
   const [filteredCities, setFilteredCities] = useState([]);
 
   const { data, error, loading } = useGet(
-      "http://localhost:4000/api/hotelList/hotel"
+      "http://localhost:4000/api/hotelList/hotelCities"
   );
   useEffect(() => {
-    if (data && selectedCity) {
-      const filteredCity = Array.from(new Set(data
-          .map((hotel) => hotel.city)
+    if (data) {
+      const filteredCity = Array.from(new Set(
+        data.cities
           .filter((city) =>
               city.toLowerCase().includes(selectedCity.toLowerCase())))
       ).slice(0,5)
       setFilteredCities(filteredCity);
-    } else if (data) {
-      //no input yet, show all
-      const allCities = Array.from(new Set(data.map((h) => h.city))).slice(0, 5);
-      setFilteredCities(allCities);
+      console.log(filteredCity)
     } else {
       setFilteredCities([]);
     }
   }, [selectedCity, data]);
 
-  // const citiesData = data ? [...new Set(data.map((hotel) => hotel.city))] : [];
+
 
   const handleCitySelect = (city) => {
     setSelectedCity(city);
@@ -140,7 +137,11 @@ const Booking = ({tailwind_prop}) => {
   const handleCitySearch = (e) => {
     const value = e.target.value;
     setSelectedCity(value);
-    setShowCities(true);
+    if (value) {
+      setShowCities(true);
+  } else {
+      setShowCities(false);
+  }
   };
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
@@ -158,60 +159,56 @@ const Booking = ({tailwind_prop}) => {
     );
   }
 
-  if (!data || data.length === 0) {
-    return <Alert message="No hotel data found" type="info" showIcon />;
-  }
-
 // handle - passing data
 
-  const handleSearch=async()=>{
+  const handleSearch=async()=> {
 
-    const people=aCount+cCount
-    if (!selectedCity || !dayStart || !dayEnd||!people) {
-      return openNotification(false,'Missing information','Please fill out all information before searching');
+    const people = aCount + cCount
+    if (!selectedCity || !dayStart || !dayEnd || !people) {
+      return openNotification(false, 'Missing information', 'Please fill out all information before searching');
     }
 
-//format before dispatch 
+//format before dispatch
     const formattedDayStart = dayjs(dayStart).tz('Asia/Ho_Chi_Minh').format(); // GMT+7
     const formattedDayEnd = dayjs(dayEnd).tz('Asia/Ho_Chi_Minh').format();
     dispatch(setInputDay({
-      dayStart:formattedDayStart,
-      dayEnd:formattedDayEnd,
-      city:selectedCity
+      dayStart: formattedDayStart,
+      dayEnd: formattedDayEnd,
+      city: selectedCity
     }))
     console.log(formattedDayStart)
     console.log(formattedDayEnd)
 
-    const searchData={
-      city:selectedCity,
-      dayStart:formattedDayStart,
-      dayEnd:formattedDayEnd,
-      people:people
+    const searchData = {
+      city: selectedCity,
+      dayStart: formattedDayStart,
+      dayEnd: formattedDayEnd,
+      people: people
     }
     console.log(searchData)
-    try{
-      const res= await axios.post('http://localhost:4000/api/hotelList/query'
-          ,searchData)
+    try {
+      const res = await axios.post('http://localhost:4000/api/hotelList/query', searchData);
       console.log(res.data)
-
-      dispatch(setSearchResult({
-        hotelData: res.data.hotelData,
-        roomData: res.data.roomData,
-        countRoom:res.data.countRoom
-      }))
-      navigate('/booking')
-    }
-    catch(e){
-      console.log(e)
-      console.log('Error while passing data')
+      if (res.status === 200 && res.data.hotelData && res.data.roomData && res.data.countRoom) {
+        dispatch(setSearchResult({
+          hotelData: res.data.hotelData,
+          roomData: res.data.roomData,
+          countRoom: res.data.countRoom
+        }));
+        navigate('/booking');
+      } else {
+        openNotification(false, 'Error', res.data.message);
+      }
+    } catch (e) {
+      console.log(e);
+      console.log(e.message + ' E in passing data');
     }
   }
-
   return (
       <div className={tailwind_prop}>
         <div
             className="
-     bg-white border-4 border-yellow-400 rounded-lg 
+     bg-white border-4 border-yellow-400 rounded-lg
      overflow-hidden items-center shadow-md w-full"
         >
           <Row gutter={0} className="w-full items-center">
@@ -220,7 +217,9 @@ const Booking = ({tailwind_prop}) => {
                   menu={{
                     items: filteredCities.map((city, index) => ({
                       key: index,
-                      label: <div onClick={() => handleCitySelect(city)}>{city}</div>,
+                      label: (<div onClick={() => handleCitySelect(city)} className='w-full'>
+                        {city}
+                      </div>),
                     })),
                   }}
                   trigger={["click"]}
@@ -231,7 +230,7 @@ const Booking = ({tailwind_prop}) => {
                     placeholder={t('where-you-want-to-go')}
                     prefix={<img src="/icon/double-bed.png" alt="Bed Icon" />}
                     className="rounded-none h-full"
-                    bordered={false}
+                    variant={false}
                     value={selectedCity}
                     onChange={handleCitySearch}
                 />
@@ -244,7 +243,7 @@ const Booking = ({tailwind_prop}) => {
                   disabledDate={disabledDate}
                   onChange={handleDateChange}
                   className="rounded-none "
-                  bordered={false}
+                  variant={false}
               />
             </Col>
             <Col span={6}>

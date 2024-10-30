@@ -39,6 +39,7 @@ import Room from "../pages/owner/Room/Room";
 import invoiceAdmin from"../pages/admin/invoiceAdmin";
 import Revienue from "../pages/owner/Revenue/Revienue";
 import Card from "../pages/owner/Card/Card";
+import StrictLoginSSO from "../pages/auth/StrictLoginSSO";
 export const routers = [
   {
     path: "/",
@@ -153,6 +154,13 @@ export const routers = [
 
     path: "/sso",
     page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
+    path: "/strict-signin-owner",
+    page: StrictLoginSSO,
     isShowHeader: false,
     isShowFooter: false,
   },

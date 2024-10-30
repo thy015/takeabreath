@@ -32,7 +32,7 @@ const SSO = () => {
         navigate('/');
       }
       else if (decodedToken.role === 'partner') {
-        navigate('/owner')
+        navigate('/strict-signin-owner',{state:decodedToken})
       }
     }
     if (isExpired) {

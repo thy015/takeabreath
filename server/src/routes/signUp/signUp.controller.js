@@ -213,7 +213,7 @@ const registerCustomer = async (req, res) => {
       .json({ message: e.message || "Internal Server Error" });
   }
 };
-
+// oggy user
 const loginWithSSO = async (req, res) => {
   const { decodedToken } = req.body
 
@@ -221,48 +221,7 @@ const loginWithSSO = async (req, res) => {
     return res.status(403).json({message: 'missing token in signUp controller'})
   }
   console.log(decodedToken)
-  if(decodedToken.role ==="partner"){
-    let owner ={}
-    const ownerExsisted = await Owner.findOne({
-      email:email
-    })
-
-    if(!ownerExsisted){
-      const newOwner = Owner({
-        ownerName:"Owner Name",
-        email:email,
-        birthday:dob,
-        idenCard:"Unknown",
-        phoneNum:"Unknown",
-        password:"Unknown"
-      })
-
-      await newOwner.save()
-      owner = newOwner
-    }else{
-      owner =ownerExsisted
-    }
-
-    const token = await generalAccessTokens({
-      id:owner._id,
-      name: owner.ownerName,
-      email: owner.email,
-      role: role,
-      birthday: owner.birthday,
-      idSSO:id
-    })
-
-    console.log("[TOKEN OWNER]",token)
-    return res.cookie("token", token, { httpOnly: true, secure: true })
-    .json({
-      login: true,
-      redirect: role,
-      name: owner.ownerName,
-      id: owner._id,
-      email: owner.email
-    })
-
-  }else if(decodedToken.role === "user"){
+if(decodedToken.role === "user"){
 
     const customerExsisted = await Customer.findOne({
       email:decodedToken.email
@@ -317,7 +276,22 @@ const loginWithSSO = async (req, res) => {
     }
   }
 }
+// oggy partner
+const checkExistedOggyPartner=async(req,res)=>{
+  const {decodedToken} = req.body
+  console.log(decodedToken)
+  if(!decodedToken){
+    return res.status(403).json({message: 'missing token in signUp controller'})
+  }
+  const existedPartner=await Owner.find({ssoID:decodedToken.userId})
+  if(!existedPartner){
+    return res.status(200).json({message: 'Cus existed'})
+  }
+  return res.status(400).json({message:'Cus sign up before'})
+}
+const strictSignUpOwnerSSO=async(req,res)=>{
 
+}
 
 const logout = async (req, res) => {
   console.log("[Token sso]", req.cookies.Token)

@@ -105,7 +105,7 @@ const Header = ({ children }) => {
           className="no-underline"
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.antgroup.com"
+          href="/mybooking"
         >
           My Reservation
         </a>

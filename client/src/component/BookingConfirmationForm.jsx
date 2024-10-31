@@ -75,6 +75,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
   const handlePaymentConfirmation = () => {
     message.success("Payment successful!");
     setPaymentModalVisible(false);
+    navigate('/mybooking')
     onCancel();
   };
   const onFinish = async (values) => {
@@ -388,7 +389,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
             </Col>
           </Row>
         </Modal>
-        {/* confirm modal pop up after click confirm booking */}
+        {/* confirm modal pop up after click confirm booking --2nd modal*/}
         <Modal
             open={paymentModalVisible}
             title={<div className="text-center font-lobster text-[26px] font-light">Payment Confirmation</div>}

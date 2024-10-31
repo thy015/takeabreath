@@ -8,11 +8,11 @@ bookRouter.get("/invoicewaiting",bookController.getInvoicesWaiting);
 bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post('/',bookController.bookRoom)
 bookRouter.get(
-  "/bookingHistory/:cusID",)
+  "/bookingHistory",)
 bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post('/',bookController.bookRoom)
 bookRouter.get(
-  "/bookingHistory",
-  bookController.getRoomsBookedCustomer
+  "/bookingHistory/:id",
+  bookController.queryBookingHistory
 );
 module.exports = bookRouter;

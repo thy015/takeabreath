@@ -1,141 +1,199 @@
-import React, { useState } from "react";
-import { FaCar, FaCog, FaParking, FaInfoCircle } from "react-icons/fa"; 
-
+import {Button} from 'react-bootstrap'
+import { AuthContext } from "../../hooks/auth.context";
+import React, { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
+import { Alert, Spin } from "antd";
+import {useGet} from "../../hooks/hooks";
+import { FaLocationDot,FaPhone,FaCircleQuestion } from "react-icons/fa6"
+import { IoIosBed } from "react-icons/io";
+import { IoPeople } from "react-icons/io5";
+import { MdPolicy } from "react-icons/md";
+import dayjs from "dayjs";
 const BookingPage = () => {
-  const [isOpen, setIsOpen] = useState(false); // For dropdown
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false); // For history dropdown
+  const { auth } = useContext(AuthContext);
 
-  const a = "flex items-center w-full border-t border-gray-200 pt-2 mb-2";
-  const b = "bg-white shadow-md p-4 rounded-lg";
-  const c = "block text-left py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 no-underline";
+  const id = auth?.user?.id;
+  console.log(id)
+  if (!id) {
+    return <Alert message="Please try logging in first" type="info" showIcon />;
+  }
+  const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
+
+  if (loading) {
+    return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
+  }
+
+  if (error) {
+    return <Alert message="Error" description="Failed to load properties." type="error" showIcon />;
+  }
+
+  if (!data || data.length === 0) {
+    return <Alert message="You have not booked any hotel" type="info" showIcon />;
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <section className="mb-10">
-        <div className="justify-between flex">
-          <h2 className="text-3xl font-bold mb-4">Bookings & Trips</h2>
-          <a href="" className="no-underline mt-1.5">Can't find your booking?</a>
-        </div>
-        <div className="relative">
-          <img
-            src="https://q-xx.bstatic.com/xdata/images/xphoto/2192x548/78535300.jpg?k=73bd5f533738bab542583ed2066a11195404a3e4a93621b1fec45ae762509ddc&o="
-            alt="Ho Chi Minh City"
-            className="rounded-md w-full object-cover brightness-75"
-          />
-          <div className="absolute top-[40%] left-4 text-white">
-            <h3 className="text-2xl font-bold">Ho Chi Minh City</h3>
-            <p className="text-lg">Nov 29 – Nov 30</p>
-          </div>
-        </div>
-
-        {/* Booking details */}
-        <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
-          <div className="flex justify-between">
-            <div className="flex gap-2">
-              <img
-                src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/575946873.jpg?k=b650248d3e5008b3275c40d3cf22f5e1e2453313418b337b92a474131c486187&o=&hp=1"
-                alt="Private Lumiere Manor"
-                className="w-[100px] h-[100px] object-cover rounded-md"
-              />
-              <div className="ml-2">
-                <p className="text-left font-bold">
-                  Private Lumiere Manor - Luxury Living in Thao Dien
-                </p>
-                <p className="text-left">
-                  Nov 29 - Nov 30 . Ho Chi Minh City . Free cancellation
-                </p>
-                <p className="text-green-600 font-semi text-left">Confirmed</p>
-              </div>
+      <div className="container mx-auto p-4">
+        <section className="my-10">
+          <div className="relative flex">
+            <img
+                src="https://img.freepik.com/premium-photo/man-relaxing-hammock-tropical-beach-working-laptop_14117-930839.jpg"
+                alt="upcoming event"
+                className="rounded-md w-full h-[300px] brightness-75 relative object-cover"
+            />
+            <img
+                src="https://cdn3d.iconscout.com/3d/premium/thumb/man-booking-travel-ticket-online-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--flight-book-travelling-pack-holidays-illustrations-6475989.png"
+                alt="tourist-man"
+                className="absolute right-0 z-10 w-[45%] scale-x-[-1]"
+            />
+            <div className="absolute">
+              <div className="relative text-[#CBDCEB] text-4xl font-afacad p-4 z-10">Booking History</div>
+              <div className="absolute text-[#1A4297] text-4xl font-afacad p-4 z-10 inset-0 transform -translate-x-0.5 -translate-y-0.5">Booking History</div>
+              <div className="inset-4 bg-white absolute rounded-b"></div>
             </div>
+          </div>
 
-            <div className="relative">
-              <button
-                className="text-xl font-bold"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                VND 1,928,880
-                <span className="ml-2">⋮</span>
-              </button>
-              {isOpen && (
-                <div className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1">
-                    <a href="#" className={c}>Change dates</a>
-                    <a href="#" className={c}>Message the property</a>
-                    <a href="#" className={c}>Contact Customer Service</a>
+          {/* Booking details */}
+
+          {data.data.map((resData,index)=>{
+            const formattedCheckInDay=dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
+            const formattedCheckOutDay=dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
+
+                  return(
+              <div key={index} className='py-2'>
+                <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
+                  <div className='row h-[150px] border-b'>
+                    {/*Hotel Info*/}
+                    <div className='col-4 flex'>
+                      <img
+                          src={resData.hotelInfo.imgLink[0]}
+                          alt='pic'
+                          className="w-[100px] h-[100px] object-cover rounded-md"
+                      />
+                      <div className='pl-4 text-left'>
+                      <p className="font-bold">
+                        Hotel: {resData.hotelInfo.hotelName} - {resData.hotelInfo.city} | {resData.hotelInfo.nation}
+                      </p>
+                      <div className='flex justify-start items-center'>
+                        <FaLocationDot className='text-red-500 mr-2'></FaLocationDot> {resData.hotelInfo.address}
+                      </div>
+                        <div className='flex justify-start items-center'>
+                          <FaPhone className='mr-2'></FaPhone> {resData.hotelInfo.phoneNum}
+                        </div>
+                      </div>
+                    </div>
+                    {/*Room Info*/}
+                    <div className='col-4 border-l flex'>
+                      <img
+                          src={resData.roomInfo.imgLink[0]}
+                          alt='pic'
+                          className="w-[100px] h-[100px] object-cover rounded-md"
+                      />
+                      <div className='text-left pl-4 w-full space-y-1'>
+                        <div className='font-semibold'>Room Information</div>
+                        <BetweenFlex className="justify-between flex">
+                          <span>Name:</span>
+                          <span className="ml-auto">{resData.roomInfo.roomName}</span>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <span>Type:</span>
+                          <span className="ml-auto">{resData.roomInfo.typeOfRoom}</span>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <span><IoIosBed /></span>
+                          <span className="ml-auto">{resData.roomInfo.numberOfBeds}</span>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <span><IoPeople></IoPeople></span>
+                          <span>{resData.roomInfo.capacity}</span>
+                        </BetweenFlex>
+                      </div>
+                      </div>
+                    {/*Invoice Info*/}
+                    <div className='col-4 border-l'>
+                      <div>
+                        <div className='font-semibold'>Booking Information</div>
+                        <BetweenFlex>
+                          <div>
+                            <span>Check in: </span>
+                            <span>{formattedCheckInDay}</span>
+                          </div>
+                          <div>
+                            <span>Check out: </span>
+                            <span>{formattedCheckOutDay}</span>
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Guest Name:
+                          </div>
+                          <div>
+                            {resData.invoiceInfo.guestInfo.name}
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Pay via:
+                          </div>
+                          <div>
+                            {resData.invoiceInfo.guestInfo.paymentMethod}
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Total Rooms Booked:
+                          </div>
+                          <div>
+                            {resData.invoiceInfo.guestInfo.totalRoom}
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Price:
+                          </div>
+                          <div>
+                            {resData.invoiceInfo.guestInfo.totalPrice}
+                          </div>
+                        </BetweenFlex>
+                      </div>
+                    </div>
+                  </div>
+                  {/*Cancel Information*/}
+                  <div className="space-y-4">
+                    <DecoratedIcon>
+                      <MdPolicy/>
+                      <span className='ml-2'>Our Policy - Reimburse for room canceled</span>
+                    </DecoratedIcon>
+                    <DecoratedIcon>
+                      <FaCircleQuestion/>
+                      <span className='ml-2'>FAQs</span>
+                    </DecoratedIcon>
+                    <div>
+                      <div className='space-x-2 flex items-end justify-end'>
+                      <Button variant='danger'>Cancel</Button>
+                      <Button variant='success'>Book Again</Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-4 space-y-4">
-            <button className={a}>
-              <FaCar />
-              <span className="ml-2">Save up to 10% on transportation options</span>
-            </button>
-            <button className={a}>
-              <FaCog />
-              <span className="ml-2">Manage your booking</span>
-            </button>
-            <button className={a}>
-              <FaParking />
-              <span className="ml-2">Parking information</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Your History Section */}
-      <section>
-        <h2 className="text-3xl font-bold mb-4">Your history</h2>
-        <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
-          <div className="flex justify-between">
-            <div className="flex gap-2">
-              <img
-                src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/575946873.jpg?k=b650248d3e5008b3275c40d3cf22f5e1e2453313418b337b92a474131c486187&o=&hp=1"
-                alt="Private Lumiere Manor"
-                className="w-[100px] h-[100px] object-cover rounded-md"
-              />
-              <div className="ml-2">
-                <p className="text-left font-bold">
-                  Private Lumiere Manor - Luxury Living in Thao Dien
-                </p>
-                <p className="text-left">
-                  Nov 29 - Nov 30 . Ho Chi Minh City . Free cancellation
-                </p>
-                <p className="text-red-600 font-semi text-left">Canceled</p>
               </div>
-            </div>
+          )})}
 
-            <div className="relative">
-              <button
-                className="text-xl font-bold"
-                onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-              >
-                VND 1,928,880
-                <span className="ml-2">⋮</span>
-              </button>
-              {isHistoryOpen && (
-                <div className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1">
-                    <a href="#" className={c}>Book again</a>
-                    <a href="#" className={c}>Remove booking</a>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-4 space-y-4">
-            <button className={a}>
-              <FaInfoCircle />
-              <span className="ml-2">Cancellation and rebooking info</span>
-            </button>
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
   );
 };
 
 export default BookingPage;
+
+const DecoratedIcon = styled.button`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-top: 1px gray;
+  padding-top: 8px;
+  margin-bottom: 8px;
+`;
+const BetweenFlex=styled.div`
+  display: flex;
+  justify-content: space-between;
+`

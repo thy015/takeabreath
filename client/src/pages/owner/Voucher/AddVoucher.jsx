@@ -118,7 +118,7 @@ function AddVoucher() {
                             min={0} max={50}
                             type='number' addonAfter="%"
                             className='w-[500px] input-addvoucher'
-                            placeholder='Enter discount ( More than 50% )' />
+                            placeholder='Enter discount ( Less than 50% )' />
                     </FormItem >
 
 

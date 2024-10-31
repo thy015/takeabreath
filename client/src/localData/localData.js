@@ -41,8 +41,19 @@ export const cardData = ()=>{
     {
       title: t('Guest House'),
       text: "This is card number 5",
-      imgSrc: "https://cdn.discordapp.com/attachments/1296366202309972010/1296366634671280209/6b26b093-1b53-4fb0-98af-8ef72156e1e9.png?ex=6716a443&is=671552c3&hm=c8bfdd5f562e83376b849ebc2becb956453698fe28481c06149ea50d56557456&",
+      imgSrc: "https://little-clogs-holidays.co.uk/wp-content/uploads/2019/03/BunkHouse-4-Guest-House-Hotel-1024x677.jpg",
     },
+    {
+      title: t('Business'),
+      text: "This is card number 5",
+      imgSrc: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/290145117.jpg?k=2fd87a5e57416941a051a85c210604e4dd7d28364319ebf7ec15982b698f2515&o=&hp=1",
+    },
+    {
+      title: t('Dorm'),
+      text: "This is card number 5",
+      imgSrc: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/477223988.jpg?k=f6178acde80bd18390ecfac62963a20994a796faf8b3157ad92bdc3e882cc035&o=&hp=1",
+    },
+
   ];
 }
 // footer

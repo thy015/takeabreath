@@ -147,15 +147,14 @@ const loginCustomer = async (req, res) => {
 
   const customer = await Customer.findOne({ email: email });
   if (customer) {
-    if(customer.isActive===false)
-    {
-      return res.status(401).json({ login: false, message: `Tài khoản đã bị khóa vì: `+customer.reasonInact+`   Liên hệ mở khóa tại: thymai.1510@gmail.com`});
+    if (customer.isActive === false) {
+      return res.status(401).json({ login: false, message: `Tài khoản đã bị khóa vì: ` + customer.reasonInact + `   Liên hệ mở khóa tại: thymai.1510@gmail.com` });
     }
     const isCorrectPass = await bcrypt.compare(password, customer.password);
     if (!isCorrectPass) {
       return res.status(401).json({ login: false, message: "Password incorrect" });
     }
-  
+
     const token = await generalAccessTokens({
       id: customer._id,
       name: customer.cusName,
@@ -370,6 +369,12 @@ const insertCartOwner = async (req, res) => {
   try {
     const owner = await Owner.findById({ _id: ownerID })
     const paymentCard = owner.paymentCard
+    const checkExistedCard = paymentCard.filter(item => item.cardNumber === numberCard)
+    console.log("[checkExistedCard]", checkExistedCard)
+    if (checkExistedCard.length > 0) {
+      return res.status(400).json({ message: "Số thẻ đã được tạo !" })
+    }
+
     const newCards = [...paymentCard, {
       paymentMethod: "Visa",
       cardNumber: numberCard,
@@ -381,19 +386,34 @@ const insertCartOwner = async (req, res) => {
     })
 
     await owner.save()
-    return res.status(200).json({ message: "Thêm thẻ thành công",cards:newCards })
-  }catch(err){
-    return res.status(500).json({message: err.message})
+    return res.status(200).json({ message: "Thêm thẻ thành công", cards: newCards })
+  } catch (err) {
+    return res.status(500).json({ message: err.message })
   }
- 
+
 }
 
-const getListCard = async (req,res)=>{
+const deleteCardOwner = async (req, res) => {
   const ownerID = req.ownerID
-  const owner = await Owner.findById({_id:ownerID})
+  const { numberCard } = req.body
+  const owner = await Owner.findById({ _id: ownerID })
+  const paymentCard = owner.paymentCard
+  const newPaymentCard = paymentCard.filter(item => item.cardNumber !== numberCard)
+
+  owner.set({
+    paymentCard: newPaymentCard
+  })
+
+  await owner.save()
+  return res.status(200).json({ message: "Thêm thẻ thành công", cards: newPaymentCard })
+}
+
+const getListCard = async (req, res) => {
+  const ownerID = req.ownerID
+  const owner = await Owner.findById({ _id: ownerID })
   const paymentCard = owner.paymentCard
 
-  return res.status(200).json({cards:paymentCard})
+  return res.status(200).json({ cards: paymentCard })
 }
 
 const updateOwner = async (req, res) => {
@@ -444,6 +464,7 @@ module.exports = {
   insertCartOwner,
   getListCard,
   checkExistedOggyPartner,
+  deleteCardOwner,
   //phuc
   loginCustomer,
   registerCustomer,

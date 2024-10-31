@@ -35,10 +35,13 @@ function Hotel() {
         axios.delete(`http://localhost:4000/api/hotelList/deleteHotel/${record._id}`)
             .then(res => res.data)
             .then(data => {
-                dispatch(deleteHotel(record._id))
+                console.log(data)
                 openNotification(true, "Xóa khách sạn thành công !", "")
+                dispatch(deleteHotel(record._id))
             })
-            .catch(err => console.log(err))
+            .catch(err =>{
+                openNotification(false, "Xóa khách sạn thất bại !",err.response?.data?.message ?? "")
+            })
     }
 
     const handleUpdate = (record) => {

@@ -15,13 +15,54 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const hotelSelected = useSelector(state => state.hotel.selectedHotel)
-  
+  const [type, setType] = useState([])
+  const [nations, setnation] = useState([])
+  const [cities, setCities] = useState([])
   const [hotel, setHotels] = useState(pre => hotelSelected)
   const [errMessage, setErrMessage] = useState('');
   const [images, setImages] = useState([])
   const [form] = Form.useForm();
   const { data: owners, error: ownerError, loading: ownerLoad } = useGet("http://localhost:4000/api/auth/owner");
   const [initialValues, setInitialValues] = useState({});
+
+  useEffect(() => {
+
+    fetch("https://esgoo.net/api-tinhthanh/1/0.htm",{
+      method:"GET"
+    })
+    .then(res=>res.json())
+    .then(data =>{
+      const arrayCity =data.data
+      const temp =arrayCity.map(item => ({
+        value:item.name,
+        label:item.full_name
+      }))
+      setCities(temp)
+    })
+    .catch(err=>console.log(err))
+
+    axios.get("http://localhost:4000/api/hotelList/hotelTypes")
+      .then(res => res.data)
+      .then(data => {
+        setType(data.types)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+    axios.get("https://restcountries.com/v3.1/all")
+      .then(res=>{
+        const arrayNation = res.data
+        const temp = arrayNation.map(item =>({
+          value:item.name.common,
+          label:item.name.common
+        }))
+        setnation(temp.sort((a,b)=>a.value.localeCompare(b.value)))
+      })
+      
+      .catch(err=>{console.log(err)})
+  }, [])
+
   useEffect(() => {
     form.setFieldsValue({
       hotelName: hotelSelected.hotelName ?? "",
@@ -31,9 +72,9 @@ const CreateHotel = ({ visible, handleCancel }) => {
       phoneNum: hotelSelected.phoneNum ?? "",
       nation: hotelSelected.nation ?? "",
     });
-    setImages(hotelSelected.imgLink ??[])
+    setImages(hotelSelected.imgLink ?? [])
   }, [visible, hotelSelected, form])
-  
+
   if (ownerLoad) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
@@ -50,16 +91,15 @@ const CreateHotel = ({ visible, handleCancel }) => {
     );
   }
 
-  const setValue = (nameInput) => {
-    if (hotelSelected != {}) {
-      console.log("Set")
-    } else {
-      console.log(null)
-    }
-  }
+  const option = type.map((item,index) =>({
+    ...item,
+    value:item,
+    label:item
+  }))
+
   const handleDelete = async (item) => {
-    setImages(pre=>pre.filter(image =>image !==item))
- }
+    setImages(pre => pre.filter(image => image !== item))
+  }
   const handleImage = async (e) => {
     e.stopPropagation()
     let images = []
@@ -124,11 +164,8 @@ const CreateHotel = ({ visible, handleCancel }) => {
       } catch (error) {
         console.error("Error details:", error);
         const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-        notification.error({
-          message: 'Hotel Creation Failed',
-          description: errorMessage,
-        });
-        setErrMessage(errorMessage);
+        
+        openNotification(false,"Thêm khách sạn thất bại", error.response?.data?.message || "Lỗi hệ thống")
       }
     }
     setErrMessage('');
@@ -185,7 +222,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
           name="city"
           rules={[{ required: true, message: 'Please input city!' }]}
         >
-          <Input placeholder={hotelSelected?.city ?? "City"} className='w-[85%]' />
+          <Select options={cities} style={{width:"85%"}}  />
         </Form.Item>
 
         <Form.Item
@@ -193,7 +230,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
           name="hotelType"
           rules={[{ required: true, message: 'Please input hotel type!' }]}
         >
-          <Input placeholder={hotelSelected?.hotelType ?? "Hotel Type"} className='w-[85%]' />
+          <Select style={{width:"85%"}} options={option} />
         </Form.Item>
 
         <Form.Item
@@ -201,14 +238,14 @@ const CreateHotel = ({ visible, handleCancel }) => {
           name="phoneNum"
           rules={[{ required: true, message: 'Please input phone number!' }]}
         >
-          <Input placeholder={hotelSelected?.phoneNum ?? "Phone Number"} className='w-[85%]' maxLength={10} minLength={10}/>
+          <Input placeholder={hotelSelected?.phoneNum ?? "Phone Number"} className='w-[85%]' maxLength={10} minLength={10} />
         </Form.Item>
         <Form.Item
           label="Quốc gia"
           name="nation"
           rules={[{ required: true, message: 'Please input nation!' }]}
         >
-          <Input placeholder={hotelSelected?.nation ?? "Nation"} className='w-[85%]' />
+          <Select options={nations}  style={{width:"85%"}} />
         </Form.Item>
 
         <Form.Item

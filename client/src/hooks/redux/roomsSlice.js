@@ -19,7 +19,7 @@ const roomSclice = createSlice({
         },
         deleteRoom:(state,action)=>{
             state.rooms = state.rooms.filter(item=>item._id!==action.payload)
-            state.roomSearch = state.roomSearch.filter(item=>item._id!==action.payload)
+            state.roomSearch = state.rooms.filter(item=>item._id!==action.payload)
         },
         selectedRoom:(state,action)=>{
             state.selectRoom = action.payload

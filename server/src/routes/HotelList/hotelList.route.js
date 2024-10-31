@@ -2,6 +2,8 @@ const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
 const {Hotel,roomSchema,hotelSchema} = require("../../models/hotel.model");
+const {Room} = require("../../models/hotel.model");
+const {Invoice} = require("../../models/invoice.model")
 const { verifyOwner } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
@@ -48,8 +50,8 @@ ListRouter.get('/room',async(req,res)=>{
 })
 // search hotel
 ListRouter.post('/query',hotelListController.queryHotel)
-ListRouter.post("/createHotel", hotelListController.createHotel);
-ListRouter.post("/updateHotel/:id", hotelListController.updateHotels);
+ListRouter.post("/createHotel", verifyOwner,hotelListController.createHotel);
+ListRouter.post("/updateHotel/:id", verifyOwner,hotelListController.updateHotels);
 // all hotel from owner that logged in
 ListRouter.get(
     "/hotelOwner",
@@ -104,7 +106,20 @@ ListRouter.get("/list-room",
         const rooms = await Room.find({
           ownerID:ownerId
         }).populate("hotelID")
-        res.status(200).json({status:true,rooms: rooms});
+
+        const getCountRoom = await Promise.all(
+          rooms.map(async (item) => {
+            let count = 0
+            const invoices = await Invoice.find({roomID:item._id})
+            
+            invoices.map(invoice=>{
+              count += invoice.guestInfo.totalRoom
+            })
+            // Thêm thuộc tính revenue vào object hotel
+            return { ...item.toObject(), revenue: count };
+          })
+        );
+        res.status(200).json({status:true,rooms: getCountRoom});
       } catch (e) {
         res.status(500).json({message:e.message});
       }

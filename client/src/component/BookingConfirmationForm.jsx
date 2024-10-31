@@ -114,7 +114,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
       if(response.status===200){
         setPaymentModalVisible(true)
       } else {
-        message.error("Booking failed", message.error(res.data.message));
+        message.error("Booking failed", message.error(response.data.message));
       }
     } catch (e) {
       console.log(e)
@@ -122,7 +122,10 @@ function BookingConfirmationForm({isShow, onCancel}) {
     }
 
   };
+  //   wowo pic click
+  const handleClickWoWo=async(req,res)=>{
 
+  }
   return (
       <div>
         <Modal
@@ -270,42 +273,8 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         >
                           Wowo
                         </Radio>
-                        {/* choosing payment */}
-                        {payment === "momo" && (
-                            <img src="/img/momo.jpeg"></img>
-                        )}
-                        {payment === "paypal" && (
-                            <div>
-
-                              <div className="mt-8">
-                                <img src='https://lavendercottagecattery.co.uk/wp-content/uploads/2022/10/CITYPNG.COMDownload-PayPal-Yellow-Payment-Button-PNG-2100x770-2.png'/>
-                              </div>
-                            </div>
-                        )}
-                        {payment==='wowo' &&(
-                            <div className="w-[320px]">
-                              <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H"/>
-                            </div>
-                        )}
                       </Radio.Group>
                     </FormItem>
-                    {/* <FormItem
-                    name="voucher"
-                    label="Select voucher"
-                    className="mb-[10px]"
-                  >
-                    <Select>
-                      <Option key="1" value="Voucher 1 ">
-                        Voucher 1
-                      </Option>
-                      <Option key="2" value="Voucher 2">
-                        Voucher 1
-                      </Option>
-                      <Option key="3" value="Voucher 3">
-                        Voucher 1
-                      </Option>
-                    </Select>
-                  </FormItem> */}
                   </Form>
                 </div>
               </ConfigProvider>
@@ -408,7 +377,10 @@ function BookingConfirmationForm({isShow, onCancel}) {
             <p>Please  <span className="text-success">click the button</span> to confirm your payment,
               otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
           </div>
-          {payment==='paypal'? <PayPalButton></PayPalButton> : 'hi'}
+          {payment==='paypal'? <PayPalButton></PayPalButton> : ''}
+          {payment==='wowo'? <img alt='wowopic' className='items-center flex'
+                                  onClick={handleClickWoWo}
+                                  src='https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H'/>: ''}
         </Modal>
       </div>
   );

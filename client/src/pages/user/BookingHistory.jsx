@@ -11,7 +11,7 @@ import { MdPolicy } from "react-icons/md";
 import dayjs from "dayjs";
 const BookingPage = () => {
   const { auth } = useContext(AuthContext);
-
+  const [isModalOpen,setIsModalOpen] = useState(false);
   const id = auth?.user?.id;
   console.log(id)
   if (!id) {
@@ -171,6 +171,8 @@ const BookingPage = () => {
                       <div className='space-x-2 flex items-end justify-end'>
                       <Button variant='danger'>Cancel</Button>
                       <Button variant='success'>Book Again</Button>
+                        <Button variant='outline-primary'>Rate The Accommodation</Button>
+
                       </div>
                     </div>
                   </div>

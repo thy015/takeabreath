@@ -4,6 +4,7 @@ import { useJwt } from 'react-jwt'
 import { AuthContext } from '../../hooks/auth.context'
 import Cookies from 'js-cookie'
 import axios from 'axios'
+import {openNotification} from "../../hooks/notification";
 const SSO = () => {
   const {auth,setAuth} = useContext(AuthContext)
   const [searchParams] = useSearchParams();
@@ -13,31 +14,43 @@ const SSO = () => {
   const { login } = useContext(AuthContext);
 
   useEffect(() => {
-    if (decodedToken && !isExpired) {
-      axios.post("http://localhost:4000/api/auth/login-with-sso", {decodedToken},{withCredentials:true})
-        .then(res=>{
-          setAuth({
-            isAuthenticated:true,
-            user:{
-              id:res.data.id,
-              name:res.data.name,
-              email:res.data.email
-            }
-          })
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      if (decodedToken.role === 'user') {
-        navigate('/');
+    const setToken=async(req,res)=> {
+      if (decodedToken && !isExpired) {
+        axios.post("http://localhost:4000/api/auth/login-with-sso", {decodedToken}, {withCredentials: true})
+            .then(res => {
+              setAuth({
+                isAuthenticated: true,
+                user: {
+                  id: res.data.id,
+                  name: res.data.name,
+                  email: res.data.email
+                }
+              })
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        if (decodedToken.role === 'user') {
+          navigate('/');
+        } else if (decodedToken.role === 'partner') {
+          const res=await
+              axios.post("http://localhost:4000/api/auth/check-existed-partner", {decodedToken},{withCredentials:true})
+          // chưa đăng kí
+          if(res.status===202){
+          navigate('/strict-signin-owner', {state: decodedToken})
+          } else if(res.status===200){
+            openNotification(true, "Success login");
+            navigate('/owner')
+          }else{
+            openNotification(false, "Cant resolve SSO FE",res.data.message);
+          }
+        }
       }
-      else if (decodedToken.role === 'partner') {
-        navigate('/strict-signin-owner',{state:decodedToken})
+      if (isExpired) {
+        console.log('Token is expired');
       }
     }
-    if (isExpired) {
-      console.log('Token is expired');
-    }
+    setToken()
   }, [decodedToken, isExpired, login, navigate])
 
 

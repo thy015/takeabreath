@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Form, Input} from "antd";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
@@ -12,7 +12,11 @@ const StrictLoginSSO = () => {
     //receive token from SSO Page
     const token=location.state
     const navigate=useNavigate();
-
+    useEffect(()=>{
+        if(location.state){
+            console.log('token',location.state)
+        }
+    })
     // handle form
     const [formData,setFormData]=useState({
         phoneNum:'',
@@ -49,12 +53,13 @@ const StrictLoginSSO = () => {
             token
         }
         try{
-            const res=await axios.post("http://localhost:4000/api/auth/signUp",data);
+            const res=await axios.post("http://localhost:4000/api/auth/strict-signin-sso",data);
             if (res.status === 200) {
-                openNotification(true, "Successfully logged in","Welcome Oggy Partner");
+               openNotification(true, "Success register");
+               navigate('/owner')
             }
             else{
-                openNotification(false, "Failed to sign up",res.data.message);
+                openNotification(false, "You already have account",res.data.message);
             }
         }catch(e){
             console.log('Error in StrictSSO',e.message)

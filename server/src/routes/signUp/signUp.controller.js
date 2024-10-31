@@ -239,7 +239,6 @@ if(decodedToken.role === "user"){
         id:newCus._id,
         name: newCus.cusName,
         email: newCus.email,
-        birthday: newCus.birthday,
         ssoID:newCus.ssoID
       })
 
@@ -250,7 +249,6 @@ if(decodedToken.role === "user"){
             id:newCus._id,
             name: newCus.cusName,
             email: newCus.email,
-            birthday: newCus.birthday,
             ssoID:newCus.ssoID
           })
     }else{
@@ -259,7 +257,6 @@ if(decodedToken.role === "user"){
         id:customerExsisted._id,
         name: customerExsisted.cusName,
         email: customerExsisted.email,
-        birthday: customerExsisted.birthday,
         ssoID:customerExsisted.ssoID
       })
 
@@ -270,7 +267,6 @@ if(decodedToken.role === "user"){
             id:customerExsisted._id,
             name: customerExsisted.cusName,
             email: customerExsisted.email,
-            birthday: customerExsisted.birthday,
             ssoID:customerExsisted.ssoID
           })
     }
@@ -278,20 +274,39 @@ if(decodedToken.role === "user"){
 }
 // oggy partner
 const checkExistedOggyPartner=async(req,res)=>{
-  const {decodedToken} = req.body
-  console.log(decodedToken)
-  if(!decodedToken){
+  const {token,phoneNum,idenCard} = req.body
+  console.log(token)
+  if(!token){
     return res.status(403).json({message: 'missing token in signUp controller'})
   }
-  const existedPartner=await Owner.find({ssoID:decodedToken.userId})
+  const existedPartner=await Owner.findOne({ssoID:token.partnerId})
   if(!existedPartner){
-    return res.status(200).json({message: 'Cus existed'})
+    const newPartner=await Owner.create({
+      ownerName:`${token.firstName} ${token.lastName}`,
+      email:token.email,
+      ssoID: token.partnerId,
+      createdAt: token.createdAt,
+      phoneNum:phoneNum,
+      idenCard:idenCard,
+    })
+    const newToken = await generalAccessTokens({
+      id:newPartner._id,
+      name: newPartner.ownerName,
+      email: newPartner.email,
+      ssoID:newPartner.ssoID
+    })
+    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
+        .json({
+          login: true,
+          id:newPartner._id,
+          name: newPartner.ownerName,
+          email: newPartner.email,
+          ssoID:newPartner.ssoID
+        })
   }
   return res.status(400).json({message:'Cus sign up before'})
 }
-const strictSignUpOwnerSSO=async(req,res)=>{
 
-}
 
 const logout = async (req, res) => {
   console.log("[Token sso]", req.cookies.Token)
@@ -428,6 +443,7 @@ module.exports = {
   updateOwner,
   insertCartOwner,
   getListCard,
+  checkExistedOggyPartner,
   //phuc
   loginCustomer,
   registerCustomer,

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ownerSchema = new mongoose.Schema({
   ownerName: { type: String, required: true },
-  password: { type: String, required: true },
+  password: { type: String, required: false },
   email: { type: String, required: true, unique: true },
   birthday: { type: String, required: false },
   phoneNum: { type: String, required: true },
@@ -23,6 +23,7 @@ const ownerSchema = new mongoose.Schema({
   ],
   awaitFund:{type:Number,required:false,default:0},
   regDay: { type: Date, default: Date.now, required: false },
+  ssoID:{type:String,required:false},
 });
 
 const Owner = mongoose.model("Owner", ownerSchema);

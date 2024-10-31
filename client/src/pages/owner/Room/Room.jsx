@@ -43,7 +43,7 @@ function Room() {
       })
       .catch(err => {
         console.log(err)
-        openNotification(false, "Xóa phòng thất bại !", "Vui long thử lại sau")
+        openNotification(false, "Xóa phòng thất bại !", err.response?.data?.message?? "Vui long thử lại sau")
       })
   }
 

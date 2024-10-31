@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { Button, Table } from 'antd'
+import { Button, Popconfirm, Table } from 'antd'
 import { Link } from 'react-router-dom'
 import FormCard from '../../../component/FormCard'
 import dayjs from 'dayjs'
 import axios from 'axios'
-import  {setCards,addCards} from '../../../hooks/redux/cardSlice'
+import { setCards, addCards } from '../../../hooks/redux/cardSlice'
 import { openNotification } from '../../../hooks/notification'
 function Card() {
     const dispatch = useDispatch()
@@ -33,6 +33,25 @@ function Card() {
 
     }, [])
 
+    const handleDelete = (record)=>{
+        axios.post("http://localhost:4000/api/auth/delete-card",{numberCard:record.cardNumber})
+        .then(res=>res.data)
+        .then(data=>{
+            openNotification(true,"Gỡ thẻ thành công","")
+            const cards = data.cards.map((item) => (
+                {
+                    ...item,
+                    key: item._id
+                }
+            ))
+
+            dispatch(setCards(cards))
+        })
+        .catch(err=>{
+            openNotification(false,"Gỡ thẻ không thành công")
+        })
+    }
+
     const columns = [
         {
             title: 'Loại thẻ',
@@ -54,6 +73,19 @@ function Card() {
             dataIndex: 'cardExpiration',
             key: 'cardExpiration',
             render: (text) => dayjs(text).format("DD/MM/YYYY")
+        }, ,
+        {
+            title: 'Hành động',
+            dataIndex: 'action',
+            key: 'action',
+            render: (_, record) => (
+                <Popconfirm okText="Xác nhận" cancelText="Trở lại" onConfirm={()=>handleDelete(record)} title="Bạn có chắc gỡ thẻ không ?">
+                    <Button danger >
+                        Gỡ thẻ
+                    </Button>
+                </Popconfirm>
+
+            )
         },
     ]
     return (

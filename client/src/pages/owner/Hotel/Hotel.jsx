@@ -40,7 +40,7 @@ function Hotel() {
                 dispatch(deleteHotel(record._id))
             })
             .catch(err =>{
-                openNotification(false,err.response.data.m)
+                openNotification(false, "Xóa khách sạn thất bại !",err.response?.data?.message ?? "")
             })
     }
 

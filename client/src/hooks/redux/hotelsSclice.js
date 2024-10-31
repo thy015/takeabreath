@@ -15,7 +15,7 @@ const hotelsSlice = createSlice({
         },
         addHotel:(state,action)=>{
             state.hotels = [...state.hotels,action.payload]
-            state.hotelSearch =  [...state.hotels,action.payload]
+            state.hotelSearch =  [...state.hotelSearch,action.payload]
         },
         deleteHotel:(state,action)=>{
             state.hotels = state.hotels.filter(item => item._id !== action.payload)

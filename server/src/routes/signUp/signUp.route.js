@@ -54,6 +54,8 @@ signUpRouter.get('/logout',signUpController.logout)
 //owner
 signUpRouter.post("/insert-card",verifyOwner,signUpController.insertCartOwner)
 signUpRouter.get("/list-card",verifyOwner,signUpController.getListCard)
+signUpRouter.post("/delete-card",verifyOwner,signUpController.deleteCardOwner)
+
 
 signUpRouter.post("/signInSSO",signUpController.signInSSO)
 

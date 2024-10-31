@@ -10,10 +10,21 @@ import axios from 'axios';
 function FormRoom({ isVisible, close }) {
     const [images, setImages] = useState([])
     const [form] = useForm()
+    const [typeRooms, setTypeRooms] = useState([])
     const selectedRoom = useSelector(state => state.room.selectRoom)
     const hotels = useSelector(state => state.hotel.hotels)
     const dispatch = useDispatch()
     useEffect(() => {
+        axios.get(" http://localhost:4000/api/hotelList/roomTypes")
+            .then(res=>res.data)
+            .then(data=>{
+                const array = data.types
+                const temp = array.map(item =>({
+                    value:item,
+                    label:item
+                }))
+                setTypeRooms(temp)
+            })
         axios.get("http://localhost:4000/api/hotelList/hotelOwner")
             .then(res => res.data)
             .then(data => {
@@ -143,7 +154,7 @@ function FormRoom({ isVisible, close }) {
                         name={"typeOfRoom"}
                         rules={[{ required: true, message: 'Vui lòng nhâp tên loại phòng !' }]}
                     >
-                        <Input />
+                        <Select options={typeRooms} />
                     </Form.Item>
                     <Form.Item
                         label={"Sức chứa"}

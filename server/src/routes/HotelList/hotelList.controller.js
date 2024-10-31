@@ -160,6 +160,15 @@ const createHotel = async (req, res) => {
       });
     }
 
+    const paymentCard = checkExistedOwnerID.paymentCard
+
+    if(paymentCard.length <= 0){
+      return res.status(400).json({
+        status: "BAD",
+        message: "Vui lòng đăng ký thẻ trước khi tạo khách sạn",
+      });
+    }
+
     const createdHotel = await Hotel.create({
       hotelName,
       address,

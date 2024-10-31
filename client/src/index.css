@@ -1,7 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+body{
+  background:black;
+}
 .ant-carousel .slick-prev,
 .ant-carousel .slick-next {
   color: transparent!important;
@@ -32,14 +34,13 @@
 /* .ant-input::placeholder{
   color: white;
 } */
-:where(.css-dev-only-do-not-override-11lehqq).ant-form-item .ant-form-item-label >label {
+:where(.css-dev-only-do-not-override-apn68).ant-form-item .ant-form-item-label >label  {
   min-width: 130px;
   margin-left: 5px;
 }
 
 .register-owner label{
   color: black !important;
-  font-size: large;
   min-width: 200px  !important ;
   font-size: 20px !important ;
 }

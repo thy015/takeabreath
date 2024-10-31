@@ -57,7 +57,9 @@ signUpRouter.get("/list-card",verifyOwner,signUpController.getListCard)
 signUpRouter.post("/delete-card",verifyOwner,signUpController.deleteCardOwner)
 
 
-signUpRouter.post("/signInSSO",signUpController.signInSSO)
+signUpRouter.post("/login-with-sso",signUpController.loginWithSSO)
+// oggy
+signUpRouter.post('/strict-signin-sso',signUpController.checkExistedOggyPartner)
 
 signUpRouter.get('/verifyAdmin',verifyAdmin,(req,res)=>{
   return res.json(req.user)

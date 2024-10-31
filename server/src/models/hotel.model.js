@@ -57,4 +57,6 @@ module.exports = {
   Hotel,
   Room,
   Comment,
+  roomSchema,
+  hotelSchema
 };

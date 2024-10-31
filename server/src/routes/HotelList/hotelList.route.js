@@ -1,7 +1,7 @@
 const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
-const {Hotel,Room} = require("../../models/hotel.model");
+const {Hotel,roomSchema,hotelSchema} = require("../../models/hotel.model");
 const { verifyOwner } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
@@ -65,19 +65,18 @@ ListRouter.get('/hotelCities',async(req,res)=>{
     return res.status(500).json({message:'e in hotelList route'})
   }
 })
-ListRouter.get('/roomTypes',async(req,res)=>{
-  try{
-    const rooms=await Room.find()
-    const types=[...new Set(rooms.map(r=>r.typeOfRoom))]
-    return res.status(200).json({types})
-  }catch(e){
-    console.log('E in hotelList route',e.message )
+ListRouter.get('/roomTypes', (req, res) => {
+  try {
+    const types = roomSchema.path('typeOfRoom').enumValues;
+    return res.status(200).json({ types });
+  } catch (e) {
+    console.error('Error fetching room types:', e.message);
+    return res.status(500).json({ message: 'Failed to fetch room types' });
   }
-})
+});
 ListRouter.get('/hotelTypes',async(req,res)=>{
   try{
-    const hotels=await Hotel.find()
-    const types=[...new Set(hotels.map(ht=>ht.hotelType))]
+    const types=hotelSchema.path('hotelType').enumValues
     return res.status(200).json({types})
   }catch(e){
     console.log('E in hotelList route',e.message )

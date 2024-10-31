@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ownerSchema = new mongoose.Schema({
   ownerName: { type: String, required: true },
-  password: { type: String, required: true },
+  password: { type: String, required: false },
   email: { type: String, required: true, unique: true },
   birthday: { type: String, required: false },
   phoneNum: { type: String, required: true },
@@ -23,6 +23,7 @@ const ownerSchema = new mongoose.Schema({
   ],
   awaitFund:{type:Number,required:false,default:0},
   regDay: { type: Date, default: Date.now, required: false },
+  ssoID:{type:String,required:false},
 });
 
 const Owner = mongoose.model("Owner", ownerSchema);
@@ -30,46 +31,40 @@ const Owner = mongoose.model("Owner", ownerSchema);
 const customerSchema = new mongoose.Schema({
   cusName: {
     type: String,
+    required:false
   },
   email: {
     type: String,
     required: true,
-    unique: true
   },
   phoneNum: {
     type: String,
+    required:false
   },
   password: {
     type: String,
-    required: true  
+    required:false
   },
   birthday: {
-    type: Date
-  },
-  isUse: {
-    type: Boolean,
-    default: false
-  },
-  role: {
-    type: String,
-  },
-  refundAmount: {
-    type: Number,
-    default: 0
+    type: Date,
+    required:false
   },
   isActive:{
-    type:Boolean,default:true,required:true
+    type:Boolean,default:true,required:false
   },
   reasonInact:{
     type:String,required:false
   },
+  //SSO đồ án
+  ssoID:{type:String,required:false},
 });
 
 //kết nối với db có sẵn chứ ko cho tạo
 const Admin = mongoose.connection.collection("admin");
 const Customer = mongoose.model('Customer', customerSchema);
+
 module.exports = {
   Owner,
   Admin,
-  Customer
+  Customer,
 };

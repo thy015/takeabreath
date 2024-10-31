@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { Owner, Admin, Customer } = require("../../models/signUp.model");
+const { Owner, Admin, Customer} = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../middleware/jwt");
 //owner
 const signUpOwner = async (req, res) => {
@@ -213,33 +213,98 @@ const registerCustomer = async (req, res) => {
       .json({ message: e.message || "Internal Server Error" });
   }
 };
+// oggy user
+const loginWithSSO = async (req, res) => {
+  const { decodedToken } = req.body
 
-const signInSSO = async (req, res) => {
-  const { token } = req.body
-  const user = res.locals.user
-  console.log(user)
-  if (!token) {
-    return res.status(403).json({ message: 'required token in signUp controller' })
+  if(!decodedToken){
+    return res.status(403).json({message: 'missing token in signUp controller'})
   }
-  let redirectPath;
-  try {
-    if (user) {
-      if (user.role === 'partner') {
-        redirectPath = '/owner'
-      } else if (user.role === 'user') {
-        redirectPath = '/'
-      }
+  console.log(decodedToken)
+if(decodedToken.role === "user"){
+
+    const customerExsisted = await Customer.findOne({
+      email:decodedToken.email
+    })
+    if(!customerExsisted){
+      const newCus = await Customer.create({
+        cusName:`${decodedToken.firstName} ${decodedToken.lastName}`,
+        email:decodedToken.email,
+        ssoID: decodedToken.userId,
+        createdAt: decodedToken.createdAt,
+        birthday:decodedToken.dob
+      })
+      // system token
+      const token = await generalAccessTokens({
+        id:newCus._id,
+        name: newCus.cusName,
+        email: newCus.email,
+        ssoID:newCus.ssoID
+      })
+
+      console.log("[SYS TOKEN CUSTOMER]",token)
+      return res.cookie("token", token, { httpOnly: true, secure: true })
+          .json({
+            login: true,
+            id:newCus._id,
+            name: newCus.cusName,
+            email: newCus.email,
+            ssoID:newCus.ssoID
+          })
+    }else{
+      // already log
+      const token = await generalAccessTokens({
+        id:customerExsisted._id,
+        name: customerExsisted.cusName,
+        email: customerExsisted.email,
+        ssoID:customerExsisted.ssoID
+      })
+
+      console.log("[SYS TOKEN CUSTOMER]",token)
+      return res.cookie("token", token, { httpOnly: true, secure: true })
+          .json({
+            login: true,
+            id:customerExsisted._id,
+            name: customerExsisted.cusName,
+            email: customerExsisted.email,
+            ssoID:customerExsisted.ssoID
+          })
     }
-    return res
-      .status(200)
-      .cookie("token", token, { httpOnly: true, secure: true })
-      .json({
-        data: user,
-        redirectPath: redirectPath
-      });
-  } catch (e) {
-    return res.status(500).json({ message: "Internal server error signUp controller" })
   }
+}
+// oggy partner
+const checkExistedOggyPartner=async(req,res)=>{
+  const {token,phoneNum,idenCard} = req.body
+  console.log(token)
+  if(!token){
+    return res.status(403).json({message: 'missing token in signUp controller'})
+  }
+  const existedPartner=await Owner.findOne({ssoID:token.partnerId})
+  if(!existedPartner){
+    const newPartner=await Owner.create({
+      ownerName:`${token.firstName} ${token.lastName}`,
+      email:token.email,
+      ssoID: token.partnerId,
+      createdAt: token.createdAt,
+      phoneNum:phoneNum,
+      idenCard:idenCard,
+    })
+    const newToken = await generalAccessTokens({
+      id:newPartner._id,
+      name: newPartner.ownerName,
+      email: newPartner.email,
+      ssoID:newPartner.ssoID
+    })
+    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
+        .json({
+          login: true,
+          id:newPartner._id,
+          name: newPartner.ownerName,
+          email: newPartner.email,
+          ssoID:newPartner.ssoID
+        })
+  }
+  return res.status(400).json({message:'Cus sign up before'})
 }
 
 
@@ -378,9 +443,10 @@ module.exports = {
   updateOwner,
   insertCartOwner,
   getListCard,
+  checkExistedOggyPartner,
   //phuc
   loginCustomer,
   registerCustomer,
   logout,
-  signInSSO
+  loginWithSSO,
 };

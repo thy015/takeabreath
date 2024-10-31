@@ -5,10 +5,10 @@ const {verifyOwner} = require("../../middleware/verify")
 const {addVoucher,getListVoucher,deleteVoucher,updateVoucher} = require("./voucher.controller")
 
 // owner
-VoucherRoute.post("/add-voucher",addVoucher)
-VoucherRoute.get("/list-voucher",getListVoucher)
-VoucherRoute.delete("/list-voucher/:id",deleteVoucher)
-VoucherRoute.post("/list-voucher/update/:id",updateVoucher)
+VoucherRoute.post("/add-voucher",verifyOwner,addVoucher)
+VoucherRoute.get("/list-voucher",verifyOwner,getListVoucher)
+VoucherRoute.delete("/list-voucher/:id",verifyOwner,deleteVoucher)
+VoucherRoute.post("/list-voucher/update/:id",verifyOwner,updateVoucher)
 //admin
 
 module.exports=VoucherRoute

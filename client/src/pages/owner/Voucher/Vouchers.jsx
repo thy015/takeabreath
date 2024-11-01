@@ -5,6 +5,7 @@ import { Button, Typography, Modal, Input, InputNumber, Form, Popconfirm, Space,
 import { openNotification } from '../../../hooks/notification'
 import TableVoucher from '../../../component/TableVoucher'
 import VoucherCard from '../../../component/VoucherCard'
+import { useMediaQuery } from 'react-responsive';
 import { Link,useNavigate } from 'react-router-dom';
 import axios from "axios"
 import moment from "moment"
@@ -16,6 +17,7 @@ function Vouchers() {
   const [form] = Form.useForm()
   const [editKey, setEditKey] = useState('')
   const [listVoucher, setListVoucher] = useState([])
+  const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
   const isEditing = (record) => record.key === editKey
   //get vouchers in db
   useEffect(() => {
@@ -231,7 +233,7 @@ function Vouchers() {
     {
       title: "Action",
       width: 200,
-      fixed: "right",
+      fixed: isMobile? "":"right",
       render: (_, record) => {
         const editable = isEditing(record)
         // if editable return save and cance else return update and delete

@@ -37,8 +37,12 @@ const SSO = () => {
               axios.post("http://localhost:4000/api/auth/check-existed-partner", {decodedToken},{withCredentials:true})
           // chưa đăng kí
           if(res.status===202){
+            localStorage.setItem('token',token)
+            console.log('set item token',token)
           navigate('/strict-signin-owner', {state: decodedToken})
           } else if(res.status===200){
+            localStorage.setItem('token',token)
+            console.log('set item token',token)
             openNotification(true, "Success login");
             navigate('/owner')
           }else{

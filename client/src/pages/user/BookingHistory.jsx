@@ -7,18 +7,31 @@ import {useGet} from "../../hooks/hooks";
 import { FaLocationDot,FaPhone,FaCircleQuestion } from "react-icons/fa6"
 import { IoIosBed } from "react-icons/io";
 import { IoPeople } from "react-icons/io5";
-import { MdPolicy } from "react-icons/md";
+import { MdPolicy,MdOutlineCancel } from "react-icons/md";
 import dayjs from "dayjs";
 const BookingPage = () => {
+
   const { auth } = useContext(AuthContext);
-  const [isModalOpen,setIsModalOpen] = useState(false);
   const id = auth?.user?.id;
   console.log(id)
   if (!id) {
     return <Alert message="Please try logging in first" type="info" showIcon />;
   }
   const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
-
+    //modal cancel pop-up
+  const [clickCancel,setClickCancel]=useState(false)
+  const handleClickCancel=(invoiceID)=>{
+    setClickCancel((prevState)=>({
+      ...prevState,
+          [invoiceID]:!prevState[invoiceID]
+    }))
+  }
+  const closeCancelConfirm = (invoiceId) => {
+    setClickCancel((prevState) => ({
+      ...prevState,
+      [invoiceId]: false,
+    }));
+  };
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
@@ -57,7 +70,7 @@ const BookingPage = () => {
           {data.data.map((resData,index)=>{
             const formattedCheckInDay=dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
             const formattedCheckOutDay=dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
-
+              console.log('invoice id',resData.invoiceInfo._id)
                   return(
               <div key={index} className='py-2'>
                 <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
@@ -168,12 +181,68 @@ const BookingPage = () => {
                       <span className='ml-2'>FAQs</span>
                     </DecoratedIcon>
                     <div>
-                      <div className='space-x-2 flex items-end justify-end'>
-                      <Button variant='danger'>Cancel</Button>
+                      <div className='space-x-2 flex items-end justify-end relative'>
+                      <Button variant='danger' onClick={()=>{
+                        handleClickCancel(resData.invoiceInfo._id)}}>
+                        Cancel</Button>
                       <Button variant='success'>Book Again</Button>
                         <Button variant='outline-primary'>Rate The Accommodation</Button>
-
                       </div>
+                        {clickCancel[resData.invoiceInfo._id] && (
+                            <div>
+                              <CancelConfirm>
+                                <div className='bg-red-300 pl-4 text-2xl font-semibold font-afacad relative'>
+                                  *Please make sure you read our policy below before cancel your room
+                                  <MdOutlineCancel className='absolute top-0 right-0 z-10 text-2xl mr-1 mt-1'
+                                                   onClick={() => {
+                                                     closeCancelConfirm(resData.invoiceInfo._id)
+                                                   }}>
+                                  </MdOutlineCancel>
+                                </div>
+                                <div
+                                    className='flex items-center justify-center text-2xl font-afacad font-semibold py-4'>
+                                  Our cancel policy
+                                </div>
+
+
+                                <div className='row px-4'>
+                                  <div className='col-6 border-r'>
+                                    <div>
+                                      <Title className='text-success'>
+                                        70% REIMBURSE
+                                      </Title>
+                                      If you <BoldSpan>cancel 24 hours before check-in day</BoldSpan>
+                                    </div>
+                                    <div className='text-muted'>
+                                      Example: Your check-in day start at: 24/11/2024
+                                      <div>
+                                        You'll receive 70% reimburse for your booking fees if you cancel before
+                                        23/11/2024
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className='col-6'>
+                                    <Title className='text-danger-emphasis'>
+                                      NO REIMBURSE
+                                    </Title>
+                                    <div>
+                                      <BoldSpan> Within 24 hours before check-in day,</BoldSpan> you can't receive any
+                                      reimburse
+                                    </div>
+                                    <div className='text-muted'>
+                                      Example: Your check-in day start at: 24/11/2024 and you cancel within 23/11-24/11
+                                      <span> You won't receive any reimbursement  </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              <div className='flex items-end justify-end mr-3 py-3'>
+                                <Button variant='outline-danger'>
+                                  Accept Cancel
+                                  </Button>
+                                </div>
+                              </CancelConfirm>
+                            </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -198,4 +267,24 @@ const DecoratedIcon = styled.button`
 const BetweenFlex=styled.div`
   display: flex;
   justify-content: space-between;
+`
+const CancelConfirm=styled.div`
+  z-index: 10;
+  background: white;
+  align-items: start;
+  justify-content: center;
+  height: 325px;
+  margin-top: 20px;
+  text-align: left;
+  border: black solid 1px ;
+`
+const Title=styled.div`
+  text-align: center;
+  font-weight: 600;
+  font-size: large;
+  padding-bottom: 12px;
+`
+const BoldSpan=styled.span`
+  font-weight: 600;
+  color:green;
 `

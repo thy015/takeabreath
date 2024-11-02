@@ -55,7 +55,7 @@ const bookRoom = async (req, res) => {
                 {name:room.roomName,amount:dataBooking.totalRoom, unitPrice:room.money}
               ],
               callback:{
-                successUrl: 'http://localhost:4000/api/booking/change-invoice-state?invoiceID=${invoice._id}',
+                successUrl: `http://localhost:4000/api/booking/change-invoice-state?invoiceID=${invoice._id}`,
                 returnUrl: 'http://localhost:3000/mybooking'
               }
             }
@@ -63,16 +63,7 @@ const bookRoom = async (req, res) => {
               const orderResponse = await wowoWallet.createOrder(newOrder);
               console.log("Đơn hàng đã được tạo:", orderResponse);
               if(orderResponse.status==='PENDING'){
-                try{
-                  const res=await axios.post(`http://localhost:4000/api/booking/change-invoice-state?invoiceID=${invoice._id}`)
-                      .then(res => {
-                        console.log(res.data);
-                      }).catch(err => {
-                        return res.status(400).json({message:err})
-                      })
-                }catch(e){
-                  return res.status(500).json({message:e})
-                }
+
               }
             } catch (error) {
               console.error("Lỗi khi tạo đơn hàng:", error.message);

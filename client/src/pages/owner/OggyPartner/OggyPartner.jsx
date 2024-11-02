@@ -7,7 +7,8 @@ export const OggyPartner = () => {
     const handleClickOggyCreateButton=()=>{
         const token=localStorage.getItem('token')
         console.log('token',token)
-        window.location.href = `https://voucher4u-fe.vercel.app/?Token=${token}`
+        const callbacklink=`http://localhost:3000/owner`
+        window.location.href = `https://voucher4u-fe.vercel.app/?Token=${token}&URLCallBack=${callbacklink}`
         navigate(window.location.href)
     }
     return (

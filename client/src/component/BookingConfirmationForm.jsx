@@ -143,7 +143,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
             cancelButtonProps={{className:'py-3 px-6 text-lg'}}
         >
           <h2 className="text-center font-semibold font-poppins"> TAB Booking Detail</h2>
-          <Row className="h-[520px] " wrap={true} gutter={24}>
+          <Row className="h-auto " wrap={true} gutter={24}>
             {/* input form */}
             <Col
                 span={16}
@@ -283,7 +283,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
             <Col span={8} >
               {/* information hotel */}
               <div className="flex flex-col space-y-4">
-                <div className=" p-7 h-[170px] border-[1px] border-gray-300 rounded-[10px]"
+                <div className=" p-7 h-auto border-[1px] border-gray-300 rounded-[10px]"
                 >
                   {" "}
                   <div className="flex space-x-5">

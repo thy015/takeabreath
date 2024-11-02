@@ -1,7 +1,7 @@
 const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
-const {Hotel,roomSchema,hotelSchema} = require("../../models/hotel.model");
+const {Hotel,amenitiesEnum,roomSchema,hotelSchema} = require("../../models/hotel.model");
 const {Room} = require("../../models/hotel.model");
 const {Invoice} = require("../../models/invoice.model")
 const { verifyOwner } = require("../../middleware/verify");
@@ -65,6 +65,14 @@ ListRouter.get('/hotelCities',async(req,res)=>{
     return res.status(200).json({cities})
   }catch(e){
     return res.status(500).json({message:'e in hotelList route'})
+  }
+})
+ListRouter.get('/hotelAmenities',async(req,res)=>{
+  try{
+    return res.status(200).json({ amenitiesEnum});
+
+  }catch(e){
+    return res.status(500).json({message:'e in hotelList controller'})
   }
 })
 ListRouter.get('/roomTypes', (req, res) => {

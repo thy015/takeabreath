@@ -18,7 +18,7 @@ const BookingPage = () => {
     return <Alert message="Please try logging in first" type="info" showIcon />;
   }
   const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
-    //modal cancel pop-up
+    //modal 1st cancel pop-up
   const [clickCancel,setClickCancel]=useState(false)
   const handleClickCancel=(invoiceID)=>{
     setClickCancel((prevState)=>({
@@ -32,6 +32,17 @@ const BookingPage = () => {
       [invoiceId]: false,
     }));
   };
+  const disableCancelFunc=(checkInDay)=>{
+    const now=dayjs()
+    return dayjs(checkInDay).isBefore(now);
+  }
+  // handle cancel confirm clicked
+  const [confirmCancel,setConfirmCancel]=useState(false);
+
+  const handleConfirmCancel=(confirmCancel,checkInDay,checkOutDay)=>{
+    const now=dayjs()
+
+  }
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
@@ -71,6 +82,8 @@ const BookingPage = () => {
             const formattedCheckInDay=dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
             const formattedCheckOutDay=dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
               console.log('invoice id',resData.invoiceInfo._id)
+            console.log('checkinday',resData.invoiceInfo.guestInfo.checkInDay)
+            const isDisabledCancel = disableCancelFunc(resData.invoiceInfo.guestInfo.checkInDay);
                   return(
               <div key={index} className='py-2'>
                 <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
@@ -182,8 +195,10 @@ const BookingPage = () => {
                     </DecoratedIcon>
                     <div>
                       <div className='space-x-2 flex items-end justify-end relative'>
-                      <Button variant='danger' onClick={()=>{
-                        handleClickCancel(resData.invoiceInfo._id)}}>
+                      <Button  variant={isDisabledCancel ? 'muted' : 'danger'}
+                              onClick={()=>{handleClickCancel(resData.invoiceInfo._id)}}
+                              disabled={isDisabledCancel}
+                      >
                         Cancel</Button>
                       <Button variant='success'>Book Again</Button>
                         <Button variant='outline-primary'>Rate The Accommodation</Button>

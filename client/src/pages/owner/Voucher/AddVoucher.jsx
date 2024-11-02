@@ -67,88 +67,65 @@ function AddVoucher() {
 
     //Form addvoucher
     return (
-        <div className='my-[10px] mx-[20px] d-flex flex-col justify-center items-center'>
-            <h2 className='mt-[30px] mb-[50px] font-bold'>Add Voucher</h2>
-            <ConfigProvider
-                theme={{
-                    token: {
-                        colorText: "black",
-                        fontSize: "17px",
-                        colorTextDescription: "black"
-                    }
-                }}
+        <div className='my-[10px] mx-[20px] flex flex-col items-center'>
+        <h2 className='mt-[30px] mb-[50px] font-bold'>Add Voucher</h2>
+        <ConfigProvider
+            theme={{
+                token: {
+                    colorText: "black",
+                    fontSize: "17px",
+                    colorTextDescription: "black"
+                }
+            }}
+        >
+            <Form
+                className='w-full max-w-[600px]' // Use full width with a max limit
+                labelCol={{ span: 24 }} // Make labels full width
+                wrapperCol={{ span: 24 }} // Make inputs full width
+                layout="vertical" // Use vertical layout for better stacking
+                onFinish={onFinish}
             >
-                <Form
-                    className='items-center h-full w-[600px]'
-                    labelCol={{
-                        span: 8
-                    }}
-                    labelAlign='left'
-                    form={formVoucher}
-                    onFinish={onFinish}
-                    validateMessages={message}
+                <Form.Item
+                    label="Voucher name"
+                    name="voucherName"
+                    rules={[{ required: true, message: "Please input voucher name!" }]}
                 >
-                    <FormItem
+                    <Input className='input-addvoucher' placeholder='Enter voucher name' />
+                </Form.Item>
 
-                        label="Voucher name "
-                        name="voucherName"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input voucher name!"
-                            }
-                        ]}
-                    >
-                        <Input className='w-[500px] px-[10px] input-addvoucher' placeholder='Enter voucher name' />
-                    </FormItem>
+                <Form.Item
+                    label="Discount"
+                    name="discount"
+                    rules={[{ required: true, message: "Please input discount!" }]}
+                >
+                    <InputNumber
+                        min={0} max={50}
+                        type='number' addonAfter="%"
+                        className='input-addvoucher w-full'
+                        placeholder='Enter discount ( Less than 50% )' />
+                </Form.Item>
 
+                <Form.Item
+                    label="Date Start & Date End"
+                    name="date"
+                    rules={[{ required: true, message: "Please select date!" }]}
+                >
+                    <DatePicker.RangePicker className='input-addvoucher w-full' />
+                </Form.Item>
 
-                    <FormItem
+                <Form.Item
+                    label="Code"
+                    name="code"
+                >
+                    <Input
+                        maxLength={5}
+                        className='input-addvoucher'
+                        placeholder='Please enter code (If not, it will be automatic)' />
+                </Form.Item>
 
-                        label="Discount"
-                        name="discount"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input discount!"
-                            }
-                        ]}
-                    >
-                        <InputNumber
-                            min={0} max={50}
-                            type='number' addonAfter="%"
-                            className='w-[500px] input-addvoucher'
-                            placeholder='Enter discount ( Less than 50% )' />
-                    </FormItem >
-
-
-
-                    <FormItem
-                        className='items-start'
-                        label="Date Start & Date End "
-                        name="date"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input discount!"
-                            },
-                        ]}
-                        validateStatus='error'
-
-                    >
-                        <DatePicker.RangePicker status={status} className='range-picker-addvoucher w-[500px] px-[10px] input-addvoucher' />
-                    </FormItem>
-                    <FormItem
-                        label="Code "
-                        name="code"
-                    >
-                        <Input
-                            maxLength={5}
-                            className='w-[500px] px-[10px] input-addvoucher'
-                            placeholder='Please enter code (If not, it will be automatic)' />
-                    </FormItem>
-                    <div className='d-flex justify-end items-center' >
-                        <Link to="/Owner/Vouchers" className='mr-[20px]'>
+                <Form.Item>
+                    <div className='flex justify-between items-center'>
+                        <Link to="/Owner/Vouchers" className='mr-[20px] flex items-center'>
                             <FontAwesomeIcon icon={faCaretLeft} className='mr-[5px]' />
                             Back
                         </Link>
@@ -156,13 +133,14 @@ function AddVoucher() {
                             className='p-[10px]'
                             type='primary'
                             htmlType='submit'
-                        >Add Voucher</Button>
-
+                        >
+                            Add Voucher
+                        </Button>
                     </div>
-                </Form>
-            </ConfigProvider>
-
-        </div>
+                </Form.Item>
+            </Form>
+        </ConfigProvider>
+    </div>
     )
 }
 

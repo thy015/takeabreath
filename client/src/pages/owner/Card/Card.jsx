@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { Button, Popconfirm, Table } from 'antd'
+import { useMediaQuery } from 'react-responsive'
 import { Link } from 'react-router-dom'
 import FormCard from '../../../component/FormCard'
 import dayjs from 'dayjs'
@@ -13,7 +14,7 @@ function Card() {
     const dispatch = useDispatch()
     const [visible, setVisible] = useState(false)
     const cards = useSelector(state => state.card.cards)
-
+    const idMobile =useMediaQuery({query:'(max-width: 640px)'})
     useEffect(() => {
         axios.get("http://localhost:4000/api/auth/list-card")
             .then(res => res.data)
@@ -101,7 +102,7 @@ function Card() {
                     </Button>
                 </Link>
             </div>
-            <Table columns={columns} dataSource={cards}></Table>
+            <Table columns={columns} dataSource={cards} scroll={{x:"max-content"}}></Table>
             <FormCard visible={visible} close={() => setVisible(false)}></FormCard>
         </div>
     )

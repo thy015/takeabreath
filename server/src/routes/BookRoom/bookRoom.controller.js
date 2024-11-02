@@ -5,6 +5,9 @@ const timezone =require('dayjs/plugin/timezone')
 const dayjs=require('dayjs')
 const utc=require('dayjs/plugin/utc')
 const {Owner} = require("../../models/signUp.model");
+const {OrderResponse, WoWoWallet}=require('@htilssu/wowo')
+const axios = require("axios");
+
 dayjs.extend(timezone)
 dayjs.extend(utc)
 
@@ -15,31 +18,58 @@ const bookRoom = async (req, res) => {
       return res.status(403).json({message:"Missing data"})
     }
     const hotel =await Hotel.findById(idHotel)
+    const room=await Room.findById(idRoom)
     const idOwner=hotel.ownerID
-    if(dataBooking.paymentMethod==="paypal"){
+      // invoice for all
       const convertCheckInDay = dayjs(dataBooking.checkInDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       const convertCheckOutDay=dayjs(dataBooking.checkOutDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       console.log('Convert check in and out day',convertCheckInDay,convertCheckOutDay)
       const invoice = await Invoice.create({
-        ownerID:idOwner,
-        hotelID:idHotel,
-        cusID:idCus,
-        roomID:idRoom,
+        ownerID: idOwner,
+        hotelID: idHotel,
+        cusID: idCus,
+        roomID: idRoom,
         guestInfo:
-          {
-            name:dataBooking.inputName,
-            idenCard:dataBooking.inputIdenCard,
-            email:dataBooking.inputEmail,
-            phone:dataBooking.inputPhoneNum,
-            dob:dataBooking.inputDob,
-            gender:dataBooking.inputGender,
-            paymentMethod:dataBooking.paymentMethod,
-            totalPrice:dataBooking.total,
-            totalRoom:dataBooking.totalRoom,
-            checkInDay:new Date(convertCheckInDay),
-            checkOutDay:new Date(convertCheckOutDay)
-          }
+            {
+              name: dataBooking.inputName,
+              idenCard: dataBooking.inputIdenCard,
+              email: dataBooking.inputEmail,
+              phone: dataBooking.inputPhoneNum,
+              dob: dataBooking.inputDob,
+              gender: dataBooking.inputGender,
+              paymentMethod: dataBooking.paymentMethod,
+              totalPrice: dataBooking.total,
+              totalRoom: dataBooking.totalRoom,
+              checkInDay: new Date(convertCheckInDay),
+              checkOutDay: new Date(convertCheckOutDay)
+            }
       })
+          if(dataBooking.paymentMethod==="wowo"){
+            console.log('log', [room.roomName,room.money,dataBooking.totalRoom,dataBooking.total])
+
+            const wowoWallet=new WoWoWallet(`${process.env.WOWO_SECRET}`);
+            const newOrder={
+              money:dataBooking.total,
+              serviceName:'Đặt phòng',
+              items:[
+                {name:room.roomName,amount:dataBooking.totalRoom, unitPrice:room.money}
+              ],
+              callback:{
+                successUrl: `http://localhost:4000/api/booking/change-invoice-state?invoiceID=${invoice._id}`,
+                returnUrl: 'http://localhost:3000/mybooking'
+              }
+            }
+            try {
+              const orderResponse = await wowoWallet.createOrder(newOrder);
+              console.log("Đơn hàng đã được tạo:", orderResponse);
+              if(orderResponse.status==='PENDING'){
+
+              }
+            } catch (error) {
+              console.error("Lỗi khi tạo đơn hàng:", error.message);
+            }
+          }
+      // hủy invoice sau 20p
       setTimeout(async()=>{
         const updatedInvoice= await Invoice.findById(invoice._id)
         if(updatedInvoice && updatedInvoice.invoiceState==="waiting"){
@@ -47,6 +77,7 @@ const bookRoom = async (req, res) => {
           console.log(`Invoice ${invoice._id} deleted due to time out`)
         }
       },120000)
+
       return res.status(200).json(
         {
           status:"OK",
@@ -54,13 +85,14 @@ const bookRoom = async (req, res) => {
           data:invoice,
           invoiceID:invoice._id
         }) 
-    }
+
   }catch(e){
     console.log("[ERROR]",e)
     return res.status(500).json({message:"Internal server error"})
   }
 };
 //logic sau khi book thanh cong
+
 const completedTran = async (req, res) => {
   const {order,invoiceID}=req.body
   if(!order||!invoiceID){

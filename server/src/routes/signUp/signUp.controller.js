@@ -272,7 +272,7 @@ if(decodedToken.role === "user"){
   }
 }
 // oggy partner
-const checkExistedOggyPartner=async(req,res)=>{
+const strictSignInPartner=async(req,res)=>{
   const {token,phoneNum,idenCard} = req.body
   console.log(token)
   if(!token){
@@ -306,7 +306,31 @@ const checkExistedOggyPartner=async(req,res)=>{
   return res.status(400).json({message:'Cus sign up before'})
 }
 
+const checkExistedPartner=async(req,res)=>{
+  const {decodedToken}=req.body
+  if(!decodedToken){
+    return res.status(403).json({message: 'missing token in signUp controller'})
+  }
+  const existedPartner=await Owner.findOne({ssoID:decodedToken.partnerId})
+  if(existedPartner){
+    const newToken = await generalAccessTokens({
+      id:existedPartner._id,
+      name: existedPartner.ownerName,
+      email: existedPartner.email,
+      ssoID:existedPartner.ssoID
+    })
+    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
+        .json({
+          login: true,
+          id:existedPartner._id,
+          name: existedPartner.ownerName,
+          email: existedPartner.email,
+          ssoID:existedPartner.ssoID
+        })
+  }
+  return res.status(202).json({message:'Partner not existed yet'})
 
+}
 const logout = async (req, res) => {
   console.log("[Token sso]", req.cookies.Token)
   if (req.cookies.Token) {
@@ -463,8 +487,9 @@ module.exports = {
   updateOwner,
   insertCartOwner,
   getListCard,
-  checkExistedOggyPartner,
+  strictSignInPartner,
   deleteCardOwner,
+  checkExistedPartner,
   //phuc
   loginCustomer,
   registerCustomer,

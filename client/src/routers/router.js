@@ -40,6 +40,7 @@ import invoiceAdmin from"../pages/admin/invoiceAdmin";
 import Revienue from "../pages/owner/Revenue/Revienue";
 import Card from "../pages/owner/Card/Card";
 import StrictLoginSSO from "../pages/auth/StrictLoginSSO";
+import {OggyPartner} from "../pages/owner/OggyPartner/OggyPartner";
 export const routers = [
   {
     path: "/",
@@ -137,7 +138,8 @@ export const routers = [
       { path: "Hotel", page: Hotel}, 
       { path: "Room", page: Room}, 
       { path: "Revenue", page: Revienue}, 
-      { path: "Card", page: Card}, 
+      { path: "Card", page: Card},
+      {path:'OggyPartner',page:OggyPartner}
     ],
     isOwner:true,
     isShowHeader: false,

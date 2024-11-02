@@ -20,18 +20,21 @@ const items = [
         key: "Vouchers",
         label: (<p className='font-bold'>Phiếu giảm giá</p>),
     },
-    ,
+
     {
         key: "Card",
         label: (<p className='font-bold'>Quản lý thẻ</p>),
+    },
+    {
+        key: "OggyPartner",
+        label: (<p className='font-bold'>Oggy Partner</p>),
     }
-    
 ]
 
 
 function SideBar() {
     const navigate = useNavigate()
-    const hanldeClickItem = ({ item, key, keyPath, domEvent})=>{
+    const handleClickItem = ({ item, key, keyPath, domEvent})=>{
         navigate(key)
     }
     return (
@@ -63,7 +66,7 @@ function SideBar() {
 
                     }}
                     items={items}
-                    onClick={hanldeClickItem}
+                    onClick={handleClickItem}
                     defaultSelectedKeys={['Revenue']}
                 />
             </div>

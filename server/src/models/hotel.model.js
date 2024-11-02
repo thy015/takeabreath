@@ -1,5 +1,19 @@
 //hotel,room
 const mongoose = require("mongoose");
+// amenities for hotel
+const amenitiesEnum = {
+  view: ['Beach View', 'Forest View', 'City View', 'Mountain View', 'Pool View', 'Skyline View', 'Garden View'],
+  bathroom: ['Bathtub', 'Hair dryer', 'Shower gel', 'Hot water'],
+  bedroom: ['Free dryer', 'Hangers', 'Extra pillows and blankets', 'Iron', 'Essentials', 'Crib'],
+  entertainment: ['HDTV 50 inch', 'Sound system', 'Exercise equipment', 'Wifi'],
+  heatingAndCooling: ['Air conditioning', 'Indoor fireplace', 'Portable fans', 'Heating', 'Central heating', 'Central air conditioning'],
+  safety: ['Smoke alarm', 'Fire extinguisher', 'Carbon monoxide alarm', 'First aid kit', 'Exterior security cameras on property'],
+  dining: ['Kitchen', 'Refrigerator', 'Microwave', 'Cooking basics', 'Freezer', 'Dishwasher', 'Stove', 'Toaster', 'Oven', 'Rice maker', 'Dining table', 'Hot water kettle'],
+  location: ['Near centre', 'In centre', 'Private entrance', 'Crowd', 'Downtown access', 'Near public transportation', 'Shopping district', 'Historic district'],
+  outdoor: ['Private pool', 'Shared pool', 'Private patio or balcony', 'Patio or balcony', 'Sun loungers', 'Outdoor dining area', 'Shared backyard', 'Private backyard', 'Shared hot tub', 'Shared sauna', 'Elevator', 'Shared gym in building', 'Free street parking', 'Paid parking on premises'],
+  service: ['Luggage dropoff allowed', 'Long term stays allowed', 'Self check-in', 'Keypad', 'Cleaning available during stay', 'Pets allowed', 'Smoking allowed', 'Smart lock']
+};
+
 const hotelSchema = new mongoose.Schema({
   hotelName: { type: String, required: true },
   address: { type: String, required: true },
@@ -7,6 +21,98 @@ const hotelSchema = new mongoose.Schema({
   nation: { type: String, required: true },
   hotelType: { type: String, required: true,
     enum:['Hotel','Resort','Apartment','Villa','Cabin','Cottage','Glamping','Guest House','Business','Dorm'] },
+  hotelAmenities: {
+    view: {
+      type: [String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.view.includes(i))
+        }
+      },
+      required: false
+    },
+    bathroom:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.bathroom.includes(i))
+        }
+      },
+      required: false
+    },
+    bedroom:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.bedroom.includes(i))
+        }
+      },
+      required: false
+    },
+    entertainment:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i=>amenitiesEnum.entertainment.includes(i))
+        }
+      },
+      required: false
+    },
+    heatingAndCooling:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.heatingAndCooling.includes(i))
+        }
+      },
+      required:false
+},
+    safety:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.safety.includes(i))
+        }
+      },
+      required:false
+    },
+    dining:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.dining.includes(i))
+        }
+      },
+      required:false
+    },
+    location:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.location.includes(i))
+        }
+      },
+      required:false
+    },
+    outdoor:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.outdoor.includes(i))
+        }
+      },
+      required:false
+    },
+    service:{
+      type:[String],
+      validate:{
+        validator:function (v){
+          return v.every(i =>amenitiesEnum.service.includes(i))
+        }
+      },
+      required:false,
+    }
+  },
   phoneNum: { type: String, required: true },
   imgLink: { type: [String], required: false },
   rate: { type: Number, required: false, default: 0 },
@@ -58,5 +164,6 @@ module.exports = {
   Room,
   Comment,
   roomSchema,
-  hotelSchema
+  hotelSchema,
+  amenitiesEnum
 };

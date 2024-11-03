@@ -6,17 +6,13 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
-const FormVoucher=({record})=> {
+const FormVoucher = ({ record }) => {
 
-    const [form] = useForm()
-    const [status, setStatus] = useState("normal")
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const onFinish = (values)=>{
+    const onFinish = (values) => {
         console.log(values)
     }
-    axios.defaults.withCredential = true
     return (
-        <div className='my-[10px] mx-[20px] d-flex flex-col justify-center items-center'>
+        <div className='my-[10px] mx-[20px] flex flex-col items-center'>
             <ConfigProvider
                 theme={{
                     token: {
@@ -27,16 +23,12 @@ const FormVoucher=({record})=> {
                 }}
             >
                 <Form
-                    className='items-center h-full w-full'
-                    labelCol={{
-                        span: 8
-                    }}
-                    form={form}
-                    labelAlign='left'  
+              
+                    layout="vertical" // Change to vertical layout
                     onFinish={onFinish}
                 >
-                    <FormItem
-                        label="Voucher name "
+                    <Form.Item
+                        label="Voucher name"
                         name="voucherName"
                         rules={[
                             {
@@ -45,63 +37,62 @@ const FormVoucher=({record})=> {
                             }
                         ]}
                     >
-                        <Input  className=' px-[10px] input-addvoucher'  placeholder={record.voucherName} />
-                   
-                    </FormItem>
+                        <Input className='px-[10px]' placeholder={record.voucherName} />
+                    </Form.Item>
 
+                    <div className="flex flex-col md:flex-row md:gap-4">
+                        <Form.Item
+                            label="Discount"
+                            name="discount"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please input discount!"
+                                }
+                            ]}
+                            className="flex-1" // Allow it to grow
+                        >
+                            <InputNumber
+                                min={0} max={50}
+                                type='number' addonAfter="%"
+                                className='w-full'
+                                placeholder='Enter discount (up to 50%)' />
+                        </Form.Item>
 
-                    <FormItem
+                        <Form.Item
+                            label="Date Start & End"
+                            name="date"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please input date!"
+                                },
+                            ]}
+                            className="flex-1" // Allow it to grow
+                        >
+                            <DatePicker.RangePicker className='w-full' />
+                        </Form.Item>
+                    </div>
 
-                        label="Discount"
-                        name="discount"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input discount!"
-                            }
-                        ]}
-                    >
-                        <InputNumber
-                            min={0} max={50}
-                            type='number' addonAfter="%"
-                            className='input-addvoucher'
-                            placeholder='Enter discount ( More than 50% )' />
-                    </FormItem >
-
-
-
-                    <FormItem
-                        className='items-start'
-                        label="Date Start & End "
-                        name="date"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input discount!"
-                            },
-                        ]}
-                        validateStatus='error'
-
-                    >
-                        <DatePicker.RangePicker status={status} className='range-picker-addvoucher  px-[10px] input-addvoucher' />
-                    </FormItem>
-                    <FormItem
-                        label="Code "
+                    <Form.Item
+                        label="Code"
                         name="code"
                     >
                         <Input
                             maxLength={5}
-                            className='px-[10px] input-addvoucher'
+                            className='px-[10px]'
                             placeholder='Please enter code (If not, it will be automatic)' />
-                    </FormItem>
-                    <Button
-                            className='p-[10px]'
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button
+                            className='w-full p-[10px]'
                             type='primary'
                             htmlType='submit'
                         >Add Voucher</Button>
+                    </Form.Item>
                 </Form>
             </ConfigProvider>
-            <input value={record.voucherName}/>
         </div>
     )
 }

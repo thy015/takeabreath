@@ -5,7 +5,6 @@ import { openNotification } from '../hooks/notification'
 import { addRoom,updateRooms } from "../hooks/redux/roomsSlice"
 import { setHotels } from '../hooks/redux/hotelsSclice';
 import { useForm } from 'antd/es/form/Form';
-import CryptoJS from "crypto-js"
 import axios from 'axios';
 function FormRoom({ isVisible, close }) {
     const [images, setImages] = useState([])
@@ -117,14 +116,15 @@ function FormRoom({ isVisible, close }) {
     const isEmpty = (obj) => Object.keys(obj).length === 0;
     return (
         <>
-            {console.log(isEmpty(selectedRoom))}
+
             <Modal
                 okText={ isEmpty(selectedRoom) ? "Thêm phòng" : "Cập nhật "}
                 cancelText="Trở lại"
-                width={"50%"}
+                width={"80%"}
                 open={isVisible}
                 onCancel={close}
                 onOk={hanldeInsert}
+                bodyStyle={{ padding: '20px' }}
             >
                 <div className='text-[20px] font-bold items-center text-center  text-blue-900 m-[10px] mb-[20px]'>{isEmpty(selectedRoom) ? "Thêm phòng" : "Cập nhật phòng"}</div>
                 <Form

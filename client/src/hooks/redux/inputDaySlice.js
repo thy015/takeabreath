@@ -7,6 +7,8 @@ const initialState={
     dayEnd:'',
     totalCheckInDay:0,
     city:'',
+    latitude:'',
+    longitude:'',
     totalPrice:0,
     convertPrice:0,
     completedPayment:false,
@@ -30,6 +32,10 @@ const inputDaySlice =createSlice({
             state.dayEnd='',
             state.totalCheckInDay=0
             state.city=''
+        },
+        setOrdinate:(state,action)=>{
+            state.latitude=action.payload.latitude,
+                state.longitude=action.payload.longitude
         },
         // for paypal, need convert based on dollar rates
         setPaymentState:(state,action)=>{
@@ -59,5 +65,5 @@ const inputDaySlice =createSlice({
         }
     }
 })
-export const {setInputDay,clearInputDay,setPaymentState,clearPaymentState,setPaymentCompleted,setInvoiceID,clearInvoiceID}=inputDaySlice.actions
+export const {setInputDay,clearInputDay,setPaymentState,clearPaymentState,setPaymentCompleted,setInvoiceID,clearInvoiceID,setOrdinate}=inputDaySlice.actions
 export default inputDaySlice.reducer

@@ -8,6 +8,7 @@ import { seletedHotel, setHotels } from '../../../hooks/redux/hotelsSclice';
 import { useSelector, useDispatch } from "react-redux";
 import { addHotel, updateHotels } from '../../../hooks/redux/hotelsSclice';
 import { openNotification } from '../../../hooks/notification';
+import ModalAmenities from '../../../component/ModalAmenities';
 const { Option } = Select;
 
 const CreateHotel = ({ visible, handleCancel }) => {
@@ -18,29 +19,31 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const [type, setType] = useState([])
   const [nations, setnation] = useState([])
   const [cities, setCities] = useState([])
-  const [hotel, setHotels] = useState(pre => hotelSelected)
   const [errMessage, setErrMessage] = useState('');
   const [images, setImages] = useState([])
   const [form] = Form.useForm();
   const { data: owners, error: ownerError, loading: ownerLoad } = useGet("http://localhost:4000/api/auth/owner");
-  const [initialValues, setInitialValues] = useState({});
-
+  const [visibleAm, setVisibleAm] = useState(false)
+  const [amenities, setAmenities] = useState([])
+  // Get data 
   useEffect(() => {
 
-    fetch("https://esgoo.net/api-tinhthanh/1/0.htm",{
-      method:"GET"
+    //Get Tinh Thanh
+    fetch("https://esgoo.net/api-tinhthanh/1/0.htm", {
+      method: "GET"
     })
-    .then(res=>res.json())
-    .then(data =>{
-      const arrayCity =data.data
-      const temp =arrayCity.map(item => ({
-        value:item.name,
-        label:item.full_name
-      }))
-      setCities(temp)
-    })
-    .catch(err=>console.log(err))
+      .then(res => res.json())
+      .then(data => {
+        const arrayCity = data.data
+        const temp = arrayCity.map(item => ({
+          value: item.name,
+          label: item.full_name
+        }))
+        setCities(temp)
+      })
+      .catch(err => console.log(err))
 
+    // Get Type holtel
     axios.get("http://localhost:4000/api/hotelList/hotelTypes")
       .then(res => res.data)
       .then(data => {
@@ -50,20 +53,24 @@ const CreateHotel = ({ visible, handleCancel }) => {
         console.log(err)
       })
 
+    //Get nation
     axios.get("https://restcountries.com/v3.1/all")
-      .then(res=>{
+      .then(res => {
         const arrayNation = res.data
-        const temp = arrayNation.map(item =>({
-          value:item.name.common,
-          label:item.name.common
+        const temp = arrayNation.map(item => ({
+          value: item.name.common,
+          label: item.name.common
         }))
-        setnation(temp.sort((a,b)=>a.value.localeCompare(b.value)))
+        setnation(temp.sort((a, b) => a.value.localeCompare(b.value)))
       })
-      
-      .catch(err=>{console.log(err)})
+
+      .catch(err => { console.log(err) })
+
   }, [])
 
+  // Get data form when update or insert hotel
   useEffect(() => {
+    // set input
     form.setFieldsValue({
       hotelName: hotelSelected.hotelName ?? "",
       address: hotelSelected.address ?? "",
@@ -72,6 +79,25 @@ const CreateHotel = ({ visible, handleCancel }) => {
       phoneNum: hotelSelected.phoneNum ?? "",
       nation: hotelSelected.nation ?? "",
     });
+
+    const aniUpdate = hotelSelected?.hotelAmenities ?? {}
+    let objectForm = {}
+    let count = 0
+    Object.entries(aniUpdate).map(([item, value]) => {
+      count += value.length
+      objectForm = {
+        ...objectForm,
+        [item]: value,
+
+      }
+    })
+    objectForm = {
+      ...objectForm,
+      count: count
+    }
+    setAmenities(objectForm)
+
+    // set image 
     setImages(hotelSelected.imgLink ?? [])
   }, [visible, hotelSelected, form])
 
@@ -91,10 +117,10 @@ const CreateHotel = ({ visible, handleCancel }) => {
     );
   }
 
-  const option = type.map((item,index) =>({
+  const option = type.map((item, index) => ({
     ...item,
-    value:item,
-    label:item
+    value: item,
+    label: item
   }))
 
   const handleDelete = async (item) => {
@@ -127,11 +153,10 @@ const CreateHotel = ({ visible, handleCancel }) => {
     const form = {
       ...values,
       imgLink: images,
-      ownerID: auth.user.id
+      ownerID: auth.user.id,
+      hotelAmenities: amenities ?? []
     }
-    console.log(form)
     if (hotelSelected === undefined || !isEmpty(hotelSelected)) {
-      console.log("Update")
       try {
         const response = await axios.post(`http://localhost:4000/api/hotelList/updateHotel/${hotelSelected._id}`, form);
         if (response.data.status === 'OK') {
@@ -164,8 +189,8 @@ const CreateHotel = ({ visible, handleCancel }) => {
       } catch (error) {
         console.error("Error details:", error);
         const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-        
-        openNotification(false,"Thêm khách sạn thất bại", error.response?.data?.message || "Lỗi hệ thống")
+
+        openNotification(false, "Thêm khách sạn thất bại", error.response?.data?.message || "Lỗi hệ thống")
       }
     }
     setErrMessage('');
@@ -178,7 +203,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
       open={visible}
       onCancel={handleCancel}
       footer={null}
-      width={'50%'}
+      width={"80%"}
     >
       <Form
         form={form}
@@ -222,7 +247,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
           name="city"
           rules={[{ required: true, message: 'Please input city!' }]}
         >
-          <Select options={cities} style={{width:"85%"}}  />
+          <Select options={cities} style={{ width: "85%" }} />
         </Form.Item>
 
         <Form.Item
@@ -230,7 +255,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
           name="hotelType"
           rules={[{ required: true, message: 'Please input hotel type!' }]}
         >
-          <Select style={{width:"85%"}} options={option} />
+          <Select style={{ width: "85%" }} options={option} />
         </Form.Item>
 
         <Form.Item
@@ -245,9 +270,15 @@ const CreateHotel = ({ visible, handleCancel }) => {
           name="nation"
           rules={[{ required: true, message: 'Please input nation!' }]}
         >
-          <Select options={nations}  style={{width:"85%"}} />
+          <Select options={nations} style={{ width: "85%" }} />
         </Form.Item>
+        <Form.Item
+          label="Tiện ích"
+          name="amenities"
 
+        >
+          <Button className='w-[85%]' onClick={() => setVisibleAm(true)} > {hotelSelected.hotelAmenities ? `Bạn đã thêm ${amenities.count} tiện ích` : "Thêm tiện ích"} </Button>
+        </Form.Item>
         <Form.Item
           label="Link hình ảnh"
           name="imgLink"
@@ -293,6 +324,14 @@ const CreateHotel = ({ visible, handleCancel }) => {
           </div>
         </Form.Item>
       </Form>
+
+      <ModalAmenities
+        visible={visibleAm}
+        close={() => {
+          setVisibleAm(false)
+
+        }}
+        setFormAm={setAmenities}></ModalAmenities>
     </Modal>
   );
 };

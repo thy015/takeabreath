@@ -90,19 +90,19 @@ const HotelDisplay_HotelDetail = () => {
                     <img
                         src={data.imgLink[0]}
                         alt={`Image of ${data.hotelName}`}
-                        className="w-full h-auto mb-2"
+                        className="w-full h-[50%] mb-2"
                     />
                     <img
                         src={data.imgLink[1]}
                         alt={`Image of ${data.hotelName}`}
-                        className="w-full h-auto "
+                        className="w-full h-[48.3%] "
                     />
                   </Col>
                   <Col span={14}>
                     <img
                         src={data.imgLink[2]}
                         alt={`Image of ${data.hotelName}`}
-                        className="w-full mb-6 h-full"
+                        className="w-full h-full"
                     />
                   </Col>
                 </Row>
@@ -112,7 +112,7 @@ const HotelDisplay_HotelDetail = () => {
 
           <Col span={6}>
             {/* Comment - Click to open side tab */}
-            <div className="h-1/2 w-full border">
+            <div className="h-1/2 w-full border ">
               <div>
                 {/* Rate part */}
                 <div className="flex justify-end border-b h-[30%]">
@@ -136,13 +136,14 @@ const HotelDisplay_HotelDetail = () => {
                   </div>
                 </div>
 
-                <div className="h-[70%] border-b ">
+                <div className="h-1/2 border-b ">
                   {/* The comment part */}
                   <div className="h-full bg-slate-400">comment section</div>
                 </div>
               </div>
             </div>
-            <div className="h-[44.5%] mt-3 w-full border object-cover">
+
+            <div className="h-1/2 w-full border object-cover">
               {/* need map api */}
               <img
                   className="h-full w-full"

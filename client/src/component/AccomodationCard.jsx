@@ -105,7 +105,7 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
       <Card.Img
         className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
         variant="top"
-        src={property.imgLink}
+        src={property.imgLink[0]}
       />
       <Card.Body className="h-[210px] flex flex-col flex-grow-1">
         <Card.Title>{property.hotelName}</Card.Title>

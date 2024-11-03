@@ -20,12 +20,12 @@ router.post('/send-email', (req, res) => {
     let transporter=nodemailer.createTransport(config);
     //header
     let mailGenerator= new mailgen({
-        theme:'default',
+        theme:'cerberus',
         product:{
             name:'Take A Breath',
             link:'https://www.totallyradio.com/images/festival_images_TakeABreath.png',
             logo:'https://i.imgur.com/xSiP9ze.png',
-        }
+        },
     })
 
     let response={

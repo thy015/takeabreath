@@ -31,8 +31,8 @@ const InvoicesList = () => {
     { title: "Họ Tên", dataIndex: ["guestInfo", "name"], key: "name", width: '20%' },
     { title: "Email", dataIndex: ["guestInfo", "email"], key: "email", width: '25%' },
     { title: "Số Điện Thoại", dataIndex: ["guestInfo", "phone"], key: "phone" },
-    { title: "Ngày Check-in", dataIndex: ["guestInfo", "checkInDay"], key: "checkInDay", render: (checkInDay) => new Date(checkInDay).toLocaleDateString() },
-    { title: "Ngày Check-out", dataIndex: ["guestInfo", "checkOutDay"], key: "checkOutDay", render: (checkOutDay) => new Date(checkOutDay).toLocaleDateString() },
+    { title: "Ngày Check-in", dataIndex: ["guestInfo", "checkInDay"], key: "checkInDay", render: (checkInDay) => new Date(checkInDay).toLocaleDateString('vi-VN') },
+    { title: "Ngày Check-out", dataIndex: ["guestInfo", "checkOutDay"], key: "checkOutDay", render: (checkOutDay) => new Date(checkOutDay).toLocaleDateString('vi-VN') },
     { title: "Tổng Giá", dataIndex: ["guestInfo", "totalPrice"], key: "totalPrice", render: (price) => `${price.toLocaleString()} VND` },
     {
       title: "Xuất Hóa Đơn",
@@ -53,7 +53,7 @@ const InvoicesList = () => {
     }
     ,
   ];
-
+  
   const formattedData = data
     .map(invoice => ({
       ...invoice,
@@ -70,6 +70,8 @@ const InvoicesList = () => {
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
           Tất cả hóa đơn
         </h1>
+        <div className="flex mr-2">
+        <ExportToExcel apiData={formattedData} fileName={fileName} buttonName={"Xu"} />
         <div className="relative pb-2.5">
           <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3" />
           <input
@@ -79,6 +81,7 @@ const InvoicesList = () => {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)} 
           />
+        </div>
         </div>
       </div>
       <Table

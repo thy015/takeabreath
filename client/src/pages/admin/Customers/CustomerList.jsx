@@ -1,11 +1,12 @@
-import React, { useState} from "react";
+import React, { useState,useEffect} from "react";
 import { Spin, Alert, Table, Tag, Modal, notification } from "antd";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import { useGet } from "../../../hooks/hooks";
 
 const CustomersList = () => {
-  const { data, error, loading } = useGet("http://localhost:4000/api/auth/customer");
+  const [refresh, setRefresh] = useState(false);
+  const { data, error, loading } = useGet("http://localhost:4000/api/auth/customer", refresh);
   const [searchText, setSearchText] = useState("");
   const [cusID, setCusID] = useState(null);
   const [reason, setReason] = useState("");
@@ -33,30 +34,30 @@ const CustomersList = () => {
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/cancelReq/inactive/${cusID}`, {
-        reason: reason,
-      });
-      if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
-        notification.success({
-          message: 'Customer Inactivated Successfully',
-          description: 'The customer has been inactivated successfully!',
+        const response = await axios.put(`http://localhost:4000/api/cancelReq/inactive/${cusID}`, {
+            reason: reason,
         });
-        handleDeleteCancel();
-        setReason(""); 
-      } else {
-        notification.error({
-          message: 'Customer Inactivation Failed',
-          description: 'Customer inactivation failed!',
-        });
-      }
+        if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
+            notification.success({
+                message: 'Customer Inactivated Successfully',
+                description: 'The customer has been inactivated successfully!',
+            });
+            handleDeleteCancel();
+            setRefresh(prev => !prev); 
+        } else {
+            notification.error({
+                message: 'Customer Inactivation Failed',
+                description: 'Customer inactivation failed!',
+            });
+        }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-      notification.error({
-        message: 'Customer Inactivation Failed',
-        description: errorMessage,
-      });
+        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        notification.error({
+            message: 'Customer Inactivation Failed',
+            description: errorMessage,
+        });
     }
-  };
+};
 
   const handleDeleteCancel = () => {
     setDeleteModalVisible(false);
@@ -66,27 +67,28 @@ const CustomersList = () => {
 
   const handleActivateConfirm = async () => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/cancelReq/active/${cusID}`);
-      if (response.status === 200 && response.data.message === 'Active customer successfully') {
-        notification.success({
-          message: 'Customer Activated Successfully',
-          description: 'The customer has been activated successfully!',
-        });
-        setActivateModalVisible(false);
-      } else {
-        notification.error({
-          message: 'Customer Activation Failed',
-          description: 'Customer activation failed!',
-        });
-      }
+        const response = await axios.put(`http://localhost:4000/api/cancelReq/active/${cusID}`);
+        if (response.status === 200 && response.data.message === 'Active customer successfully') {
+            notification.success({
+                message: 'Customer Activated Successfully',
+                description: 'The customer has been activated successfully!',
+            });
+            setRefresh(prev => !prev); 
+            setActivateModalVisible(false);
+        } else {
+            notification.error({
+                message: 'Customer Activation Failed',
+                description: 'Customer activation failed!',
+            });
+        }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-      notification.error({
-        message: 'Customer Activation Failed',
-        description: errorMessage,
-      });
+        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        notification.error({
+            message: 'Customer Activation Failed',
+            description: errorMessage,
+        });
     }
-  };
+};
 
   const columns = [
     { title: "Họ Tên", dataIndex: "cusName", key: "cusName", sorter: (a, b) => (a.cusName || "").localeCompare(b.cusName || ""), width: '25%' },

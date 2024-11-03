@@ -3,27 +3,35 @@ import { Modal, Form, Select, Button } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import axios from 'axios'
 import { openNotification } from '../hooks/notification'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { addAmenity } from '../hooks/redux/amenitySlice'
 import { faPray } from '@fortawesome/free-solid-svg-icons'
-function ModalAmenities({ visible, close, setFormAm }) {
+function ModalAmenities({ visible, close }) {
     const [form] = Form.useForm()
+    const dispatch = useDispatch()
+    const amenity = useSelector(state => state.amenity.amenity)
     const hotelSelected = useSelector(state => state.hotel.selectedHotel)
     const [amenities, setAmenities] = useState({})
     const [totalSelections, setTotalSelections] = useState(0);
     const [formValues, setFormValues] = useState({});
     const { Option } = Select;
     const initalAmenities = {
-        bathroom:[],
-        bedroom:[],
-        dining:[],
-        entertainment:[],
-        heatingAndCooling:[],
-        location:[],
-        outdoor:[],
-        safety:[],
-        service:[],
-        view:[]   
+        bathroom: [],
+        bedroom: [],
+        dining: [],
+        entertainment: [],
+        heatingAndCooling: [],
+        location: [],
+        outdoor: [],
+        safety: [],
+        service: [],
+        view: []
     }
+
+    function isEmptyObject(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
     useEffect(() => {
         // get amenities
         axios.get("http://localhost:4000/api/hotelList/hotelAmenities")
@@ -36,27 +44,14 @@ function ModalAmenities({ visible, close, setFormAm }) {
 
             })
     }, [])
-
+    console.log(amenity)
     useEffect(() => {
-        const aniUpdate =hotelSelected?.hotelAmenities ?? initalAmenities
-        let objectForm = {}
-        let count = 0
-        Object.entries(aniUpdate).map(([item,value])=>{
-            count+=value.length
-            objectForm ={
-                ...objectForm,
-                [item]:value,
-               
-            }
-        })
-        objectForm ={
-            ...objectForm,
-            count:count
-        }
-        setTotalSelections(count)
-        form.setFieldsValue(objectForm ?? initalAmenities)
-        console.log(objectForm)
-        setFormValues(objectForm ?? initalAmenities)
+        const aniUpdate = amenity?.view ? amenity : initalAmenities
+        console.log("Uopdate", aniUpdate)
+        
+        setTotalSelections(aniUpdate.count)
+        form.setFieldsValue(aniUpdate ?? initalAmenities)
+        setFormValues(aniUpdate ?? initalAmenities)
     }, [hotelSelected, visible, form])
 
 
@@ -76,13 +71,11 @@ function ModalAmenities({ visible, close, setFormAm }) {
                 count: newTotal
             }))
         }
-
     }
     const onFinish = (values) => {
-        setFormAm(formValues)
+        dispatch(addAmenity(formValues))
         close()
     };
-    console.log(formValues)
     const handleInsertAmenities = () => {
         form.submit()
     }

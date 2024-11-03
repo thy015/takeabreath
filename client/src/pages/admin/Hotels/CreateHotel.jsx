@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addHotel, updateHotels } from '../../../hooks/redux/hotelsSclice';
 import { openNotification } from '../../../hooks/notification';
 import ModalAmenities from '../../../component/ModalAmenities';
+import { addAmenity } from '../../../hooks/redux/amenitySlice';
 const { Option } = Select;
 
 const CreateHotel = ({ visible, handleCancel }) => {
@@ -24,7 +25,20 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const [form] = Form.useForm();
   const { data: owners, error: ownerError, loading: ownerLoad } = useGet("http://localhost:4000/api/auth/owner");
   const [visibleAm, setVisibleAm] = useState(false)
-  const [amenities, setAmenities] = useState([])
+  const amenity = useSelector(state => state.amenity.amenity)
+
+  const initalAmenities = {
+    bathroom:[],
+    bedroom:[],
+    dining:[],
+    entertainment:[],
+    heatingAndCooling:[],
+    location:[],
+    outdoor:[],
+    safety:[],
+    service:[],
+    view:[]   
+}
   // Get data 
   useEffect(() => {
 
@@ -95,11 +109,15 @@ const CreateHotel = ({ visible, handleCancel }) => {
       ...objectForm,
       count: count
     }
-    setAmenities(objectForm)
+    console.log("CREATE HOTEL",count, objectForm)
+    dispatch(addAmenity(objectForm ?? initalAmenities))
 
     // set image 
     setImages(hotelSelected.imgLink ?? [])
   }, [visible, hotelSelected, form])
+
+
+  console.log("CREATE HOTEL",amenity ?? {})
 
   if (ownerLoad) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
@@ -154,7 +172,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
       ...values,
       imgLink: images,
       ownerID: auth.user.id,
-      hotelAmenities: amenities ?? []
+      hotelAmenities: amenity ?? []
     }
     if (hotelSelected === undefined || !isEmpty(hotelSelected)) {
       try {
@@ -277,7 +295,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
           name="amenities"
 
         >
-          <Button className='w-[85%]' onClick={() => setVisibleAm(true)} > {hotelSelected.hotelAmenities ? `Bạn đã thêm ${amenities.count} tiện ích` : "Thêm tiện ích"} </Button>
+          <Button className='w-[85%]' onClick={() => setVisibleAm(true)} > {hotelSelected.hotelAmenities || amenity.count >0 ? `Bạn đã thêm ${amenity.count} tiện ích` : "Thêm tiện ích"} </Button>
         </Form.Item>
         <Form.Item
           label="Link hình ảnh"
@@ -329,9 +347,8 @@ const CreateHotel = ({ visible, handleCancel }) => {
         visible={visibleAm}
         close={() => {
           setVisibleAm(false)
-
         }}
-        setFormAm={setAmenities}></ModalAmenities>
+        ></ModalAmenities>
     </Modal>
   );
 };

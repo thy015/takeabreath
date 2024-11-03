@@ -3,6 +3,7 @@ const { Hotel, Room } = require("../../models/hotel.model");
 const { Invoice } = require("../../models/invoice.model");
 const { Owner } = require("../../models/signUp.model");
 const dayjs = require("dayjs");
+const axios=require('axios')
 const isBetween = require("dayjs/plugin/isBetween");
 
 dayjs.extend(isBetween);
@@ -136,7 +137,8 @@ const createHotel = async (req, res) => {
     hotelType,
     phoneNum,
     imgLink,
-    ownerID,
+    ownerID, 
+    hotelAmenities
   } = req.body;
 
   try {
@@ -178,6 +180,7 @@ const createHotel = async (req, res) => {
       phoneNum,
       imgLink,
       ownerID: req.ownerID,
+      hotelAmenities:hotelAmenities
     });
 
     return res.status(201).json({
@@ -192,7 +195,7 @@ const createHotel = async (req, res) => {
 };
 
 const updateHotels = async (req, res) => {
-  const { hotelName, address, city, nation, hotelType, phoneNum, imgLink } =
+  const { hotelName, address, city, nation, hotelType, phoneNum, imgLink,hotelAmenities } =
     req.body;
 
   try {
@@ -213,7 +216,7 @@ const updateHotels = async (req, res) => {
     hotel.hotelType = hotelType;
     hotel.phoneNum = phoneNum;
     hotel.imgLink = imgLink;
-
+    hotel.hotelAmenities= hotelAmenities
     await hotel.save();
 
     return res.status(200).json({
@@ -317,7 +320,28 @@ const queryHotel = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+// query ordinate location
+const googleGeometrySearch=async(req,res)=>{
+  try {
+    const { city } = req.body;
 
+    const response = await
+        axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${process.env.VITE_API_KEY}`);
+
+    //can use postman 2 see this
+    if (response.data && response.data.results.length > 0) {
+      const lat = response.data.results[0].geometry.location.lat;
+      const lng = response.data.results[0].geometry.location.lng;
+
+      return res.status(200).json({ lat, lng });
+    } else {
+      return res.status(404).json({ message: 'No results found' });
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+}
 
 const deleteHotel = async (req, res) => {
   try {
@@ -420,5 +444,6 @@ module.exports = {
   deleteHotel,
   deleteRoom,
   updateRoom,
-  getInvoicesOwner
+  getInvoicesOwner,
+  googleGeometrySearch
 };

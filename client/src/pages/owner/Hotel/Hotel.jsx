@@ -15,6 +15,7 @@ function Hotel() {
     const dispatch = useDispatch()
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
     const hotels = useSelector(state => state.hotel.hotels)
+    const amenity = useSelector(state=> state.amenity.amenity)
     const hotelSearch = useSelector(state => state.hotel.hotelSearch)
     const [visible, setVisible] = useState(false)
     useEffect(() => {

@@ -5,7 +5,6 @@ import { openNotification } from '../hooks/notification'
 import { addRoom,updateRooms } from "../hooks/redux/roomsSlice"
 import { setHotels } from '../hooks/redux/hotelsSclice';
 import { useForm } from 'antd/es/form/Form';
-import CryptoJS from "crypto-js"
 import axios from 'axios';
 function FormRoom({ isVisible, close }) {
     const [images, setImages] = useState([])

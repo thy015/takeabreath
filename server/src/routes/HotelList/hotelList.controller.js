@@ -136,7 +136,8 @@ const createHotel = async (req, res) => {
     hotelType,
     phoneNum,
     imgLink,
-    ownerID,
+    ownerID, 
+    hotelAmenities
   } = req.body;
 
   try {
@@ -178,6 +179,7 @@ const createHotel = async (req, res) => {
       phoneNum,
       imgLink,
       ownerID: req.ownerID,
+      hotelAmenities:hotelAmenities
     });
 
     return res.status(201).json({
@@ -192,7 +194,7 @@ const createHotel = async (req, res) => {
 };
 
 const updateHotels = async (req, res) => {
-  const { hotelName, address, city, nation, hotelType, phoneNum, imgLink } =
+  const { hotelName, address, city, nation, hotelType, phoneNum, imgLink,hotelAmenities } =
     req.body;
 
   try {
@@ -213,7 +215,7 @@ const updateHotels = async (req, res) => {
     hotel.hotelType = hotelType;
     hotel.phoneNum = phoneNum;
     hotel.imgLink = imgLink;
-
+    hotel.hotelAmenities= hotelAmenities
     await hotel.save();
 
     return res.status(200).json({

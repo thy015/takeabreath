@@ -44,12 +44,10 @@ function ModalAmenities({ visible, close }) {
 
             })
     }, [])
-    console.log(amenity)
     useEffect(() => {
         const aniUpdate = amenity?.view ? amenity : initalAmenities
-        console.log("Uopdate", aniUpdate)
-        
-        setTotalSelections(aniUpdate.count)
+
+        setTotalSelections(aniUpdate.count??0)
         form.setFieldsValue(aniUpdate ?? initalAmenities)
         setFormValues(aniUpdate ?? initalAmenities)
     }, [hotelSelected, visible, form])

@@ -82,6 +82,8 @@ const CreateHotel = ({ visible, handleCancel }) => {
 
   }, [])
 
+
+
   // Get data form when update or insert hotel
   useEffect(() => {
     // set input
@@ -109,7 +111,6 @@ const CreateHotel = ({ visible, handleCancel }) => {
       ...objectForm,
       count: count
     }
-    console.log("CREATE HOTEL",count, objectForm)
     dispatch(addAmenity(objectForm ?? initalAmenities))
 
     // set image 
@@ -117,7 +118,6 @@ const CreateHotel = ({ visible, handleCancel }) => {
   }, [visible, hotelSelected, form])
 
 
-  console.log("CREATE HOTEL",amenity ?? {})
 
   if (ownerLoad) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
@@ -157,7 +157,6 @@ const CreateHotel = ({ visible, handleCancel }) => {
         body: formData
       })
       const uploadedImageURL = await res.json()
-      console.log(uploadedImageURL)
       setImages(pre => [
         ...pre,
         uploadedImageURL.url
@@ -214,7 +213,6 @@ const CreateHotel = ({ visible, handleCancel }) => {
     setErrMessage('');
 
   };
-
   return (
 
     <Modal

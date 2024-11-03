@@ -52,6 +52,8 @@ ListRouter.get('/room',async(req,res)=>{
 ListRouter.post('/query',hotelListController.queryHotel)
 ListRouter.post("/createHotel", verifyOwner,hotelListController.createHotel);
 ListRouter.post("/updateHotel/:id", verifyOwner,hotelListController.updateHotels);
+// query hotel ordinate
+ListRouter.post('/google/geometry', hotelListController.googleGeometrySearch);
 // all hotel from owner that logged in
 ListRouter.get(
     "/hotelOwner",

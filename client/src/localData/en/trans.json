@@ -38,6 +38,8 @@
     "Cottage":"Cottage",
     "Glamping":"Glamping",
     "Guest House":"Guest House",
+    "Business": "Business",
+    "Dorm": "Dorm",
 
     "//login":"This is the sign-in trans",
     "not-having-an-account-yet":"Not having an account yet?",

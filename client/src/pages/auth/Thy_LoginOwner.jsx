@@ -178,10 +178,7 @@ const LogInOwner = () => {
               <div className="gryphen absolute flex mt-[100px] ml-6 text-white text-semibold text-[20px] italic">
               {t('we-sincerely-appreciate-your-partnership')}
               </div>
-              <div className="gryphen absolute flex mt-[130px] ml-[200px] text-white font-bold text-[20px] italic">
-                {t('as-a')}<span className="text-[#c3d7ef] mx-2"> TAB </span>
-                {t('partner')}
-              </div>
+
               <img
                 className="w-full flex mt-56"
                 src="/img/sign-in.svg"

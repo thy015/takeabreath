@@ -87,7 +87,7 @@ const BookingPage = () => {
                   return(
               <div key={index} className='py-2'>
                 <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
-                  <div className='row h-[150px] border-b'>
+                  <div className='row h-auto border-b'>
                     {/*Hotel Info*/}
                     <div className='col-4 flex'>
                       <img
@@ -220,7 +220,7 @@ const BookingPage = () => {
                                 </div>
 
 
-                                <div className='row px-4'>
+                                <div className='row h-auto px-4'>
                                   <div className='col-6 border-r'>
                                     <div>
                                       <Title className='text-success'>
@@ -288,7 +288,6 @@ const CancelConfirm=styled.div`
   background: white;
   align-items: start;
   justify-content: center;
-  height: 325px;
   margin-top: 20px;
   text-align: left;
   border: black solid 1px ;

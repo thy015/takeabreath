@@ -88,19 +88,19 @@ const HotelDisplay_HotelDetail = () => {
                 <Row gutter={6}>
                   <Col span={10}>
                     <img
-                        src={data.imgLink}
+                        src={data.imgLink[0]}
                         alt={`Image of ${data.hotelName}`}
                         className="w-full h-auto mb-2"
                     />
                     <img
-                        src={data.imgLink}
+                        src={data.imgLink[1]}
                         alt={`Image of ${data.hotelName}`}
                         className="w-full h-auto "
                     />
                   </Col>
                   <Col span={14}>
                     <img
-                        src={data.imgLink}
+                        src={data.imgLink[2]}
                         alt={`Image of ${data.hotelName}`}
                         className="w-full mb-6 h-full"
                     />

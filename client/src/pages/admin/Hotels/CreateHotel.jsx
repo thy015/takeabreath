@@ -178,10 +178,11 @@ const CreateHotel = ({ visible, handleCancel }) => {
       open={visible}
       onCancel={handleCancel}
       footer={null}
-      width={'50%'}
+      width={"80%"}
     >
       <Form
         form={form}
+        
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 15 }}
         name="createHotel"

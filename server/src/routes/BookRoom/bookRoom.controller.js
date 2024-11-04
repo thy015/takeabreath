@@ -124,7 +124,7 @@ const completedTran = async (req, res) => {
       paymentMethod:invoice.guestInfo.paymentMethod,
       name:invoice.guestInfo.name,
       email:invoice.guestInfo.email,
-      phoneNum:invoice.guestInfo.phoneNum,
+      phoneNum:invoice.guestInfo.phone,
       idenCard:invoice.guestInfo.idenCard,
       gender:invoice.guestInfo.gender,
       dob:invoice.guestInfo.dob

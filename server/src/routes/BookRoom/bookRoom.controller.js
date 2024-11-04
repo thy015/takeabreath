@@ -101,21 +101,42 @@ const completedTran = async (req, res) => {
   console.log(order,invoiceID)
 
   try{
+
     const invoice = await Invoice.findById(invoiceID);
     if (!invoice) {
       return res.status(404).json({message: "Invoice not found"});
     }
     const roomMatch = await Room.findById(invoice.roomID);
+    const hotelMatch=await Hotel.findById(invoice.hotelID)
+    const invoiceMatch=await Invoice.findById(invoice)
     const directPartner=await Owner.findById(invoice.ownerID)
-    if (!roomMatch) {
+    if (!roomMatch ||!hotelMatch||!invoiceMatch) {
       return res.status(404).json({message: "Room not found"});
-    } 
+    }
+    const emailData={
+      roomName:roomMatch.roomName,
+      totalRoom:invoiceMatch.guestInfo.totalRoom,
+      hotelLocation:`${hotelMatch.city} - ${hotelMatch.nation}`,
+      totalPrice:invoice.guestInfo.totalPrice,
+      checkInDay: invoice.guestInfo.checkInDay,
+      checkOutDay: invoice.guestInfo.checkOutDay,
+      totalStayDay:dayjs(invoice.guestInfo.checkOutDay).diff(dayjs(invoice.guestInfo.checkInDay),'day'),
+      paymentMethod:invoice.guestInfo.paymentMethod,
+      name:invoice.guestInfo.name,
+      email:invoice.guestInfo.email,
+      phoneNum:invoice.guestInfo.phone,
+      idenCard:invoice.guestInfo.idenCard,
+      gender:invoice.guestInfo.gender,
+      dob:invoice.guestInfo.dob
+    }
+    console.log(emailData)
     if(order.status==="COMPLETED"){
       if(invoice && invoice.invoiceState==="waiting"){
         invoice.invoiceState="paid"
         await invoice.save()
         directPartner.awaitFund += invoice.guestInfo.totalPrice
         await directPartner.save()
+        await axios.post('http://localhost:4000/api/email/send-email', emailData);
         return res.status(200).json({message:"Payment success"})
       } else if(invoice && invoice.invoiceState==="paid"){
         return res.status(200).json({message:"Payment already success"})
@@ -142,7 +163,6 @@ const queryBookingHistory = async (req, res) => {
     let paidRoomsInvoice=[]
     paidRoomsInvoice = bookedRooms.filter((iv) => iv.invoiceState === 'paid');
     if (paidRoomsInvoice.length > 0) {
-      console.log(paidRoomsInvoice)
       const bookingInfo=await Promise.all(
           paidRoomsInvoice.map(async(invoice)=>{
             const roomInfo=await Room.findById(invoice.roomID)

@@ -77,6 +77,7 @@ ListRouter.get('/hotelAmenities',async(req,res)=>{
     return res.status(500).json({message:'e in hotelList controller'})
   }
 })
+
 ListRouter.get('/roomTypes', (req, res) => {
   try {
     const types = roomSchema.path('typeOfRoom').enumValues;

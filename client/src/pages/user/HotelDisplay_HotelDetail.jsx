@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useLocation, useParams } from "react-router-dom";
 import { useGet } from "../../hooks/hooks";
 import { Spin, Alert, Row, Col } from "antd";
@@ -6,14 +6,16 @@ import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {clearClickedHotel} from "../../hooks/redux/searchSlice";
 
 const HotelDisplay_HotelDetail = () => {
   const { id } = useParams();
   const location=useLocation()
-  const {roomData}=location.state || {roomData:[]}
+  const {countRoom,clickedHotel}=useSelector((state)=>state.searchResults)
+
   // query room data result, integrate countRoom
-  const {countRoom}=useSelector((state)=>state.searchResults)
+  const {roomData}=location.state || {roomData:[]}
   const specRoomData=roomData.filter(r=>r.hotelID===id)
   const specRoomIntegratedCount=specRoomData.map((room)=> {
     const countEach=countRoom.find((cr)=>cr.roomID===room._id)
@@ -53,15 +55,15 @@ const HotelDisplay_HotelDetail = () => {
           {/* hotel info */}
           <div className="flex justify-between items-center w-full ml-2">
             <div className="flex flex-col items-start">
-              <RateStar hotel={data}></RateStar>
+              <RateStar hotel={clickedHotel}></RateStar>
               <div>
                 <h4 className="font-semibold mt-3">
-                  {data.hotelName} - {data.city}
+                  {clickedHotel.hotelName} - {clickedHotel.city}
                 </h4>
                 <div className="flex flex-row items-start ">
                   <MdRoom className="text-[#0F4098]  mb-3 text-[20px]" />
                   <div>
-                    {data.address}, {data.city}, {data.nation}
+                    {clickedHotel.address}, {clickedHotel.city}, {clickedHotel.nation}
                   </div>
                 </div>
               </div>
@@ -83,26 +85,26 @@ const HotelDisplay_HotelDetail = () => {
 
           <Col span={18}>
             <div>
-              {/* Fake 3 img until group img to a link */}
+              {/*hotel img*/}
               <div>
                 <Row gutter={6}>
                   <Col span={10}>
                     <img
-                        src={data.imgLink[0]}
-                        alt={`Image of ${data.hotelName}`}
-                        className="w-full h-auto mb-2"
+                        src={clickedHotel.imgLink[0]}
+                        alt={`Image of ${clickedHotel.hotelName}`}
+                        className="w-full h-[50%] mb-2"
                     />
                     <img
-                        src={data.imgLink[1]}
-                        alt={`Image of ${data.hotelName}`}
-                        className="w-full h-auto "
+                        src={clickedHotel.imgLink[1]}
+                        alt={`Image of ${clickedHotel.hotelName}`}
+                        className="w-full h-[48.3%] "
                     />
                   </Col>
                   <Col span={14}>
                     <img
-                        src={data.imgLink[2]}
-                        alt={`Image of ${data.hotelName}`}
-                        className="w-full mb-6 h-full"
+                        src={clickedHotel.imgLink[2]}
+                        alt={`Image of ${clickedHotel.hotelName}`}
+                        className="w-full h-full"
                     />
                   </Col>
                 </Row>
@@ -112,7 +114,7 @@ const HotelDisplay_HotelDetail = () => {
 
           <Col span={6}>
             {/* Comment - Click to open side tab */}
-            <div className="h-1/2 w-full border">
+            <div className="h-1/2 w-full border ">
               <div>
                 {/* Rate part */}
                 <div className="flex justify-end border-b h-[30%]">
@@ -136,13 +138,14 @@ const HotelDisplay_HotelDetail = () => {
                   </div>
                 </div>
 
-                <div className="h-[70%] border-b ">
+                <div className="h-1/2 border-b ">
                   {/* The comment part */}
                   <div className="h-full bg-slate-400">comment section</div>
                 </div>
               </div>
             </div>
-            <div className="h-[44.5%] mt-3 w-full border object-cover">
+
+            <div className="h-1/2 w-full border object-cover">
               {/* need map api */}
               <img
                   className="h-full w-full"

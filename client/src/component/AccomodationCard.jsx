@@ -101,7 +101,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
 const PropertyCard = ({ property, link_button, showButton = false, edit, showDeleteModal }) => {
   return (
     <Link to={`/hotel/${property._id}`} className="link-property">
-    <Card className="shadow-sm h-full rounded-[12px]">
+    <Card className="card-wrapper">
       <Card.Img
         className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
         variant="top"
@@ -149,7 +149,27 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
     </Link>
   );
 };
-
+//amenities
+const AmenitiesCard=({hotel})=>{
+//   truyền vào clicked hotel
+  return(
+  <div className='card-wrapper'>
+    <div className='row g-0'>
+      <div className='col-5'>
+    <img
+        className="w-full h-full object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
+        src='/icon/Bathroom/HairDryer.png'
+    />
+      </div>
+    <div className='col-7'>
+      <p>Type</p>
+      <p>Describe</p>
+    </div>
+    </div>
+  </div>
+  )
+}
+// trang báo lá cải
 const PressReleasesCarousel=({cardData})=>{
   // setting carousels
   const settings={
@@ -243,4 +263,4 @@ const OurAchievementsCard=({cardData})=>{
   </Slider>
   )
 }
-export { PropertyCard, AccommodationCard,PressReleasesCarousel,OurAchievementsCard };
+export { PropertyCard, AccommodationCard,PressReleasesCarousel,OurAchievementsCard ,AmenitiesCard};

@@ -106,3 +106,12 @@ ul{
 html {
   font-family: 'Poppins', sans-serif; /* Apply Poppins font to the entire HTML */
 }
+.card-wrapper{
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.25s ease-in-out;
+  &:hover{
+    transform: scale(1.05);
+}
+
+}

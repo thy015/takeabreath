@@ -120,7 +120,7 @@ const completedTran = async (req, res) => {
       totalPrice:invoice.guestInfo.totalPrice,
       checkInDay: invoice.guestInfo.checkInDay,
       checkOutDay: invoice.guestInfo.checkOutDay,
-      totalStayDay:dayjs(invoice.guestInfo.checkOutDay)-dayjs(invoice.guestInfo.checkInDay),
+      totalStayDay:dayjs(invoice.guestInfo.checkOutDay).diff(dayjs(invoice.guestInfo.checkInDay),'day'),
       paymentMethod:invoice.guestInfo.paymentMethod,
       name:invoice.guestInfo.name,
       email:invoice.guestInfo.email,

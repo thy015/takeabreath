@@ -14,6 +14,9 @@ export const searchSlice=createSlice({
             state.roomData=action.payload.roomData
             state.countRoom=action.payload.countRoom
         },
+        setClickedHotel:(state,action)=>{
+          state.clickedHotel=action.payload.clickedHotel
+        },
         clearSearchResult:(state,action)=>{
             state.hotelData=[]
             state.roomData=[]
@@ -21,5 +24,5 @@ export const searchSlice=createSlice({
         }
     }
 })
-export const {setSearchResult,clearSearchResult,countRoom}=searchSlice.actions
+export const {setSearchResult,clearSearchResult,countRoom,setClickedHotel}=searchSlice.actions
 export default searchSlice.reducer

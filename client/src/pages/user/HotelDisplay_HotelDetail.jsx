@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 const HotelDisplay_HotelDetail = () => {
   const { id } = useParams();
   const location=useLocation()
+
+
   const {roomData}=location.state || {roomData:[]}
   // query room data result, integrate countRoom
   const {countRoom}=useSelector((state)=>state.searchResults)
@@ -83,7 +85,7 @@ const HotelDisplay_HotelDetail = () => {
 
           <Col span={18}>
             <div>
-              {/* Fake 3 img until group img to a link */}
+              {/*hotel img*/}
               <div>
                 <Row gutter={6}>
                   <Col span={10}>

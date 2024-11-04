@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState={
     hotelData:[],
     roomData:[],
-    countRoom:[]
+    countRoom:[],
+    clickedHotel:{},
+    attachedRooms:[]
 }
 export const searchSlice=createSlice({
     name:'searchResult',
@@ -16,6 +18,10 @@ export const searchSlice=createSlice({
         },
         setClickedHotel:(state,action)=>{
           state.clickedHotel=action.payload.clickedHotel
+              state.attachedRooms=action.payload.attachedRooms
+        },
+        clearClickedHotel:(state,action)=>{
+            state.clickedHotel= {}
         },
         clearSearchResult:(state,action)=>{
             state.hotelData=[]
@@ -24,5 +30,5 @@ export const searchSlice=createSlice({
         }
     }
 })
-export const {setSearchResult,clearSearchResult,countRoom,setClickedHotel}=searchSlice.actions
+export const {setSearchResult,clearSearchResult,countRoom,setClickedHotel,clearClickedHotel}=searchSlice.actions
 export default searchSlice.reducer

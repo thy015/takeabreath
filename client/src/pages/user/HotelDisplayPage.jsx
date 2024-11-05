@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Booking from "../../component/Booking";
 import { Row, Col, Checkbox, Collapse, Spin, Alert } from "antd";
-import { AccommodationCard } from "../../component/AccomodationCard";
+import { AccommodationCard } from "../../component/AccommodationCard";
 import { useGet } from "../../hooks/hooks";
 import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";

@@ -3,7 +3,7 @@ import { Carousel, Row, Col, Spin, Alert } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; // Ensure you have antd's CSS
 import { useGet } from "../../hooks/hooks";
-import { PropertyCard } from "../../component/AccomodationCard";
+import { PropertyCard } from "../../component/AccommodationCard";
 
 
 const PropertyGrid = () => {

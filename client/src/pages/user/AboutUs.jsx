@@ -2,7 +2,7 @@ import React from "react";
 import {
   OurAchievementsCard,
   PressReleasesCarousel,
-} from "../../component/AccomodationCard";
+} from "../../component/AccommodationCard";
 import { pressReleasedData,ourAchievementsData } from "../../localData/localData";
 const AboutUs = () => {
   const pressReleasedDataCard = pressReleasedData();

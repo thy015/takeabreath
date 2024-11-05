@@ -20,11 +20,11 @@ const AccommodationCard = ({ hotel, onClick }) => {
 
   return (
     <div onClick={onClick}>
-    <Card className="mb-4 ">
+    <Card className="mb-4 card-wrapper">
       <Row noGutters>
         <Col md={4}>
-          <Card.Img
-            className="object-cover h-[250px] rounded-tl-[12px] rounded-tr-none rounded-br-none p-3"
+          <img
+            className="object-cover h-[250px] w-full rounded-tl-[12px] rounded-tr-none rounded-br-none p-3"
             src={hotel.imgLink[0]}
             alt="HOTEL IMG"
           />
@@ -63,11 +63,10 @@ const AccommodationCard = ({ hotel, onClick }) => {
             <Row>
                 <Col md={7}>
                   {filteredRoom ? (
-                    <div className="w-full h-28 p-2 flex justify-start flex-col items-start">
+                    <div className="w-full h-28 p-2 flex justify-center flex-col border-l items-start">
                       <h6>{filteredRoom.roomName}</h6>
                       <div>Room Type: {filteredRoom.typeOfRoom}</div>
                       <div>Number of beds: {filteredRoom.numberOfBeds}</div>
-                      <div className="text-success">Price: {formatMoney(filteredRoom.money)} VND</div>
                     </div>
                   ) : (
                     <div className="w-full h-28">No available rooms</div>
@@ -76,7 +75,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
               <Col md={5}>
                 <div className="font-semibold flex flex-col items-end">
                 {filteredRoom ? (
-                  <div className="text-green-600">From: {formatMoney(filteredRoom.money)} VND</div>)
+                  <div className="text-green-600 text-lg">From: {formatMoney(filteredRoom.money)} VND</div>)
                   :null
                   }
                   <div className="text-muted font-[14px]">
@@ -100,6 +99,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
 
 // homepage display
 const PropertyCard = ({ property, link_button, showButton = false, edit, showDeleteModal }) => {
+  // handle click each hotel
   const dispatch=useDispatch();
   const navigate=useNavigate()
   const [roomData,setRoomData]=useState(null)
@@ -125,7 +125,7 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
   }
   return (
     <div className="link-property" onClick={handleClickPropCard}>
-    <Card className="card-wrapper">
+    <Card className='card-wrapper' >
       <Card.Img
         className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
         variant="top"
@@ -135,16 +135,8 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
         <Card.Title>{property.hotelName}</Card.Title>
         <RateStar hotel={property}></RateStar>
         <Card.Text className="whitespace-nowrap overflow-hidden text-ellipsis">{property.address}</Card.Text>
-        <div className="d-flex align-items-center">
-          <div
-            style={{
-              backgroundColor: "#003580",
-              color: "white",
-              padding: "0 8px",
-              borderRadius: "5px",
-              fontWeight: "bold",
-            }}
-          >
+        <div className='flex-center'>
+          <div className='card-rate'>
             {property.rate}
           </div>
           <div style={{ marginLeft: "8px" }}>
@@ -174,29 +166,55 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
   );
 };
 //amenities
-const AmenitiesCard=({hotel})=>{
-//   truyền vào clicked hotel
-  const amenData=hotel.hotelAmenities
-  console.log(amenData)
-  return(
-  <div className='card-wrapper'>
-    <div className='row g-0'>
-      <div className='col-5'>
-    <img
-        className="w-full h-full object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none p-2"
-        src='/icon/Bathroom/HairDryer.png'
-    />
+const AmenitiesCard = ({ hotel }) => {
+  const amenData = hotel.hotelAmenities;
+  const amenKeys = Object.keys(amenData);
+
+  return (
+      <div className="flex flex-wrap gap-2">
+        {amenKeys.map((a, index) => {
+          const items = amenData[a];
+          if (items.length > 0) {
+            return items.flatMap((item, idx) => {
+              // split by comma n map
+              const individualItems = item.split(",").map(i => i.trim());
+
+              return individualItems.map((indItem, indIdx) => {
+                const encodedItem = encodeURIComponent(indItem);
+                const imgSrc = `/icon/${a}/${encodedItem}.png` || '';
+                console.log('indi items',indItem)
+                  console.log('encode',encodedItem)
+                return (
+                    <div className="card-amenities " key={`${a}-${idx}-${indIdx}`}>
+                      <div className="row g-0 w-full h-full">
+                        <div className="col-5">
+                          <img
+                              className="card-img"
+                              src={imgSrc}
+                              alt={`${indItem} icon`}
+                              onError={(e) => {
+                                // cant find pic=> fallback here
+                                e.target.src = `/icon/Avatar%20Cute/kitten.png`;
+                              }}
+                          />
+                        </div>
+                        <div className="col-7">
+                          <div className="pt-2 font-oswald text-xl flex items-center justify-start h-full">
+                            <p>{indItem}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                );
+              });
+            });
+          }
+          return null;
+        })}
       </div>
-    <div className='col-7'>
-      <div className='pt-2'>
-      <p>Type</p>
-      <p>Describe</p>
-      </div>
-    </div>
-    </div>
-  </div>
-  )
-}
+  );
+};
+
 // trang báo lá cải
 const PressReleasesCarousel=({cardData})=>{
   // setting carousels

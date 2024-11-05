@@ -1,18 +1,18 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {useLocation, useParams } from "react-router-dom";
-import { useGet } from "../../hooks/hooks";
-import { Spin, Alert, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
-import {useDispatch, useSelector} from "react-redux";
-import {clearClickedHotel} from "../../hooks/redux/searchSlice";
+import {useSelector} from "react-redux";
+import {AmenitiesCard} from "../../component/AccommodationCard";
+import styled from "styled-components";
 
 const HotelDisplay_HotelDetail = () => {
   const { id } = useParams();
   const location=useLocation()
-  const {countRoom,clickedHotel}=useSelector((state)=>state.searchResults)
+  const {countRoom,clickedHotel,attachedRooms}=useSelector((state)=>state.searchResults)
 
   // query room data result, integrate countRoom
   const {roomData}=location.state || {roomData:[]}
@@ -23,32 +23,9 @@ const HotelDisplay_HotelDetail = () => {
     return {
       ...room,
       countRoom:countEach ? countEach.countRoom :0
-
     }
   })
-  const { data, error, loading } = useGet(
-      `http://localhost:4000/api/hotelList/hotel/${id}`
-  );
 
-  if (loading) {
-    return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
-  }
-
-  if (error) {
-    console.log(data);
-    return (
-        <Alert
-            message="Error"
-            description="Failed to load hotel details."
-            type="error"
-            showIcon
-        />
-    );
-  }
-
-  if (!data) {
-    return <Alert message="No hotel data found" type="info" showIcon />;
-  }
   return (
       <div>
         <Row gutter={18}>
@@ -120,8 +97,8 @@ const HotelDisplay_HotelDetail = () => {
                 <div className="flex justify-end border-b h-[30%]">
                   <div className="mr-2">
                     {" "}
-                    <RateText hotel={data}></RateText>
-                    {data.numberOfRates} people rated
+                    <RateText hotel={clickedHotel}></RateText>
+                    {clickedHotel.numberOfRates} people rated
                   </div>
                   <div
                       className="badge bg-[#0f4098]"
@@ -134,7 +111,7 @@ const HotelDisplay_HotelDetail = () => {
                         borderBottomRightRadius: "0px",
                       }}
                   >
-                    {data.rate}
+                    {clickedHotel.rate}
                   </div>
                 </div>
 
@@ -155,25 +132,29 @@ const HotelDisplay_HotelDetail = () => {
           </Col>
 
         </Row>
-        {/* Feature display */}
-        <div> <h4 className="flex mt-12 font-semibold">Feature</h4> </div>
+        {/* Amen display */}
+        <div> <Title>What this place offers</Title>
+          <div className='flex flex-wrap'>
+          <AmenitiesCard hotel={clickedHotel}></AmenitiesCard>
+        </div>
+        </div>
         {/* Comment */}
-        <div> <h4 className="flex mt-12 font-semibold">Comments</h4> </div>
-        <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
+        <div> <Title >Comments</Title> </div>
+        <div> <Title>Room Available</Title> </div>
         {/* Room display */}
         <div>
-          {console.log('Detail hotel in hoteldisplay_hoteldetail',specRoomData)}
+          {/*bấm ở home*/}
           {specRoomData.length === 0 ? (
-              <Alert
-                  message="PLEASE QUERY FIRST"
-                  description="Please try query to see rooms"
-                  type="info"
-                  showIcon
-              />
+              <HotelDetail_RoomDisplay
+                  roomData={attachedRooms}
+                  hotel={clickedHotel}
+              >
+              </HotelDetail_RoomDisplay>
           ) : (
+              // bấm khi query
               <HotelDetail_RoomDisplay
                   roomData={specRoomIntegratedCount}
-                  hotel={data}
+                  hotel={clickedHotel}
               ></HotelDetail_RoomDisplay>
           )}
         </div>
@@ -181,4 +162,10 @@ const HotelDisplay_HotelDetail = () => {
   );
 };
 
+const Title=styled.h3`
+  display: flex;
+  margin: 32px 0;
+  font-weight: 600;
+  font-family: "Afacad Flux", sans-serif;
+`
 export default HotelDisplay_HotelDetail;

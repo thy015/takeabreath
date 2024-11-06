@@ -22,7 +22,10 @@ const items = [
         key: "owner/Vouchers",
         label: (<p className='font-bold'>Phiếu giảm giá</p>),
     },
-    ,
+    {
+        key: "owner/OggyPartner",
+        label: (<p className='font-bold'>Oggy Partner</p>),
+    },
     {
         key: "owner/Card",
         label: (<p className='font-bold'>Quản lý thẻ</p>),

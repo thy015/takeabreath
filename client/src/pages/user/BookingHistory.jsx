@@ -5,58 +5,101 @@ import styled from "styled-components";
 import { Alert, Spin } from "antd";
 import {useGet} from "../../hooks/hooks";
 import { FaLocationDot,FaPhone,FaCircleQuestion } from "react-icons/fa6"
-import { IoIosBed } from "react-icons/io";
+import { IoIosBed,IoMdArrowDropdown } from "react-icons/io";
 import { IoPeople } from "react-icons/io5";
 import { MdPolicy,MdOutlineCancel } from "react-icons/md";
 import dayjs from "dayjs";
+import axios from "axios";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 const BookingPage = () => {
 
   const { auth } = useContext(AuthContext);
   const id = auth?.user?.id;
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+
   console.log(id)
   if (!id) {
     return <Alert message="Please try logging in first" type="info" showIcon />;
   }
-  const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
+
     //modal 1st cancel pop-up
   const [clickCancel,setClickCancel]=useState(false)
+  const [isClickedConfirmCancel,setClickedConfirmCancel]=useState(false);
+
   const handleClickCancel=(invoiceID)=>{
     setClickCancel((prevState)=>({
       ...prevState,
           [invoiceID]:!prevState[invoiceID]
     }))
   }
-  const closeCancelConfirm = (invoiceId) => {
+  const closeCancelConfirm = (invoiceID) => {
     setClickCancel((prevState) => ({
       ...prevState,
-      [invoiceId]: false,
+      [invoiceID]: false,
     }));
   };
+
   const disableCancelFunc=(checkInDay)=>{
-    const now=dayjs()
-    return dayjs(checkInDay).isBefore(now);
+    const now=dayjs().tz('Asia/Ho_Chi_Minh')
+    const formattedCheckInDay=dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
+    if(formattedCheckInDay.isSame(now,'day')){
+      // after 12pm => disable
+      const todayNoon=now.startOf('day').add(12)
+      return now.isAfter(todayNoon)
+    }
+    else {
+      return formattedCheckInDay.isBefore(now)
+    }
+  }
+  const disableCancelConfirmAfterClicked=(invoiceID)=>{
+    setClickedConfirmCancel((prevState) => ({
+      ...prevState,
+      [invoiceID]: true,
+    }));
   }
   // handle cancel confirm clicked
-  const [confirmCancel,setConfirmCancel]=useState(false);
-
-  const handleConfirmCancel=(confirmCancel,checkInDay,checkOutDay)=>{
-    const now=dayjs()
-
-  }
+  const handleConfirmCancel = async (invoiceID, checkInDay, id) => {
+    const now = dayjs().tz('Asia/Ho_Chi_Minh');
+    const countDiffDay = dayjs(checkInDay).tz('Asia/Ho_Chi_Minh').diff(now, 'day');
+    console.log('Difference in days:', countDiffDay);
+    console.log(invoiceID,checkInDay,id)
+    const passingData = { countDiffDay, id };
+    try {
+      disableCancelConfirmAfterClicked(invoiceID)
+      const res = await
+          axios.post(
+              `http://localhost:4000/api/booking/bookingHistory/${invoiceID}/cancel`,
+              passingData,
+              { headers: { Authorization: `Bearer ${auth.token}` } }
+          );
+      console.log('Response:', res.data);
+    } catch (error) {
+      console.error('Error canceling booking:', error.message);
+    }
+  };
+  const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
 
   if (error) {
-    return <Alert message="Error" description="Failed to load properties." type="error" showIcon />;
+    return <Alert message="Notice" description="You haven't make any reservation." type="info" showIcon />;
   }
 
-  if (!data || data.length === 0) {
-    return <Alert message="You have not booked any hotel" type="info" showIcon />;
-  }
 
   return (
       <div className="container mx-auto p-4">
+        {/*sort*/}
+        <div className='history-wrapper'>
+          <div className='history-dropdown'>
+            <div className='pl-4'>Sort</div>
+            <div className='pr-2'>
+              <IoMdArrowDropdown></IoMdArrowDropdown>
+            </div>
+          </div>
+        </div>
         <section className="my-10">
           <div className="relative flex">
             <img
@@ -81,9 +124,14 @@ const BookingPage = () => {
           {data.data.map((resData,index)=>{
             const formattedCheckInDay=dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
             const formattedCheckOutDay=dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
+              //stop rendering if found a cancel infor of that room
+              if(resData.cancelInfo&&resData.cancelInfo.length>0){
+                console.log('hiding',resData)
+                return null
+              }
               console.log('invoice id',resData.invoiceInfo._id)
-            console.log('checkinday',resData.invoiceInfo.guestInfo.checkInDay)
-            const isDisabledCancel = disableCancelFunc(resData.invoiceInfo.guestInfo.checkInDay);
+              console.log('checkinday',resData.invoiceInfo.guestInfo.checkInDay)
+              const isDisabledCancel = disableCancelFunc(resData.invoiceInfo.guestInfo.checkInDay);
                   return(
               <div key={index} className='py-2'>
                 <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
@@ -219,7 +267,6 @@ const BookingPage = () => {
                                   Our cancel policy
                                 </div>
 
-
                                 <div className='row h-auto px-4'>
                                   <div className='col-6 border-r'>
                                     <div>
@@ -251,7 +298,10 @@ const BookingPage = () => {
                                   </div>
                                 </div>
                               <div className='flex items-end justify-end mr-3 py-3'>
-                                <Button variant='outline-danger'>
+                                <Button variant='outline-danger' onClick={()=>{
+                                  handleConfirmCancel(resData.invoiceInfo._id,resData.invoiceInfo.guestInfo.checkInDay,id)}}
+                                        disabled={isClickedConfirmCancel[resData.invoiceInfo._id]}
+                                >
                                   Accept Cancel
                                   </Button>
                                 </div>

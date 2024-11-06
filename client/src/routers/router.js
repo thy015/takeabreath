@@ -41,6 +41,7 @@ import Revienue from "../pages/owner/Revenue/Revienue";
 import Card from "../pages/owner/Card/Card";
 import StrictLoginSSO from "../pages/auth/StrictLoginSSO";
 import {OggyPartner} from "../pages/owner/OggyPartner/OggyPartner";
+import BookingHistory_BookingTab from "../pages/user/BookingHistory_BookingTab";
 export const routers = [
   {
     path: "/",
@@ -103,7 +104,7 @@ export const routers = [
   },
   {
     path: "/mybooking",
-    page: BookingHistory,
+    page: BookingHistory_BookingTab,
     isShowHeader: true,
     isShowFooter: true,
   },

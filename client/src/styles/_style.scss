@@ -1,3 +1,6 @@
+@function half($v){
+  @return $v/2
+}
 @mixin flexCenter{
   display: flex;
   justify-content: center;
@@ -39,4 +42,19 @@
   margin:10px;
   height: 75px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+//booking his
+.history-wrapper{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 100%;
+    .history-dropdown{
+      @include flexCenter;
+      background-color: lightgray;
+      width: 128px;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
 }

@@ -1,0 +1,27 @@
+@mixin flexCenter($direction,$background){
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+  background-color: $background;
+}
+$primaryButton: rgb(52, 102, 231);
+
+.hi-sass{
+  @include flexCenter(column, rgb(142, 170, 255));
+  color:blue;
+  .primaryBtn{
+    background-color:$primaryButton;
+    &:hover{
+      cursor:all-scroll;
+    }
+    &::after{
+      content:"a cutie pie";
+    }
+  }
+}
+.random-text{
+  @extend .hi-sass;
+
+
+}

@@ -1,6 +1,14 @@
+@use './styles/test' as test;
+@use './styles/style' as style;
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+//index scss contain restyle library contents and tailwind
+html{
+  font-family: 'Poppins', sans-serif;
+}
 body{
   background:black;
 }
@@ -101,19 +109,4 @@ ul{
 }
 .white-label{
   color: white!important;
-}
-/* src/App.css or src/index.css */
-html {
-  font-family: 'Poppins', sans-serif; /* Apply Poppins font to the entire HTML */
-}
-.card-wrapper{
-  border-radius: 12px;
-  cursor:pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: transform 0.25s ease-in-out;
-  border:1px solid #98DED9;
-  &:hover{
-    transform: scale(1.05);
-}
-
 }

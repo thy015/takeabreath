@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Booking from "../../component/Booking";
 import { Row, Col, Checkbox, Collapse, Spin, Alert } from "antd";
 import { AccommodationCard } from "../../component/AccomodationCard";
@@ -7,27 +7,43 @@ import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
+import {GoogleMap,Marker,useJsApiLoader} from "@react-google-maps/api";
+import {setOrdinate} from "../../hooks/redux/inputDaySlice";
+import {setClickedHotel} from "../../hooks/redux/searchSlice";
+
 const { Panel } = Collapse;
   
 const HotelDisplayCompre = () => {
+
+  const google_api_key=import.meta.env.VITE_API_KEY;
+  const dispatch=useDispatch()
   const cardItems=cardData()
-const filters = cardItems.map((c) => c.title);
+  const filters = cardItems.map((c) => c.title);
+
   // global, take from redux and booking
   const searchResults = useSelector((state) => state.searchResults);
-  const { city } = useSelector((state) => state.inputDay);
+  const { city, latitude, longitude} = useSelector((state) => state.inputDay);
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: google_api_key
+  });
 
+
+  useEffect(() => {
+    console.log(city, latitude, longitude);
+    // mở dòng này ra khi deploy để tránh block API
+    // searchMapLocation()
+  }, [city, latitude,longitude]);
   const navigate = useNavigate();
   const { data, error, loading } = useGet(
     "http://localhost:4000/api/hotelList/hotel"
   );
 
   const [selectedFilters, setSelectedFilters] = useState([]);
-
   const handleFilterChange = (checkedValues) => {
     setSelectedFilters(checkedValues);
   };
-
+  if (!isLoaded) return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
@@ -49,18 +65,25 @@ const filters = cardItems.map((c) => c.title);
   console.log(data);
   // passing prop roomData (receive array from be=> filter to each hotel)
   const handleHotelClick = async (hotel) => {
-    let roomData = [];
+    let roomData = []
+    dispatch(setClickedHotel({
+      clickedHotel:hotel
+    }))
+    // có search result thì hiện, còn ko display toàn bộ phòng
     if (searchResults?.roomData.length > 0) {
       roomData = searchResults.roomData.filter((r) => r.hotelID === hotel._id);
-    } else {
+    }
+    else {
       const response = await axios.get(
         `http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`
       );
       roomData = response.data;
       console.log('Debug roomdata in hoteldisplaypage',roomData)
     }
+
     navigate(`hotel/${hotel._id}`, { state: { roomData } });
   };
+
   // no searchResults => fall back to data
   const displayHotel = searchResults?.hotelData?.length
     ? searchResults.hotelData
@@ -73,6 +96,23 @@ const filters = cardItems.map((c) => c.title);
           selectedFilters.includes(hotel.hotelType)
         )
       : displayHotel;
+  //map default ordinate
+  async function searchMapLocation() {
+    try {
+        const res=await axios.post('http://localhost:4000/api/hotelList/google/geometry', {city})
+            .then(res => {
+              console.log(res.data);
+              dispatch(setOrdinate({
+                latitude:res.data.lat,
+                longitude:res.data.lng
+              }))
+            })
+    } catch (e) {
+      console.error("Error fetching location:", e);
+    }
+  }
+
+  const mapCenter = latitude && longitude ? { lat: latitude, lng: longitude } : { lat: 0, lng: 0 };
 
   return (
     <div>
@@ -96,8 +136,17 @@ const filters = cardItems.map((c) => c.title);
           <Row gutter={16} className="mt-6">
             <Col span={5}>
               <Breadcrumb></Breadcrumb>
-              <div className="w-[210px] h-[169px mb-4">
-                <img src="https://th.bing.com/th/id/OIP.Xl33AAWnwUNysT_nFRsUEgHaHa?rs=1&pid=ImgDetMain" />
+              {/*gg map display*/}
+              <div className="w-full h-[169px] mb-4">
+
+                 <GoogleMap
+                     mapContainerStyle={{width: '100%', height: '100%'}}
+                     center={mapCenter}
+                     zoom={10}
+                 >
+                   <Marker position={mapCenter}></Marker>
+                 </GoogleMap>
+
               </div>
               <Collapse defaultActiveKey={["1"]}>
                 <Panel header="Chọn lọc theo:" key="1">

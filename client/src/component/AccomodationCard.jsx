@@ -1,12 +1,13 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import { MdRoom } from "react-icons/md";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { RateStar } from "./Rate";
-import { useSelector } from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import Slider from 'react-slick'
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import {setClickedHotel} from "../hooks/redux/searchSlice";
 
 // hotel display page
 const AccommodationCard = ({ hotel, onClick }) => {
@@ -99,13 +100,36 @@ const AccommodationCard = ({ hotel, onClick }) => {
 
 // homepage display
 const PropertyCard = ({ property, link_button, showButton = false, edit, showDeleteModal }) => {
+  const dispatch=useDispatch();
+  const navigate=useNavigate()
+  const [roomData,setRoomData]=useState(null)
+    useEffect(()=>{
+      const fetchRoomData=async()=>{
+        try{
+            const res=await fetch(`http://localhost:4000/api/hotelList/hotel/${property._id}/room`)
+              const data=await res.json();
+                setRoomData(data)
+        }catch(e){
+            console.log('E in property card fe', e)
+        }
+      }
+      fetchRoomData()
+    },[property._id])
+
+  const handleClickPropCard=()=>{
+    dispatch(setClickedHotel({
+      clickedHotel:property,
+      attachedRooms:roomData
+    }))
+    navigate(`/hotel/${property._id}`)
+  }
   return (
-    <Link to={`/hotel/${property._id}`} className="link-property">
-    <Card className="shadow-sm h-full rounded-[12px]">
+    <div className="link-property" onClick={handleClickPropCard}>
+    <Card className="card-wrapper">
       <Card.Img
         className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
         variant="top"
-        src={property.imgLink}
+        src={property.imgLink[0]}
       />
       <Card.Body className="h-[210px] flex flex-col flex-grow-1">
         <Card.Title>{property.hotelName}</Card.Title>
@@ -146,10 +170,34 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
        )}
       </Card.Body>
     </Card>
-    </Link>
+    </div>
   );
 };
-
+//amenities
+const AmenitiesCard=({hotel})=>{
+//   truyền vào clicked hotel
+  const amenData=hotel.hotelAmenities
+  console.log(amenData)
+  return(
+  <div className='card-wrapper'>
+    <div className='row g-0'>
+      <div className='col-5'>
+    <img
+        className="w-full h-full object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none p-2"
+        src='/icon/Bathroom/HairDryer.png'
+    />
+      </div>
+    <div className='col-7'>
+      <div className='pt-2'>
+      <p>Type</p>
+      <p>Describe</p>
+      </div>
+    </div>
+    </div>
+  </div>
+  )
+}
+// trang báo lá cải
 const PressReleasesCarousel=({cardData})=>{
   // setting carousels
   const settings={
@@ -243,4 +291,4 @@ const OurAchievementsCard=({cardData})=>{
   </Slider>
   )
 }
-export { PropertyCard, AccommodationCard,PressReleasesCarousel,OurAchievementsCard };
+export { PropertyCard, AccommodationCard,PressReleasesCarousel,OurAchievementsCard ,AmenitiesCard};

@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AudioOutlined } from '@ant-design/icons';
+import { useMediaQuery } from 'react-responsive';
 import { Button, Table, Popconfirm, Typography, Space, Input } from 'antd'
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { CreateHotel } from '../../admin/Hotels/CreateHotel'
-import { setHotels, deleteHotel, seletedHotel,searchHotels } from '../../../hooks/redux/hotelsSclice';
+import { setHotels, deleteHotel, seletedHotel, searchHotels } from '../../../hooks/redux/hotelsSclice';
 import axios from 'axios'
 import { openNotification } from '../../../hooks/notification';
 
 function Hotel() {
     const dispatch = useDispatch()
+    const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
     const hotels = useSelector(state => state.hotel.hotels)
-    const hotelSearch = useSelector(state=>state.hotel.hotelSearch)
+    const amenity = useSelector(state=> state.amenity.amenity)
+    const hotelSearch = useSelector(state => state.hotel.hotelSearch)
     const [visible, setVisible] = useState(false)
     useEffect(() => {
         axios.get("http://localhost:4000/api/hotelList/hotelOwner")
@@ -28,17 +31,20 @@ function Hotel() {
                 )))
                 dispatch(setHotels(hotels))
             })
-            .catch(err => console.log("HOTEL",err))
+            .catch(err => console.log("HOTEL", err))
     }, [])
 
     const handleDelete = (record) => {
         axios.delete(`http://localhost:4000/api/hotelList/deleteHotel/${record._id}`)
             .then(res => res.data)
             .then(data => {
-                dispatch(deleteHotel(record._id))
+                console.log(data)
                 openNotification(true, "Xóa khách sạn thành công !", "")
+                dispatch(deleteHotel(record._id))
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                openNotification(false, "Xóa khách sạn thất bại !", err.response?.data?.message ?? "")
+            })
     }
 
     const handleUpdate = (record) => {
@@ -47,7 +53,7 @@ function Hotel() {
         setVisible(true)
     }
 
-    const columns = [   
+    const columns = [
         {
             title: 'Tên khách sạn',
             dataIndex: 'hotelName',
@@ -104,11 +110,12 @@ function Hotel() {
         },
         ,
         {
-            fixed: 'right',
+            fixed: isMobile ? '' : 'right',
             title: 'Action',
             width: 200,
             dataIndex: 'action',
             key: 'action',
+
             render: (_, record) => {
                 return (
                     <>
@@ -129,34 +136,33 @@ function Hotel() {
         },
     ];
 
-    const onSearch = (value, _e, info) =>{
+    const onSearch = (value, _e, info) => {
         dispatch(searchHotels(value))
     }
-
-    const suffix = (
-        <AudioOutlined
-          style={{
-            fontSize: 16,
-            color: '#1677ff',
-          }}
-        />
-      );
     return (
         <>
-            <div className='h-full '>
-                <div className='w-full text-left py-[20px] px-[40px] d-flex justify-between items-center'>
+            <div className='h-full p-4'>
+                <div className='flex flex-wrap  justify-between items-center py-4'>
                     <Link>
                         <Button
+                            className={isMobile ? 'hidden':""}
                             onClick={() => setVisible(true)}
                             type='primary'
                             icon={<FontAwesomeIcon icon={faPlus} />}
                         >
                             Thêm khách sạn
                         </Button>
+                        <Button
+                            className={!isMobile ? 'hidden':""}
+                            onClick={() => setVisible(true)}
+                            type='primary'
+                            icon={<FontAwesomeIcon icon={faPlus} />}
+                        >
+                        </Button>
                     </Link>
-                    <Input.Search  
-                        placeholder='Tim kiếm theo tên'
-                        className='max-w-[200px]'
+                    <Input.Search
+                        placeholder='Tìm kiếm theo tên'
+                        className='max-w-[200px] w-full md:w-auto '
                         allowClear
                         enterButton
                         onSearch={onSearch}
@@ -170,18 +176,17 @@ function Hotel() {
                         scroll={{
                             x: 'max-content',
                         }}
-                    >
-
-                    </Table>
+                        className="min-w-full"
+                    />
                 </div>
+                <CreateHotel
+                    visible={visible}
+                    handleCancel={() => {
+                        setVisible(false);
+                        dispatch(seletedHotel({}));
+                    }}
+                />
             </div>
-            <CreateHotel
-                visible={visible}
-                handleCancel={() => {
-                    setVisible(false)
-                    dispatch(seletedHotel({}))
-                }}
-            ></CreateHotel>
         </>
 
     )

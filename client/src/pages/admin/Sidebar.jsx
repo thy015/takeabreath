@@ -11,7 +11,6 @@ import {
   FaTicketAlt,
   FaReceipt,
 } from "react-icons/fa";
-import "../../App.css";
 import { FaHand } from "react-icons/fa6";
 
 const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => (

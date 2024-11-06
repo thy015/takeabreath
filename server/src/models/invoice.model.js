@@ -15,7 +15,7 @@ const InvoiceSchema = new mongoose.Schema({
       phone:{type:String,required:true},
       dob:{type:Date,required:true},
       gender:{type:String,required:true, enum:['male','female','unknown']},
-      paymentMethod:{type:String, enum:['momo','paypal'],required:true},
+      paymentMethod:{type:String, enum:['momo','paypal','wowo'],required:true},
       checkInDay: { type: Date, required: true },
       checkOutDay: { type: Date, required: true },
       totalPrice: { type: Number, required: true },

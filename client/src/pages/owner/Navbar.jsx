@@ -2,17 +2,16 @@ import React, { useContext, useState } from "react";
  import { FaSearch, FaEnvelope, FaRegBell } from "react-icons/fa";
 import { AuthContext } from "../../hooks/auth.context";
 import { useNavigate } from "react-router-dom";
+import { MenuOutlined } from '@ant-design/icons';
 import axios from "axios";
-function Navbar() {
+function Navbar({isMenuOpen,setIsMenuOpen}) {
     const {auth,setAuth} = useContext(AuthContext)
-    console.log(auth)
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
     axios.defaults.withCredentials = true
     const showProfile = () => {
       setOpen(!open);
     };
-    console.log(auth)
     const hanldeLogout = ()=>{
       axios.get("http://localhost:4000/api/auth/logout")
       .then(res => {
@@ -39,6 +38,9 @@ function Navbar() {
       <div className="flex items-center justify-end h-[70px] shadow-lg px-[25px] ">
        
         <div className="flex items-center gap-[20px]">
+        <button className="md:hidden absolute top-4 left-4 z-10" onClick={() => setIsMenuOpen(true)}>
+                    <MenuOutlined className="text-2xl text-[#003580]" />
+                </button>
           <div className="flex items-center gap-[25px] border-r-[1px] pr-[25px]">
              <FaRegBell />
             <FaEnvelope /> 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Button, Table, Space, Typography, Popconfirm,Input } from 'antd'
+import { useMediaQuery } from 'react-responsive';
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FormRoom from '../../../component/FormRoom'
@@ -12,6 +13,7 @@ import { setRooms, deleteRoom, selectedRoom, searchRoom } from '../../../hooks/r
 function Room() {
   const dispatch = useDispatch()
   const rooms = useSelector(state => state.room.roomSearch)
+  const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
 
   useEffect(() => {
     axios.get("http://localhost:4000/api/hotelList/list-room")
@@ -43,7 +45,7 @@ function Room() {
       })
       .catch(err => {
         console.log(err)
-        openNotification(false, "Xóa phòng thất bại !", "Vui long thử lại sau")
+        openNotification(false, "Xóa phòng thất bại !", err.response?.data?.message?? "Vui long thử lại sau")
       })
   }
 
@@ -99,7 +101,7 @@ function Room() {
     {
       title: "Chỉnh sửa",
       key: "edit",
-      fixed: "right",
+      fixed: isMobile?"":"right",
       width: 200,
       render: (_, record) => {
         return (
@@ -128,11 +130,19 @@ function Room() {
       <div className='w-full text-left py-[20px] px-[40px] d-flex justify-between items-center'>
         <Link >
           <Button
+            className={!isMobile ? "" :"hidden"}
             onClick={() => setVisible(true)}
             type='primary'
             icon={<FontAwesomeIcon icon={faPlus} />}
           >
             Thêm phòng
+          </Button>
+          <Button
+            className={isMobile ? "" :"hidden"}
+            onClick={() => setVisible(true)}
+            type='primary'
+            icon={<FontAwesomeIcon icon={faPlus} />}
+          >
           </Button>
         </Link>
         <Input.Search
@@ -145,6 +155,7 @@ function Room() {
       </div>
 
       <Table
+        className='mr-[20px]'
         dataSource={rooms}
         columns={column}
         scroll={{
@@ -154,7 +165,6 @@ function Room() {
       ></Table>
 
       <FormRoom
-
         isVisible={visible}
         close={() => {
           dispatch(selectedRoom({}))

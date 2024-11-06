@@ -1,7 +1,9 @@
 const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
-const {Hotel,Room} = require("../../models/hotel.model");
+const {Hotel,amenitiesEnum,roomSchema,hotelSchema} = require("../../models/hotel.model");
+const {Room} = require("../../models/hotel.model");
+const {Invoice} = require("../../models/invoice.model")
 const { verifyOwner } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
@@ -48,8 +50,10 @@ ListRouter.get('/room',async(req,res)=>{
 })
 // search hotel
 ListRouter.post('/query',hotelListController.queryHotel)
-ListRouter.post("/createHotel", hotelListController.createHotel);
-ListRouter.post("/updateHotel/:id", hotelListController.updateHotels);
+ListRouter.post("/createHotel", verifyOwner,hotelListController.createHotel);
+ListRouter.post("/updateHotel/:id", verifyOwner,hotelListController.updateHotels);
+// query hotel ordinate
+ListRouter.post('/google/geometry', hotelListController.googleGeometrySearch);
 // all hotel from owner that logged in
 ListRouter.get(
     "/hotelOwner",
@@ -65,19 +69,27 @@ ListRouter.get('/hotelCities',async(req,res)=>{
     return res.status(500).json({message:'e in hotelList route'})
   }
 })
-ListRouter.get('/roomTypes',async(req,res)=>{
+ListRouter.get('/hotelAmenities',async(req,res)=>{
   try{
-    const rooms=await Room.find()
-    const types=[...new Set(rooms.map(r=>r.typeOfRoom))]
-    return res.status(200).json({types})
+    return res.status(200).json({ amenitiesEnum});
+
   }catch(e){
-    console.log('E in hotelList route',e.message )
+    return res.status(500).json({message:'e in hotelList controller'})
   }
 })
+
+ListRouter.get('/roomTypes', (req, res) => {
+  try {
+    const types = roomSchema.path('typeOfRoom').enumValues;
+    return res.status(200).json({ types });
+  } catch (e) {
+    console.error('Error fetching room types:', e.message);
+    return res.status(500).json({ message: 'Failed to fetch room types' });
+  }
+});
 ListRouter.get('/hotelTypes',async(req,res)=>{
   try{
-    const hotels=await Hotel.find()
-    const types=[...new Set(hotels.map(ht=>ht.hotelType))]
+    const types=hotelSchema.path('hotelType').enumValues
     return res.status(200).json({types})
   }catch(e){
     console.log('E in hotelList route',e.message )
@@ -105,7 +117,20 @@ ListRouter.get("/list-room",
         const rooms = await Room.find({
           ownerID:ownerId
         }).populate("hotelID")
-        res.status(200).json({status:true,rooms: rooms});
+
+        const getCountRoom = await Promise.all(
+          rooms.map(async (item) => {
+            let count = 0
+            const invoices = await Invoice.find({roomID:item._id})
+            
+            invoices.map(invoice=>{
+              count += invoice.guestInfo.totalRoom
+            })
+            // Thêm thuộc tính revenue vào object hotel
+            return { ...item.toObject(), revenue: count };
+          })
+        );
+        res.status(200).json({status:true,rooms: getCountRoom});
       } catch (e) {
         res.status(500).json({message:e.message});
       }

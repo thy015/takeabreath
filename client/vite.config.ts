@@ -1,15 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import viteTsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import viteTsconfigPaths from 'vite-tsconfig-paths';
+import replace from '@rollup/plugin-replace'; // Import the replace plugin
 
 export default defineConfig({
-    // depending on your application, base can also be "/"
     base: '',
-    plugins: [react()],
-    server: {    
-        // this ensures that the browser opens upon server start
+    plugins: [
+        react(),
+        replace({
+            preventAssignment: true,
+            values: {
+                'process.env.VITE_API_KEY': JSON.stringify(process.env.VITE_API_KEY),
+            },
+        }),
+    ],
+    server: {
         open: true,
-        // this sets a default port to 3000  
-        port: 3000, 
+        port: 3000,
     },
-})
+});

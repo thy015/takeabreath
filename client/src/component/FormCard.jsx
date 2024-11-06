@@ -22,7 +22,13 @@ function FormCard({ visible, close }) {
             openNotification(false,"Ngày hết hạn phải ở tương lai","")
             return
         }
-
+        
+        // thời hạn thẻ phải ít nhất 1 năm 
+        if(!expDay.isAfter(currentDay.add(1, "year"))){
+            openNotification(false,"Ngày hết hạn ít nhất là 1 năm sau","")
+            return
+        }
+        
         axios.post("http://localhost:4000/api/auth/insert-card",{numberCard,cvv,expDay})
             .then(res=>res.data)
             .then(data=>{
@@ -32,7 +38,7 @@ function FormCard({ visible, close }) {
             })
             .catch(err=>{
                 console.log(err)
-                openNotification(false,"Thêm thẻ không thành công","")
+                openNotification(false,"Thêm thẻ không thành công",err.response?.data?.message??"")
             })
     }
 

@@ -11,8 +11,7 @@ function TableVoucher({ component, columns, data }) {
             dataSource={data}
             bordered
             scroll={{
-                x: 500,
-                y: 400,
+                x:"max-content"
               }}
             pagination={{
                 pageSize: 20,

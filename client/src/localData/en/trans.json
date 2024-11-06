@@ -38,6 +38,8 @@
     "Cottage":"Cottage",
     "Glamping":"Glamping",
     "Guest House":"Guest House",
+    "Business": "Business",
+    "Dorm": "Dorm",
 
     "//login":"This is the sign-in trans",
     "not-having-an-account-yet":"Not having an account yet?",
@@ -61,7 +63,7 @@
     "//registerOwner":"This is the registerOwner trans",
     "register-owner-describe":"Register for Your Very First Journey",
     "be-an-owner":"Be an owner",
-    "iden-card":"Identification Card",
+    "iden-card":"Identity Card",
     "as-a":"as a",
     "partner":"Partner",
 

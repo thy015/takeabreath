@@ -1,9 +1,7 @@
 import React from "react";
 import { Col, Row, Tabs } from "antd";
-import HotelDisplay_HotelDetail from "./HotelDisplay_HotelDetail";
-import Booking from "../../component/Booking";
-import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 import BookingHistory from "./BookingHistory";
+import YourCancelRequest from "./YourCancelRequest";
 const { TabPane } = Tabs;
 const BookingHistory_BookingTab = () => {
     const tab_titles = [
@@ -12,7 +10,7 @@ const BookingHistory_BookingTab = () => {
             title: "Booking History",
             content: <BookingHistory></BookingHistory>,
         },
-        { key: "2", title: "Your Cancel Request", content: ''},
+        { key: "2", title: "Your Cancel Request", content:<YourCancelRequest></YourCancelRequest>},
         { key: "3", title: "Refund Amount", content: "" },
         // { key: "4", title: "Policies", content: "" },
 
@@ -24,7 +22,7 @@ const BookingHistory_BookingTab = () => {
                     <div className="w-full p-4">
                         <Tabs defaultActiveKey="1" size="large" className='text-center flex-center'>
                             {tab_titles.map((tab) => (
-                                <TabPane tab={tab.title} key={tab.key} >
+                                <TabPane tab={tab.title} key={tab.key} style={{ width: '100%' }} >
                                     {tab.content}
                                 </TabPane>
                             ))}

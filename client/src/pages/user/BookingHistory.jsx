@@ -21,7 +21,7 @@ const BookingPage = () => {
 
   console.log(id)
   if (!id) {
-    return <Alert message="Please try logging in first" type="info" showIcon />;
+    return <Alert message="Please try sign in first" type="info" showIcon />;
   }
 
     //modal 1st cancel pop-up
@@ -80,6 +80,8 @@ const BookingPage = () => {
     }
   };
   const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
+
+  console.log(localStorage.getItem('invoiceData'))
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }

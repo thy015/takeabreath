@@ -1,11 +1,22 @@
+@function half($v){
+  @return $v/2
+}
+
+@mixin space-y($v) {
+  margin-top: $v;
+  margin-bottom: $v;
+}
+
 @mixin flexCenter{
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .flex-center{
   @include  flexCenter
 }
+
 //homepage Card
 .card-wrapper{
   border-radius: 0 0 32px 32px;
@@ -26,6 +37,13 @@
       border-radius: 0;
       padding: 8px;
     }
+    //for cancel req
+    .card-holder{
+      @include space-y(8px);
+      width: 100%;
+      height:100px;
+      background-color: lightgray;
+    }
   &:hover{
     transform: scale(1.05);
   }
@@ -39,4 +57,19 @@
   margin:10px;
   height: 75px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+//booking his
+.history-wrapper{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 100%;
+    .history-dropdown{
+      @include flexCenter;
+      background-color: lightgray;
+      width: 128px;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
 }

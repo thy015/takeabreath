@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import {useGet} from "../hooks/hooks";
 
 export const cardData = ()=>{
   const {t}=useTranslation()
@@ -150,4 +151,8 @@ export const ourAchievementsData=()=>{
     },
   ]
 }
-
+// // booking his
+// export const bookingHisQuery=()=>{
+//   const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
+//   localStorage.setItem('invoiceData',JSON.stringify(data))
+// }

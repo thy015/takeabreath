@@ -7,6 +7,7 @@ const utc=require('dayjs/plugin/utc')
 const {Owner} = require("../../models/signUp.model");
 const {OrderResponse, WoWoWallet}=require('@htilssu/wowo')
 const axios = require("axios");
+const {CancelRequest} = require("../../models/cancelReq.model");
 
 dayjs.extend(timezone)
 dayjs.extend(utc)
@@ -153,27 +154,53 @@ const completedTran = async (req, res) => {
   }
 };
 
+const changeInvoiceState=async(req,res)=>{
+  const {invoiceID}=req.query
+  try {
+    const invoice = await Invoice.findById(invoiceID);
+
+    if (!invoice) {
+      return res.status(404).json({ message: "Invoice not found" });
+    }
+
+    if (invoice.invoiceState === "waiting") {
+      invoice.invoiceState = "paid";
+      await invoice.save();
+      return res.status(200).json({ message: "Invoice state updated to paid" });
+    }
+    else {
+      return res.status(400).json({ message: "Invoice is not in waiting state" });
+    }
+  } catch (e) {
+    console.error("[ERROR]", e);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 const queryBookingHistory = async (req, res) => {
-  const id = req.params.id; // Extract cusID from req.params
+  const id = req.params.id;
   if (!id) {
     return res.status(403).json({ message: "Missing customer ID" });
   }
   try {
-    const bookedRooms = await Invoice.find({ cusID: id });
-    let paidRoomsInvoice=[]
-    paidRoomsInvoice = bookedRooms.filter((iv) => iv.invoiceState === 'paid');
+    let bookedRooms = await Invoice.find({ cusID: id });
+    let paidRoomsInvoice=bookedRooms.filter((iv) => iv.invoiceState === 'paid');
+
     if (paidRoomsInvoice.length > 0) {
-      const bookingInfo=await Promise.all(
+      let bookingInfo=await Promise.all(
           paidRoomsInvoice.map(async(invoice)=>{
-            const roomInfo=await Room.findById(invoice.roomID)
-            const hotelInfo=await Hotel.findById(invoice.hotelID)
+            let roomInfo=await Room.findById(invoice.roomID)
+            let hotelInfo=await Hotel.findById(invoice.hotelID)
+            let cancelInfo=await CancelRequest.find({invoiceID:invoice._id})
             return{
               invoiceInfo:invoice,
               roomInfo:roomInfo,
-              hotelInfo:hotelInfo
+              hotelInfo:hotelInfo,
+              cancelInfo:cancelInfo
             }
           })
       )
+      console.log(bookingInfo)
       return res.status(200).json({
         data:bookingInfo
       });
@@ -184,6 +211,36 @@ const queryBookingHistory = async (req, res) => {
     return res.status(500).json({ message: "Error in controller", error: e });
   }
 };
+
+const cancelBooking=async(req,res)=>{
+  const {invoiceID}=req.params
+  const {countDiffDay,id}=req.body
+  //cant check here, check here caused error
+  try{
+    // còn 1 ngày
+    const dayDifference = parseInt(countDiffDay, 10);
+    console.log(dayDifference)
+    if(dayDifference===0){
+      let createDoneCancelRequest=await CancelRequest.create({
+        isAccept:'accepted',
+        dayAcp:new Date(),
+        invoiceID:invoiceID,
+        cusID:id
+      })
+      console.log(createDoneCancelRequest)
+      return res.status(200).json({message:'Success cancel room',data:createDoneCancelRequest})
+    }
+    let createWaitingCancelRequest=await CancelRequest.create({
+      invoiceID:invoiceID,
+      cusID:id,
+      // day counted til checkin day
+      dayDiffFromCheckIn:dayDifference
+    })
+    return res.status(200).json({message:'Waiting cancel room approved',data:createWaitingCancelRequest})
+  }catch(e){
+    return res.status(500).json({message:'I server in cancel Booking controller'})
+  }
+}
 
 const getInvoicesWithReceipts = async (req, res) => {
   try {
@@ -217,7 +274,9 @@ module.exports = {
   bookRoom,
   getInvoicesWithReceipts,
   queryBookingHistory,
+  cancelBooking,
   completedTran,
   getInvoicesPaid,
+  changeInvoiceState,
   getInvoicesWaiting
 };

@@ -8,6 +8,7 @@ const {Owner} = require("../../models/signUp.model");
 const {OrderResponse, WoWoWallet}=require('@htilssu/wowo')
 const axios = require("axios");
 const {CancelRequest} = require("../../models/cancelReq.model");
+const moment = require("moment");
 
 dayjs.extend(timezone)
 dayjs.extend(utc)
@@ -44,14 +45,33 @@ const bookRoom = async (req, res) => {
               checkInDay: new Date(convertCheckInDay),
               checkOutDay: new Date(convertCheckOutDay)
             }
-      })
-          if(dataBooking.paymentMethod==="wowo"){
+         })
+          if(dataBooking.paymentMethod==='paypal'){
+            // hủy invoice sau 20p
+            setTimeout(async()=>{
+              const updatedInvoice= await Invoice.findById(invoice._id)
+              if(updatedInvoice && updatedInvoice.invoiceState==="waiting"){
+                await Invoice.findByIdAndDelete(invoice._id)
+                console.log(`Invoice ${invoice._id} deleted due to time out`)
+              }
+            },120000)
+            // paypal
+            return res.status(200).json(
+                {
+                  status:"OK",
+                  message:"Invoice created successfully, waiting for payment",
+                  paymentMethod: 'paypal',
+                  data:invoice,
+                  invoiceID:invoice._id
+                })
+          }
+          else if(dataBooking.paymentMethod==="wowo"){
             console.log('log', [room.roomName,room.money,dataBooking.totalRoom,dataBooking.total])
 
             const wowoWallet=new WoWoWallet(`${process.env.WOWO_SECRET}`);
             const newOrder={
               money:dataBooking.total,
-              serviceName:'Đặt phòng',
+              serviceName:'TakeABreath',
               items:[
                 {name:room.roomName,amount:dataBooking.totalRoom, unitPrice:room.money}
               ],
@@ -64,29 +84,25 @@ const bookRoom = async (req, res) => {
               const orderResponse = await wowoWallet.createOrder(newOrder);
               console.log("Đơn hàng đã được tạo:", orderResponse);
               if(orderResponse.status==='PENDING'){
-
+              return res.status(201).json({
+                message:'Created order',
+                paymentMethod: 'wowo',
+                orderResponse:orderResponse
+              })
+              }else{
+                setTimeout(async()=>{
+                  const updatedInvoice= await Invoice.findById(invoice._id)
+                  if(updatedInvoice && updatedInvoice.invoiceState==="waiting"){
+                    await Invoice.findByIdAndDelete(invoice._id)
+                    console.log(`Invoice ${invoice._id} deleted due to time out`)
+                  }
+                },120000)
+                return res.status(401).json({message:'Failed create order'})
               }
             } catch (error) {
               console.error("Lỗi khi tạo đơn hàng:", error.message);
             }
           }
-      // hủy invoice sau 20p
-      setTimeout(async()=>{
-        const updatedInvoice= await Invoice.findById(invoice._id)
-        if(updatedInvoice && updatedInvoice.invoiceState==="waiting"){
-          await Invoice.findByIdAndDelete(invoice._id)
-          console.log(`Invoice ${invoice._id} deleted due to time out`)
-        }
-      },120000)
-
-      return res.status(200).json(
-        {
-          status:"OK",
-          message:"Invoice created successfully, waiting for payment",
-          data:invoice,
-          invoiceID:invoice._id
-        }) 
-
   }catch(e){
     console.log("[ERROR]",e)
     return res.status(500).json({message:"Internal server error"})
@@ -221,9 +237,10 @@ const cancelBooking=async(req,res)=>{
     const dayDifference = parseInt(countDiffDay, 10);
     console.log(dayDifference)
     if(dayDifference===0){
+      let convertDayAcp=moment().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       let createDoneCancelRequest=await CancelRequest.create({
         isAccept:'accepted',
-        dayAcp:new Date(),
+        dayAcp:convertDayAcp,
         invoiceID:invoiceID,
         cusID:id
       })

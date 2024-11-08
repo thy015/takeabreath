@@ -12,11 +12,17 @@
   justify-content: center;
   align-items: center;
 }
-
-.flex-center{
-  @include  flexCenter
+@mixin flexBetween{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
+.flex-center{
+  @include flexCenter
+}
+.flex-between{
+  @include flexBetween
+}
 //homepage Card
 .card-wrapper{
   border-radius: 0 0 32px 32px;
@@ -39,10 +45,11 @@
     }
     //for cancel req
     .card-holder{
-      @include space-y(8px);
-      width: 100%;
+      @include space-y(12px);
+      width: 800px;
       height:100px;
-      background-color: lightgray;
+      background-color: white;
+      box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
     }
   &:hover{
     transform: scale(1.05);
@@ -57,6 +64,7 @@
   margin:10px;
   height: 75px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
 }
 //booking his
 .history-wrapper{

@@ -14,7 +14,7 @@
   "description": "",
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
-    "@htilssu/wowo": "^1.1.32",
+    "@htilssu/wowo": "^1.1.34",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -27,6 +27,8 @@
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "mailgen": "^2.0.28",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.46",
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.5",
     "morgan": "^1.10.0",

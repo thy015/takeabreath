@@ -20,7 +20,7 @@ const BookingHistory_BookingTab = () => {
             <Col span={4} />
             <Col span={16}>
                     <div className="w-full p-4">
-                        <Tabs defaultActiveKey="1" size="large" className='text-center flex-center'>
+                        <Tabs defaultActiveKey="1" size="large" className='text-center flex-center w-full'>
                             {tab_titles.map((tab) => (
                                 <TabPane tab={tab.title} key={tab.key} style={{ width: '100%' }} >
                                     {tab.content}

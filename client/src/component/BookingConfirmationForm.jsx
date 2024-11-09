@@ -109,11 +109,23 @@ function BookingConfirmationForm({isShow, onCancel}) {
         dataBooking,
       });
       console.log("[RESPONSE]", response.data);
-      console.log('[Invoice ID]',response.data.invoiceID)
-      dispatch(setInvoiceID({invoiceID:response.data.invoiceID}))
+      // paypal
       if(response.status===200){
+        console.log('[Invoice ID]',response.data.invoiceID)
+        dispatch(setInvoiceID({invoiceID:response.data.invoiceID}))
         setPaymentModalVisible(true)
-      } else {
+      //   wowo
+      } else if(response.status===201){
+        console.log('check url', response.data.orderResponse.checkoutUrl)
+        const checkoutUrl = response.data.orderResponse.checkoutUrl;
+        if (checkoutUrl) {
+          window.open(checkoutUrl,'_blank');
+          setPaymentModalVisible(true)
+        } else {
+          message.error("WoWo checkout URL is missing.");
+        }
+      }
+      else {
         message.error("Booking failed", message.error(response.data.message));
       }
     } catch (e) {

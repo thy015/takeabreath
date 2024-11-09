@@ -299,12 +299,18 @@ const BookingPage = () => {
                                     </div>
                                   </div>
                                 </div>
-                              <div className='flex items-end justify-end mr-3 py-3'>
-                                <Button variant='outline-danger' onClick={()=>{
-                                  handleConfirmCancel(resData.invoiceInfo._id,resData.invoiceInfo.guestInfo.checkInDay,id)}}
-                                        disabled={isClickedConfirmCancel[resData.invoiceInfo._id]}
-                                >
-                                  Accept Cancel
+                                <div
+                                    className='flex-center font-afacad text-muted text-xl mt-2'>
+                                  Please make sure you added a valid card before cancel
+                                  <span className='ml-2 px-2 cursor-pointer border-bottom'>Add here</span>
+                                </div>
+                                <div className='flex items-end justify-end mr-3 py-3'>
+                                  <Button variant='outline-danger' onClick={() => {
+                                    handleConfirmCancel(resData.invoiceInfo._id, resData.invoiceInfo.guestInfo.checkInDay, id)
+                                  }}
+                                          disabled={isClickedConfirmCancel[resData.invoiceInfo._id]}
+                                  >
+                                    Accept Cancel
                                   </Button>
                                 </div>
                               </CancelConfirm>
@@ -314,7 +320,8 @@ const BookingPage = () => {
                   </div>
                 </div>
               </div>
-          )})}
+                  )
+          })}
 
         </section>
       </div>

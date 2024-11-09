@@ -11,7 +11,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@htilssu/wowo": "^1.1.24",
+    "@htilssu/wowo": "^1.1.34",
     "@mui/material": "^6.1.6",
     "@mui/x-charts": "latest",
     "@paypal/react-paypal-js": "^8.7.0",
@@ -61,7 +61,7 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build",
+    "build": "VITE_CJS_TRACE=true vite build",
     "lint": "eslint src/**/*.{js,jsx,mjs,cjs}"
   },
   "eslintConfig": {

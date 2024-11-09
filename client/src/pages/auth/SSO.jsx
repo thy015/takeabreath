@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useJwt } from 'react-jwt'
 import { AuthContext } from '../../hooks/auth.context'
-import Cookies from 'js-cookie'
 import axios from 'axios'
 import {openNotification} from "../../hooks/notification";
 const SSO = () => {

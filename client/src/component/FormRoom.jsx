@@ -148,6 +148,7 @@ function FormRoom({ isVisible, close }) {
                     >
                         <Input />
                     </Form.Item>
+
                     <Form.Item
 
                         label={"Loại phòng"}
@@ -156,6 +157,7 @@ function FormRoom({ isVisible, close }) {
                     >
                         <Select options={typeRooms} />
                     </Form.Item>
+
                     <Form.Item
                         label={"Sức chứa"}
                         name={"capacity"}
@@ -163,32 +165,23 @@ function FormRoom({ isVisible, close }) {
                     >
                         <InputNumber className='w-[100%]' />
                     </Form.Item>
-                    <Row>
-                        <Col span={12}>
+
                             <Form.Item
-                                labelCol={{
-                                    span: 10
-                                }}
                                 label={"Số  lượng"}
                                 name={"numberOfRooms"}
                                 rules={[{ required: true, message: 'Vui lòng nhâp số lượng phòng !' }]}
                             >
                                 <InputNumber className='inputnumber-room' max={100} min={0} />
                             </Form.Item>
-                        </Col>
-                        <Col span={12}>
+
                             <Form.Item
-                                labelCol={{
-                                    span: 11
-                                }}
                                 label={"Số giường"}
                                 name={"numberOfBeds"}
                                 rules={[{ required: true, message: 'Vui lòng nhâp số lượng giường !' }]}
                             >
                                 <InputNumber max={30} min={0} className='inputnumber-room ' />
                             </Form.Item>
-                        </Col>
-                    </Row>
+
                     <Form.Item
                         label={"Giá tiền"}
                         name={"money"}

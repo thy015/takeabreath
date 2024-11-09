@@ -11,9 +11,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
     const { totalCheckInDay } = useSelector((state) => state.inputDay)
     const dispatch=useDispatch()
     const [counts, setCounts] = useState({});
-    useEffect(()=>{
-        console.log('Remount when change room number')
-    },[roomData])
+
     //open modal : Phuc
     const [isShow, setShow] = useState(false)
 
@@ -65,27 +63,21 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                         // Display room details
                         <Row className="border-b my-12" key={room.id}>
                             <Col span={8}>
-                                <Card >
-                                    <div>
-                                        <Card.Img
-                                            className="object-cover h-full rounded-md shadow-md"
+                                        <img
+                                            className="object-center h-[250px] w-full rounded-md shadow-md"
                                             src={room.imgLink[0]}
                                         />
-                                    </div>
-                                </Card>
                                 <h5 className="border-none mb-6 mt-2 font-[500]" >{room.roomName}</h5>
                             </Col>
                             {/* Display room info */}
                             <Col span={8}>
                                 <div className="py-3">
-
                                     <div className="pl-4">
                                         <ul className="flex flex-col w-full text-left ">
                                             <li>Room Type: {room.typeOfRoom}</li>
                                             <li>Capacity: {room.capacity}</li>
                                             <li>Total Bed: {room.numberOfBeds}</li>
                                             <li>Number of rooms: {room.countRoom}</li>
-                                            <li>Amenities: ....</li>
                                         </ul>
                                     </div>
                                 </div>

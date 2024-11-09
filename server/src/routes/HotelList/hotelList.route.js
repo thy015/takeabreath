@@ -8,7 +8,8 @@ const { verifyOwner } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
   try {
-    const createdHotel = await Hotel.find();
+    let createdHotel = await Hotel.find();
+
     res.status(200).json(createdHotel);
   } catch (e) {
     res.status(500).json(e);
@@ -33,7 +34,7 @@ ListRouter.get("/hotel/:id/room", async (req, res) => {
     if (!hotelID) {
       return res.status(400).json({ message: "hotelID is required" });
     }
-    const rooms = await Room.find({hotelID:hotelID});
+    const rooms = await Room.find({hotelID:hotelID}).sort({money:1});
     res.status(200).json(rooms);
   } catch (e) {
     res.status(500).json(e);
@@ -77,6 +78,7 @@ ListRouter.get('/hotelAmenities',async(req,res)=>{
     return res.status(500).json({message:'e in hotelList controller'})
   }
 })
+
 ListRouter.get('/roomTypes', (req, res) => {
   try {
     const types = roomSchema.path('typeOfRoom').enumValues;

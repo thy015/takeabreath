@@ -1,10 +1,6 @@
 // src/routers/router.js
 import DashboardView from "../pages/admin/DashboardView";
 import HomePage from "../pages/user/HomePage";
-
-//import Login from "../pages/login_register/Login";
-//import Register from "../pages/login_register/Register";
-
 import HotelsAdmin from "../pages/admin/Hotels/HotelsAdmin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import Calendar from "../pages/admin/Calendar";
@@ -33,7 +29,6 @@ import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/AdminVoucher";
 import BookingHistory from "../pages/user/BookingHistory";
 import Hotel from "../pages/owner/Hotel/Hotel";
-import { CreateHotel } from "../pages/admin/Hotels/CreateHotel";
 import AboutUs from "../pages/user/AboutUs";
 import Room from "../pages/owner/Room/Room";
 import invoiceAdmin from"../pages/admin/invoiceAdmin";
@@ -41,6 +36,8 @@ import Revienue from "../pages/owner/Revenue/Revienue";
 import Card from "../pages/owner/Card/Card";
 import StrictLoginSSO from "../pages/auth/StrictLoginSSO";
 import {OggyPartner} from "../pages/owner/OggyPartner/OggyPartner";
+import BookingHistory_BookingTab from "../pages/user/BookingHistory_BookingTab";
+import YourCancelRequest from "../pages/user/YourCancelRequest";
 export const routers = [
   {
     path: "/",
@@ -101,12 +98,14 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
+    //my booking
   {
     path: "/mybooking",
-    page: BookingHistory,
+    page: BookingHistory_BookingTab,
     isShowHeader: true,
     isShowFooter: true,
   },
+
   {
     path: "/booking-success",
     page: SuccessPayment,

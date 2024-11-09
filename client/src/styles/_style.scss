@@ -1,0 +1,83 @@
+@function half($v){
+  @return $v/2
+}
+
+@mixin space-y($v) {
+  margin-top: $v;
+  margin-bottom: $v;
+}
+
+@mixin flexCenter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@mixin flexBetween{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex-center{
+  @include flexCenter
+}
+.flex-between{
+  @include flexBetween
+}
+//homepage Card
+.card-wrapper{
+  border-radius: 0 0 32px 32px;
+  cursor:pointer;
+  transition: transform 0.25s ease-in-out;
+    .card-rate{
+      background-color: #003580;
+      color: white;
+      padding: 0 8px;
+      border-radius: 5px;
+      font-weight: 800;
+    }
+    .card-img{
+      width: 70px;
+      height:70px;
+      margin-left: 8px;
+      object-fit: cover;
+      border-radius: 0;
+      padding: 8px;
+    }
+    //for cancel req
+    .card-holder{
+      @include space-y(12px);
+      width: 1000px;
+      height:150px;
+      background-color: white;
+      box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
+    }
+  &:hover{
+    transform: scale(1.05);
+  }
+}
+//amenities Card
+.card-amenities{
+  @extend .card-wrapper;
+  width: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  margin:10px;
+  height: 75px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
+}
+//booking his
+.history-wrapper{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 100%;
+    .history-dropdown{
+      @include flexCenter;
+      background-color: lightgray;
+      width: 128px;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+}

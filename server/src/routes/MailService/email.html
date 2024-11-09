@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Lato:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            color: #000;
+            font-family: 'Lato', sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            font-family: 'Lato', sans-serif;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+        .header {
+            background-color: #CBDCEB;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+        .logo {
+            font-size: 30px;
+            margin: 0;
+            font-family:'Lobster', serif;
+            color: black;
+        }
+        .content {
+            background-color: #fff;
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .greeting {
+            font-size: 30px;
+            color: #4a4a4a;
+            margin: 0 0 10px;
+            font-weight: 600;
+        }
+        .message {
+            color: #1A4297;
+            font-size: 20px;
+            margin: 0 0 20px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            padding: 8px;
+            text-align: left;
+            color: #333;
+            border-bottom: solid 1px #ddd;
+        }
+        .th {
+            font-weight: bold;
+            color: #4a4a4a;
+            text-align: center;
+        }
+        .note {
+            font-size: 16px;
+            color: #1A4297;
+        }
+        .signature {
+            font-size: 20px;
+            font-style: italic;
+            color: #333;
+            margin-top: 25px;
+        }
+        .footer {
+            margin-top: 40px;
+            background-color: #CBDCEB;
+            padding: 30px;
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
+            text-align: center;
+        }
+        .footer-text {
+            font-size: 20px;
+            color: black;
+        }
+        .footer-link {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="logo">Take A Breath</h1>
+    </div>
+    <div class="content">
+        <h2 class="greeting">Dear {{name}},</h2>
+        <p class="message">Thank you for choosing TAB's services!</p>
+        <p>Your services ordered:</p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="th">Service</th>
+                <th class="th">Item</th>
+                <th class="th">Quantity</th>
+                <th class="th">At</th>
+                <th class="th">Price</th>
+                <th class="th">CheckInDay</th>
+                <th class="th">CheckOutDay</th>
+                <th class="th">For total</th>
+                <th class="th">Payment Method</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Đặt phòng</td>
+                <td>{{roomName}}</td>
+                <td>{{totalRoom}}</td>
+                <td>{{hotelLocation}}</td>
+                <td>{{totalPrice}}VND</td>
+                <td>{{checkInDay}}</td>
+                <td>{{checkOutDay}}</td>
+                <td>{{totalStayDay}} day</td>
+                <td>{{paymentMethod}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p>Your personal information:</p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="th">Name</th>
+                <th class="th">I-Card</th>
+                <th class="th">Email</th>
+                <th class="th">Phone Number</th>
+                <th class="th">Gender</th>
+                <th class="th">Birthday</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{name2}}</td>
+                <td>{{idenCard}}</td>
+                <td>{{email}}</td>
+                <td>{{phoneNum}}</td>
+                <td>{{gender}}</td>
+                <td>{{dob}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="signature">Yours truly,<br>Take A Breath</p>
+        <div class="note">This is an auto-generated email, please do not reply to this.</div>
+    </div>
+    <footer class="footer">
+        <div class="footer-text">
+            © 2024 <a href="#" class="footer-link">Take A Breath</a>. All rights reserved.
+        </div>
+    </footer>
+</div>
+</body>
+</html>

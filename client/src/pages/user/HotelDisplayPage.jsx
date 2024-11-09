@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Booking from "../../component/Booking";
 import { Row, Col, Checkbox, Collapse, Spin, Alert } from "antd";
-import { AccommodationCard } from "../../component/AccomodationCard";
+import { AccommodationCard } from "../../component/AccommodationCard";
 import { useGet } from "../../hooks/hooks";
 import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
@@ -10,6 +10,7 @@ import axios from "axios";
 import { useDispatch,useSelector } from "react-redux";
 import {GoogleMap,Marker,useJsApiLoader} from "@react-google-maps/api";
 import {setOrdinate} from "../../hooks/redux/inputDaySlice";
+import {setClickedHotel} from "../../hooks/redux/searchSlice";
 
 const { Panel } = Collapse;
   
@@ -47,7 +48,6 @@ const HotelDisplayCompre = () => {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
 
-
   if (error) {
     return (
       <Alert
@@ -65,18 +65,25 @@ const HotelDisplayCompre = () => {
   console.log(data);
   // passing prop roomData (receive array from be=> filter to each hotel)
   const handleHotelClick = async (hotel) => {
-    let roomData = [];
+    let roomData = []
+    dispatch(setClickedHotel({
+      clickedHotel:hotel
+    }))
+    // có search result thì hiện, còn ko display toàn bộ phòng
     if (searchResults?.roomData.length > 0) {
       roomData = searchResults.roomData.filter((r) => r.hotelID === hotel._id);
-    } else {
+    }
+    else {
       const response = await axios.get(
         `http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`
       );
       roomData = response.data;
       console.log('Debug roomdata in hoteldisplaypage',roomData)
     }
+
     navigate(`hotel/${hotel._id}`, { state: { roomData } });
   };
+
   // no searchResults => fall back to data
   const displayHotel = searchResults?.hotelData?.length
     ? searchResults.hotelData

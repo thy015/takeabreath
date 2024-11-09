@@ -1,19 +1,21 @@
 import React from "react";
 import {useLocation, useParams } from "react-router-dom";
-import { useGet } from "../../hooks/hooks";
-import { Spin, Alert, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import { RateStar, RateText } from "../../component/Rate";
 import { MdRoom } from "react-icons/md";
 import { CiHeart, CiShare2 } from "react-icons/ci";
 import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
+import {AmenitiesCard} from "../../component/AccommodationCard";
+import styled from "styled-components";
 
 const HotelDisplay_HotelDetail = () => {
   const { id } = useParams();
   const location=useLocation()
-  const {roomData}=location.state || {roomData:[]}
+  const {countRoom,clickedHotel,attachedRooms}=useSelector((state)=>state.searchResults)
+
   // query room data result, integrate countRoom
-  const {countRoom}=useSelector((state)=>state.searchResults)
+  const {roomData}=location.state || {roomData:[]}
   const specRoomData=roomData.filter(r=>r.hotelID===id)
   const specRoomIntegratedCount=specRoomData.map((room)=> {
     const countEach=countRoom.find((cr)=>cr.roomID===room._id)
@@ -21,47 +23,24 @@ const HotelDisplay_HotelDetail = () => {
     return {
       ...room,
       countRoom:countEach ? countEach.countRoom :0
-
     }
   })
-  const { data, error, loading } = useGet(
-      `http://localhost:4000/api/hotelList/hotel/${id}`
-  );
 
-  if (loading) {
-    return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
-  }
-
-  if (error) {
-    console.log(data);
-    return (
-        <Alert
-            message="Error"
-            description="Failed to load hotel details."
-            type="error"
-            showIcon
-        />
-    );
-  }
-
-  if (!data) {
-    return <Alert message="No hotel data found" type="info" showIcon />;
-  }
   return (
       <div>
         <Row gutter={18}>
           {/* hotel info */}
           <div className="flex justify-between items-center w-full ml-2">
             <div className="flex flex-col items-start">
-              <RateStar hotel={data}></RateStar>
+              <RateStar hotel={clickedHotel}></RateStar>
               <div>
                 <h4 className="font-semibold mt-3">
-                  {data.hotelName} - {data.city}
+                  {clickedHotel.hotelName} - {clickedHotel.city}
                 </h4>
                 <div className="flex flex-row items-start ">
                   <MdRoom className="text-[#0F4098]  mb-3 text-[20px]" />
                   <div>
-                    {data.address}, {data.city}, {data.nation}
+                    {clickedHotel.address}, {clickedHotel.city}, {clickedHotel.nation}
                   </div>
                 </div>
               </div>
@@ -83,26 +62,26 @@ const HotelDisplay_HotelDetail = () => {
 
           <Col span={18}>
             <div>
-              {/* Fake 3 img until group img to a link */}
+              {/*hotel img*/}
               <div>
                 <Row gutter={6}>
                   <Col span={10}>
                     <img
-                        src={data.imgLink[0]}
-                        alt={`Image of ${data.hotelName}`}
-                        className="w-full h-auto mb-2"
+                        src={clickedHotel.imgLink[0]}
+                        alt={`Image of ${clickedHotel.hotelName}`}
+                        className="w-full h-[50%] mb-2"
                     />
                     <img
-                        src={data.imgLink[1]}
-                        alt={`Image of ${data.hotelName}`}
-                        className="w-full h-auto "
+                        src={clickedHotel.imgLink[1]}
+                        alt={`Image of ${clickedHotel.hotelName}`}
+                        className="w-full h-[48.3%] "
                     />
                   </Col>
                   <Col span={14}>
                     <img
-                        src={data.imgLink[2]}
-                        alt={`Image of ${data.hotelName}`}
-                        className="w-full mb-6 h-full"
+                        src={clickedHotel.imgLink[2]}
+                        alt={`Image of ${clickedHotel.hotelName}`}
+                        className="w-full h-full"
                     />
                   </Col>
                 </Row>
@@ -112,14 +91,14 @@ const HotelDisplay_HotelDetail = () => {
 
           <Col span={6}>
             {/* Comment - Click to open side tab */}
-            <div className="h-1/2 w-full border">
+            <div className="h-1/2 w-full border ">
               <div>
                 {/* Rate part */}
                 <div className="flex justify-end border-b h-[30%]">
                   <div className="mr-2">
                     {" "}
-                    <RateText hotel={data}></RateText>
-                    {data.numberOfRates} people rated
+                    <RateText hotel={clickedHotel}></RateText>
+                    {clickedHotel.numberOfRates} people rated
                   </div>
                   <div
                       className="badge bg-[#0f4098]"
@@ -132,17 +111,18 @@ const HotelDisplay_HotelDetail = () => {
                         borderBottomRightRadius: "0px",
                       }}
                   >
-                    {data.rate}
+                    {clickedHotel.rate}
                   </div>
                 </div>
 
-                <div className="h-[70%] border-b ">
+                <div className="h-1/2 border-b ">
                   {/* The comment part */}
                   <div className="h-full bg-slate-400">comment section</div>
                 </div>
               </div>
             </div>
-            <div className="h-[44.5%] mt-3 w-full border object-cover">
+
+            <div className="h-1/2 w-full border object-cover">
               {/* need map api */}
               <img
                   className="h-full w-full"
@@ -152,25 +132,29 @@ const HotelDisplay_HotelDetail = () => {
           </Col>
 
         </Row>
-        {/* Feature display */}
-        <div> <h4 className="flex mt-12 font-semibold">Feature</h4> </div>
+        {/* Amen display */}
+        <div> <Title>What this place offers</Title>
+          <div className='flex flex-wrap'>
+          <AmenitiesCard hotel={clickedHotel}></AmenitiesCard>
+        </div>
+        </div>
         {/* Comment */}
-        <div> <h4 className="flex mt-12 font-semibold">Comments</h4> </div>
-        <div> <h4 className="flex mt-12 font-semibold">Room Available</h4> </div>
+        <div> <Title >Comments</Title> </div>
+        <div> <Title>Room Available</Title> </div>
         {/* Room display */}
         <div>
-          {console.log('Detail hotel in hoteldisplay_hoteldetail',specRoomData)}
+          {/*bấm ở home*/}
           {specRoomData.length === 0 ? (
-              <Alert
-                  message="PLEASE QUERY FIRST"
-                  description="Please try query to see rooms"
-                  type="info"
-                  showIcon
-              />
+              <HotelDetail_RoomDisplay
+                  roomData={attachedRooms}
+                  hotel={clickedHotel}
+              >
+              </HotelDetail_RoomDisplay>
           ) : (
+              // bấm khi query
               <HotelDetail_RoomDisplay
                   roomData={specRoomIntegratedCount}
-                  hotel={data}
+                  hotel={clickedHotel}
               ></HotelDetail_RoomDisplay>
           )}
         </div>
@@ -178,4 +162,10 @@ const HotelDisplay_HotelDetail = () => {
   );
 };
 
+const Title=styled.h3`
+  display: flex;
+  margin: 32px 0;
+  font-weight: 600;
+  font-family: "Afacad Flux", sans-serif;
+`
 export default HotelDisplay_HotelDetail;

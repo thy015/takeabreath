@@ -1,16 +1,44 @@
 const express = require('express');
 const reqCancelRouter = express.Router();
 const reqCancelController=require('./cancelReq.controller');
-const { authenCusToken, authenAdminToken } = require('../../middleware/jwt');
+const {CancelRequest} = require("../../models/cancelReq.model");
+const {Invoice} = require("../../models/invoice.model");
+const {verifyAdmin} = require("../../middleware/verify");
 
 reqCancelRouter.get('/processing',reqCancelController.getReqCancelRoomProcess)
 reqCancelRouter.get('/accepted',reqCancelController.getReqCancelRoomAccepted)
 reqCancelRouter.get('/rejected',reqCancelController.getReqCancelRoomRejected)
+//get cancel req theo id user( + invoice)
+reqCancelRouter.get('/:id/cancelRequest',async(req,res)=>{
+    const {id}=req.params;
+    try{
+        let cancelRequest=await CancelRequest.find({cusID:id})
+        if(cancelRequest.length>0){
+            let invoiceMatchId=cancelRequest.map(request=>request.invoiceID)
+            let invoices=await Invoice.find({_id:{$in:invoiceMatchId}})
+            let invoiceMap={}
+            invoices.forEach(invoice => {
+                invoiceMap[invoice._id] = invoice;
+            });
+            const responseData = cancelRequest.map(request => ({
+                cancelRequest: request,
+                invoice: invoiceMap[request.invoiceID] || null
+            }));
+
+            return res.status(200).json({message:'Cancel Request',
+                data:responseData
+            });
+        }
+        return res.status(204).json({message:'You havent cancel any req',data:responseData});
+    }catch(e){
+        return res.status(500).json({message:'internal e in signUp router',e})
+    }
+})
+
 reqCancelRouter.put('/active/:id', reqCancelController.activeCus);
 reqCancelRouter.put('/inactive/:id', reqCancelController.inactiveCus);
-reqCancelRouter.post('/cusSend',authenCusToken,reqCancelController.reqCancelRoom)
-reqCancelRouter.post('/admin/accept/:reqCancelID',authenAdminToken,reqCancelController.handleCancelRoomAccept)
-reqCancelRouter.post('/admin/reject/:reqCancelID',authenAdminToken,reqCancelController.handleCancelRoomReject)
+reqCancelRouter.post('/accept/:cancelReqID',verifyAdmin,reqCancelController.handleCancelRoomAccept)
+reqCancelRouter.post('/reject/:cancelReqID',verifyAdmin,reqCancelController.handleCancelRoomReject)
 module.exports=reqCancelRouter
 
 //swagger

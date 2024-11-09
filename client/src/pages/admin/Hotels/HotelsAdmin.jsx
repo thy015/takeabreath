@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { notification, Row, Col, Spin, Alert, Select } from 'antd';
 import { useGet } from "../../../hooks/hooks";
-import { PropertyCard } from "../../../component/AccomodationCard";
+import { PropertyCard } from "../../../component/AccommodationCard";
 import { PlusOutlined } from '@ant-design/icons';
 import { CreateHotel, ModalDelete } from "./CreateHotel";  
 import axios from "axios";

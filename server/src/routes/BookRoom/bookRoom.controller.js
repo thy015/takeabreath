@@ -236,12 +236,14 @@ const cancelBooking=async(req,res)=>{
     // còn 1 ngày
     const dayDifference = parseInt(countDiffDay, 10);
     console.log(dayDifference)
+    let invoiceMatched= await Invoice.findById(invoiceID)
     if(dayDifference===0){
       let convertDayAcp=moment().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       let createDoneCancelRequest=await CancelRequest.create({
         isAccept:'accepted',
         dayAcp:convertDayAcp,
         invoiceID:invoiceID,
+        ownerID:invoiceMatched.ownerID,
         cusID:id
       })
       console.log(createDoneCancelRequest)
@@ -250,6 +252,7 @@ const cancelBooking=async(req,res)=>{
     let createWaitingCancelRequest=await CancelRequest.create({
       invoiceID:invoiceID,
       cusID:id,
+      ownerID:invoiceMatched.ownerID,
       // day counted til checkin day
       dayDiffFromCheckIn:dayDifference
     })

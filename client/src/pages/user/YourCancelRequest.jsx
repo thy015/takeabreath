@@ -11,7 +11,8 @@ const ChangeStateColor=({state})=>{
     let styleColor={
         color: state ==='Processing' ?  '#d59e00'
             : state ==='Accepted'?'green'
-                :'red'
+                :state==='Rejected'?'red'
+                    :'black'
     }
     return(
         <div style={styleColor}>
@@ -35,6 +36,9 @@ const YourCancelRequest = () => {
     if (error ||data.length===0 || !data) {
         return <Alert message="Notice" description="You haven't make any cancel request." type="info" showIcon />;
     }
+    const formatMoney = (money) => {
+        return new Intl.NumberFormat('de-DE').format(money)
+    }
     return (
         <>
             <div className='w-full text-start font-afacad text-2xl absolute'>
@@ -53,7 +57,9 @@ const YourCancelRequest = () => {
                         .tz('Asia/Ho_Chi_Minh').format('D/MM/YYYY')
                     // processing => Processing
                     let uppercaseState=c.cancelRequest.isAccept.toUpperCase().charAt(0)+c.cancelRequest.isAccept.toLowerCase().slice(1);
-
+                    // format day and money
+                    let formattedRefundAmount=formatMoney(c.cancelRequest.refundAmount)
+                    let formattedDayAcp=dayjs(c.cancelRequest.refundDay).tz('Asia/Ho_Chi_Minh').format('D/MM/YYYY')
                     return (
                         <div key={c.cancelRequest._id}>
                             <div className='card-wrapper w-full '>
@@ -76,13 +82,22 @@ const YourCancelRequest = () => {
                                         <div className='col-6 border-l'>
                                             {/*right display invoice*/}
                                             <div className='row'>
-                                            <div className='col-9 text-left'>
+                                            <div className='col-7 text-left'>
                                                 <div> Contact Email: {c.invoice.guestInfo.email}</div>
                                                 <div> Payment Method: {c.invoice.guestInfo.paymentMethod}</div>
                                                 <div> Total Price: {c.invoice.guestInfo.totalPrice}</div>
                                             </div>
-                                            <div className='col-3'>
-                                                <div className='flex items-end h-full italic '>
+                                            <div className='col-5'>
+                                                <div className='flex items-end h-full italic flex-col text-right'>
+                                                    {uppercaseState==='Accepted'&&(
+                                                        <>
+                                                        <div>Refund Amount: {formattedRefundAmount} VND</div>
+                                                        <div>Accept day: {formattedDayAcp} </div>
+                                                        </>
+                                                    )}
+                                                    {uppercaseState==='Rejected'&&(
+                                                        <div>Reason:{c.cancelRequest.rejectedReason}</div>
+                                                    )}
                                                     <ChangeStateColor state={uppercaseState}></ChangeStateColor>
                                                 </div>
                                             </div>

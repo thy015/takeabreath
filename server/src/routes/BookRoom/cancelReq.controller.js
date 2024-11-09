@@ -1,13 +1,69 @@
 
 
-const { CancelRequest}=require("../../models/cancelReq.model");
-const { Customer } = require("../../models/signUp.model");
+const { CancelRequest, RefundCusMoney}=require("../../models/cancelReq.model");
+const { Customer, Owner} = require("../../models/signUp.model");
+const {Invoice} = require("../../models/invoice.model");
 
 const handleCancelRoomAccept=async(req,res)=>{
-  const {cancelReqID,adminID}=req.params;
+  //chuyển ảo
+  const {cancelReqID}=req.params;
+  const {adminID}=req.body
+  if(!adminID){
+    return res.status(403).json({message:'missing variables'})
+  }
+  try{
 
+    // tim invoice, tim owner => cong tien invoice - 10% hoa hong vao await fund partner
+    let cancelReq = await CancelRequest.findById(cancelReqID);
+    let matchedPartner = await Owner.findById(cancelReq.ownerID);
+    let matchedInvoice = await Invoice.findById(cancelReq.invoiceID);
+
+    if (!cancelReq||!matchedPartner||!matchedInvoice) {
+      return res.status(403).json({message: 'Missing variables'});
+    }
+    // hoan 70% cho cus
+    let refundCusMoney=(matchedInvoice.guestInfo.totalPrice)*0.7
+    cancelReq.isAccept = 'accepted';
+    cancelReq.adminID = adminID
+    cancelReq.refundAmount=refundCusMoney;
+    await cancelReq.save();
+
+    // tra lai 10% da lay luc cus dat
+    let refundPartnerMoney = (matchedInvoice.guestInfo.totalPrice) * 0.1
+      matchedPartner.awaitFund = refundPartnerMoney || 0
+      await matchedPartner.save()
+
+      return res.status(200).json({
+        message:'Succ Acp cancel room',
+        cancelReq:cancelReq,
+        matchedInvoice:matchedInvoice,
+        matchedPartner:matchedPartner,
+      })
+  }catch(e){
+    return res.status(500).json({message:'E in handleroomAcp',e})
+  }
 }
 const handleCancelRoomReject=async(req,res)=>{
+  const {cancelReqID}=req.params;
+  const {adminID,rejectedReason}=req.body
+  if(!adminID||!rejectedReason){
+    return res.status(403).json({message:'missing variables'})
+  }
+  try {
+    let cancelReq = await CancelRequest.findById(cancelReqID);
+    if (!cancelReq) {
+      return res.status(404).json({message: 'Cancellation request not found'});
+    }
+    cancelReq.isAccept = 'rejected';
+    cancelReq.adminID = adminID
+    cancelReq.rejectedReason=rejectedReason
+    await cancelReq.save();
+      return res.status(200).json({message:'Succ cancel req',
+      cancelReq:cancelReq,
+      })
+  }catch(e){
+    return res.status(500).json({message:'E in handleroomAcp',e})
+  }
 
 }
 

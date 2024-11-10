@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
-import replace from '@rollup/plugin-replace'; // Import the replace plugin
+import replace from '@rollup/plugin-replace';
 
 export default defineConfig({
     base: '',
@@ -11,6 +10,7 @@ export default defineConfig({
             preventAssignment: true,
             values: {
                 'process.env.VITE_API_KEY': JSON.stringify(process.env.VITE_API_KEY),
+                'process.env.CHAT_CLIENT_ID': JSON.stringify(process.env.CHAT_CLIENT_ID),
             },
         }),
     ],
@@ -20,6 +20,9 @@ export default defineConfig({
                 api: 'modern-compiler'
             }
         }
+    },
+    optimizeDeps: {
+        exclude: ['chunk-FWZAQCPU.js']
     },
     server: {
         open: true,

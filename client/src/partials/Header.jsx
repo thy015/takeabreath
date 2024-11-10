@@ -271,6 +271,7 @@ const Header = ({ children }) => {
       </div>
       <div className="pt-[120px]">
       {children}
+
       </div>
     </div>
   );

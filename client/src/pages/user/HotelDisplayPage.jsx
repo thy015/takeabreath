@@ -32,7 +32,7 @@ const HotelDisplayCompre = () => {
   useEffect(() => {
     console.log(city, latitude, longitude);
     // mở dòng này ra khi deploy để tránh block API
-    // searchMapLocation()
+    searchMapLocation()
   }, [city, latitude,longitude]);
   const navigate = useNavigate();
   const { data, error, loading } = useGet(

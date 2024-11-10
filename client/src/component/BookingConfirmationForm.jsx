@@ -8,13 +8,10 @@ import {
   Form,
   Input,
   ConfigProvider,
-  Select,
   DatePicker,
   Radio,
   message
 } from "antd";
-import FormItem from "antd/es/form/FormItem";
-import { useForm } from "antd/es/form/Form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useSelector } from "react-redux";
@@ -24,6 +21,7 @@ import PayPalButton from "./PayPalButton";
 import {useNavigate} from "react-router-dom"
 import {useDispatch} from "react-redux"
 import {setInvoiceID} from "../hooks/redux/inputDaySlice"
+import {useForm} from "antd/es/form/Form";
 function BookingConfirmationForm({isShow, onCancel}) {
   const { auth } = useContext(AuthContext);
   const [form] = useForm();
@@ -33,9 +31,6 @@ function BookingConfirmationForm({isShow, onCancel}) {
   const navigate=useNavigate()
   const dispatch=useDispatch()
 
-  const ForwardedFormItem = forwardRef((props, ref) => {
-    return <FormItem {...props} ref={ref} />;
-  });
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };
@@ -184,7 +179,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                       form={form}
                       className="w-[550px] h-[500px] mr-[34px] ml-[28px] "
                   >
-                    <ForwardedFormItem
+                    <Form.Item
                         label="Fullname"
                         name="fullname"
                         rules={[
@@ -195,8 +190,8 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         ]}
                     >
                       <Input className="min-w-[150px]" />
-                    </ForwardedFormItem>
-                    <ForwardedFormItem
+                    </Form.Item>
+                    <Form.Item
                         label="Identification Card"
                         name="idenCard"
                         rules={[
@@ -207,8 +202,8 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         ]}
                     >
                       <Input className="min-w-[150px]" />
-                    </ForwardedFormItem>
-                    <ForwardedFormItem
+                    </Form.Item>
+                    <Form.Item
                         label="Email"
                         name="email"
                         rules={[
@@ -219,9 +214,9 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         ]}
                     >
                       <Input />
-                    </ForwardedFormItem>
+                    </Form.Item>
 
-                    <ForwardedFormItem
+                    <Form.Item
                         label="Phone Number"
                         name="numberphone"
                         maxLength={10}
@@ -236,21 +231,21 @@ function BookingConfirmationForm({isShow, onCancel}) {
                           defaultMask="... ... ... ."
                           enableLongNumbers={false}
                       ></PhoneInput>
-                    </ForwardedFormItem>
+                    </Form.Item>
 
-                    <ForwardedFormItem name="dob" label="Select birthday">
+                    <Form.Item name="dob" label="Select birthday">
                       <DatePicker className="ml-[10px]" />
-                    </ForwardedFormItem>
+                    </Form.Item>
 
-                    <ForwardedFormItem name="gender" label="Select gender">
+                    <Form.Item name="gender" label="Select gender">
                       <Radio.Group className="ml-[10px]">
                         <Radio value="male">Male</Radio>
                         <Radio value="female">Female</Radio>
                         <Radio value="unknown">Secret</Radio>
                       </Radio.Group>
-                    </ForwardedFormItem>
+                    </Form.Item>
 
-                    <ForwardedFormItem
+                    <Form.Item
                         name="paymentMethod"
                         label="Select payment method"
                         ref={paymentRef}
@@ -284,7 +279,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                           Wowo
                         </Radio>
                       </Radio.Group>
-                    </ForwardedFormItem>
+                    </Form.Item>
                   </Form>
                 </div>
               </ConfigProvider>

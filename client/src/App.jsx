@@ -23,6 +23,7 @@ function App() {
                 id: userRes?.id ?? "",
                 email: userRes?.email ?? "",
                 name: userRes?.name ??  "",
+                  role:userRes?.role ?? ""
               },
             });
           })
@@ -34,6 +35,30 @@ function App() {
       fetchUser();
     }, []);
 
+    useEffect(() => {
+        const loadScript = (src) => {
+            if(auth?.user?.role!== 'admin' || auth?.user?.role!=='owner') {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = src;
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error(`Script load error for ${src}`));
+                    document.body.appendChild(script);
+                });
+            }
+        };
+
+        const loadScripts = async () => {
+            try {
+                await loadScript('https://cdn.botpress.cloud/webchat/v2.2/inject.js');
+                await loadScript('https://files.bpcontent.cloud/2024/11/09/20/20241109202259-FMPWOTKL.js');
+                console.log("Scripts loaded successfully");
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadScripts();
+    }, [auth?.user?.role]);
     return (
         <div className="App">
             <Router>

@@ -48,8 +48,6 @@ const LogInOwner = () => {
       return;
     }
 
-
-
     try {
       const response = await axios.post("http://localhost:4000/api/auth/signInOwner", formData);
       if (response.status === 200) {
@@ -59,9 +57,11 @@ const LogInOwner = () => {
           user: {
             id: response?.data?.id ?? "",
             email: response?.data?.email ?? "",
-            name: response?.data?.name ?? ""
+            name: response?.data?.name ?? "",
+            role:response?.data?.role??''
           }
         })
+
         navigate(response.data.redirect);
       }
     } catch (e) {

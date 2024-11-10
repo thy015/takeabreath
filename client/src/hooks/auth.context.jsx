@@ -5,7 +5,8 @@ export const AuthContext = createContext({
     user: {
         id: '',
         email: '',
-        name: ''
+        name: '',
+        role:''
     },
     login:()=>{}
 })
@@ -16,7 +17,8 @@ export const AuthWrapper = ({ children }) => {
         user: {
             id: '',
             name: '',
-            email:''
+            email:'',
+            role:''
         }
     })
 

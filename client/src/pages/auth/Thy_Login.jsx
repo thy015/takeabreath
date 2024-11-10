@@ -65,7 +65,8 @@ const Login = () => {
               user: {
                 id: res?.data?.id ?? "",
                 email: res?.data?.email ?? "",
-                name: res?.data?.name ?? ""
+                name: res?.data?.name ?? "",
+                role:res?.data?.role ?? ''
               }
             })
             openNotification(true, "Login Successful", "")

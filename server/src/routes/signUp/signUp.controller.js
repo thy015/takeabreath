@@ -83,6 +83,7 @@ const signInOwner = async (req, res) => {
 
       return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
         login: true,
+        role:'owner',
         status: "OK",
         message: "Success log in",
         id: foundOwner._id,
@@ -118,6 +119,7 @@ const signInOwner = async (req, res) => {
         name: foundAdmin.adminName,
         id: foundAdmin._id,
         login: true,
+        role:'admin',
         redirect: "/Admin",
       });
     }
@@ -137,7 +139,6 @@ const signInOwner = async (req, res) => {
 };
 
 // cus
-
 const loginCustomer = async (req, res) => {
   const { email, password } = req.body;
 
@@ -166,6 +167,7 @@ const loginCustomer = async (req, res) => {
     return res.cookie("token", token, { httpOnly: true, secure: true })
       .json({
         login: true,
+        role:'customer',
         redirect: "/",
         name: customer.cusName,
         id: customer._id,
@@ -204,6 +206,7 @@ const registerCustomer = async (req, res) => {
       register: true,
       message: "Succ",
       data: customer,
+      role:'customer',
       redirect: '/Customer'
     });
   } catch (e) {
@@ -220,7 +223,7 @@ const loginWithSSO = async (req, res) => {
     return res.status(403).json({message: 'missing token in signUp controller'})
   }
   console.log(decodedToken)
-if(decodedToken.role === "user"){
+  if(decodedToken.role === "user"){
 
     const customerExsisted = await Customer.findOne({
       email:decodedToken.email
@@ -245,6 +248,7 @@ if(decodedToken.role === "user"){
       return res.cookie("token", token, { httpOnly: true, secure: true })
           .json({
             login: true,
+            role:'customer',
             id:newCus._id,
             name: newCus.cusName,
             email: newCus.email,
@@ -263,6 +267,7 @@ if(decodedToken.role === "user"){
       return res.cookie("token", token, { httpOnly: true, secure: true })
           .json({
             login: true,
+            role:'customer',
             id:customerExsisted._id,
             name: customerExsisted.cusName,
             email: customerExsisted.email,
@@ -297,6 +302,7 @@ const strictSignInPartner=async(req,res)=>{
     return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
         .json({
           login: true,
+          role:'owner',
           id:newPartner._id,
           name: newPartner.ownerName,
           email: newPartner.email,
@@ -322,6 +328,7 @@ const checkExistedPartner=async(req,res)=>{
     return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
         .json({
           login: true,
+          role:'owner',
           id:existedPartner._id,
           name: existedPartner.ownerName,
           email: existedPartner.email,

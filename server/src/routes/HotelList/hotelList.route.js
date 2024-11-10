@@ -4,7 +4,7 @@ const hotelListController = require("./hotelList.controller");
 const {Hotel,amenitiesEnum,roomSchema,hotelSchema} = require("../../models/hotel.model");
 const {Room} = require("../../models/hotel.model");
 const {Invoice} = require("../../models/invoice.model")
-const { verifyOwner } = require("../../middleware/verify");
+const { verifyOwner, verifyLogin } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
   try {
@@ -146,6 +146,10 @@ ListRouter.post("/updateRoom/:id"
 ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
 ListRouter.delete("/deleteRoom/:id", hotelListController.deleteRoom);
 ListRouter.get("/list-invoice-owner",verifyOwner,hotelListController.getInvoicesOwner)
+
+ListRouter.post("/commentRoom",verifyLogin,hotelListController.commentRoom)
+ListRouter.get("/get-comment-cus",verifyLogin,hotelListController.getCommentCus)
+
 module.exports = ListRouter;
 
 //This is the start of swagger docs

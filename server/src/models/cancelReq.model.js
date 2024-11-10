@@ -7,7 +7,7 @@ const reqCancelSchema = new mongoose.Schema({
     enum: ["processing", "accepted", "rejected"],
     required: false,
   },
-  dayReq: { type: Date, default: Date.now, required: true },
+  dayReq: { type: Date, default: Date.now, required: false },
   dayAcp: { type: Date, required: false },
   cusID: {
     type: mongoose.Schema.Types.ObjectId,
@@ -24,23 +24,25 @@ const reqCancelSchema = new mongoose.Schema({
     ref: "Invoice",
     required: true,
   },
-});
-
-const refundMoneySchema = new mongoose.Schema({
-  refundDay: { type: Date, default: Date.now, required: true },
-  refundAmount: { type: Number, default: 0, required: true },
-  cusID: { type: String, required: true },
-  cancelReqID: {
+  dayDiffFromCheckIn:{
+    type:Number,
+    required:false
+  },
+  ownerID:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "CancelReq",
+    ref: "Owner",
     required: true,
   },
+  rejectedReason:{
+    type:String,
+    required:false
+  },
+  refundAmount: { type: Number, default: 0, required: false },
+  refundDay: { type: Date, default: Date.now, required: true },
 });
 
-const reqCancel = mongoose.model("CancelReq", reqCancelSchema);
-const RefundMoney = mongoose.model("RefundMoney", refundMoneySchema);
+const CancelRequest = mongoose.model("CancelReq", reqCancelSchema);
 
 module.exports = {
-  reqCancel,
-  RefundMoney,
+  CancelRequest,
 };

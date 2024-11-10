@@ -4,7 +4,7 @@ import { Row, Col, Carousel } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
 import {cardData} from '../../localData/localData'
-import "../../index.css";
+import "../../index.scss";
 import PropertyGrid from "./Home_HotelDisplay";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect}from "react";
 import { useParams, Link } from "react-router-dom";
 import { Row, Col, Spin, Alert } from "antd";
 import { useGet } from "../../../hooks/hooks";
@@ -7,6 +7,23 @@ import { FaSearch } from "react-icons/fa";
 const RoomList = () => {
   const { id } = useParams();
   const { data, error, loading } = useGet(`http://localhost:4000/api/roomList/hotels/${id}/rooms`);
+  const [hotelMap, setHotelMap] = useState({});
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/hotelList/hotel");
+        const map = response.data.reduce((acc, hotel) => {
+          acc[hotel._id] = hotel.hotelName;
+          return acc;
+        }, {});
+        setHotelMap(map);
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+      }
+    };
+
+    fetchHotels();
+  }, []);
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
@@ -44,7 +61,7 @@ const RoomList = () => {
     <Row gutter={[16, 16]}>
       {data.map((room) => (
         <Col key={room._id} xs={24} sm={12} md={6}>
-          <RoomCard room={room} />
+          <RoomCard room={room} hotelMap={hotelMap}/>
         </Col>
       ))}
     </Row>

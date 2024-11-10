@@ -162,6 +162,7 @@ const CustomersList = () => {
         onConfirm={handleConfirm}
         reason={reason}
         setReason={setReason}
+        header={"vô hiệu hóa"}
       />
       <ModalActivate
         open={activateModalVisible}
@@ -172,7 +173,7 @@ const CustomersList = () => {
   );
 };
 
-const ModalDelete = ({ open, onClose, onConfirm, reason, setReason }) => {
+export const ModalDelete = ({ open, onClose, onConfirm, reason, setReason,header }) => {
   return (
     <Modal
       className="justify-center items-center"
@@ -182,7 +183,7 @@ const ModalDelete = ({ open, onClose, onConfirm, reason, setReason }) => {
     >
       <div className="text-center">
         <div className="mx-auto my-4 w-64">
-          <h3 className="text-lg w-full font-black text-blue-900"> Vui lòng nhập lí do vô hiệu hóa tài khoản này</h3>
+          <h3 className="text-lg w-full font-black text-blue-900"> Vui lòng nhập lí do {header} tài khoản này</h3>
         
           <input
             type="text"

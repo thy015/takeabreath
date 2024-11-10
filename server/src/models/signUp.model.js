@@ -59,8 +59,23 @@ const customerSchema = new mongoose.Schema({
   ssoID:{type:String,required:false},
 });
 
+const adminSchema=new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique:true,
+  },
+  password:{
+    type:String,
+    required:true,
+  },
+adminName:{
+  type:String,
+  required:true,
+}
+})
 //kết nối với db có sẵn chứ ko cho tạo
-const Admin = mongoose.connection.collection("admin");
+const Admin = mongoose.model("Admin",adminSchema);
 const Customer = mongoose.model('Customer', customerSchema);
 
 module.exports = {

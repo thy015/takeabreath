@@ -1,8 +1,24 @@
 import React, { useCallback } from "react";
-import { Spin, Alert } from "antd";
+import { Spin, Alert,Button } from "antd";
 import { useGet } from "../../../hooks/hooks";
-import {InfoCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { ModalDelete } from "../Customers/CustomerList";
+import axios from 'axios'
 const cancelReqAdmin = () => {
+    const getName = (name) => {
+      return name
+        .split(' ')             
+        .map((word) => word[0])   
+        .join('')                
+        .toUpperCase();         
+    };
+  const handleAccept=async(req,res)=>{
+try {
+  
+} catch (error) {
+  
+}
+  }
   const {
     data: processingData,
     error: processingError,
@@ -67,142 +83,82 @@ const cancelReqAdmin = () => {
 
   const customerMap = createCustomerMap(customerData || []);
 
-  const formatData = (data) =>
+
+
+  const formatDataWithAcceptDate = (data) =>
     data.map((customer) => ({
       ...customer,
-      dayReq: new Date(customer.dayReq).toLocaleDateString(),
+      dayReq: new Date(customer.dayReq).toLocaleDateString('vi-VN'),
+      checkInDay: new Date(customer.invoiceID.guestInfo.checkInDay).toLocaleDateString('vi-VN'),
+      checkOutDay: new Date(customer.invoiceID.guestInfo.checkOutDay).toLocaleDateString('vi-VN'),
       cusName: customerMap[customer.cusID] || 'Unknown',
     }));
 
-  const formatDataa = (data) =>
-    data.map((customer) => ({
-      ...customer,
-      dayReq: new Date(customer.dayReq).toLocaleDateString(),
-      dayAcp: new Date(customer.dayAcp).toLocaleDateString(),
-      cusName: customerMap[customer.cusID] || 'Unknown',
-    }));
-
-  const processingDataFormatted = formatData(processingData || []);
-  const acceptedDataFormatted = formatDataa(acceptedData || []);
-  const rejectedDataFormatted = formatDataa(rejectedData || []);
-
-  const columns = [
-    { title: "Day Request", key: "dayReq" },
-    { title: "Customer Name", key: "cusName" },
-    { title: "Invoice ID", key: "invoiceID" },
-    { title: "Status", key: "isAccept" },
-  ];
-
-  const columnss = [
-    { title: "Day Request", key: "dayReq" },
-    { title: "Customer Name", key: "cusName" },
-    { title: "Invoice ID", key: "invoiceID" },
-    { title: "Status", key: "isAccept" },
-    { title: "Admin ID", key: "adminID" },
-    { title: "Day Accepted", key: "dayAcp" },
-  ];
-
-  const columnsss = [
-    { title: "Day Request", key: "dayReq" },
-    { title: "Customer Name", key: "cusName" },
-    { title: "Invoice ID", key: "invoiceID" },
-    { title: "Status", key: "isAccept" },
-    { title: "Admin ID", key: "adminID" },
-    { title: "Day Rejected", key: "dayAcp" },
-  ];
+  const processingDataFormatted = formatDataWithAcceptDate(processingData || []);
+  const acceptedDataFormatted = formatDataWithAcceptDate(acceptedData || []);
+  const rejectedDataFormatted = formatDataWithAcceptDate(rejectedData || []);
 
   return (
-    <div className="grid grid-cols-3 gap-4 bg-white mt-0.5">
-    <div className="p-4 ">
-      <h3 className="font-semibold mb-2 bg-white">ĐANG CHỜ: 3</h3>
-      <div className="p-3 border rounded-lg mb-2 bg-white">
-        <div className="flex justify-between">
-          <span>29/09/2024</span>
-          <InfoCircleOutlined />
-        </div>
-        
-        <div className="flex justify-between mt-2">
-        <span>ID-01</span>
-        <div className="flex gap-2">
-          <button className="bg-green-500 text-white px-2 py-1 rounded">Đồng ý</button>
-          <button className="bg-red-500 text-white px-2 py-1 rounded">Từ chối</button>
+    <div className="grid grid-cols-3 gap-4 bg-[#F8F9FC] h-full mt-0.5">
+    {/* yeu cau process */}
+    <div className="p-4 flex flex-col overflow-y-auto">
+      <h3 className="font-semibold mb-2 text-yellow-600">ĐANG CHỜ: {processingDataFormatted.length}</h3>
+      {processingDataFormatted.map((item, index) => (
+        <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
+          <div className="flex justify-between">
+            <span>{item.dayReq}</span>
+            <InfoCircleOutlined className="text-yellow-600"/>
+          </div>
+          <div className="flex items-center mt-2 justify-between">
+            <span className="text-yellow-600">{item._id.slice(-6)}</span>
+            <div className="flex gap-2">
+        <button className="bg-green-500 text-white px-2 rounded hover:bg-green-400  ">
+  Đồng ý
+</button>
+
+              <button className="bg-red-600 text-white px-2 py-1 hover:bg-red-400 rounded">Từ chối</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="p-3 border rounded-lg mb-2 bg-white">
-        <div className="flex justify-between">
-          <span>29/09/2024</span>
-          <InfoCircleOutlined />
-        </div>
-        
-        <div className="flex justify-between mt-2">
-        <span>ID-01</span>
-        <div className="flex gap-2">
-          <button className="bg-green-500 text-white px-2 py-1 rounded">Đồng ý</button>
-          <button className="bg-red-500 text-white px-2 py-1 rounded">Từ chối</button>
-          </div>
-        </div>
-      </div>
-      <div className="p-3 border rounded-lg mb-2 bg-white">
-        <div className="flex justify-between">
-          <span>29/09/2024</span>
-          <InfoCircleOutlined />
-        </div>
-        
-        <div className="flex justify-between mt-2">
-        <span>ID-01</span>
-        <div className="flex gap-2">
-          <button className="bg-green-500 text-white px-2 py-1 rounded">Đồng ý</button>
-          <button className="bg-red-500 text-white px-2 py-1 rounded">Từ chối</button>
-          </div>
-        </div>
-      </div>
+      ))}
     </div>
-
-    <div className="p-4 bg-white">
-      <h3 className="font-semibold mb-2">ĐÃ TỪ CHỐI: 2</h3>
-      <div className="p-3 border rounded-lg mb-2 bg-white">
-        <div className="flex justify-between">
-          <span>29/09/2024 - 1/10/2024</span>
-        </div>
-        <div className="flex items-center mt-2 justify-between">
-          <div>
-          <span className="text-red-500">ID-01</span>
-          <span className="ml-2 bg-blue-500 text-white rounded-full px-2">LB</span>
+  
+    {/* yeu cau reject */}
+    <div className="p-4 flex flex-col overflow-y-auto">
+      <h3 className="font-semibold mb-2 text-red-500">ĐÃ TỪ CHỐI: {rejectedDataFormatted.length}</h3>
+      {rejectedDataFormatted.map((item, index) => (
+        <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
+          <div className="flex justify-between">
+            <span>{item.dayReq}</span>
           </div>
-          <InfoCircleOutlined />
-        </div>
-      </div>
-      <div className="p-3 border rounded-lg mb-2 bg-white">
-        <div className="flex justify-between">
-          <span>29/09/2024 - 1/10/2024</span>
-        </div>
-        <div className="flex items-center mt-2 justify-between">
-          <div>
-          <span className="text-red-500">ID-01</span>
-          <span className="ml-2 bg-blue-500 text-white rounded-full px-2">LB</span>
+          <div className="flex items-center mt-2 justify-between">
+            <div>
+              <span className="text-red-500">{item._id.slice(-6)}</span>
+              <span className="ml-2 bg-[#be6785] text-white rounded-full px-2">{getName(item.adminID.adminName)}</span>
+            </div>
+            <InfoCircleOutlined className="text-red-700"/>
           </div>
-          <InfoCircleOutlined />
         </div>
-      </div>
+      ))}
     </div>
-
-    <div className="p-4 bg-white">
-      <h3 className="font-semibold mb-2">ĐÃ ĐỒNG Ý: 1</h3>
-
-      <div className="p-3 border rounded-lg mb-4 bg-white">
-        <div className="flex justify-between">
-          <span>29/09/2024 - 1/10/2024</span>
-          
-        </div>
-        <div className="flex items-center mt-2 justify-between">
-          <div>
-          <span className="text-green-500">ID-01</span>
-          <span className="ml-2 bg-purple-500 text-white rounded-full px-2">LB</span>
+  
+    {/* yeu cau accept */}
+    <div className="p-4 flex flex-col overflow-y-auto">
+      <h3 className="font-semibold mb-2 text-green-500">ĐÃ ĐỒNG Ý: {acceptedDataFormatted.length}</h3>
+      {acceptedDataFormatted.map((item, index) => (
+        <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
+          <div className="flex justify-between">
+            <span>{item.dayReq}</span>
           </div>
-          <InfoCircleOutlined />
+          <div className="flex items-center mt-2 justify-between">
+            <div>
+              <span className="text-green-500">{item._id.slice(-6)}</span>
+              <span className="ml-2 bg-[#663000] text-white rounded-full px-2">{getName(item.adminID.adminName)}</span>
+            </div>
+            <InfoCircleOutlined className="text-green-700"/>
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   </div>
   

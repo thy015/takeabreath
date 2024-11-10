@@ -6,7 +6,7 @@ const RoomCard = ({ room, hotelMap }) => {
     <Card className="shadow-sm h-full mt-1" style={{ borderRadius: "12px" }}>
       <Card.Img
         variant="top"
-        src={room.imgLink}
+        src={room.imgLink[0]}
         style={{
           borderRadius: "12px 12px 0 0",
           height: "180px",

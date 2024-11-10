@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   FaTachometerAlt,
@@ -30,17 +30,26 @@ const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => (
 );
 
 const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState(null);
+  const defaultActiveItem = "Dashboard";
+  const [activeItem, setActiveItem] = useState(defaultActiveItem);
+
+  useEffect(() => {
+    const ActiveItem = localStorage.getItem("activeItem");
+    if (ActiveItem) {
+      setActiveItem(ActiveItem);
+    }
+  }, []);
 
   const handleItemClick = (item) => {
     setActiveItem(item);
+    localStorage.setItem("activeItem", item); 
   };
 
   const manageItems = [
     { label: "Khách Sạn", to: "hotel", icon: FaHotel },
     { label: "Khách Hàng", to: "customers", icon: FaUser },
     { label: "Phòng", to: "rooms", icon: FaRestroom },
-    { label: "Vouchers", to: "vouchers", icon: FaTicketAlt },
+    { label: "Vouchers", to: "", icon: FaTicketAlt },
     { label: "Hóa Đơn", to: "invoices", icon: FaReceipt },
     { label: "Yêu Cầu", to: "requests", icon: FaHand },
   

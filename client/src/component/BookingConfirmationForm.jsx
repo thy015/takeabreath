@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, {useState, useContext, useRef, forwardRef} from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import {
@@ -8,13 +8,10 @@ import {
   Form,
   Input,
   ConfigProvider,
-  Select,
   DatePicker,
   Radio,
   message
 } from "antd";
-import FormItem from "antd/es/form/FormItem";
-import { useForm } from "antd/es/form/Form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useSelector } from "react-redux";
@@ -24,6 +21,7 @@ import PayPalButton from "./PayPalButton";
 import {useNavigate} from "react-router-dom"
 import {useDispatch} from "react-redux"
 import {setInvoiceID} from "../hooks/redux/inputDaySlice"
+import {useForm} from "antd/es/form/Form";
 function BookingConfirmationForm({isShow, onCancel}) {
   const { auth } = useContext(AuthContext);
   const [form] = useForm();
@@ -32,7 +30,6 @@ function BookingConfirmationForm({isShow, onCancel}) {
   const [isFormValid,setIsFormValid]=useState(false)
   const navigate=useNavigate()
   const dispatch=useDispatch()
-
 
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
@@ -134,10 +131,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
     }
 
   };
-  //   wowo pic click
-  const handleClickWoWo=async(req,res)=>{
 
-  }
   return (
       <div>
         <Modal
@@ -185,7 +179,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                       form={form}
                       className="w-[550px] h-[500px] mr-[34px] ml-[28px] "
                   >
-                    <FormItem
+                    <Form.Item
                         label="Fullname"
                         name="fullname"
                         rules={[
@@ -196,8 +190,8 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         ]}
                     >
                       <Input className="min-w-[150px]" />
-                    </FormItem>
-                    <FormItem
+                    </Form.Item>
+                    <Form.Item
                         label="Identification Card"
                         name="idenCard"
                         rules={[
@@ -208,8 +202,8 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         ]}
                     >
                       <Input className="min-w-[150px]" />
-                    </FormItem>
-                    <FormItem
+                    </Form.Item>
+                    <Form.Item
                         label="Email"
                         name="email"
                         rules={[
@@ -220,9 +214,9 @@ function BookingConfirmationForm({isShow, onCancel}) {
                         ]}
                     >
                       <Input />
-                    </FormItem>
+                    </Form.Item>
 
-                    <FormItem
+                    <Form.Item
                         label="Phone Number"
                         name="numberphone"
                         maxLength={10}
@@ -237,24 +231,23 @@ function BookingConfirmationForm({isShow, onCancel}) {
                           defaultMask="... ... ... ."
                           enableLongNumbers={false}
                       ></PhoneInput>
-                    </FormItem>
+                    </Form.Item>
 
-                    <FormItem name="dob" label="Select birthday">
+                    <Form.Item name="dob" label="Select birthday">
                       <DatePicker className="ml-[10px]" />
-                    </FormItem>
+                    </Form.Item>
 
-                    <FormItem name="gender" label="Select gender">
+                    <Form.Item name="gender" label="Select gender">
                       <Radio.Group className="ml-[10px]">
                         <Radio value="male">Male</Radio>
                         <Radio value="female">Female</Radio>
                         <Radio value="unknown">Secret</Radio>
                       </Radio.Group>
-                    </FormItem>
+                    </Form.Item>
 
-                    <FormItem
+                    <Form.Item
                         name="paymentMethod"
                         label="Select payment method"
-                        paymentMethod={payment}
                         ref={paymentRef}
                     >
                       <Radio.Group
@@ -286,7 +279,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                           Wowo
                         </Radio>
                       </Radio.Group>
-                    </FormItem>
+                    </Form.Item>
                   </Form>
                 </div>
               </ConfigProvider>
@@ -391,7 +384,6 @@ function BookingConfirmationForm({isShow, onCancel}) {
           </div>
           {payment==='paypal'? <PayPalButton></PayPalButton> : ''}
           {payment==='wowo'? <img alt='wowopic' className='items-center flex'
-                                  onClick={handleClickWoWo}
                                   src='https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H'/>: ''}
         </Modal>
       </div>

@@ -81,3 +81,16 @@
       justify-content: space-between;
     }
 }
+
+//chatbox display
+.page-children{
+  position: relative;
+  .chatbox-holder{
+    height:100px;
+    position: fixed;
+    display: flex;
+    left:0;
+    top:10%;
+    padding: 16px;
+  }
+}

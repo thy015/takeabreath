@@ -60,7 +60,6 @@ const bookRoom = async (req, res) => {
                 {
                   status:"OK",
                   message:"Invoice created successfully, waiting for payment",
-                  paymentMethod: 'paypal',
                   data:invoice,
                   invoiceID:invoice._id
                 })
@@ -86,7 +85,6 @@ const bookRoom = async (req, res) => {
               if(orderResponse.status==='PENDING'){
               return res.status(201).json({
                 message:'Created order',
-                paymentMethod: 'wowo',
                 orderResponse:orderResponse
               })
               }else{

@@ -46,8 +46,8 @@ function BookingConfirmationForm({isShow, onCancel}) {
     countRoom,
     completedPayment,
   } = useSelector((state) => state.inputDay);
-  //radio
 
+  //radio
   const paymentRef=useRef(null)
 
   const handlePaymentChange = (e) => {
@@ -85,7 +85,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
           inputIdenCard: values.idenCard,
           inputGender: values.gender,
           paymentMethod: values.paymentMethod,
-          inputPhoneNum: values.numberphone,
+          inputPhoneNum: values.phoneNum,
           inputEmail: values.email,
           inputDob: dayjs(values.dob),
           total: totalPrice,
@@ -218,12 +218,12 @@ function BookingConfirmationForm({isShow, onCancel}) {
 
                     <Form.Item
                         label="Phone Number"
-                        name="numberphone"
+                        name="phoneNum"
                         maxLength={10}
                         rules={[
                           {
                             required: true,
-                            message: "Please input your numberphone !",
+                            message: "Please input your phone number !",
                           },
                         ]}
                     >

@@ -70,7 +70,7 @@ const bookRoom = async (req, res) => {
             const wowoWallet=new WoWoWallet(`${process.env.WOWO_SECRET}`);
             const newOrder={
               money:dataBooking.total,
-              serviceName:'TakeABreath',
+              serviceName:'TAB',
               items:[
                 {name:room.roomName,amount:dataBooking.totalRoom, unitPrice:room.money}
               ],

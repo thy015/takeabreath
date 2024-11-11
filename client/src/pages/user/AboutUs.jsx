@@ -104,7 +104,7 @@ const AboutUs = () => {
             ></PressReleasesCarousel>
           </div>
           <div className="col-2 flex justify-start items-end">
-            <img src="/icon/punctuation.png" className="scale-y-[-1]"></img>
+            <img src="/icon/punctuation.png" alt='punc' className="scale-y-[-1]"></img>
           </div>
         </div>
       </div>

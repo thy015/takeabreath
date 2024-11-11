@@ -45,8 +45,7 @@ const Header = ({ children }) => {
       if(auth.user.name === '' || !auth.user.name){
         return auth?.user?.email 
       }else{
-        return auth?.user?.name 
-        
+        return auth?.user?.name
       }
     
     }else{
@@ -65,6 +64,7 @@ const Header = ({ children }) => {
               id: "",
               email: '',
               name: '',
+              role:''
             }
           })
         }

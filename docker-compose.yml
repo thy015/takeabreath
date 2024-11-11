@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  clientapp:
+    container_name: clientapp_c
+    image: clientapp:latest
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    volumes:
+      - /home/maithy/Workplace/react/takeabreath/client:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+
+  serverapp:
+    container_name: serverapp_c
+    image: serverapp:latest
+    build:
+      context: ./server
+    ports:
+      - "4000:4000"
+    volumes:
+      - /home/maithy/Workplace/react/takeabreath/server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+
+

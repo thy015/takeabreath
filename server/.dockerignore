@@ -1,0 +1,22 @@
+# Node modules and dependencies
+node_modules
+pnpm-lock.yaml
+npm-debug.log
+yarn-error.log
+
+*.log
+
+dist
+build
+
+Dockerfile
+.dockerignore
+
+.git
+.gitignore
+
+.DS_Store
+Thumbs.db
+
+.vscode
+.idea

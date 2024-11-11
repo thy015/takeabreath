@@ -24,7 +24,8 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ['chunk-FWZAQCPU.js']
     },
-    server: {
+    server:{
+        host: '0.0.0.0',
         open: true,
         port: 3000,
     },

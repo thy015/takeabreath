@@ -132,9 +132,7 @@ const PropertyGrid = () => {
           <Col key={property._id} xs={24} sm={12} md={6}>
             <PropertyCard
               property={property}
-              link_property={`/hotel/${property._id}`}
               link_button={`/admin/hotel/${property._id}/rooms`}
-              edit={`/admin/hotel/${property._id}/updateHotel`}
               showButton={true}
               showDeleteModal={() => showDeleteModal(property._id)}
             />

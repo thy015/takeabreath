@@ -1,9 +1,9 @@
 
 
 const { CancelRequest, RefundCusMoney}=require("../../models/cancelReq.model");
-const { Customer, Owner} = require("../../models/signUp.model");
+const { Customer, Owner,Admin} = require("../../models/signUp.model");
 const {Invoice} = require("../../models/invoice.model");
-
+const mongoose=require('mongoose')
 const handleCancelRoomAccept=async(req,res)=>{
   //chuyển ảo
   const {cancelReqID}=req.params;
@@ -34,6 +34,7 @@ const handleCancelRoomAccept=async(req,res)=>{
       await matchedPartner.save()
 
       return res.status(200).json({
+        success:true,
         message:'Succ Acp cancel room',
         cancelReq:cancelReq,
         matchedInvoice:matchedInvoice,
@@ -58,7 +59,7 @@ const handleCancelRoomReject=async(req,res)=>{
     cancelReq.adminID = adminID
     cancelReq.rejectedReason=rejectedReason
     await cancelReq.save();
-      return res.status(200).json({message:'Succ cancel req',
+      return res.status(200).json({success:true,message:'Succ cancel req',
       cancelReq:cancelReq,
       })
   }catch(e){
@@ -70,7 +71,13 @@ const handleCancelRoomReject=async(req,res)=>{
 //get info
 const getReqCancelRoomAccepted = async (req, res) => {
   try {
-    const reqCancelsAccepted = await CancelRequest.find({ isAccept: "accepted" });
+    const reqCancelsAccepted = await CancelRequest.find({ isAccept: "accepted" }).populate({
+      path: 'invoiceID',
+      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
+    }).populate({
+      path:'adminID',
+      select:"adminName"
+    });
     return res.status(200).json(reqCancelsAccepted);
   } catch (e) {
     console.error("Error in getReqCancelRoomAccepted:", e);
@@ -79,31 +86,41 @@ const getReqCancelRoomAccepted = async (req, res) => {
     });
   }
 };
+
 const getReqCancelRoomRejected = async (req, res) => {
   try {
-    const reqCancelsRejected = await CancelRequest.find({ isAccept: "rejected" });
-    res.status(200).json( reqCancelsRejected,
-    );
+    const reqCancelsRejected = await CancelRequest.find({ isAccept: "rejected" }).populate({
+      path: 'invoiceID',
+      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
+    }).populate({
+      path:'adminID',
+      select:"adminName"
+    });;
+  
+    return res.status(200).json(reqCancelsRejected);
   } catch (e) {
     console.error("Error in getReqCancelRoomRejected:", e);
-    res.status(500).json({
+    return res.status(500).json({
       message: "An error occurred while fetching the cancellation requests",
     });
   }
 };
+
 const getReqCancelRoomProcess = async (req, res) => {
   try {
-    const reqCancelsProcessing = await CancelRequest.find({
-      isAccept: "processing",
+    const reqCancelsProcessing = await CancelRequest.find({ isAccept: "processing" }).populate({
+      path: 'invoiceID',
+      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
     });
-    res.status(200).json(reqCancelsProcessing);
+    return res.status(200).json(reqCancelsProcessing);
   } catch (e) {
     console.error("Error in getReqCancelRoomProcess:", e);
-    res.status(500).json({
+    return res.status(500).json({
       message: "An error occurred while fetching the cancellation requests",
     });
   }
 };
+
 const inactiveCus = async (req, res) => {
   const cusID = req.params.id;
   const { reason } = req.body;
@@ -136,7 +153,6 @@ const inactiveCus = async (req, res) => {
   }
 };
 
-// Activate customer
 const activeCus = async (req, res) => {
   const cusID = req.params.id;
 

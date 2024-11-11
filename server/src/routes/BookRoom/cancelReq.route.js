@@ -35,8 +35,8 @@ reqCancelRouter.get('/:id/cancelRequest',async(req,res)=>{
     }
 })
 
-reqCancelRouter.put('/active/:id', reqCancelController.activeCus);
-reqCancelRouter.put('/inactive/:id', reqCancelController.inactiveCus);
+reqCancelRouter.put('/active/:id', verifyAdmin,reqCancelController.activeCus);
+reqCancelRouter.put('/inactive/:id',verifyAdmin ,reqCancelController.inactiveCus);
 reqCancelRouter.post('/accept/:cancelReqID',verifyAdmin,reqCancelController.handleCancelRoomAccept)
 reqCancelRouter.post('/reject/:cancelReqID',verifyAdmin,reqCancelController.handleCancelRoomReject)
 module.exports=reqCancelRouter

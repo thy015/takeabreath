@@ -57,7 +57,7 @@ const DashboardView = () => {
             onClick={showProfile}
           >
             <p className="pt-[10px]">{auth?.user?.name}</p>
-            <div className="h-[50px] w-[50px] bg-[#4E73DF] cursor-pointer flex items-center justify-center relative z-40">
+            <div className="h-[50px] w-[60px]  cursor-pointer flex items-center justify-center relative z-40">
               <img src="/img/profile.png" alt="" />
             </div>
 

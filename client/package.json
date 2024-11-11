@@ -34,6 +34,7 @@
     "i18next-http-backend": "^2.6.2",
     "install": "^0.13.0",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "mdb-react-ui-kit": "^8.0.0",
     "moment": "^2.30.1",

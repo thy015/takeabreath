@@ -34,6 +34,7 @@ const handleCancelRoomAccept=async(req,res)=>{
       await matchedPartner.save()
 
       return res.status(200).json({
+        success:true,
         message:'Succ Acp cancel room',
         cancelReq:cancelReq,
         matchedInvoice:matchedInvoice,
@@ -58,7 +59,7 @@ const handleCancelRoomReject=async(req,res)=>{
     cancelReq.adminID = adminID
     cancelReq.rejectedReason=rejectedReason
     await cancelReq.save();
-      return res.status(200).json({message:'Succ cancel req',
+      return res.status(200).json({success:true,message:'Succ cancel req',
       cancelReq:cancelReq,
       })
   }catch(e){

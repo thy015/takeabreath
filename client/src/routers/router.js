@@ -19,7 +19,6 @@ import AddVoucher from "../pages/owner/Voucher/AddVoucher";
 import Customer from "../pages/admin/Customers/CustomerList"
 import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
 
-import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
@@ -59,7 +58,6 @@ export const routers = [
       {path:"hotel/:id/rooms", page:RoomsOfHotel},
       {path:"customers", page:Customer},
       {path:"requests",page:cancelReqAdmin},
-      {path:"hotel/:id/updateHotel",page:UpdateHotel},
       {path:"vouchers",page:AdminVoucher},
       {path:"invoices",page:invoiceAdmin},
     ],

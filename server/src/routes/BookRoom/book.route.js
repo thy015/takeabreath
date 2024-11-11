@@ -2,11 +2,12 @@ const express = require("express");
 const bookController = require("./bookRoom.controller");
 const {CancelRequest} = require("../../models/cancelReq.model");
 const {Invoice} = require("../../models/invoice.model");
+const { verifyAdmin } = require("../../middleware/verify");
 const bookRouter = express.Router();
 
-bookRouter.get("/invoice", bookController.getInvoicesWithReceipts);
-bookRouter.get("/invoicepaid",bookController.getInvoicesPaid);
-bookRouter.get("/invoicewaiting",bookController.getInvoicesWaiting);
+bookRouter.get("/invoice",verifyAdmin, bookController.getInvoicesWithReceipts);
+bookRouter.get("/invoicepaid",verifyAdmin,bookController.getInvoicesPaid);
+bookRouter.get("/invoicewaiting",verifyAdmin,bookController.getInvoicesWaiting);
 bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post('/',bookController.bookRoom)
 bookRouter.get(

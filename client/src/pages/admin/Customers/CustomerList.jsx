@@ -162,12 +162,13 @@ const CustomersList = () => {
         onConfirm={handleConfirm}
         reason={reason}
         setReason={setReason}
-        header={"vô hiệu hóa"}
+        header={"vô hiệu hóa tài khoản"}
       />
       <ModalActivate
         open={activateModalVisible}
         onClose={() => setActivateModalVisible(false)}
         onConfirm={handleActivateConfirm}
+        header={"Kích hoạt tài khoản"}
       />
     </div>
   );
@@ -183,7 +184,7 @@ export const ModalDelete = ({ open, onClose, onConfirm, reason, setReason,header
     >
       <div className="text-center">
         <div className="mx-auto my-4 w-64">
-          <h3 className="text-lg w-full font-black text-blue-900"> Vui lòng nhập lí do {header} tài khoản này</h3>
+          <h3 className="text-lg w-full font-black text-blue-900"> Vui lòng nhập lí do {header} này</h3>
         
           <input
             type="text"
@@ -206,7 +207,7 @@ export const ModalDelete = ({ open, onClose, onConfirm, reason, setReason,header
   );
 };
 
-const ModalActivate = ({ open, onClose, onConfirm }) => {
+export const ModalActivate = ({ open, onClose, onConfirm,header }) => {
   return (
     <Modal
       className="justify-center items-center"
@@ -215,9 +216,9 @@ const ModalActivate = ({ open, onClose, onConfirm }) => {
       onCancel={onClose}
     >
       <div className="text-center">
-        <h3 className="text-lg font-black text-blue-900">Kích Hoạt Tài Khoản</h3>
+        <h3 className="text-lg font-black text-blue-900">{header}</h3>
         <p className="text-sl text-gray-500">
-          Bạn có chắc muốn kích hoạt lại tài khoản khách hàng này ?
+          Bạn có chắc muốn {header} của khách hàng này ?
         </p>
         <div className="flex justify-around mt-4">
           <button onClick={onClose} className="bg-gray-300 w-1/4 p-2 rounded">

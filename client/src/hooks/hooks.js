@@ -14,26 +14,27 @@ function useCount(iniValue = 0) {
   return [count, increment, decrement];
 }
 
-function useGet(link) {
+function useGet(link, refresh) {
   const [data, setData] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(link);
-        console.log("API response: ", res.data); 
+        console.log("API response: ", res.data);
         setData(res.data);
       } catch (e) {
         setError(e);
         console.log(e);
       } finally {
-        //if succ or not
         setLoading(false);
       }
     };
     fetchData();
-  }, [link]);
+  }, [link, refresh]); 
   return { data, error, loading };
 }
 

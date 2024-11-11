@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 import axios from 'axios';
 import {ExportToExcel} from './../../component/ExportToExcel'
 const Main = () => {
+    axios.defaults.withCredentials = true
     const fileName = "BaoCaoDoanhThu";
     const [totalDiscount, setTotalDiscount] = useState(0);
     const [totalDiscountMonth, setTotalDiscountMonth] = useState(0);

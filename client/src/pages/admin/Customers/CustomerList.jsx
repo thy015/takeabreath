@@ -1,11 +1,12 @@
-import React, { useState} from "react";
+import React, { useState,useEffect} from "react";
 import { Spin, Alert, Table, Tag, Modal, notification } from "antd";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import { useGet } from "../../../hooks/hooks";
 
 const CustomersList = () => {
-  const { data, error, loading } = useGet("http://localhost:4000/api/auth/customer");
+  const [refresh, setRefresh] = useState(false);
+  const { data, error, loading } = useGet("http://localhost:4000/api/auth/customer", refresh);
   const [searchText, setSearchText] = useState("");
   const [cusID, setCusID] = useState(null);
   const [reason, setReason] = useState("");
@@ -33,30 +34,30 @@ const CustomersList = () => {
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/cancelReq/inactive/${cusID}`, {
-        reason: reason,
-      });
-      if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
-        notification.success({
-          message: 'Customer Inactivated Successfully',
-          description: 'The customer has been inactivated successfully!',
+        const response = await axios.put(`http://localhost:4000/api/cancelReq/inactive/${cusID}`, {
+            reason: reason,
         });
-        handleDeleteCancel();
-        setReason(""); 
-      } else {
-        notification.error({
-          message: 'Customer Inactivation Failed',
-          description: 'Customer inactivation failed!',
-        });
-      }
+        if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
+            notification.success({
+                message: 'Customer Inactivated Successfully',
+                description: 'The customer has been inactivated successfully!',
+            });
+            handleDeleteCancel();
+            setRefresh(prev => !prev); 
+        } else {
+            notification.error({
+                message: 'Customer Inactivation Failed',
+                description: 'Customer inactivation failed!',
+            });
+        }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-      notification.error({
-        message: 'Customer Inactivation Failed',
-        description: errorMessage,
-      });
+        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        notification.error({
+            message: 'Customer Inactivation Failed',
+            description: errorMessage,
+        });
     }
-  };
+};
 
   const handleDeleteCancel = () => {
     setDeleteModalVisible(false);
@@ -66,27 +67,28 @@ const CustomersList = () => {
 
   const handleActivateConfirm = async () => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/cancelReq/active/${cusID}`);
-      if (response.status === 200 && response.data.message === 'Active customer successfully') {
-        notification.success({
-          message: 'Customer Activated Successfully',
-          description: 'The customer has been activated successfully!',
-        });
-        setActivateModalVisible(false);
-      } else {
-        notification.error({
-          message: 'Customer Activation Failed',
-          description: 'Customer activation failed!',
-        });
-      }
+        const response = await axios.put(`http://localhost:4000/api/cancelReq/active/${cusID}`);
+        if (response.status === 200 && response.data.message === 'Active customer successfully') {
+            notification.success({
+                message: 'Customer Activated Successfully',
+                description: 'The customer has been activated successfully!',
+            });
+            setRefresh(prev => !prev); 
+            setActivateModalVisible(false);
+        } else {
+            notification.error({
+                message: 'Customer Activation Failed',
+                description: 'Customer activation failed!',
+            });
+        }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-      notification.error({
-        message: 'Customer Activation Failed',
-        description: errorMessage,
-      });
+        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        notification.error({
+            message: 'Customer Activation Failed',
+            description: errorMessage,
+        });
     }
-  };
+};
 
   const columns = [
     { title: "Họ Tên", dataIndex: "cusName", key: "cusName", sorter: (a, b) => (a.cusName || "").localeCompare(b.cusName || ""), width: '25%' },
@@ -160,17 +162,19 @@ const CustomersList = () => {
         onConfirm={handleConfirm}
         reason={reason}
         setReason={setReason}
+        header={"vô hiệu hóa tài khoản"}
       />
       <ModalActivate
         open={activateModalVisible}
         onClose={() => setActivateModalVisible(false)}
         onConfirm={handleActivateConfirm}
+        header={"Kích hoạt tài khoản"}
       />
     </div>
   );
 };
 
-const ModalDelete = ({ open, onClose, onConfirm, reason, setReason }) => {
+export const ModalDelete = ({ open, onClose, onConfirm, reason, setReason,header }) => {
   return (
     <Modal
       className="justify-center items-center"
@@ -180,7 +184,7 @@ const ModalDelete = ({ open, onClose, onConfirm, reason, setReason }) => {
     >
       <div className="text-center">
         <div className="mx-auto my-4 w-64">
-          <h3 className="text-lg w-full font-black text-blue-900"> Vui lòng nhập lí do vô hiệu hóa tài khoản này</h3>
+          <h3 className="text-lg w-full font-black text-blue-900"> Vui lòng nhập lí do {header} này</h3>
         
           <input
             type="text"
@@ -203,7 +207,7 @@ const ModalDelete = ({ open, onClose, onConfirm, reason, setReason }) => {
   );
 };
 
-const ModalActivate = ({ open, onClose, onConfirm }) => {
+export const ModalActivate = ({ open, onClose, onConfirm,header }) => {
   return (
     <Modal
       className="justify-center items-center"
@@ -212,9 +216,9 @@ const ModalActivate = ({ open, onClose, onConfirm }) => {
       onCancel={onClose}
     >
       <div className="text-center">
-        <h3 className="text-lg font-black text-blue-900">Kích Hoạt Tài Khoản</h3>
+        <h3 className="text-lg font-black text-blue-900">{header}</h3>
         <p className="text-sl text-gray-500">
-          Bạn có chắc muốn kích hoạt lại tài khoản khách hàng này ?
+          Bạn có chắc muốn {header} của khách hàng này ?
         </p>
         <div className="flex justify-around mt-4">
           <button onClick={onClose} className="bg-gray-300 w-1/4 p-2 rounded">

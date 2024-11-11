@@ -37,21 +37,32 @@ function App() {
 
     useEffect(() => {
         const loadScript = (src) => {
-            if(auth?.user?.role!== 'admin' || auth?.user?.role!=='owner') {
+            let script
+            if (auth?.user?.role === 'customer' || auth?.user?.role==='') {
+                console.log("Load Script")
                 return new Promise((resolve, reject) => {
-                    const script = document.createElement('script');
+                    script = document.createElement('script');
+                    script.id = "chatbox"
                     script.src = src;
                     script.onload = () => resolve();
                     script.onerror = () => reject(new Error(`Script load error for ${src}`));
                     document.body.appendChild(script);
                 });
+
+            } else {
+                const iframeChatbox = document.getElementsByName("fab");
+                iframeChatbox.forEach(element => {
+                    element.style.display = "none";
+                });
             }
+
         };
 
         const loadScripts = async () => {
             try {
                 await loadScript('https://cdn.botpress.cloud/webchat/v2.2/inject.js');
                 await loadScript('https://files.bpcontent.cloud/2024/11/09/20/20241109202259-FMPWOTKL.js');
+
                 console.log("Scripts loaded successfully");
             } catch (error) {
                 console.error(error);

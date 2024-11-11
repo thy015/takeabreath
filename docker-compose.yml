@@ -1,32 +1,25 @@
-version: '3.8'
 
 services:
   clientapp:
-    container_name: clientapp_c
-    image: clientapp:latest
-    build:
-      context: ./client
+    image: thy015/takeabreath:client
     ports:
       - "3000:3000"
-    volumes:
-      - /home/maithy/Workplace/react/takeabreath/client:/app
-      - /app/node_modules
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+    networks:
+      - app-network
     restart: unless-stopped
 
   serverapp:
-    container_name: serverapp_c
-    image: serverapp:latest
-    build:
-      context: ./server
+    image: thy015/takeabreath:server
     ports:
       - "4000:4000"
-    volumes:
-      - /home/maithy/Workplace/react/takeabreath/server:/app
-      - /app/node_modules
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+    networks:
+      - app-network
     restart: unless-stopped
 
-
+networks:
+  app-network:
+    driver: bridge

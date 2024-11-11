@@ -79,6 +79,7 @@ const signInOwner = async (req, res) => {
         phoneNum: foundOwner.phoneNum,
         avatarLink: foundOwner.avatarLink,
         regDay: foundOwner.regDay,
+        role:'owner',
       });
 
       return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
@@ -96,7 +97,7 @@ const signInOwner = async (req, res) => {
     const foundAdmin = await Admin.findOne({
       email: email
     });
-
+    console.log(foundAdmin)
     if (foundAdmin) {
       let checkPassword = await bcrypt.compare(password, foundAdmin.password)
       if (!checkPassword) {
@@ -109,7 +110,8 @@ const signInOwner = async (req, res) => {
       const access_token = await generalAccessTokens({
         id: foundAdmin._id,
         name: foundAdmin.adminName,
-        email: foundAdmin.email
+        email: foundAdmin.email,
+        role:'admin',
       });
 
       return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
@@ -161,7 +163,8 @@ const loginCustomer = async (req, res) => {
       name: customer.cusName,
       email: customer.email,
       phoneNum: customer.phoneNum,
-      birthday: customer.birthday
+      birthday: customer.birthday,
+      role:'customer',
     });
 
     return res.cookie("token", token, { httpOnly: true, secure: true })

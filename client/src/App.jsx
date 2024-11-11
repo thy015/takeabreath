@@ -12,46 +12,57 @@ function App() {
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-      const fetchUser = () => {
-        axios
-          .get("http://localhost:4000/api/auth/verify")
-          .then((res) => {
-            const userRes = res.data.user;
-            setAuth({
-              isAuthenticated: true,
-              user: {
-                id: userRes?.id ?? "",
-                email: userRes?.email ?? "",
-                name: userRes?.name ??  "",
-                  role:userRes?.role ?? ""
-              },
-            });
-          })
-          .catch((err) => {
-            console.log("[APP]", err);
-          });
-      };
+        const fetchUser = () => {
+            axios
+                .get("http://localhost:4000/api/auth/verify")
+                .then((res) => {
+                    const userRes = res.data.user;
+                    console.log(userRes)
+                    setAuth({
+                        isAuthenticated: true,
+                        user: {
+                            id: userRes?.id ?? "",
+                            email: userRes?.email ?? "",
+                            name: userRes?.name ?? "",
+                            role: userRes?.role ?? ""
+                        },
+                    });
+                })
+                .catch((err) => {
+                    console.log("[APP]", err);
+                });
+        };
 
-      fetchUser();
+        fetchUser();
     }, []);
-
     useEffect(() => {
         const loadScript = (src) => {
-            if(auth?.user?.role!== 'admin' || auth?.user?.role!=='owner') {
+            let script
+            if (auth?.user?.role === 'customer') {
+                console.log("Load Script")
                 return new Promise((resolve, reject) => {
-                    const script = document.createElement('script');
+                    script = document.createElement('script');
+                    script.id = "chatbox"
                     script.src = src;
                     script.onload = () => resolve();
                     script.onerror = () => reject(new Error(`Script load error for ${src}`));
                     document.body.appendChild(script);
                 });
+
+            } else {
+                const iframeChatbox = document.getElementsByName("fab");
+                iframeChatbox.forEach(element => {
+                    element.style.display = "none";
+                });
             }
+
         };
 
         const loadScripts = async () => {
             try {
                 await loadScript('https://cdn.botpress.cloud/webchat/v2.2/inject.js');
                 await loadScript('https://files.bpcontent.cloud/2024/11/09/20/20241109202259-FMPWOTKL.js');
+
                 console.log("Scripts loaded successfully");
             } catch (error) {
                 console.error(error);
@@ -82,8 +93,8 @@ function App() {
                         if (route.isOwner) {
                             return (
                                 <Route key={route.path}
-                                       path={route.path}
-                                       element={<route.page />}>
+                                    path={route.path}
+                                    element={<route.page />}>
                                     {route.children &&
                                         route.children.map((child) => (
                                             <Route

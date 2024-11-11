@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Form, Input, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import axios from "axios";
@@ -38,7 +38,7 @@ const LogInOwner = () => {
     });
   };
 
- 
+
 
   const handleFormSubmit = async () => {
     const { email, password } = formData;
@@ -58,10 +58,9 @@ const LogInOwner = () => {
             id: response?.data?.id ?? "",
             email: response?.data?.email ?? "",
             name: response?.data?.name ?? "",
-            role:response?.data?.role??''
+            role: response?.data?.role ?? ''
           }
         })
-
         navigate(response.data.redirect);
       }
     } catch (e) {
@@ -104,7 +103,7 @@ const LogInOwner = () => {
                 <div className="col-8">
                   <div className="py-32">
                     <h5 className="font-bold text-[#c3d7ef]">
-                    {t('welcome-back')}
+                      {t('welcome-back')}
                       <span className="text-white"> TAB</span>{" "}
                       {t('partner-login-owner')} !
                     </h5>
@@ -157,7 +156,7 @@ const LogInOwner = () => {
                             className="my-2 ml-8 hover:scale-105 bg-white"
                             style={{ color: "#114098" }}
                           >
-                          {t('sign-in')}
+                            {t('sign-in')}
                           </Button>
                         </Form.Item>
                       </Form>
@@ -166,7 +165,7 @@ const LogInOwner = () => {
                     <div className="flex justify-start mt-3 text-[#c3d7ef]">
                       <span>{t('not-register-owner')}</span>
                       <span className="text-white cursor-pointer no-underline ml-2" onClick={handleSignInClick}>
-                      {t('register-owner')}
+                        {t('register-owner')}
                       </span>
                     </div>
                   </div>
@@ -176,7 +175,7 @@ const LogInOwner = () => {
             </motion.div>
             <div className="col-5 relative border-l">
               <div className="gryphen absolute flex mt-[100px] ml-6 text-white text-semibold text-[20px] italic">
-              {t('we-sincerely-appreciate-your-partnership')}
+                {t('we-sincerely-appreciate-your-partnership')}
               </div>
 
               <img
@@ -186,7 +185,7 @@ const LogInOwner = () => {
               />
               <div className='absolute flex top-[92%] left-[70%]'>
                 <ChangeLangButton color='white' underline='yellow-200'></ChangeLangButton>
-                </div>
+              </div>
             </div>
           </div>
         </div>

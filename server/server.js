@@ -31,7 +31,9 @@ useSSOCallback(app)
 
 const allowedOrigins = ["http://localhost:3000",
     "https://takeabreath.io.vn",
-  "https://wowo.htilssu.id.vn/assets/remoteEntry.js"];
+  "https://wowo.htilssu.id.vn/assets/remoteEntry.js",
+    "https://www.sandbox.paypal.com/xoplatform/logger/api/logger?disableSetCookie=true"
+];
 
 app.use(
     cors({

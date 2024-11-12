@@ -104,12 +104,6 @@ export const routers = [
   },
 
   {
-    path: "/booking-success",
-    page: SuccessPayment,
-    isShowHeader: true,
-    isShowFooter: true,
-  },
-  {
     path: "/hotel/:id",
     page: HotelDisplay_HotelTab,
     isShowHeader: true,

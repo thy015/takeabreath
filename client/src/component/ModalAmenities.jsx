@@ -14,6 +14,7 @@ function ModalAmenities({ visible, close }) {
     const [amenities, setAmenities] = useState({})
     const [totalSelections, setTotalSelections] = useState(0);
     const [formValues, setFormValues] = useState({});
+    const BE_PORT=process.env.BE_PORT
     const { Option } = Select;
     const initalAmenities = {
         bathroom: [],
@@ -34,7 +35,7 @@ function ModalAmenities({ visible, close }) {
 
     useEffect(() => {
         // get amenities
-        axios.get("http://localhost:4000/api/hotelList/hotelAmenities")
+        axios.get(`${BE_PORT}/api/hotelList/hotelAmenities`)
             .then(res => res.data)
             .then(data => {
                 setAmenities(data.amenitiesEnum)

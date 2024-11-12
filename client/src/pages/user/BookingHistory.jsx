@@ -18,7 +18,7 @@ const BookingPage = () => {
   const id = auth?.user?.id;
   dayjs.extend(utc);
   dayjs.extend(timezone);
-
+  const BE_PORT=process.env.BE_PORT
   console.log(id)
   if (!id) {
     return <Alert message="Please try sign in first" type="info" showIcon />;
@@ -70,7 +70,7 @@ const BookingPage = () => {
       disableCancelConfirmAfterClicked(invoiceID)
       const res = await
           axios.post(
-              `http://localhost:4000/api/booking/bookingHistory/${invoiceID}/cancel`,
+              `${BE_PORT}/api/booking/bookingHistory/${invoiceID}/cancel`,
               passingData,
               { headers: { Authorization: `Bearer ${auth.token}` } }
           );
@@ -79,7 +79,7 @@ const BookingPage = () => {
       console.error('Error canceling booking:', error.message);
     }
   };
-  const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
+  const {data,error,loading}=useGet(`${BE_PORT}/api/booking/bookingHistory/${id}`)
 
   console.log(localStorage.getItem('invoiceData'))
   if (loading) {

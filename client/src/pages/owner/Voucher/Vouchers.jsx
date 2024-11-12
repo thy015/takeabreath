@@ -18,10 +18,11 @@ function Vouchers() {
   const [editKey, setEditKey] = useState('')
   const [listVoucher, setListVoucher] = useState([])
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+  const BE_PORT=process.env.BE_PORT
   const isEditing = (record) => record.key === editKey
   //get vouchers in db
   useEffect(() => {
-    axios.get("http://localhost:4000/api/voucher/list-voucher")
+    axios.get(`${BE_PORT}/api/voucher/list-voucher`)
       .then(res =>
         res.data
       )
@@ -109,7 +110,7 @@ function Vouchers() {
       title: "Are you sure, you want to delete this",
       onOk: () => {
         console.log("[OKE DELETE]", record)
-        axios.delete(`http://localhost:4000/api/voucher/list-voucher/${record._id}`)
+        axios.delete(`${BE_PORT}/api/voucher/list-voucher/${record._id}`)
           .then(res => res.data)
           .then(data => {
             console.log(data)
@@ -169,7 +170,7 @@ function Vouchers() {
           return
         }
 
-        axios.post(`http://localhost:4000/api/voucher/list-voucher/update/${id}`, {
+        axios.post(`${BE_PORT}/api/voucher/list-voucher/update/${id}`, {
           value
         })
           .then(res => res.data)

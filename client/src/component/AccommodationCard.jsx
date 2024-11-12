@@ -103,10 +103,11 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
   const dispatch=useDispatch();
   const navigate=useNavigate()
   const [roomData,setRoomData]=useState(null)
+  const BE_PORT=process.env.BE_PORT
     useEffect(()=>{
       const fetchRoomData=async()=>{
         try{
-            const res=await fetch(`http://localhost:4000/api/hotelList/hotel/${property._id}/room`)
+            const res=await fetch(`${BE_PORT}/api/hotelList/hotel/${property._id}/room`)
               const data=await res.json();
                 setRoomData(data)
         }catch(e){

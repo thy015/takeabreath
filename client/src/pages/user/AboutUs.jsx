@@ -7,6 +7,7 @@ import { pressReleasedData,ourAchievementsData } from "../../localData/localData
 const AboutUs = () => {
   const pressReleasedDataCard = pressReleasedData();
   const ourAchievementsDataCard = ourAchievementsData();
+
   return (
     <div>
       {/* 1st section */}

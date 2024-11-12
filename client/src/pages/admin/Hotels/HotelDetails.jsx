@@ -5,7 +5,8 @@ import { Spin, Alert } from "antd";
 
 const HotelDetail = () => {
   const { id } = useParams();
-  const { data, error, loading } = useGet(`http://localhost:4000/api/hotelList/hotel/${id}`);
+    const BE_PORT=process.env.BE_PORT
+  const { data, error, loading } = useGet(`${BE_PORT}/api/hotelList/hotel/${id}`);
 
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;

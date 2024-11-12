@@ -14,7 +14,7 @@ import styled from 'styled-components'
 const Header = ({ children }) => {
 
   const { t } = useTranslation();
-
+  const BE_PORT=process.env.BE_PORT
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
     //log in
@@ -54,7 +54,7 @@ const Header = ({ children }) => {
   }
 
   const Logout = () => {
-    axios.get("http://localhost:4000/api/auth/logout")
+    axios.get(`${BE_PORT}/api/auth/logout`)
       .then(res => {
         if (res.data.logout) {
           openNotification(true,"Logout Successful !")
@@ -118,7 +118,7 @@ const Header = ({ children }) => {
           className="no-underline"
           target="_blank"
           rel="noopener noreferrer"
-          href="http://localhost:3000/registerOwner"
+          href="https://takeabreath.io.vn/registerOwner"
         >
           Register Owner!
         </a>

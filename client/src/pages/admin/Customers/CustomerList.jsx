@@ -6,7 +6,8 @@ import { useGet } from "../../../hooks/hooks";
 
 const CustomersList = () => {
   const [refresh, setRefresh] = useState(false);
-  const { data, error, loading } = useGet("http://localhost:4000/api/auth/customer", refresh);
+    const BE_PORT=process.env.BE_PORT
+  const { data, error, loading } = useGet(`${BE_PORT}/api/auth/customer`, refresh);
   const [searchText, setSearchText] = useState("");
   const [cusID, setCusID] = useState(null);
   const [reason, setReason] = useState("");
@@ -34,7 +35,7 @@ const CustomersList = () => {
 
   const handleConfirm = async () => {
     try {
-        const response = await axios.put(`http://localhost:4000/api/cancelReq/inactive/${cusID}`, {
+        const response = await axios.put(`${BE_PORT}/api/cancelReq/inactive/${cusID}`, {
             reason: reason,
         });
         if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
@@ -67,7 +68,7 @@ const CustomersList = () => {
 
   const handleActivateConfirm = async () => {
     try {
-        const response = await axios.put(`http://localhost:4000/api/cancelReq/active/${cusID}`);
+        const response = await axios.put(`${BE_PORT}/api/cancelReq/active/${cusID}`);
         if (response.status === 200 && response.data.message === 'Active customer successfully') {
             notification.success({
                 message: 'Customer Activated Successfully',

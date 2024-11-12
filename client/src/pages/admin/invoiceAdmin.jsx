@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Spin, Alert, Table } from "antd";
 import { useGet } from "../../hooks/hooks";
 import { FaSearch } from "react-icons/fa";
-import {ExportToExcel} from './../../component/ExportToExcel'
+import {ExportToExcel} from '../../component/ExportToExcel'
 const InvoicesList = () => {
-  const { data, error, loading } = useGet("http://localhost:4000/api/booking/invoicepaid");
+  const BE_PORT=process.env.BE_PORT
+  const { data, error, loading } = useGet(`${BE_PORT}/api/booking/invoicepaid`);
   const [searchText, setSearchText] = useState(""); 
   const [fileName,setFileName]=useState("Hóa Đơn");
   if (loading) {

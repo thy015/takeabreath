@@ -22,7 +22,6 @@ import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
-import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/AdminVoucher";

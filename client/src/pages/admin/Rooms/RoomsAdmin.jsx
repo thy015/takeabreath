@@ -8,7 +8,8 @@ import { FaSearch } from "react-icons/fa";
 const { Option } = Select;
 
 const RoomList = () => {
-  const { data: roomsData, error, loading } = useGet("http://localhost:4000/api/roomList/rooms");
+  const BE_PORT=process.env.BE_PORT
+  const { data: roomsData, error, loading } = useGet(`${BE_PORT}/api/roomList/rooms`);
   const [hotelMap, setHotelMap] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [sortKey, setSortKey] = useState("");
@@ -16,7 +17,7 @@ const RoomList = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/hotelList/hotel");
+        const response = await axios.get(`${BE_PORT}/api/hotelList/hotel`);
         const map = response.data.reduce((acc, hotel) => {
           acc[hotel._id] = hotel.hotelName;
           return acc;

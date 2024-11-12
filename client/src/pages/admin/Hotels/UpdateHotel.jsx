@@ -8,13 +8,13 @@ const UpdateHotel = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);  
   const [errMessage, setErrMessage] = useState('');  
-  const [form] = Form.useForm(); 
-
+  const [form] = Form.useForm();
+  const BE_PORT=process.env.BE_PORT
   useEffect(() => {
     const fetchHotelData = async () => {
       setLoading(true);  
       try {
-        const response = await axios.get(`http://localhost:4000/api/hotelList/hotel/${id}`);
+        const response = await axios.get(`${BE_PORT}/api/hotelList/hotel/${id}`);
         const hotelData = response.data;  
         form.setFieldsValue(hotelData);  
       } catch (error) {
@@ -29,7 +29,7 @@ const UpdateHotel = () => {
   const onFinish = async (values) => {
     setErrMessage(''); 
     try {
-      const response = await axios.post(`http://localhost:4000/api/hotelList/updateHotel/${id}`, {
+      const response = await axios.post(`${BE_PORT}/api/hotelList/updateHotel/${id}`, {
         ...values,
       });
 

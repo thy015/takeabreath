@@ -21,9 +21,10 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const [nations, setnation] = useState([])
   const [cities, setCities] = useState([])
   const [errMessage, setErrMessage] = useState('');
+  const BE_PORT=process.env.BE_PORT
   const [images, setImages] = useState([])
   const [form] = Form.useForm();
-  const { data: owners, error: ownerError, loading: ownerLoad } = useGet("http://localhost:4000/api/auth/owner");
+  const { data: owners, error: ownerError, loading: ownerLoad } = useGet(`${BE_PORT}/api/auth/owner`);
   const [visibleAm, setVisibleAm] = useState(false)
   const amenity = useSelector(state => state.amenity.amenity)
 
@@ -58,7 +59,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
       .catch(err => console.log(err))
 
     // Get Type holtel
-    axios.get("http://localhost:4000/api/hotelList/hotelTypes")
+    axios.get(`${BE_PORT}/api/hotelList/hotelTypes`)
       .then(res => res.data)
       .then(data => {
         setType(data.types)
@@ -175,7 +176,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
     }
     if (hotelSelected === undefined || !isEmpty(hotelSelected)) {
       try {
-        const response = await axios.post(`http://localhost:4000/api/hotelList/updateHotel/${hotelSelected._id}`, form);
+        const response = await axios.post(`${BE_PORT}/api/hotelList/updateHotel/${hotelSelected._id}`, form);
         if (response.data.status === 'OK') {
           openNotification(true, "Cập nhật thành công", "")
           dispatch(updateHotels(response.data.data))
@@ -195,7 +196,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
       }
     } else {
       try {
-        const response = await axios.post('http://localhost:4000/api/hotelList/createHotel', form);
+        const response = await axios.post(`${BE_PORT}/api/hotelList/createHotel`, form);
         if (response.data.status === 'OK') {
           openNotification(true, "Thêm thành công", "")
           dispatch(addHotel(form))

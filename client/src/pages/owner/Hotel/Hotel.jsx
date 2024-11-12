@@ -17,9 +17,10 @@ function Hotel() {
     const hotels = useSelector(state => state.hotel.hotels)
     const amenity = useSelector(state=> state.amenity.amenity)
     const hotelSearch = useSelector(state => state.hotel.hotelSearch)
+    const BE_PORT=process.env.BE_PORT
     const [visible, setVisible] = useState(false)
     useEffect(() => {
-        axios.get("http://localhost:4000/api/hotelList/hotelOwner")
+        axios.get(`${BE_PORT}/api/hotelList/hotelOwner`)
             .then(res => res.data)
             .then(data => {
                 console.log(data)
@@ -35,7 +36,7 @@ function Hotel() {
     }, [])
 
     const handleDelete = (record) => {
-        axios.delete(`http://localhost:4000/api/hotelList/deleteHotel/${record._id}`)
+        axios.delete(`${BE_PORT}/api/hotelList/deleteHotel/${record._id}`)
             .then(res => res.data)
             .then(data => {
                 console.log(data)

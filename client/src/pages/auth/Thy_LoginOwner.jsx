@@ -17,7 +17,7 @@ const LogInOwner = () => {
   const { auth, setAuth } = useContext(AuthContext)
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
-
+  const BE_PORT=process.env.BE_PORT
   const handleSignInClick = () => {
     setIsSignInClicked(true);
   };
@@ -49,7 +49,7 @@ const LogInOwner = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/signInOwner", formData);
+      const response = await axios.post(`${BE_PORT}/api/auth/signInOwner`, formData);
       if (response.status === 200) {
         openNotification(true, "Success login");
         setAuth({

@@ -94,12 +94,12 @@ function BookingConfirmationForm({isShow, onCancel}) {
           totalDay: totalCheckInDay,
           totalRoom:countRoom
         }
-
+    const BE_PORT=process.env.BE_PORT
     // need handle voucher
     console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking);
 
     try {
-      const response = await axios.post("http://localhost:4000/api/booking", {
+      const response = await axios.post(`${BE_PORT}/api/booking`, {
         idHotel,
         idCus,
         idRoom,

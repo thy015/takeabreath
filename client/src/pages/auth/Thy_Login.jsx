@@ -18,7 +18,7 @@ const Login = () => {
   const { auth, setAuth } = useContext(AuthContext)
   // get the redirect url from the location
   const navigate = useNavigate();
-
+  const BE_PORT=process.env.BE_PORT
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -56,7 +56,7 @@ const Login = () => {
       return;
     }
 
-    axios.post("http://localhost:4000/api/auth/signInCus", { email, password })
+    axios.post(`${BE_PORT}/api/auth/signInCus`, { email, password })
       .then(res => {
         if (res.data.login) {
           console.log(res)

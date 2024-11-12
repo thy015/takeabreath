@@ -8,14 +8,14 @@ const DashboardView = () => {
   const {auth,setAuth} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
-
+  const BE_PORT=process.env.BE_PORT
   console.log("[Admin Page] ",auth)
   axios.defaults.withCredentials = true
   const showProfile = () => {
     setOpen(!open);
   };
   const hanldeLogout = ()=>{
-    axios.get("http://localhost:4000/api/auth/logout")
+    axios.get(`${BE_PORT}/api/auth/logout`)
     .then(res => {
       if (res.data.logout) {
         setAuth({

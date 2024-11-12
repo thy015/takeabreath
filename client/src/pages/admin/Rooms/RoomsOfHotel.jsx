@@ -6,12 +6,13 @@ import RoomCard from "./RoomCard";
 import { FaSearch } from "react-icons/fa";
 const RoomList = () => {
   const { id } = useParams();
-  const { data, error, loading } = useGet(`http://localhost:4000/api/roomList/hotels/${id}/rooms`);
+  const BE_PORT=process.env.BE_PORT
+  const { data, error, loading } = useGet(`${BE_PORT}/api/roomList/hotels/${id}/rooms`);
   const [hotelMap, setHotelMap] = useState({});
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/hotelList/hotel");
+        const response = await axios.get(`${BE_PORT}/api/hotelList/hotel`);
         const map = response.data.reduce((acc, hotel) => {
           acc[hotel._id] = hotel.hotelName;
           return acc;

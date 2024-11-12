@@ -12,6 +12,7 @@ function AddVoucher() {
     const [status, setStatus] = useState("normal")
     const [message, setMessage] = useState("")
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const BE_PORT=process.env.BE_PORT
     axios.defaults.withCredential=true
     function generateRandomString(length) {
         let
@@ -51,7 +52,7 @@ function AddVoucher() {
             dateEnd: stringDateEnd,
             code : code,
         }
-        axios.post("http://localhost:4000/api/voucher/add-voucher",voucher)
+        axios.post(`${BE_PORT}/api/voucher/add-voucher`,voucher)
             .then(res=>res.data)
             .then(data =>{
                 openNotification(data.status,"Add voucher successful !" ,"")

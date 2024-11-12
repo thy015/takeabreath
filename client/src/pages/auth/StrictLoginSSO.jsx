@@ -11,6 +11,7 @@ const StrictLoginSSO = () => {
     const location = useLocation();
     //receive token from SSO Page
     const token=location.state
+    const BE_PORT=process.env.BE_PORT
     const navigate=useNavigate();
     useEffect(()=>{
         if(location.state){
@@ -53,7 +54,7 @@ const StrictLoginSSO = () => {
             token
         }
         try{
-            const res=await axios.post("http://localhost:4000/api/auth/strict-signin-sso",data);
+            const res=await axios.post(`${BE_PORT}/api/auth/strict-signin-sso`,data);
             if (res.status === 200) {
                openNotification(true, "Success register");
                navigate('/owner')

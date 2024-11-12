@@ -11,6 +11,7 @@ export default defineConfig({
             values: {
                 'process.env.VITE_API_KEY': JSON.stringify(process.env.VITE_API_KEY),
                 'process.env.CHAT_CLIENT_ID': JSON.stringify(process.env.CHAT_CLIENT_ID),
+                'process.env.BE_PORT': JSON.stringify(process.env.BE_PORT),
             },
         }),
     ],

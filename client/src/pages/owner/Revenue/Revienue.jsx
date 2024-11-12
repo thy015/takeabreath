@@ -18,6 +18,7 @@ function Revienue() {
     const invoices = useSelector(state => state.invoice.invoices)
     const invoicesSearch = useSelector(state => state.invoice.invoicesSearch)
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+    const BE_PORT=process.env.BE_PORT
     const formatDay = (day) => {
         return dayjs(day).format("DD/MM/YYYY")
     }
@@ -33,7 +34,7 @@ function Revienue() {
 
 
     useEffect(() => {
-        axios.get("http://localhost:4000/api/hotelList/list-invoice-owner")
+        axios.get(`${BE_PORT}/api/hotelList/list-invoice-owner`)
             .then(res => res.data)
             .then(data => {
                 setCountHotel(data.countHotel)

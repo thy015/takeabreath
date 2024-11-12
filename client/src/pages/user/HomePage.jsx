@@ -13,6 +13,7 @@ const HomePage = () => {
   const navigate=useNavigate()
   const h4Design = "items-start flex font-bold pb-4";
   const cardItems=cardData()
+
   // Carousel n Cards
   const slides = [];
   const itemsPerSlide = 4;

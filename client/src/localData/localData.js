@@ -151,8 +151,4 @@ export const ourAchievementsData=()=>{
     },
   ]
 }
-// // booking his
-// export const bookingHisQuery=()=>{
-//   const {data,error,loading}=useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
-//   localStorage.setItem('invoiceData',JSON.stringify(data))
-// }
+

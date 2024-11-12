@@ -109,9 +109,9 @@ const Booking = ({tailwind_prop}) => {
   const [selectedCity, setSelectedCity] = useState(""); //user select
   const [showCities, setShowCities] = useState(false); //menu display
   const [filteredCities, setFilteredCities] = useState([]);
-
+  const BE_PORT=process.env.BE_PORT
   const { data, error, loading } = useGet(
-      "http://localhost:4000/api/hotelList/hotelCities"
+      `${BE_PORT}/api/hotelList/hotelCities`
   );
   useEffect(() => {
     if (data) {
@@ -187,7 +187,7 @@ const Booking = ({tailwind_prop}) => {
     }
     console.log(searchData)
     try {
-      const res = await axios.post('http://localhost:4000/api/hotelList/query', searchData);
+      const res = await axios.post(`${BE_PORT}/api/hotelList/query`, searchData);
       console.log(res.data)
       if (res.status === 200 && res.data.hotelData && res.data.roomData && res.data.countRoom) {
         dispatch(setSearchResult({

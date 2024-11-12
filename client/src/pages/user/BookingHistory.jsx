@@ -1,8 +1,9 @@
 import { Button } from 'react-bootstrap'
 import { AuthContext } from "../../hooks/auth.context";
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux'
 import styled from "styled-components";
-import { Alert, Spin } from "antd";
+import { Alert, ConfigProvider, Select, Spin } from "antd";
 import { useGet } from "../../hooks/hooks";
 import { FaLocationDot, FaPhone, FaCircleQuestion } from "react-icons/fa6"
 import { IoIosBed, IoMdArrowDropdown } from "react-icons/io";
@@ -13,15 +14,16 @@ import axios from "axios";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import ModalComment from '../../component/ModalComment';
-const BookingPage = () => {
+import { getComment } from '../../hooks/redux/commentSlice';
+import { refreshInvoice, setInvoice, sortInvoice } from '../../hooks/redux/invoiceSlice';
 
+const BookingPage = () => {
+  const dispatch = useDispatch()
   const { auth } = useContext(AuthContext);
   const id = auth?.user?.id;
 
   dayjs.extend(utc);
   dayjs.extend(timezone);
-
-  console.log(id)
   if (!id) {
     return <Alert message="Please try sign in first" type="info" showIcon />;
   }
@@ -30,11 +32,14 @@ const BookingPage = () => {
   const [clickCancel, setClickCancel] = useState(false)
   const [isClickedConfirmCancel, setClickedConfirmCancel] = useState(false);
 
+  const invoicesTemps = useSelector(state => state.invoice.invoiceTemps)
+  const invoices = useSelector(state => state.invoice.invoices)
 
   const [visible, setVisible] = useState(false)
-  const [disable, setDisable] = useState(false)
+  const [sortSelect, setSortSelect] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState({})
-  const [comment, setComment] = useState([])
+
+  const comment = useSelector(state => state.comment.comments)
   const handleClickCancel = (invoiceID) => {
     setClickCancel((prevState) => ({
       ...prevState,
@@ -70,8 +75,7 @@ const BookingPage = () => {
   const handleConfirmCancel = async (invoiceID, checkInDay, id) => {
     const now = dayjs().tz('Asia/Ho_Chi_Minh');
     const countDiffDay = dayjs(checkInDay).tz('Asia/Ho_Chi_Minh').diff(now, 'day');
-    console.log('Difference in days:', countDiffDay);
-    console.log(invoiceID, checkInDay, id)
+
     const passingData = { countDiffDay, id };
     try {
       disableCancelConfirmAfterClicked(invoiceID)
@@ -81,7 +85,7 @@ const BookingPage = () => {
           passingData,
           { headers: { Authorization: `Bearer ${auth.token}` } }
         );
-      console.log('Response:', res.data);
+
     } catch (error) {
       console.error('Error canceling booking:', error.message);
     }
@@ -94,13 +98,13 @@ const BookingPage = () => {
   }
   //function check exp comment checkOutDay and was commented
   const expComment = (checkOutDay, invoiceID) => {
-   
+
     // check day
     const now = dayjs()
     const dateDiff = now.diff(dayjs(checkOutDay), "day")
     // check commented 
-    const roomCommented = comment.find(item => item.invoiceID==invoiceID)
-    if(roomCommented){
+    const roomCommented = comment.find(item => item.invoiceID == invoiceID)
+    if (roomCommented) {
       return true
     }
     if (dateDiff >= 7) {
@@ -108,14 +112,15 @@ const BookingPage = () => {
     }
     return false
   }
-
   const { data, error, loading } = useGet(`http://localhost:4000/api/booking/bookingHistory/${id}`)
+  useEffect(()=>{
+    dispatch(setInvoice(data.data))
+  },[data])
 
   useEffect(() => {
     axios.get('http://localhost:4000/api/hotelList/get-comment-cus')
       .then(res => {
-    
-        setComment(res.data.message)
+        dispatch(getComment(res.data.message))
       })
       .catch(err => {
         console.log(err)
@@ -123,7 +128,36 @@ const BookingPage = () => {
   }, [])
 
 
-  console.log(localStorage.getItem('invoiceData'))
+  //options sort
+  const options = [
+    {
+      label: "Mặc định",
+      value: "defauld"
+    },
+    {
+      label: "Sắp tới",
+      value: "future"
+    },
+    {
+      label: "Đang thuê",
+      value: "current"
+    },
+    {
+      label: "Quá hạn",
+      value: "expired"
+    },
+  ]
+  // handle sort by options
+  const handleSortByOptions = (value) => {
+    const valueSet = {
+      value,
+      invoices
+    }
+    dispatch(sortInvoice(valueSet))
+
+  }
+  console.log("[SORT]", invoicesTemps)
+  // console.log(localStorage.getItem('invoiceData'))
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
@@ -134,18 +168,31 @@ const BookingPage = () => {
 
 
   return (
-    
+
     <div className="container mx-auto p-4">
-      {console.log(comment)}
+
       {/*sort*/}
       <div className='history-wrapper'>
         <div className='history-dropdown'>
-          <div className='pl-4'>Sort</div>
+          {/* <div className='pl-4' onClick={handleSort}>Sort</div>
           <div className='pr-2'>
             <IoMdArrowDropdown></IoMdArrowDropdown>
-          </div>
+          </div> */}
+          <ConfigProvider
+            theme={{
+              components: {
+                Select: {
+                  clearBg: "#d3d3d3"
+                },
+              },
+            }}
+          >
+            <Select className='w-full bg-light-gray' options={options} defaultValue={"defauld"} onChange={handleSortByOptions}></Select>
+
+          </ConfigProvider>
         </div>
       </div>
+
       <section className="my-10">
         <div className="relative flex">
           <img
@@ -167,16 +214,15 @@ const BookingPage = () => {
 
         {/* Booking details */}
 
-        {data.data.map((resData, index) => {
+        {invoicesTemps?.map((resData, index) => {
           const formattedCheckInDay = dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
           const formattedCheckOutDay = dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
           //stop rendering if found a cancel infor of that room
           if (resData.cancelInfo && resData.cancelInfo.length > 0) {
-            console.log('hiding', resData)
+
             return null
           }
-          console.log('invoice id', resData.invoiceInfo._id)
-          console.log('checkinday', resData.invoiceInfo.guestInfo.checkInDay)
+
           const isDisabledCancel = disableCancelFunc(resData.invoiceInfo.guestInfo.checkInDay);
           return (
             <div key={index} className='py-2'>
@@ -378,7 +424,6 @@ const BookingPage = () => {
         open={visible}
         close={() => setVisible(false)}
         selectedInvoice={selectedInvoice}
-        setDisable={setDisable}
       />
     </div>
   );

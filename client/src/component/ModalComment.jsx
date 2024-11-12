@@ -1,12 +1,12 @@
 import { Modal, Form, Input, Rate } from 'antd'
+import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import React from 'react'
 import { openNotification } from '../hooks/notification'
-
-function ModalComment({ open, close, selectedInvoice,setDisable }) {
-    console.log(selectedInvoice)
+import { addComment } from '../hooks/redux/commentSlice'
+function ModalComment({ open, close, selectedInvoice }) {
     const [form] = Form.useForm()
-
+    const dispatch = useDispatch()
     const hanldeOke = () => {
         form.submit()
     }
@@ -22,10 +22,11 @@ function ModalComment({ open, close, selectedInvoice,setDisable }) {
         .then(res=>res.data)
         .then(data=>{
             openNotification(true,data.message,"")
-            setDisable(false)
+            dispatch(addComment(data.comment))
             close()
         })
         .catch(err=>{
+            console.log(err)
             openNotification(false,"Đánh giá thất bại",err.response?.data?.message)
         })
     }

@@ -454,7 +454,7 @@ const commentRoom = async (req, res) => {
     })
 
     await comment.save()
-    return res.status(200).json({ message: "Đánh giá thành công, Cảm ơn bạn đã đánh giá" })
+    return res.status(200).json({ message: "Đánh giá thành công, Cảm ơn bạn đã đánh giá", comment: comment })
 
   } catch (err) {
     return res.status(500).json({ message: "Lỗi hệ thống", err: err.message })
@@ -476,6 +476,22 @@ const getCommentCus = async (req, res) => {
   }
 }
 
+const getCommentRoom = async (req, res) => {
+  const  idRoom  = req.params.id
+  if (!idRoom)
+    return res.status(403), json({ message: "Mất dữ liệu" })
+  try {
+    const comment = await Comment.find({
+      roomID: idRoom
+    }).populate("cusID")
+    return res.status(200).json({ comments: comment })
+  } catch (err) {
+    return res.status(500).json({ message: "Lỗi hệ thống", err: err.message })
+
+  }
+
+}
+
 module.exports = {
   createHotel,
   createRoom,
@@ -488,5 +504,6 @@ module.exports = {
   getInvoicesOwner,
   googleGeometrySearch,
   commentRoom,
-  getCommentCus
+  getCommentCus,
+  getCommentRoom
 };

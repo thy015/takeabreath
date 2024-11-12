@@ -153,7 +153,7 @@ const commentSchema = new mongoose.Schema({
   content: { type: String, maxlength: 100, required: false },
   roomID: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
   invoiceID: { type: mongoose.Schema.Types.ObjectId, ref: "Invoice", required: true },
-  cusID: { type: String, required: true }, 
+  cusID: {type: mongoose.Schema.Types.ObjectId, ref: "Customer", required: true }, 
   createdDay:{type:Date,default:Date.now(),required:false}
 });
 

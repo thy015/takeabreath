@@ -39,21 +39,21 @@ const CustomersList = () => {
         });
         if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
             notification.success({
-                message: 'Customer Inactivated Successfully',
-                description: 'The customer has been inactivated successfully!',
+                message: 'Vô Hiệu Hóa Thành Công',
+                description: 'Tài khoản khách hàng đã bị khóa!',
             });
             handleDeleteCancel();
             setRefresh(prev => !prev); 
         } else {
             notification.error({
-                message: 'Customer Inactivation Failed',
-                description: 'Customer inactivation failed!',
+                message: 'Vô Hiệu Hóa Thất Bại',
+                description: 'Vô hiệu hóa tài khoản thất bại!',
             });
         }
     } catch (error) {
-        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
         notification.error({
-            message: 'Customer Inactivation Failed',
+            message: 'Vô Hiệu Hóa Thất Bại',
             description: errorMessage,
         });
     }
@@ -70,21 +70,21 @@ const CustomersList = () => {
         const response = await axios.put(`http://localhost:4000/api/cancelReq/active/${cusID}`);
         if (response.status === 200 && response.data.message === 'Active customer successfully') {
             notification.success({
-                message: 'Customer Activated Successfully',
-                description: 'The customer has been activated successfully!',
+                message: 'Kích Hoạt Thành Công',
+                description: 'Tài khoản khách hàng đã được kích hoạt thành công!',
             });
             setRefresh(prev => !prev); 
             setActivateModalVisible(false);
         } else {
             notification.error({
-                message: 'Customer Activation Failed',
-                description: 'Customer activation failed!',
+                message: 'Kích Hoạt Thất Bại',
+                description: 'Tài khoản khách hàng đã kích hoạt thất bại!',
             });
         }
     } catch (error) {
-        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
         notification.error({
-            message: 'Customer Activation Failed',
+            message: 'Kích Hoạt Thất Bại',
             description: errorMessage,
         });
     }
@@ -100,8 +100,8 @@ const CustomersList = () => {
       dataIndex: "isActive",
       key: "isActive",
       filters: [
-        { text: "Active", value: true },
-        { text: "Inactive", value: false },
+        { text: "Đã kích hoạt", value: true },
+        { text: "Vô hiệu hóa", value: false },
       ],
       onFilter: (value, record) => record.isActive === value,
       render: (isActive, record) => (
@@ -195,10 +195,10 @@ export const ModalDelete = ({ open, onClose, onConfirm, reason, setReason,header
           />
         </div>
         <div className="flex justify-around">
-          <button onClick={onClose} className="bg-gray-300 w-1/4  rounded">
+          <button onClick={onClose} className="bg-gray-600 w-1/4  text-white rounded hover:bg-gray-300">
           Hủy
           </button>
-          <button onClick={onConfirm} className="bg-red-500 w-1/4 text-white p-2 rounded">
+          <button onClick={onConfirm} className="bg-red-500  w-1/4 text-white p-2 rounded hover:bg-red-300">
           Chấp nhận
           </button>
         </div>
@@ -221,10 +221,10 @@ export const ModalActivate = ({ open, onClose, onConfirm,header }) => {
           Bạn có chắc muốn {header} của khách hàng này ?
         </p>
         <div className="flex justify-around mt-4">
-          <button onClick={onClose} className="bg-gray-300 w-1/4 p-2 rounded">
+          <button onClick={onClose} className="bg-gray-600 w-1/4  text-white rounded hover:bg-gray-300">
            Hủy
           </button>
-          <button onClick={onConfirm} className="bg-green-500 w-1/4 text-white p-2 rounded">
+          <button onClick={onConfirm} className="bg-green-500 w-1/4 text-white p-2 rounded hover:bg-green-300">
             Chấp nhận
           </button>
         </div>

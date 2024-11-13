@@ -51,7 +51,7 @@ const PropertyGrid = () => {
         });
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+      const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
       notification.error({
         message: 'Hotel Deletion Failed',
         description: errorMessage,
@@ -139,17 +139,6 @@ const PropertyGrid = () => {
           </Col>
         ))}
       </Row>
-
-      <CreateHotel
-        visible={isModalVisible}
-        handleCancel={handleCancel}
-      />
-
-      <ModalDelete
-        open={deleteModalVisible}
-        onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-      />
     </div>
   );
 };

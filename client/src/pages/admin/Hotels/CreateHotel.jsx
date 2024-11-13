@@ -186,7 +186,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
         }
       } catch (error) {
         console.error("Error details:", error);
-        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
         notification.error({
           message: 'Hotel Creation Failed',
           description: errorMessage,
@@ -205,7 +205,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
         }
       } catch (error) {
         console.error("Error details:", error);
-        const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+        const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
 
         openNotification(false, "Thêm khách sạn thất bại", error.response?.data?.message || "Lỗi hệ thống")
       }

@@ -75,7 +75,7 @@ const Sidebar = () => {
         onClick={() => handleItemClick("Dashboard")}
       />
       <div className="pt-[15px] border-t-[1px] border-[#EDEDED]/[0.3]">
-        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">MANAGE</p>
+        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">QUẢN LÝ</p>
       </div>
 
       {manageItems.map((item) => (
@@ -87,7 +87,7 @@ const Sidebar = () => {
         />
       ))}
       <div className="pt-[5px] border-b-[1px] border-[#EDEDED]/[0.3]">
-        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">ADDONS</p>
+        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">TÍNH NĂNG THÊM</p>
       </div>
 
       {addonItems.map((item) => (

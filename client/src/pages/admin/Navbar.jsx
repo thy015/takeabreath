@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
  import { FaSearch, FaEnvelope, FaRegBell } from "react-icons/fa";
 import { AuthContext } from "../../hooks/auth.context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import axios from "axios";
-
 const DashboardView = () => {
   const {auth,setAuth} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
@@ -61,16 +60,14 @@ const DashboardView = () => {
               <img src="/img/profile.png" alt="" />
             </div>
 
-            {open && (
-              <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[10px]  space-y-[10px]">
-                <p className="cursor-pointer hover:text-[blue] font-semibold">
-                  Profile
+            {open && auth.user.id !==""&& (
+              <div className="bg-white border h-[100px] w-[150px] absolute bottom-[-100px] z-20 right-0 pt-[10px]  space-y-[10px]">
+              <Link to="settings" className="no-underline text-black"> <p className="cursor-pointer hover:text-[blue] font-semibold">
+                 Cài Đặt
                 </p>
-                <p className="cursor-pointer hover:text-[blue] font-semibold">
-                  Settings
-                </p>
+                </Link> 
                 <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={hanldeLogout}>
-                  Log out
+                  Đăng Xuất
                 </p>
               </div>
             )}

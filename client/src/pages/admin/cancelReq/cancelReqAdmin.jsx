@@ -40,9 +40,9 @@ try {
     });
 }
 } catch (error) {
-  const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+  const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
   notification.error({
-      message: 'Customer Activation Failed',
+      message: 'Kích hoạt khách hàng thất bại',
       description: errorMessage,
   });
 }
@@ -64,9 +64,9 @@ try {
         });
     }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+      const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
       notification.error({
-          message: 'Customer Activation Failed',
+          message: 'Kích hoạt khách hàng thất bại',
           description: errorMessage,
       });
     }
@@ -124,7 +124,7 @@ try {
     return (
       <Alert
         message="Error"
-        description="Failed to load customer requests."
+        description="Lỗi trong quá trình lấy yêu cầu khách hàng"
         type="error"
         showIcon
       />
@@ -134,7 +134,7 @@ try {
   if ((!processingData || processingData.length === 0) &&
       (!acceptedData || acceptedData.length === 0) &&
       (!rejectedData || rejectedData.length === 0)) {
-    return <Alert message="No customer data found" type="info" showIcon />;
+    return <Alert message="Không tìm thấy khách hàng" type="info" showIcon />;
   }
 
   const createCustomerMap = (customers) => {

@@ -82,7 +82,7 @@ const signInOwner = async (req, res) => {
         role:'owner',
       });
 
-      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true,sameSite:"none" }).json({
         login: true,
         role:'owner',
         status: "OK",
@@ -114,7 +114,7 @@ const signInOwner = async (req, res) => {
         role:'admin',
       });
 
-      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true ,sameSite:"none"}).json({
         status: "OK",
         message: "Admin logged in",
         access_token: access_token,
@@ -167,7 +167,7 @@ const loginCustomer = async (req, res) => {
       role:'customer',
     });
 
-    return res.cookie("token", token, { httpOnly: true, secure: true })
+    return res.cookie("token", token, { httpOnly: true, secure: true ,sameSite:"none"})
       .json({
         login: true,
         role:'customer',
@@ -248,7 +248,7 @@ const loginWithSSO = async (req, res) => {
       })
 
       console.log("[SYS TOKEN CUSTOMER]",token)
-      return res.cookie("token", token, { httpOnly: true, secure: true })
+      return res.cookie("token", token, { httpOnly: true, secure: true,sameSite:"none" })
           .json({
             login: true,
             role:'customer',
@@ -267,7 +267,7 @@ const loginWithSSO = async (req, res) => {
       })
 
       console.log("[SYS TOKEN CUSTOMER]",token)
-      return res.cookie("token", token, { httpOnly: true, secure: true })
+      return res.cookie("token", token, { httpOnly: true, secure: true,sameSite:"none" })
           .json({
             login: true,
             role:'customer',
@@ -302,7 +302,7 @@ const strictSignInPartner=async(req,res)=>{
       email: newPartner.email,
       ssoID:newPartner.ssoID
     })
-    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
+    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true,sameSite:"none"})
         .json({
           login: true,
           role:'owner',
@@ -328,7 +328,7 @@ const checkExistedPartner=async(req,res)=>{
       email: existedPartner.email,
       ssoID:existedPartner.ssoID
     })
-    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
+    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true,sameSite:"none"})
         .json({
           login: true,
           role:'owner',

@@ -8,9 +8,9 @@ import { PropertyCard } from "../../component/AccommodationCard";
 
 const PropertyGrid = () => {
   const slides = [];
-
+    const BE_PORT=import.meta.env.VITE_BE_PORT
   const { data, error, loading } = useGet(
-      "http://localhost:4000/api/hotelList/hotel"
+      `${BE_PORT}/api/hotelList/hotel`
   );
 
   if (loading) {

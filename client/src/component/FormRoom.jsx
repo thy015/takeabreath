@@ -13,7 +13,7 @@ function FormRoom({ isVisible, close }) {
     const selectedRoom = useSelector(state => state.room.selectRoom)
     const hotels = useSelector(state => state.hotel.hotels)
     const dispatch = useDispatch()
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
 
     useEffect(() => {
         axios.get(`${BE_PORT}/api/hotelList/roomTypes`)

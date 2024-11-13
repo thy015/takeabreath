@@ -11,7 +11,7 @@ const StrictLoginSSO = () => {
     const location = useLocation();
     //receive token from SSO Page
     const token=location.state
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const navigate=useNavigate();
     useEffect(()=>{
         if(location.state){

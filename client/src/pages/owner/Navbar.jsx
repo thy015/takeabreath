@@ -8,7 +8,7 @@ function Navbar({isMenuOpen,setIsMenuOpen}) {
     const {auth,setAuth} = useContext(AuthContext)
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     axios.defaults.withCredentials = true
     const showProfile = () => {
       setOpen(!open);

@@ -14,7 +14,7 @@ import styled from 'styled-components'
 const Header = ({ children }) => {
 
   const { t } = useTranslation();
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
     //log in

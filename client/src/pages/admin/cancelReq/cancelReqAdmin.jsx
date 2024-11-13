@@ -16,7 +16,7 @@ const cancelReqAdmin = () => {
   const [cancelDetailModalVisible, setcancelDetailModalVisible] = useState(false); 
   const [selectedCancel, setselectedCancel] = useState(null); 
   const [refresh, setRefresh] = useState(false);
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
 
     const getName = (name) => {
       return name

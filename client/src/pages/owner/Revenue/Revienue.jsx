@@ -18,7 +18,7 @@ function Revienue() {
     const invoices = useSelector(state => state.invoice.invoices)
     const invoicesSearch = useSelector(state => state.invoice.invoicesSearch)
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const formatDay = (day) => {
         return dayjs(day).format("DD/MM/YYYY")
     }

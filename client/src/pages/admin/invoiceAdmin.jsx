@@ -4,7 +4,7 @@ import { useGet } from "../../hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import {ExportToExcel} from '../../component/ExportToExcel'
 const InvoicesList = () => {
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const { data, error, loading } = useGet(`${BE_PORT}/api/booking/invoicepaid`);
   const [searchText, setSearchText] = useState(""); 
   const [fileName,setFileName]=useState("Hóa Đơn");

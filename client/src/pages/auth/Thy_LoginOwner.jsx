@@ -17,7 +17,7 @@ const LogInOwner = () => {
   const { auth, setAuth } = useContext(AuthContext)
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const handleSignInClick = () => {
     setIsSignInClicked(true);
   };

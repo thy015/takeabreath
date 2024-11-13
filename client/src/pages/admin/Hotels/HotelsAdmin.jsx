@@ -10,7 +10,7 @@ import { FaSearch } from "react-icons/fa";
 const { Option } = Select;
 
 const PropertyGrid = () => {
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const { data, error, loading } = useGet(`${BE_PORT}/api/hotelList/hotel`);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);

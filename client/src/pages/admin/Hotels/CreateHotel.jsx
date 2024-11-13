@@ -21,7 +21,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const [nations, setnation] = useState([])
   const [cities, setCities] = useState([])
   const [errMessage, setErrMessage] = useState('');
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const [images, setImages] = useState([])
   const [form] = Form.useForm();
   const { data: owners, error: ownerError, loading: ownerLoad } = useGet(`${BE_PORT}/api/auth/owner`);

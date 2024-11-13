@@ -14,7 +14,7 @@ function Room() {
   const dispatch = useDispatch()
   const rooms = useSelector(state => state.room.roomSearch)
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   useEffect(() => {
 
     axios.get(`${BE_PORT}/api/hotelList/list-room`)

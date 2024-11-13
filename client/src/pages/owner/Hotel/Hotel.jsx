@@ -14,10 +14,8 @@ import { openNotification } from '../../../hooks/notification';
 function Hotel() {
     const dispatch = useDispatch()
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
-    const hotels = useSelector(state => state.hotel.hotels)
-    const amenity = useSelector(state=> state.amenity.amenity)
     const hotelSearch = useSelector(state => state.hotel.hotelSearch)
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const [visible, setVisible] = useState(false)
     useEffect(() => {
         axios.get(`${BE_PORT}/api/hotelList/hotelOwner`)

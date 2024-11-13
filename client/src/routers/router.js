@@ -151,6 +151,13 @@ export const routers = [
   },
   {
 
+    path: "*",
+    page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
     path: "/strict-signin-owner",
     page: StrictLoginSSO,
     isShowHeader: false,
@@ -163,13 +170,7 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
-  {
 
-    path: "*",
-    page: SSO,
-    isShowHeader: false,
-    isShowFooter: false,
-  },
 ]
 
 

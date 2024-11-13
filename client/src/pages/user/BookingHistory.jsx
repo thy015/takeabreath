@@ -18,7 +18,7 @@ const BookingPage = () => {
   const id = auth?.user?.id;
   dayjs.extend(utc);
   dayjs.extend(timezone);
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   console.log(id)
   if (!id) {
     return <Alert message="Please try sign in first" type="info" showIcon />;

@@ -8,7 +8,7 @@ const PayPalButton = () => {
     const paypal = useRef();
     const dispatch = useDispatch();
     const { convertPrice, invoiceID } = useSelector((state) => state.inputDay);
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
 
     useEffect(() => {
         console.log("Current invoiceID in PayPalButton:", invoiceID);

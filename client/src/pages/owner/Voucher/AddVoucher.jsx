@@ -12,7 +12,7 @@ function AddVoucher() {
     const [status, setStatus] = useState("normal")
     const [message, setMessage] = useState("")
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     axios.defaults.withCredential=true
     function generateRandomString(length) {
         let

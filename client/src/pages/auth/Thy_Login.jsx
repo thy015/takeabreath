@@ -18,7 +18,7 @@ const Login = () => {
   const { auth, setAuth } = useContext(AuthContext)
   // get the redirect url from the location
   const navigate = useNavigate();
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const [formData, setFormData] = useState({
     email: "",
     password: "",

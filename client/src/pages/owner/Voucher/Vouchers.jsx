@@ -18,7 +18,7 @@ function Vouchers() {
   const [editKey, setEditKey] = useState('')
   const [listVoucher, setListVoucher] = useState([])
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const isEditing = (record) => record.key === editKey
   //get vouchers in db
   useEffect(() => {

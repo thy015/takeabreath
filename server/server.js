@@ -31,8 +31,11 @@ useSSOCallback(app)
 
 const allowedOrigins = ["http://localhost:3000",
     "https://takeabreath.io.vn",
-  "https://wowo.htilssu.id.vn/assets/remoteEntry.js",
-    "https://www.sandbox.paypal.com/xoplatform/logger/api/logger?disableSetCookie=true"
+    "https://wowo.htilssu.id.vn/assets/remoteEntry.js",
+    "https://takeabreath-frontend.vercel.app",
+    "https://www.sandbox.paypal.com/xoplatform/logger/api/logger?disableSetCookie=true",
+    "https://takeabreath.vercel.app"
+
 ];
 
 app.use(

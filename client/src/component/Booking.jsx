@@ -109,7 +109,7 @@ const Booking = ({tailwind_prop}) => {
   const [selectedCity, setSelectedCity] = useState(""); //user select
   const [showCities, setShowCities] = useState(false); //menu display
   const [filteredCities, setFilteredCities] = useState([]);
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const { data, error, loading } = useGet(
       `${BE_PORT}/api/hotelList/hotelCities`
   );

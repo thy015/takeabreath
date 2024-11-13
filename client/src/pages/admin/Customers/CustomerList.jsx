@@ -6,7 +6,7 @@ import { useGet } from "../../../hooks/hooks";
 
 const CustomersList = () => {
   const [refresh, setRefresh] = useState(false);
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
   const { data, error, loading } = useGet(`${BE_PORT}/api/auth/customer`, refresh);
   const [searchText, setSearchText] = useState("");
   const [cusID, setCusID] = useState(null);

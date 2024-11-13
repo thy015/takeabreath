@@ -10,7 +10,7 @@ const Main = () => {
     const [totalDiscountMonth, setTotalDiscountMonth] = useState(0);
     const [totalDiscountYear, setTotalDiscountYear] = useState(0);
     const [monthlyData, setMonthlyData] = useState([]);
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     
 const[numb,setNumb]=useState(0);
     const formatToVND = (amount) => {

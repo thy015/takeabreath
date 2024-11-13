@@ -9,7 +9,7 @@ const UpdateHotel = () => {
   const [loading, setLoading] = useState(false);  
   const [errMessage, setErrMessage] = useState('');  
   const [form] = Form.useForm();
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   useEffect(() => {
     const fetchHotelData = async () => {
       setLoading(true);  

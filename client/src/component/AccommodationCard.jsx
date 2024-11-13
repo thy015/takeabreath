@@ -103,7 +103,7 @@ const PropertyCard = ({ property, link_button, showButton = false, edit, showDel
   const dispatch=useDispatch();
   const navigate=useNavigate()
   const [roomData,setRoomData]=useState(null)
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(()=>{
       const fetchRoomData=async()=>{
         try{

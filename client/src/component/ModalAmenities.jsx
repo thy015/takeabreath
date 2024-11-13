@@ -14,7 +14,7 @@ function ModalAmenities({ visible, close }) {
     const [amenities, setAmenities] = useState({})
     const [totalSelections, setTotalSelections] = useState(0);
     const [formValues, setFormValues] = useState({});
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const { Option } = Select;
     const initalAmenities = {
         bathroom: [],

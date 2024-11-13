@@ -11,7 +11,7 @@ const SSO = () => {
   const { decodedToken, isExpired } = useJwt(token);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
 
   useEffect(() => {
     const setToken=async(req,res)=> {

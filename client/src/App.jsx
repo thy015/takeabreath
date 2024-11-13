@@ -10,7 +10,7 @@ import { AuthContext } from "./hooks/auth.context";
 function App() {
     const { auth, setAuth } = useContext(AuthContext);
     axios.defaults.withCredentials = true;
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {
       const fetchUser = () => {
         axios

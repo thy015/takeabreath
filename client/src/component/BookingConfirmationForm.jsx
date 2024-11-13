@@ -94,7 +94,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
           totalDay: totalCheckInDay,
           totalRoom:countRoom
         }
-    const BE_PORT=process.env.BE_PORT
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     // need handle voucher
     console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking);
 

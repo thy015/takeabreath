@@ -20,7 +20,7 @@ const HotelDisplayCompre = () => {
   const dispatch=useDispatch()
   const cardItems=cardData()
   const filters = cardItems.map((c) => c.title);
-  const BE_PORT=process.env.BE_PORT
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   // global, take from redux and booking
   const searchResults = useSelector((state) => state.searchResults);
   const { city, latitude, longitude} = useSelector((state) => state.inputDay);

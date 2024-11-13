@@ -103,8 +103,6 @@ const Header = ({ children }) => {
       label: (
         <a
           className="no-underline"
-          target="_blank"
-          rel="noopener noreferrer"
           href="/mybooking"
         >
           My Reservation

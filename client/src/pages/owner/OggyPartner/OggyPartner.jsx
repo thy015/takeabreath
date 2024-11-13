@@ -9,7 +9,7 @@ export const OggyPartner = () => {
         const token=localStorage.getItem('token')
         console.log('token',token)
         const callbacklink=`https://takeabreath.io.vn/owner`
-        window.location.href = `https://voucher4u-fe.vercel.app/sso?Token=${token}&URLCallBack=${callbacklink}`
+        window.location.href = `https://voucher4u.io.vn/sso?Token=${token}&URLCallBack=${callbacklink}`
         navigate(window.location.href)
     }
     return (

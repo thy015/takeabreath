@@ -14,8 +14,10 @@ const SSO = () => {
   const BE_PORT=import.meta.env.VITE_BE_PORT
 
   useEffect(() => {
-    const setToken=async(req,res)=> {
+    const setToken=async()=> {
+      localStorage.setItem('token',token)
       if (decodedToken && !isExpired) {
+        console.log('receive token')
         axios.post(`${BE_PORT}/api/auth/login-with-sso`, {decodedToken}, {withCredentials: true})
             .then(res => {
               setAuth({
@@ -37,11 +39,9 @@ const SSO = () => {
               axios.post(`${BE_PORT}/api/auth/check-existed-partner`, {decodedToken},{withCredentials:true})
           // chưa đăng kí
           if(res.status===202){
-            localStorage.setItem('token',token)
             console.log('set item token',token)
           navigate('/strict-signin-owner', {state: decodedToken})
           } else if(res.status===200){
-            localStorage.setItem('token',token)
             console.log('set item token',token)
             openNotification(true, "Success login");
             navigate('/owner')

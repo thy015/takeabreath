@@ -20,9 +20,9 @@ const validateEmail = (email) => {
 
 const RegisterOwner = () => {
   const {t} = useTranslation();
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
-
   const handleSignInClick = () => {
     setIsSignInClicked(true);
   };
@@ -81,7 +81,7 @@ const RegisterOwner = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/signUpOwner", formData);
+      const response = await axios.post(`${BE_PORT}/api/auth/signUpOwner`, formData);
       console.log(response.data);
       if (response.status === 200) {
         openNotification(true, "Success register");

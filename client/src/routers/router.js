@@ -19,11 +19,9 @@ import AddVoucher from "../pages/owner/Voucher/AddVoucher";
 import Customer from "../pages/admin/Customers/CustomerList"
 import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
 
-import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
-import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/AdminVoucher";
@@ -59,7 +57,6 @@ export const routers = [
       {path:"hotel/:id/rooms", page:RoomsOfHotel},
       {path:"customers", page:Customer},
       {path:"requests",page:cancelReqAdmin},
-      {path:"hotel/:id/updateHotel",page:UpdateHotel},
       {path:"vouchers",page:AdminVoucher},
       {path:"invoices",page:invoiceAdmin},
     ],
@@ -106,12 +103,6 @@ export const routers = [
     isShowFooter: true,
   },
 
-  {
-    path: "/booking-success",
-    page: SuccessPayment,
-    isShowHeader: true,
-    isShowFooter: true,
-  },
   {
     path: "/hotel/:id",
     page: HotelDisplay_HotelTab,
@@ -160,6 +151,13 @@ export const routers = [
   },
   {
 
+    path: "*",
+    page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
     path: "/strict-signin-owner",
     page: StrictLoginSSO,
     isShowHeader: false,
@@ -172,13 +170,7 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
-  {
 
-    path: "*",
-    page: SSO,
-    isShowHeader: false,
-    isShowFooter: false,
-  },
 ]
 
 

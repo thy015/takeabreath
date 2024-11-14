@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon -L server.js",
     "start": "node src/server.js",
     "pm": "nodemon src/testpromise.js",
     "test": "echo \"Error: no test specified\" && exit 1"

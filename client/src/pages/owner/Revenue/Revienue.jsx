@@ -18,11 +18,12 @@ function Revienue() {
     const invoices = useSelector(state => state.invoiceRevenue.invoices)
     const invoicesSearch = useSelector(state => state.invoiceRevenue.invoicesSearch)
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const formatDay = (day) => {
         return dayjs(day).format("DD/MM/YYYY")
     }
     useEffect(() => {
-        axios.get("http://localhost:4000/api/hotelList/list-invoice-owner")
+        axios.get(`${BE_PORT}/api/hotelList/list-invoice-owner`)
             .then(res => res.data)
             .then(data => {
                 console.log(data)

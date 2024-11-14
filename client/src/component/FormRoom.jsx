@@ -13,8 +13,10 @@ function FormRoom({ isVisible, close }) {
     const selectedRoom = useSelector(state => state.room.selectRoom)
     const hotels = useSelector(state => state.hotel.hotels)
     const dispatch = useDispatch()
+    const BE_PORT=import.meta.env.VITE_BE_PORT
+
     useEffect(() => {
-        axios.get(" http://localhost:4000/api/hotelList/roomTypes")
+        axios.get(`${BE_PORT}/api/hotelList/roomTypes`)
             .then(res=>res.data)
             .then(data=>{
                 const array = data.types
@@ -24,7 +26,7 @@ function FormRoom({ isVisible, close }) {
                 }))
                 setTypeRooms(temp)
             })
-        axios.get("http://localhost:4000/api/hotelList/hotelOwner")
+        axios.get(`${BE_PORT}/api/hotelList/hotelOwner`)
             .then(res => res.data)
             .then(data => {
                 const hotels = data.data.map((item => (
@@ -87,7 +89,7 @@ function FormRoom({ isVisible, close }) {
         }
 
         if(isEmpty(selectedRoom)){
-            axios.post("http://localhost:4000/api/hotelList/createRoom", formInput)
+            axios.post(`${BE_PORT}/api/hotelList/createRoom`, formInput)
             .then(res => res.data)
             .then(data => {
                 dispatch(addRoom(data.data))
@@ -99,7 +101,7 @@ function FormRoom({ isVisible, close }) {
                 openNotification(false, "Tạo phòng thất bại", err.response.data.message)
             })
         }else{
-            axios.post(`http://localhost:4000/api/hotelList//updateRoom/${selectedRoom._id}`, formInput)
+            axios.post(`${BE_PORT}/api/hotelList//updateRoom/${selectedRoom._id}`, formInput)
             .then(res => res.data)
             .then(data => {
                 console.log("[UPDATE]",data.data)

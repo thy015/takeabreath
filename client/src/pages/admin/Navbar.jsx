@@ -8,14 +8,14 @@ const DashboardView = () => {
   const {auth,setAuth} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
-
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   console.log("[Admin Page] ",auth)
   axios.defaults.withCredentials = true
   const showProfile = () => {
     setOpen(!open);
   };
   const hanldeLogout = ()=>{
-    axios.get("http://localhost:4000/api/auth/logout")
+    axios.get(`${BE_PORT}/api/auth/logout`)
     .then(res => {
       if (res.data.logout) {
         setAuth({
@@ -57,7 +57,7 @@ const DashboardView = () => {
             onClick={showProfile}
           >
             <p className="pt-[10px]">{auth?.user?.name}</p>
-            <div className="h-[50px] w-[50px] bg-[#4E73DF] cursor-pointer flex items-center justify-center relative z-40">
+            <div className="h-[50px] w-[60px]  cursor-pointer flex items-center justify-center relative z-40">
               <img src="/img/profile.png" alt="" />
             </div>
 

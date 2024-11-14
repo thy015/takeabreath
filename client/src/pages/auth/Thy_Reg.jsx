@@ -23,6 +23,7 @@ const validateEmail = (email) => {
 
 const Register = () => {
   const sso = new SSO('TAB')
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const {t}=useTranslation()
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
@@ -80,7 +81,7 @@ const Register = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/signUpCus", formData);
+      const response = await axios.post(`${BE_PORT}/api/auth/signUpCus`, formData);
       if (response.status === 200) {
         openNotification(true, "Success register");
         navigate("/login");
@@ -97,7 +98,7 @@ const Register = () => {
 //sso
 
 function handleLoginSSO() {
-  sso.redirectToLogin("http://localhost:3000/sso")
+  sso.redirectToLogin("https://takeabreath.io.vn/sso")
 }
   return (
     <div>

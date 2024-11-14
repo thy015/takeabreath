@@ -1,0 +1,25 @@
+
+services:
+  clientapp:
+    image: thy015/takeabreath:client
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  serverapp:
+    image: thy015/takeabreath:server
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

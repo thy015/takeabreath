@@ -79,10 +79,12 @@ const signInOwner = async (req, res) => {
         phoneNum: foundOwner.phoneNum,
         avatarLink: foundOwner.avatarLink,
         regDay: foundOwner.regDay,
+        role:'owner',
       });
 
-      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true,sameSite:"none" }).json({
         login: true,
+        role:'owner',
         status: "OK",
         message: "Success log in",
         id: foundOwner._id,
@@ -95,7 +97,7 @@ const signInOwner = async (req, res) => {
     const foundAdmin = await Admin.findOne({
       email: email
     });
-
+    console.log(foundAdmin)
     if (foundAdmin) {
       let checkPassword = await bcrypt.compare(password, foundAdmin.password)
       if (!checkPassword) {
@@ -108,16 +110,18 @@ const signInOwner = async (req, res) => {
       const access_token = await generalAccessTokens({
         id: foundAdmin._id,
         name: foundAdmin.adminName,
-        email: foundAdmin.email
+        email: foundAdmin.email,
+        role:'admin',
       });
 
-      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true }).json({
+      return res.status(200).cookie("token", access_token, { httpOnly: true, secure: true ,sameSite:"none"}).json({
         status: "OK",
         message: "Admin logged in",
         access_token: access_token,
         name: foundAdmin.adminName,
         id: foundAdmin._id,
         login: true,
+        role:'admin',
         redirect: "/Admin",
       });
     }
@@ -137,7 +141,6 @@ const signInOwner = async (req, res) => {
 };
 
 // cus
-
 const loginCustomer = async (req, res) => {
   const { email, password } = req.body;
 
@@ -160,12 +163,14 @@ const loginCustomer = async (req, res) => {
       name: customer.cusName,
       email: customer.email,
       phoneNum: customer.phoneNum,
-      birthday: customer.birthday
+      birthday: customer.birthday,
+      role:'customer',
     });
 
-    return res.cookie("token", token, { httpOnly: true, secure: true })
+    return res.cookie("token", token, { httpOnly: true, secure: true ,sameSite:"none"})
       .json({
         login: true,
+        role:'customer',
         redirect: "/",
         name: customer.cusName,
         id: customer._id,
@@ -204,6 +209,7 @@ const registerCustomer = async (req, res) => {
       register: true,
       message: "Succ",
       data: customer,
+      role:'customer',
       redirect: '/Customer'
     });
   } catch (e) {
@@ -220,7 +226,7 @@ const loginWithSSO = async (req, res) => {
     return res.status(403).json({message: 'missing token in signUp controller'})
   }
   console.log(decodedToken)
-if(decodedToken.role === "user"){
+  if(decodedToken.role === "user"){
 
     const customerExsisted = await Customer.findOne({
       email:decodedToken.email
@@ -242,9 +248,10 @@ if(decodedToken.role === "user"){
       })
 
       console.log("[SYS TOKEN CUSTOMER]",token)
-      return res.cookie("token", token, { httpOnly: true, secure: true })
+      return res.cookie("token", token, { httpOnly: true, secure: true,sameSite:"none" })
           .json({
             login: true,
+            role:'customer',
             id:newCus._id,
             name: newCus.cusName,
             email: newCus.email,
@@ -260,9 +267,10 @@ if(decodedToken.role === "user"){
       })
 
       console.log("[SYS TOKEN CUSTOMER]",token)
-      return res.cookie("token", token, { httpOnly: true, secure: true })
+      return res.cookie("token", token, { httpOnly: true, secure: true,sameSite:"none" })
           .json({
             login: true,
+            role:'customer',
             id:customerExsisted._id,
             name: customerExsisted.cusName,
             email: customerExsisted.email,
@@ -294,9 +302,10 @@ const strictSignInPartner=async(req,res)=>{
       email: newPartner.email,
       ssoID:newPartner.ssoID
     })
-    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
+    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true,sameSite:"none"})
         .json({
           login: true,
+          role:'owner',
           id:newPartner._id,
           name: newPartner.ownerName,
           email: newPartner.email,
@@ -319,9 +328,10 @@ const checkExistedPartner=async(req,res)=>{
       email: existedPartner.email,
       ssoID:existedPartner.ssoID
     })
-    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true})
+    return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true,sameSite:"none"})
         .json({
           login: true,
+          role:'owner',
           id:existedPartner._id,
           name: existedPartner.ownerName,
           email: existedPartner.email,

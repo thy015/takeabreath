@@ -60,7 +60,6 @@ const bookRoom = async (req, res) => {
                 {
                   status:"OK",
                   message:"Invoice created successfully, waiting for payment",
-                  paymentMethod: 'paypal',
                   data:invoice,
                   invoiceID:invoice._id
                 })
@@ -71,13 +70,13 @@ const bookRoom = async (req, res) => {
             const wowoWallet=new WoWoWallet(`${process.env.WOWO_SECRET}`);
             const newOrder={
               money:dataBooking.total,
-              serviceName:'TakeABreath',
+              serviceName:'TAB',
               items:[
                 {name:room.roomName,amount:dataBooking.totalRoom, unitPrice:room.money}
               ],
               callback:{
-                successUrl: `http://localhost:4000/api/booking/change-invoice-state?invoiceID=${invoice._id}`,
-                returnUrl: 'http://localhost:3000/mybooking'
+                successUrl: `${process.env.BE_PORT}/api/booking/change-invoice-state?invoiceID=${invoice._id}`,
+                returnUrl: 'https://takeabreath.io.vn/mybooking'
               }
             }
             try {
@@ -86,7 +85,6 @@ const bookRoom = async (req, res) => {
               if(orderResponse.status==='PENDING'){
               return res.status(201).json({
                 message:'Created order',
-                paymentMethod: 'wowo',
                 orderResponse:orderResponse
               })
               }else{
@@ -153,7 +151,7 @@ const completedTran = async (req, res) => {
         await invoice.save()
         directPartner.awaitFund += invoice.guestInfo.totalPrice
         await directPartner.save()
-        await axios.post('http://localhost:4000/api/email/send-email', emailData);
+        await axios.post(`${process.env.BE_PORT}/api/email/send-email`, emailData);
         return res.status(200).json({message:"Payment success"})
       } else if(invoice && invoice.invoiceState==="paid"){
         return res.status(200).json({message:"Payment already success"})
@@ -182,6 +180,7 @@ const changeInvoiceState=async(req,res)=>{
     if (invoice.invoiceState === "waiting") {
       invoice.invoiceState = "paid";
       await invoice.save();
+      res.cookie('completedPayment', true, { maxAge: 60000, httpOnly: false });
       return res.status(200).json({ message: "Invoice state updated to paid" });
     }
     else {

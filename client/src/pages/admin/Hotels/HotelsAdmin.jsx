@@ -10,7 +10,8 @@ import { FaSearch } from "react-icons/fa";
 const { Option } = Select;
 
 const PropertyGrid = () => {
-  const { data, error, loading } = useGet("http://localhost:4000/api/hotelList/hotel");
+  const BE_PORT=import.meta.env.VITE_BE_PORT
+  const { data, error, loading } = useGet(`${BE_PORT}/api/hotelList/hotel`);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [hotelToDelete, setHotelToDelete] = useState(null);
@@ -37,7 +38,7 @@ const PropertyGrid = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await axios.delete(`http://localhost:4000/api/hotelList/deleteHotel/${hotelToDelete}`);
+      const response = await axios.delete(`${BE_PORT}/api/hotelList/deleteHotel/${hotelToDelete}`);
       if (response.status === 200 && response.data.message === 'Product deleted successfully') {
         notification.success({
           message: 'Hotel Deleted Successfully',
@@ -132,9 +133,7 @@ const PropertyGrid = () => {
           <Col key={property._id} xs={24} sm={12} md={6}>
             <PropertyCard
               property={property}
-              link_property={`/hotel/${property._id}`}
               link_button={`/admin/hotel/${property._id}/rooms`}
-              edit={`/admin/hotel/${property._id}/updateHotel`}
               showButton={true}
               showDeleteModal={() => showDeleteModal(property._id)}
             />

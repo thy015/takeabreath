@@ -15,10 +15,14 @@ function Room() {
   const dispatch = useDispatch()
   const rooms = useSelector(state => state.room.roomSearch)
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+
   const [visibleComment,setVisibleComment] = useState(false)
   const [record,setRecord] = useState(false)
+
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   useEffect(() => {
-    axios.get("http://localhost:4000/api/hotelList/list-room")
+
+    axios.get(`${BE_PORT}/api/hotelList/list-room`)
       .then(res => res.data)
       .then(data => {
         const setRoom = data.rooms.map(item => {
@@ -39,7 +43,7 @@ function Room() {
 
 
   const handleDelete = (record) => {
-    axios.delete(`http://localhost:4000/api/hotelList/deleteRoom/${record._id}`)
+    axios.delete(`${BE_PORT}/api/hotelList/deleteRoom/${record._id}`)
       .then(res => res.data)
       .then(data => {
         dispatch(deleteRoom(record._id))

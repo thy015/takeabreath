@@ -61,7 +61,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                     const totalPrice = rangeRoomPrice + fees
                     return (
                         // Display room details
-                        <Row className="border-b my-12" key={room.id}>
+                        <Row className="border-b my-12" key={`${room._id}-${index}`}>
                             <Col span={8}>
                                         <img
                                             className="object-center h-[250px] w-full rounded-md shadow-md"

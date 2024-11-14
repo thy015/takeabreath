@@ -8,6 +8,7 @@ const PayPalButton = () => {
     const paypal = useRef();
     const dispatch = useDispatch();
     const { convertPrice, invoiceID } = useSelector((state) => state.inputDay);
+    const BE_PORT=import.meta.env.VITE_BE_PORT
 
     useEffect(() => {
         console.log("Current invoiceID in PayPalButton:", invoiceID);
@@ -40,7 +41,7 @@ const PayPalButton = () => {
                         console.log("InvoiceID being sent:", invoiceID);
                         dispatch(setPaymentCompleted({ completedPayment: true }));
                         try {
-                            const res = await axios.post('http://localhost:4000/api/booking/completedTran', { order, invoiceID });
+                            const res = await axios.post(`${BE_PORT}/api/booking/completedTran`, { order, invoiceID });
                             if (res.status === 200) {
                                 openNotification(true, "Success", "Payment success");
                             } else {

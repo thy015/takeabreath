@@ -10,11 +10,11 @@ import { AuthContext } from "./hooks/auth.context";
 function App() {
     const { auth, setAuth } = useContext(AuthContext);
     axios.defaults.withCredentials = true;
-
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {
       const fetchUser = () => {
         axios
-          .get("http://localhost:4000/api/auth/verify")
+          .get(`${BE_PORT}/api/auth/verify`)
           .then((res) => {
             const userRes = res.data.user;
             setAuth({
@@ -23,6 +23,7 @@ function App() {
                 id: userRes?.id ?? "",
                 email: userRes?.email ?? "",
                 name: userRes?.name ??  "",
+                  role:userRes?.role ?? ""
               },
             });
           })
@@ -34,6 +35,41 @@ function App() {
       fetchUser();
     }, []);
 
+    useEffect(() => {
+        const loadScript = (src) => {
+            let script
+            if (auth?.user?.role === 'customer' || auth?.user?.role==='') {
+                console.log("Load Script")
+                return new Promise((resolve, reject) => {
+                    script = document.createElement('script');
+                    script.id = "chatbox"
+                    script.src = src;
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error(`Script load error for ${src}`));
+                    document.body.appendChild(script);
+                });
+
+            } else {
+                const iframeChatbox = document.getElementsByName("fab");
+                iframeChatbox.forEach(element => {
+                    element.style.display = "none";
+                });
+            }
+
+        };
+
+        const loadScripts = async () => {
+            try {
+                await loadScript('https://cdn.botpress.cloud/webchat/v2.2/inject.js');
+                await loadScript('https://files.bpcontent.cloud/2024/11/09/20/20241109202259-FMPWOTKL.js');
+
+                console.log("Scripts loaded successfully");
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadScripts();
+    }, [auth?.user?.role]);
     return (
         <div className="App">
             <Router>

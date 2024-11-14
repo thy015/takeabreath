@@ -1,18 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
-import replace from '@rollup/plugin-replace'; // Import the replace plugin
+import replace from '@rollup/plugin-replace';
 
 export default defineConfig({
-    base: '',
+    base: '/',
     plugins: [
         react(),
-        replace({
-            preventAssignment: true,
-            values: {
-                'process.env.VITE_API_KEY': JSON.stringify(process.env.VITE_API_KEY),
-            },
-        }),
+
     ],
     css: {
         preprocessorOptions: {
@@ -21,8 +15,12 @@ export default defineConfig({
             }
         }
     },
-    server: {
+    server:{
+        host: '0.0.0.0',
         open: true,
         port: 3000,
+    },
+    build: {
+        outDir: 'dist',
     },
 });

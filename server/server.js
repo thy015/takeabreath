@@ -30,7 +30,14 @@ app.use(morgan("combined"));
 useSSOCallback(app)
 
 const allowedOrigins = ["http://localhost:3000",
-  "https://wowo.htilssu.id.vn/assets/remoteEntry.js"];
+    "https://takeabreath.io.vn",
+    "https://wowo.htilssu.id.vn/assets/remoteEntry.js",
+    "https://takeabreath-frontend.vercel.app",
+    "https://www.sandbox.paypal.com/xoplatform/logger/api/logger?disableSetCookie=true",
+    "https://takeabreath.vercel.app",
+    "https://vercel.live/_next-live/feedback/feedback.html"
+
+];
 
 app.use(
     cors({
@@ -48,7 +55,7 @@ app.use(
 );
 // swagger config
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
-console.log(`Swagger: http://localhost:${PORT}/api-docs`)
+console.log(`Swagger: https://takeabreath.vercel.app/api-docs`)
 app.use("/api/roomList", RoomListRouter);
 app.use("/api/hotelList", HotelListRouter);
 app.use("/api/auth", signUpRouter);

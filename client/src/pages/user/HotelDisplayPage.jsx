@@ -20,7 +20,7 @@ const HotelDisplayCompre = () => {
   const dispatch=useDispatch()
   const cardItems=cardData()
   const filters = cardItems.map((c) => c.title);
-
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   // global, take from redux and booking
   const searchResults = useSelector((state) => state.searchResults);
   const { city, latitude, longitude} = useSelector((state) => state.inputDay);
@@ -32,11 +32,11 @@ const HotelDisplayCompre = () => {
   useEffect(() => {
     console.log(city, latitude, longitude);
     // mở dòng này ra khi deploy để tránh block API
-    // searchMapLocation()
+    searchMapLocation()
   }, [city, latitude,longitude]);
   const navigate = useNavigate();
   const { data, error, loading } = useGet(
-    "http://localhost:4000/api/hotelList/hotel"
+    `${BE_PORT}/api/hotelList/hotel`
   );
 
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -75,7 +75,7 @@ const HotelDisplayCompre = () => {
     }
     else {
       const response = await axios.get(
-        `http://localhost:4000/api/hotelList/hotel/${hotel._id}/room`
+        `${BE_PORT}/api/hotelList/hotel/${hotel._id}/room`
       );
       roomData = response.data;
       console.log('Debug roomdata in hoteldisplaypage',roomData)
@@ -99,7 +99,7 @@ const HotelDisplayCompre = () => {
   //map default ordinate
   async function searchMapLocation() {
     try {
-        const res=await axios.post('http://localhost:4000/api/hotelList/google/geometry', {city})
+        const res=await axios.post(`${BE_PORT}/api/hotelList/google/geometry`, {city})
             .then(res => {
               console.log(res.data);
               dispatch(setOrdinate({

@@ -17,7 +17,7 @@ const SSO = () => {
     const setToken=async()=> {
       localStorage.setItem('token',token)
       if (decodedToken && !isExpired) {
-        console.log('receive token')
+        console.log('receive token',decodedToken)
         axios.post(`${BE_PORT}/api/auth/login-with-sso`, {decodedToken}, {withCredentials: true})
             .then(res => {
               setAuth({

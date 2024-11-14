@@ -1,4 +1,4 @@
-import React, {useState, useContext, useRef, forwardRef} from "react";
+import React, {useState, useContext, useRef, forwardRef, useEffect} from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import {
@@ -46,7 +46,17 @@ function BookingConfirmationForm({isShow, onCancel}) {
     countRoom,
     completedPayment,
   } = useSelector((state) => state.inputDay);
-
+  // handle invoice state change spec for wowo
+  useEffect(() => {
+    const handlePaymentStorageChange=(e)=>{
+      if(e.key==='completedPayment'&&e.newValue==='true'){
+        dispatch(completedPayment(true))
+        localStorage.removeItem('completedPayment')
+      }
+    }
+    window.addEventListener('storage',handlePaymentStorageChange)
+    return ()=>window.removeEventListener('storage',handlePaymentStorageChange)
+  }, [dispatch]);
   //radio
   const paymentRef=useRef(null)
 
@@ -383,7 +393,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
               otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
           </div>
           {payment==='paypal'? <PayPalButton></PayPalButton> : ''}
-          {payment==='wowo'? <img alt='wowopic' className='items-center flex'
+          {payment==='wowo'? <img alt='wowopic' className='flex-center'
                                   src='https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H'/>: ''}
         </Modal>
       </div>

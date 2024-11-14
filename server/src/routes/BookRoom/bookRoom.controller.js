@@ -180,6 +180,7 @@ const changeInvoiceState=async(req,res)=>{
     if (invoice.invoiceState === "waiting") {
       invoice.invoiceState = "paid";
       await invoice.save();
+      res.cookie('completedPayment', true, { maxAge: 60000, httpOnly: false });
       return res.status(200).json({ message: "Invoice state updated to paid" });
     }
     else {

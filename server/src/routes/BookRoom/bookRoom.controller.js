@@ -215,7 +215,7 @@ const queryBookingHistory = async (req, res) => {
           }
         })
       )
-      console.log(bookingInfo)
+     // console.log(bookingInfo)
       return res.status(200).json({
         data: bookingInfo
       });
@@ -292,7 +292,7 @@ const getInvoicesWaiting = async (req, res) => {
 
 const deleteInvoiceWaiting = async (req, res) => {
   const { listID } = req.body
-  console.log(listID)
+  console.log("[Delete invoiceWaiting]",listID)
   for (let invoiceID of listID) {
     const invoiceWaiting = await Invoice.findById({ _id: invoiceID })
     if (invoiceWaiting) {

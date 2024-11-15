@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { setInvoiceID } from "../hooks/redux/inputDaySlice"
 import { useForm } from "antd/es/form/Form";
-import { setInvoiceCount } from "../hooks/redux/countInvoice";
+import { setInvoiceCount,cleanInvoice } from "../hooks/redux/countInvoice";
 function BookingConfirmationForm({ isShow, onCancel }) {
   const { auth,setAuth } = useContext(AuthContext);
   // message in antd
@@ -51,7 +51,7 @@ function BookingConfirmationForm({ isShow, onCancel }) {
     completedPayment,
   } = useSelector((state) => state.inputDay);
 
-  console.log("Tai khaon",count , auth)
+
 
   // handle invoice state change spec for wowo
   useEffect(() => {
@@ -85,6 +85,8 @@ function BookingConfirmationForm({ isShow, onCancel }) {
       });
       if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
         message.error("Tài khoản của bạn đã bị khóa")
+        const resDeleteInvoice = await axios.post(`${BE_PORT}/api/booking/deleteInvoiceWaiting`, { listID: listInvoiceID })
+        console.log("Delete invoice waiting",resDeleteInvoice)
         hanldeLogout()
       } else {
         notification.error({
@@ -94,8 +96,6 @@ function BookingConfirmationForm({ isShow, onCancel }) {
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || "An unknown error occurred.";
-      console.log("BLOCK",errorMessage)
-      
     }
   };
 
@@ -141,7 +141,6 @@ function BookingConfirmationForm({ isShow, onCancel }) {
     }
   // check nếu đặt 5 lần ko thành công
     if(count === 5){
-      console.log("Block account")
       handleInactive("Bạn bị khóa vì đặt quá 5 lần không thành công. Hiểu là spam")
 
     }
@@ -152,6 +151,7 @@ function BookingConfirmationForm({ isShow, onCancel }) {
   const handlePaymentConfirmation = () => {
     message.success("Payment successful!");
     setPaymentModalVisible(false);
+    dispatch(cleanInvoice())
     navigate('/mybooking')
     onCancel();
   };

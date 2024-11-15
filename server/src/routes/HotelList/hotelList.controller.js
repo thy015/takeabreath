@@ -410,13 +410,10 @@ const deleteRoom = async (req, res) => {
 
 const getInvoicesOwner = async (req, res) => {
   const { ownerID } = req
-  const countHotel = await Hotel.countDocuments({})
-  const countRoom = await Room.countDocuments({})
+  const countHotel = await Hotel.countDocuments({ownerID:ownerID})
+  const countRoom = await Room.countDocuments({ownerID:ownerID})
   const hotels = await Hotel.find({ ownerID: ownerID })
   const hotelIDs = hotels.map(hotel => hotel._id)
-
-
-
   const invoices = await Invoice.find({
     "hotelID": { $in: hotelIDs }
   }).populate("roomID hotelID cusID")

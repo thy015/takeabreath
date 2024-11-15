@@ -38,7 +38,7 @@ function App() {
     useEffect(() => {
         const loadScript = (src) => {
             let script
-            if (auth?.user?.role === 'customer' || auth?.user?.role==='') {
+            if (auth?.user?.role === 'customer' ) {
                 console.log("Load Script")
                 return new Promise((resolve, reject) => {
                     script = document.createElement('script');

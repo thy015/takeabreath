@@ -49,10 +49,7 @@ const PayPalButton = () => {
                                 const resDeleteInvoice = await axios.post(`${BE_PORT}/api/booking/deleteInvoiceWaiting`, { listID: listInvoiceID })
                                 if (resDeleteInvoice.status === true) {
                                     console.log("Xoa thanh cong")
-                                    
                                 }
-                                dispatch(cleanInvoice())
-
                             } else {
                                 openNotification(false, "Error", "Payment failed");
                             }

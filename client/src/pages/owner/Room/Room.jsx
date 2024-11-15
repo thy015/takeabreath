@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, Table, Space, Typography, Popconfirm,Input } from 'antd'
+import { Button, Table, Space, Typography, Popconfirm, Input } from 'antd'
 import { useMediaQuery } from 'react-responsive';
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,10 +16,10 @@ function Room() {
   const rooms = useSelector(state => state.room.roomSearch)
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
 
-  const [visibleComment,setVisibleComment] = useState(false)
-  const [record,setRecord] = useState(false)
+  const [visibleComment, setVisibleComment] = useState(false)
+  const [record, setRecord] = useState(false)
 
-  const BE_PORT=import.meta.env.VITE_BE_PORT
+  const BE_PORT = import.meta.env.VITE_BE_PORT
   useEffect(() => {
 
     axios.get(`${BE_PORT}/api/hotelList/list-room`)
@@ -51,7 +51,7 @@ function Room() {
       })
       .catch(err => {
         console.log(err)
-        openNotification(false, "Xóa phòng thất bại !", err.response?.data?.message?? "Vui long thử lại sau")
+        openNotification(false, "Xóa phòng thất bại !", err.response?.data?.message ?? "Vui long thử lại sau")
       })
   }
 
@@ -60,12 +60,12 @@ function Room() {
     setVisible(true)
   }
 
-  const handleClickRow = (record)=>{
+  const handleClickRow = (record) => {
     setRecord(record)
     setVisibleComment(true)
   }
 
-  const onSearch = (value)=>{
+  const onSearch = (value) => {
     dispatch(searchRoom(value))
   }
 
@@ -119,17 +119,27 @@ function Room() {
     {
       title: "Chỉnh sửa",
       key: "edit",
-      fixed: isMobile?"":"right",
+      fixed: isMobile ? "" : "right",
       width: 200,
       render: (_, record) => {
         return (
           <>
             <Space>
-              <Typography.Link onClick={() => handleUpdate(record)} >
+              <Typography.Link onClick={(event) => {
+                event.stopPropagation()
+                handleUpdate(record)
+              }
+              }>
                 <p>Cập nhật</p>
               </Typography.Link>
-              <Typography.Link >
-                <Popconfirm title="Bạn có muốn xóa không" okText="Có" cancelText="Không" onConfirm={() => handleDelete(record)}>
+              <Typography.Link onClick={(event) => {
+                event.stopPropagation()
+              }} >
+                <Popconfirm
+                  title="Bạn có muốn xóa không"
+                  okText="Có"
+                  cancelText="Không"
+                  onConfirm={()=>  handleDelete(record)}>
                   <p>Xóa</p>
                 </Popconfirm>
               </Typography.Link>
@@ -148,7 +158,7 @@ function Room() {
       <div className='w-full text-left py-[20px] px-[40px] d-flex justify-between items-center'>
         <Link >
           <Button
-            className={!isMobile ? "" :"hidden"}
+            className={!isMobile ? "" : "hidden"}
             onClick={() => setVisible(true)}
             type='primary'
             icon={<FontAwesomeIcon icon={faPlus} />}
@@ -156,7 +166,7 @@ function Room() {
             Thêm phòng
           </Button>
           <Button
-            className={isMobile ? "" :"hidden"}
+            className={isMobile ? "" : "hidden"}
             onClick={() => setVisible(true)}
             type='primary'
             icon={<FontAwesomeIcon icon={faPlus} />}
@@ -164,18 +174,18 @@ function Room() {
           </Button>
         </Link>
         <Input.Search
-            placeholder='Tim kiếm theo tên'
-            className='max-w-[200px]'
-            allowClear
-            enterButton
-            onSearch={onSearch}
-          />
+          placeholder='Tim kiếm theo tên'
+          className='max-w-[200px]'
+          allowClear
+          enterButton
+          onSearch={onSearch}
+        />
       </div>
 
       <Table
-        onRow={(record,rowIndex)=>{
-          return{
-            onClick:()=>handleClickRow(record)
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: () => handleClickRow(record)
           }
         }}
         className='mr-[20px]'
@@ -198,7 +208,7 @@ function Room() {
 
       <ViewComment
         visible={visibleComment}
-        close={()=>setVisibleComment(false)}
+        close={() => setVisibleComment(false)}
         record={record}
       >
 

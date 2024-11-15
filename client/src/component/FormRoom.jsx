@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, Modal, Input, InputNumber, Row, Col, Image, Select } from 'antd'
 import { useSelector, useDispatch } from "react-redux";
 import { openNotification } from '../hooks/notification'
-import { addRoom,updateRooms } from "../hooks/redux/roomsSlice"
+import { addRoom, updateRooms } from "../hooks/redux/roomsSlice"
 import { setHotels } from '../hooks/redux/hotelsSclice';
 import { useForm } from 'antd/es/form/Form';
 import axios from 'axios';
@@ -13,16 +13,16 @@ function FormRoom({ isVisible, close }) {
     const selectedRoom = useSelector(state => state.room.selectRoom)
     const hotels = useSelector(state => state.hotel.hotels)
     const dispatch = useDispatch()
-    const BE_PORT=import.meta.env.VITE_BE_PORT
+    const BE_PORT = import.meta.env.VITE_BE_PORT
 
     useEffect(() => {
         axios.get(`${BE_PORT}/api/hotelList/roomTypes`)
-            .then(res=>res.data)
-            .then(data=>{
+            .then(res => res.data)
+            .then(data => {
                 const array = data.types
-                const temp = array.map(item =>({
-                    value:item,
-                    label:item
+                const temp = array.map(item => ({
+                    value: item,
+                    label: item
                 }))
                 setTypeRooms(temp)
             })
@@ -56,7 +56,7 @@ function FormRoom({ isVisible, close }) {
             money: selectedRoom.money ?? "",
             hotelID: selectedRoom?.hotelID?._id ?? "",
         });
-        setImages(selectedRoom.imgLink??[])
+        setImages(selectedRoom.imgLink ?? [])
     }, [isVisible, selectedRoom, form])
     const handleImage = async (e) => {
         e.stopPropagation()
@@ -83,36 +83,41 @@ function FormRoom({ isVisible, close }) {
         form.submit()
     }
     const onFinish = async (values) => {
+        const {money} = values
+        if(money <0){
+            openNotification(false,"Giá tiền không được âm !","")
+            return
+        }
         const formInput = {
             ...values,
             imgLink: images
         }
 
-        if(isEmpty(selectedRoom)){
+        if (isEmpty(selectedRoom)) {
             axios.post(`${BE_PORT}/api/hotelList/createRoom`, formInput)
-            .then(res => res.data)
-            .then(data => {
-                dispatch(addRoom(data.data))
-                openNotification(true, "Tạo phòng thành công", "")
-                close()
-            })
-            .catch(err => {
-                console.log(err)
-                openNotification(false, "Tạo phòng thất bại", err.response.data.message)
-            })
-        }else{
+                .then(res => res.data)
+                .then(data => {
+                    dispatch(addRoom(data.data))
+                    openNotification(true, "Tạo phòng thành công", "")
+                    close()
+                })
+                .catch(err => {
+                    console.log(err)
+                    openNotification(false, "Tạo phòng thất bại", err.response.data.message)
+                })
+        } else {
             axios.post(`${BE_PORT}/api/hotelList//updateRoom/${selectedRoom._id}`, formInput)
-            .then(res => res.data)
-            .then(data => {
-                console.log("[UPDATE]",data.data)
-                dispatch(updateRooms(data.data))
-                openNotification(true, "Cập nhật phòng thành công", "")
-                close()
-            })
-            .catch(err => {
-                console.log(err)
-                openNotification(false, "Tạo phòng thất bại", err.response.data.message)
-            })
+                .then(res => res.data)
+                .then(data => {
+                    console.log("[UPDATE]", data.data)
+                    dispatch(updateRooms(data.data))
+                    openNotification(true, "Cập nhật phòng thành công", "")
+                    close()
+                })
+                .catch(err => {
+                    console.log(err)
+                    openNotification(false, "Tạo phòng thất bại", err.response.data.message)
+                })
         }
     }
     const isEmpty = (obj) => Object.keys(obj).length === 0;
@@ -120,9 +125,9 @@ function FormRoom({ isVisible, close }) {
         <>
 
             <Modal
-                okText={ isEmpty(selectedRoom) ? "Thêm phòng" : "Cập nhật "}
+                okText={isEmpty(selectedRoom) ? "Thêm phòng" : "Cập nhật "}
                 cancelText="Trở lại"
-                width={"80%"}
+                width={"50%"}
                 open={isVisible}
                 onCancel={close}
                 onOk={hanldeInsert}
@@ -168,23 +173,24 @@ function FormRoom({ isVisible, close }) {
                         <InputNumber className='w-[100%]' />
                     </Form.Item>
 
-                            <Form.Item
-                                label={"Số  lượng"}
-                                name={"numberOfRooms"}
-                                rules={[{ required: true, message: 'Vui lòng nhâp số lượng phòng !' }]}
-                            >
-                                <InputNumber className='inputnumber-room' max={100} min={0} />
-                            </Form.Item>
-
-                            <Form.Item
-                                label={"Số giường"}
-                                name={"numberOfBeds"}
-                                rules={[{ required: true, message: 'Vui lòng nhâp số lượng giường !' }]}
-                            >
-                                <InputNumber max={30} min={0} className='inputnumber-room ' />
-                            </Form.Item>
+                    <Form.Item
+                        label={"Số  lượng"}
+                        name={"numberOfRooms"}
+                        rules={[{ required: true, message: 'Vui lòng nhâp số lượng phòng !' }]}
+                    >
+                        <InputNumber className='inputnumber-room' max={100} min={0} />
+                    </Form.Item>
 
                     <Form.Item
+                        label={"Số giường"}
+                        name={"numberOfBeds"}
+                        rules={[{ required: true, message: 'Vui lòng nhâp số lượng giường !' }]}
+                    >
+                        <InputNumber max={30} min={0} className='inputnumber-room ' />
+                    </Form.Item>
+
+                    <Form.Item
+                        min={1}
                         label={"Giá tiền"}
                         name={"money"}
                         rules={[{ required: true, message: 'Vui lòng nhập giá tiền !' }]}
@@ -209,14 +215,14 @@ function FormRoom({ isVisible, close }) {
                 <div className=' flex gap-4 justify-center items-center'>
                     {images?.map(item => (
                         <div className="relative inline-block overflow-hidden">
-                        <Image src={item} className="object-cover rounded-md" alt="item" />
-                        <button
-                            className="absolute top-1 right-1 bg-red-500 text-center items-center text-white rounded-full p-1 w-[20px] h-[20px] flex justify-center"
-                            onClick={() => handleDelete(item)}
-                        >
-                            x
-                        </button>
-                    </div>
+                            <Image src={item} className="object-cover rounded-md" alt="item" />
+                            <button
+                                className="absolute top-1 right-1 bg-red-500 text-center items-center text-white rounded-full p-1 w-[20px] h-[20px] flex justify-center"
+                                onClick={() => handleDelete(item)}
+                            >
+                                x
+                            </button>
+                        </div>
                     ))}
 
                 </div>

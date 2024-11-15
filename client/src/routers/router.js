@@ -36,6 +36,7 @@ import StrictLoginSSO from "../pages/auth/StrictLoginSSO";
 import {OggyPartner} from "../pages/owner/OggyPartner/OggyPartner";
 import BookingHistory_BookingTab from "../pages/user/BookingHistory_BookingTab";
 import YourCancelRequest from "../pages/user/YourCancelRequest";
+import UserInfoCard from "../pages/owner/Profile/profileOwner";
 export const routers = [
   {
     path: "/",
@@ -129,6 +130,7 @@ export const routers = [
       { path: "Room", page: Room}, 
       { path: "Revenue", page: Revienue}, 
       { path: "Card", page: Card},
+      { path: "Profile", page: UserInfoCard},
       {path:'OggyPartner',page:OggyPartner}
     ],
     isOwner:true,

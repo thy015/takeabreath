@@ -29,6 +29,7 @@ signUpRouter.get('/owner/:id',async (req,res)=>{
   }
 })
 
+
 signUpRouter.delete('/owner/:id',signUpController.deleteOwner)
 signUpRouter.put('/owner/:id',signUpController.updateOwner)
 
@@ -56,7 +57,6 @@ signUpRouter.post("/insert-card",verifyOwner,signUpController.insertCartOwner)
 signUpRouter.get("/list-card",verifyOwner,signUpController.getListCard)
 signUpRouter.post("/delete-card",verifyOwner,signUpController.deleteCardOwner)
 
-
 signUpRouter.post("/login-with-sso",signUpController.loginWithSSO)
 // oggy
 signUpRouter.post('/strict-signin-sso',signUpController.strictSignInPartner)
@@ -69,6 +69,23 @@ signUpRouter.get('/verifyAdmin',verifyAdmin,(req,res)=>{
 signUpRouter.get('/verify',verifyLogin,(req,res)=>{
   return res.json({user: req.user})
 })
+
+signUpRouter.get("/get-owner",verifyOwner,async(req,res)=>{
+  const ownerID = req.ownerID
+  if (!ownerID)
+    return res.status(403).json({ message: "Bị mất dữ liệu người dùng !" })
+
+  try{
+    const owner = await Owner.findById({_id:ownerID})
+    return res.json({owner:owner})
+  }catch(err){
+    return res.status(500).json({ message: err.message })
+    
+  }
+})
+
+signUpRouter.post("/update-owner/:id",verifyOwner,signUpController.updateOnwerPhuc
+)
 
 module.exports = signUpRouter;
 

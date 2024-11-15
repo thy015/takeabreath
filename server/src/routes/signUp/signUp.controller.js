@@ -453,6 +453,22 @@ const getListCard = async (req, res) => {
 const updateOwner = async (req, res) => {
   const id = req.params.id
   const newData = req.body
+  console.log(newData)
+  try {
+    const updateOwner = await Owner.findByIdAndUpdate(id, newData, { new: true })
+    if (!updateOwner) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    res.status(200).json(updateOwner);
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server prob' } + e)
+  }
+}
+
+const updateOnwerPhuc = async (req,res)=>{
+  const id = req.params.id
+  const newData = req.body.newData
+
   try {
     const updateOwner = await Owner.findByIdAndUpdate(id, newData, { new: true })
     if (!updateOwner) {
@@ -505,4 +521,5 @@ module.exports = {
   registerCustomer,
   logout,
   loginWithSSO,
+  updateOnwerPhuc
 };

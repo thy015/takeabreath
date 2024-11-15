@@ -165,7 +165,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                 span={16}
                 className="border-[1px] p-6 h-[520px] border-gray-300 rounded-[10px] min-w-[550px]"
             >
-              <h3 className="text-center mt-[18px] mb-[29px] font-poppins">
+              <h3 className="text-center mt-[18px] mb-[29px] font-afacad">
                 Enter your details
               </h3>
               <ConfigProvider
@@ -177,7 +177,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                     },
                   }}
               >
-                <div style={{ overflowY: "auto", height: "400px" }}>
+                <div>
                   <Form
                       onFinish={onFinish}
                       scrollToFirstError={true}
@@ -187,7 +187,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                       }}
                       labelAlign="left"
                       form={form}
-                      className="w-[550px] h-[500px] mr-[34px] ml-[28px] "
+                      className="w-[550px] h-auto mr-[34px] ml-[28px] "
                   >
                     <Form.Item
                         label="Fullname"
@@ -292,7 +292,9 @@ function BookingConfirmationForm({isShow, onCancel}) {
                     </Form.Item>
                   </Form>
                 </div>
+
               </ConfigProvider>
+
             </Col>
             {/* information */}
             <Col span={8} >

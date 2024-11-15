@@ -301,7 +301,7 @@ const queryHotel = async (req, res) => {
       }
     });
 
-    if (availableRoomDays.length > 0 || unavailableRooms.length > 0) {
+    if (availableRoomDays.length > 0) {
       return res.status(200).json({
         status: "OK",
         roomData: availableRoomDays,

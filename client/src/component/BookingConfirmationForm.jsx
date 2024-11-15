@@ -165,7 +165,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                 span={16}
                 className="border-[1px] p-6 h-[520px] border-gray-300 rounded-[10px] min-w-[550px]"
             >
-              <h3 className="text-center mt-[18px] mb-[29px] font-poppins">
+              <h3 className="text-center mt-[18px] mb-[29px] font-afacad">
                 Enter your details
               </h3>
               <ConfigProvider
@@ -177,7 +177,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                     },
                   }}
               >
-                <div style={{ overflowY: "auto", height: "400px" }}>
+                <div>
                   <Form
                       onFinish={onFinish}
                       scrollToFirstError={true}
@@ -187,7 +187,7 @@ function BookingConfirmationForm({isShow, onCancel}) {
                       }}
                       labelAlign="left"
                       form={form}
-                      className="w-[550px] h-[500px] mr-[34px] ml-[28px] "
+                      className="w-[550px] h-auto mr-[34px] ml-[28px] "
                   >
                     <Form.Item
                         label="Fullname"
@@ -292,7 +292,9 @@ function BookingConfirmationForm({isShow, onCancel}) {
                     </Form.Item>
                   </Form>
                 </div>
+
               </ConfigProvider>
+
             </Col>
             {/* information */}
             <Col span={8} >
@@ -389,12 +391,23 @@ function BookingConfirmationForm({isShow, onCancel}) {
           <div className="text-center p-2 text-[16px]">
             <p>Confirm your payment using {payment}</p>
             <p>Your total price is {formatMoney(totalPrice)} VND which is <span className="text-success">{convertPrice} USD </span></p>
-            <p>Please  <span className="text-success">click the button</span> to confirm your payment,
-              otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
+
           </div>
-          {payment==='paypal'? <PayPalButton></PayPalButton> : ''}
-          {payment==='wowo'? <img alt='wowopic' className='flex-center'
-                                  src='https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H'/>: ''}
+          {payment==='paypal'? (
+              <>
+                  <p>Please <span className="text-success">click the button</span> to confirm your payment,
+                    otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
+              <PayPalButton></PayPalButton>
+              </>
+            ) : ''}
+          {payment === 'wowo' ? (
+              <>
+              <p>Please <span className="text-success">complete the payment on Wowo page,</span>
+                otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
+              <img alt='wowopic' className='flex-center w-full h-[400px]'
+                                     src='https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H'/>
+              </>
+              ): ''}
         </Modal>
       </div>
   );

@@ -67,15 +67,15 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                                             className="object-center h-[250px] w-full rounded-md shadow-md"
                                             src={room.imgLink[0]}
                                         />
-                                <h5 className="border-none mb-6 mt-2 font-[500]" >{room.roomName}</h5>
+                                <h5 className="border-none mb-6 mt-2 font-[400] font-afacad text-[24px]" >{room.roomName}</h5>
                             </Col>
                             {/* Display room info */}
                             <Col span={8}>
-                                <div className="py-3">
-                                    <div className="pl-4">
-                                        <ul className="flex flex-col w-full text-left ">
+                                <div className="py-12">
+                                    <div className="pl-4 w-full">
+                                        <ul className="room-info">
                                             <li>Room Type: {room.typeOfRoom}</li>
-                                            <li>Capacity: {room.capacity}</li>
+                                            <li>Capacity: {room.capacity} people</li>
                                             <li>Total Bed: {room.numberOfBeds}</li>
                                             <li>Number of rooms: {room.countRoom}</li>
                                         </ul>

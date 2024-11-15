@@ -114,8 +114,8 @@ export const pressReleasedData=()=>{
       describe:t('describe-topic-3-press-released')
     },
     {
-      imgLink:'https://media.discordapp.net/attachments/1296366202309972010/1296368393531822110/5f7036ba-43e6-4fb4-8a7b-27d2b5269c14.png?ex=6719f1a6&is=6718a026&hm=455fc5c9274234df71b98c51439fef5d7050aa97f1dd403e607ecd12fb835590&=&format=webp&quality=lossless&width=1050&height=700',
-      imgAlt:'topic1',
+      imgLink:'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTE2OTQzNzMyMjU2MDgxNDk4MQ%3D%3D/original/408cb246-5c21-4d64-a940-d279d95c6187.jpeg?im_w=1200',
+      imgAlt:'topic4',
       dateReleased:'JANUARY 26,2024',
       title:t('title-topic-1-press-released'),
       describe:t('describe-topic-1-press-released')

@@ -207,9 +207,9 @@ const Header = ({ children }) => {
             </ul>
           
             <div className="items-start">
-            <ul class="flex space-x-4 cursor-pointer">           
+            <ul className="flex space-x-4 cursor-pointer">
             <li className="flex">
-          <ChangeLangButton color="white" underlineColor="yellow-200"/>
+          <ChangeLangButton color="white" underlineColor="yellow"/>
              </li>
             <li className="w-20">
            <p className={hoverEffect}> {t('partners')}</p>

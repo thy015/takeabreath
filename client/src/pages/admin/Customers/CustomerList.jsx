@@ -37,7 +37,7 @@ const CustomersList = () => {
         const response = await axios.put(`http://localhost:4000/api/cancelReq/inactive/${cusID}`, {
             reason: reason,
         });
-        if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
+        if (response.data.success) {
             notification.success({
                 message: 'Vô Hiệu Hóa Thành Công',
                 description: 'Tài khoản khách hàng đã bị khóa!',
@@ -68,7 +68,7 @@ const CustomersList = () => {
   const handleActivateConfirm = async () => {
     try {
         const response = await axios.put(`http://localhost:4000/api/cancelReq/active/${cusID}`);
-        if (response.status === 200 && response.data.message === 'Active customer successfully') {
+        if (response.data.success) {
             notification.success({
                 message: 'Kích Hoạt Thành Công',
                 description: 'Tài khoản khách hàng đã được kích hoạt thành công!',
@@ -91,7 +91,7 @@ const CustomersList = () => {
 };
 
   const columns = [
-    { title: "Họ Tên", dataIndex: "cusName", key: "cusName", sorter: (a, b) => (a.cusName || "").localeCompare(b.cusName || ""), width: '25%' },
+    { title: "Họ Tên", dataIndex: "cusName", key: "cusName", width: '25%' },
     { title: "Email", dataIndex: "email", key: "email", sorter: (a, b) => (a.email || "").localeCompare(b.email || ""), width: '25%' },
     { title: "Số Điện Thoại", dataIndex: "phoneNum", key: "phoneNum" },
     { title: "Sinh Nhật", dataIndex: "birthday", key: "birthday" },

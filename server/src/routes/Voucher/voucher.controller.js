@@ -1,6 +1,7 @@
 const { set } = require("mongoose")
-const { Voucher } = require("../../models/voucher.model")
-
+const { Voucher, SystemVoucher } = require("../../models/voucher.model")
+const { response } = require("express")
+const moment = require('moment')
 const addVoucher = async (req, res) => {
     const { voucherName, discount, dateStart, dateEnd, code } = req.body
     const { ownerID } = req
@@ -98,9 +99,45 @@ const getListVoucher = async (req, res) => {
     res.json({ listVoucher: listVoucher })
 }
 
+const updateSysVoucher = async(req,res)=>{
+    const{voucherName,discount,startDay,endDay,code,adminID}=req.body;
+    if(!voucherName||!discount||!startDay||!endDay||!code||!adminID){
+        return res.json({success:false,message:"Vui lòng điền đủ thông tin"})
+    }
+    try {
+        const today=moment().startOf('day')
+        const end =moment(endDay)
+        if(!end.isAfter(today.add(1,'day'))){
+            return res.status(400).json({success:false,message:"Ngày kết thúc phải ít nhất 1 ngày sau ngày hôm nay"})
+        }
+        const updateVou=await SystemVoucher.findByIdAndUpdate(req.params.id,
+            {voucherName,discount,endDay,startDay,code,adminID},
+            {new: true}
+        )
+        if (!updateVou) {
+            return res.status(404).json({ message: "Không tìm thấy Voucher" });
+          }
+          res.json({ success:true,message: "Cập nhật Voucher thành công", voucher: updateVou });
+    } catch (error) {
+        res.status(500).json({success:false, message: "Cập nhật Voucher thất bại", error });
+    }
+}
+const deleteSysVoucher=async(req,res)=>{
+    try {
+        const deletee = await SystemVoucher.findByIdAndDelete(req.params.id);
+        if (!deletee) {
+            return res.status(404).json({success:false,message: "Không tìm thấy Voucher" });
+          }
+          res.json({success:true, message: "Xóa Voucher thành công" });
+    } catch (error) {
+        res.status(500).json({success:false, message: "Xóa Voucher thất bại", error });
+    }
+}
 module.exports = {
     addVoucher,
     getListVoucher,
     deleteVoucher,
-    updateVoucher
+    updateVoucher,
+    updateSysVoucher,
+    deleteSysVoucher,
 }

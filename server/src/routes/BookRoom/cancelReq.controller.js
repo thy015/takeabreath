@@ -139,14 +139,14 @@ const inactiveCus = async (req, res) => {
     await cus.save();
 
     return res.status(200).json({
-      status: "OK",
+      success:true,
       message: "Vô hiệu hóa khách hàng thành công",
       data: cus,
     });
   } catch (e) {
     console.error("Error in inactivating customer: ", e);
     return res.status(500).json({
-      status: "BAD",
+      success:false,
       message: "Gặp lỗi trong quá trình vô hiệu hóa khách hàng",
       error: e.message,
     });
@@ -167,14 +167,14 @@ const activeCus = async (req, res) => {
     await cus.save();
 
     return res.status(200).json({
-      status: "OK",
+      success:true,
       message: "Kích hoạt khách hàng thành công",
       data: cus,
     });
   } catch (e) {
     console.error("Error in activating customer: ", e);
     return res.status(500).json({
-      status: "BAD",
+      success: false,
       message: "Gặp lỗi trong quá trình kích hoạt tài khoản khách hàng",
       error: e.message,
     });

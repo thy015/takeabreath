@@ -25,7 +25,7 @@ import LogInOwner from "../pages/auth/Thy_LoginOwner";
 import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
-import AdminVoucher from "../pages/admin/AdminVoucher";
+import AdminVoucher from "../pages/admin/Voucher/AdminVoucher";
 import BookingHistory from "../pages/user/BookingHistory";
 import Hotel from "../pages/owner/Hotel/Hotel";
 import AboutUs from "../pages/user/AboutUs";

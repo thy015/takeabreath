@@ -49,14 +49,14 @@ const Sidebar = () => {
     { label: "Khách Sạn", to: "hotel", icon: FaHotel },
     { label: "Khách Hàng", to: "customers", icon: FaUser },
     { label: "Phòng", to: "rooms", icon: FaRestroom },
-    { label: "Vouchers", to: "", icon: FaTicketAlt },
+    { label: "Vouchers", to: "vouchers", icon: FaTicketAlt },
     { label: "Hóa Đơn", to: "invoices", icon: FaReceipt },
     { label: "Yêu Cầu", to: "requests", icon: FaHand },
   
   ];
 
   const addonItems = [
-    { label: "Lịch Làm Việc", to: "calendar", icon: FaCalendar },
+    { label: "Lịch Làm Việc", to: "", icon: FaCalendar },
     { label: "Cài Đặt", to: "settings", icon: FaRegSun },
   ];
 

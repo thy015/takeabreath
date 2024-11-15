@@ -9,11 +9,16 @@ import FormRoom from '../../../component/FormRoom'
 import axios from 'axios'
 import { openNotification } from '../../../hooks/notification'
 import { setHotels } from '../../../hooks/redux/hotelsSclice'
+import ViewComment from '../../../component/ViewComment';
 import { setRooms, deleteRoom, selectedRoom, searchRoom } from '../../../hooks/redux/roomsSlice'
 function Room() {
   const dispatch = useDispatch()
   const rooms = useSelector(state => state.room.roomSearch)
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+
+  const [visibleComment,setVisibleComment] = useState(false)
+  const [record,setRecord] = useState(false)
+
   const BE_PORT=import.meta.env.VITE_BE_PORT
   useEffect(() => {
 
@@ -55,6 +60,11 @@ function Room() {
     setVisible(true)
   }
 
+  const handleClickRow = (record)=>{
+    setRecord(record)
+    setVisibleComment(true)
+  }
+
   const onSearch = (value)=>{
     dispatch(searchRoom(value))
   }
@@ -93,6 +103,13 @@ function Room() {
       dataIndex: "revenue",
       key: "revenue",
       sorter: (a, b) => a.revenue - b.revenue
+    },
+    ,
+    {
+      title: "Số lượt đánh giá",
+      dataIndex: "comments",
+      key: "comments",
+      sorter: (a, b) => a.comments - b.comments
     },
     {
       title: "Thuộc khách sạn",
@@ -156,6 +173,11 @@ function Room() {
       </div>
 
       <Table
+        onRow={(record,rowIndex)=>{
+          return{
+            onClick:()=>handleClickRow(record)
+          }
+        }}
         className='mr-[20px]'
         dataSource={rooms}
         columns={column}
@@ -173,6 +195,14 @@ function Room() {
         }}
       >
       </FormRoom>
+
+      <ViewComment
+        visible={visibleComment}
+        close={()=>setVisibleComment(false)}
+        record={record}
+      >
+
+      </ViewComment>
     </div>
   )
 }

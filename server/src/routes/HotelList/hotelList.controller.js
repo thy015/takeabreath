@@ -1,9 +1,9 @@
 
-const { Hotel, Room } = require("../../models/hotel.model");
+const { Hotel, Room, Comment } = require("../../models/hotel.model");
 const { Invoice } = require("../../models/invoice.model");
 const { Owner } = require("../../models/signUp.model");
 const dayjs = require("dayjs");
-const axios=require('axios')
+const axios = require('axios')
 const isBetween = require("dayjs/plugin/isBetween");
 
 dayjs.extend(isBetween);
@@ -137,7 +137,7 @@ const createHotel = async (req, res) => {
     hotelType,
     phoneNum,
     imgLink,
-    ownerID, 
+    ownerID,
     hotelAmenities
   } = req.body;
 
@@ -180,7 +180,7 @@ const createHotel = async (req, res) => {
       phoneNum,
       imgLink,
       ownerID: req.ownerID,
-      hotelAmenities:hotelAmenities
+      hotelAmenities: hotelAmenities
     });
 
     return res.status(201).json({
@@ -195,7 +195,7 @@ const createHotel = async (req, res) => {
 };
 
 const updateHotels = async (req, res) => {
-  const { hotelName, address, city, nation, hotelType, phoneNum, imgLink,hotelAmenities } =
+  const { hotelName, address, city, nation, hotelType, phoneNum, imgLink, hotelAmenities } =
     req.body;
 
   try {
@@ -216,7 +216,7 @@ const updateHotels = async (req, res) => {
     hotel.hotelType = hotelType;
     hotel.phoneNum = phoneNum;
     hotel.imgLink = imgLink;
-    hotel.hotelAmenities= hotelAmenities
+    hotel.hotelAmenities = hotelAmenities
     await hotel.save();
 
     return res.status(200).json({
@@ -321,12 +321,12 @@ const queryHotel = async (req, res) => {
   }
 };
 // query ordinate location
-const googleGeometrySearch=async(req,res)=>{
+const googleGeometrySearch = async (req, res) => {
   try {
     const { city } = req.body;
 
     const response = await
-        axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${process.env.VITE_API_KEY}`);
+      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${process.env.VITE_API_KEY}`);
 
     //can use postman 2 see this
     if (response.data && response.data.results.length > 0) {
@@ -415,15 +415,15 @@ const getInvoicesOwner = async (req, res) => {
   const hotels = await Hotel.find({ ownerID: ownerID })
   const hotelIDs = hotels.map(hotel => hotel._id)
 
- 
+
 
   const invoices = await Invoice.find({
     "hotelID": { $in: hotelIDs }
   }).populate("roomID hotelID cusID")
 
-  const totalPrice = invoices.reduce((acc,item)=>{
-      return acc+ item.guestInfo.totalPrice
-  },0)
+  const totalPrice = invoices.reduce((acc, item) => {
+    return acc + item.guestInfo.totalPrice
+  }, 0)
 
   return res.json(
     {
@@ -432,9 +432,66 @@ const getInvoicesOwner = async (req, res) => {
       countHotel: countHotel,
       countRoom: countRoom,
       countInvoice: invoices.length,
-      totalPrice:totalPrice
+      totalPrice: totalPrice
     })
 }
+
+const commentRoom = async (req, res) => {
+  const { ratePoint, content, roomID, invoiceID } = req.body
+  const idCus = req.user.id
+  if (!ratePoint || !content || !roomID || !invoiceID)
+    return res.status(403).json({ message: "Bị mất dữ liệu" })
+  if (!idCus)
+    return res.status(403).json({ message: "Mất thông tin khách hàng" })
+
+  try {
+    const comment = new Comment({
+      ratePoint: ratePoint,
+      content: content,
+      roomID: roomID,
+      cusID: idCus,
+      invoiceID: invoiceID
+    })
+
+    await comment.save()
+    return res.status(200).json({ message: "Đánh giá thành công, Cảm ơn bạn đã đánh giá", comment: comment })
+
+  } catch (err) {
+    return res.status(500).json({ message: "Lỗi hệ thống", err: err.message })
+
+  }
+}
+
+const getCommentCus = async (req, res) => {
+  const idCus = req.user.id
+  try {
+    const comment = await Comment.find({
+      cusID: idCus
+    })
+    return res.status(200).json({ message: comment })
+
+  } catch (err) {
+    return res.status(500).json({ message: "Lỗi hệ thống", err: err.message })
+
+  }
+}
+
+const getCommentRoom = async (req, res) => {
+  const  idRoom  = req.params.id
+  if (!idRoom)
+    return res.status(403), json({ message: "Mất dữ liệu" })
+  try {
+    const comment = await Comment.find({
+      roomID: idRoom
+    }).populate("cusID")
+    return res.status(200).json({ comments: comment })
+  } catch (err) {
+    return res.status(500).json({ message: "Lỗi hệ thống", err: err.message })
+
+  }
+
+}
+
 module.exports = {
   createHotel,
   createRoom,
@@ -445,5 +502,8 @@ module.exports = {
   deleteRoom,
   updateRoom,
   getInvoicesOwner,
-  googleGeometrySearch
+  googleGeometrySearch,
+  commentRoom,
+  getCommentCus,
+  getCommentRoom
 };

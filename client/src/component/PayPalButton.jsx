@@ -2,14 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPaymentCompleted } from '../hooks/redux/inputDaySlice';
 import { openNotification } from '../hooks/notification';
+import { cleanInvoice } from '../hooks/redux/countInvoice';
 import axios from 'axios';
 
 const PayPalButton = () => {
     const paypal = useRef();
     const dispatch = useDispatch();
     const { convertPrice, invoiceID } = useSelector((state) => state.inputDay);
-    const BE_PORT=import.meta.env.VITE_BE_PORT
-
+    const { count, listInvoiceID } = useSelector(state => state.countInvoice)
+    const BE_PORT = import.meta.env.VITE_BE_PORT
+    console.log({ count, listInvoiceID })
     useEffect(() => {
         console.log("Current invoiceID in PayPalButton:", invoiceID);
     }, [invoiceID]);
@@ -44,6 +46,13 @@ const PayPalButton = () => {
                             const res = await axios.post(`${BE_PORT}/api/booking/completedTran`, { order, invoiceID });
                             if (res.status === 200) {
                                 openNotification(true, "Success", "Payment success");
+                                const resDeleteInvoice = await axios.post(`${BE_PORT}/api/booking/deleteInvoiceWaiting`, { listID: listInvoiceID })
+                                if (resDeleteInvoice.status === true) {
+                                    console.log("Xoa thanh cong")
+                                    
+                                }
+                                dispatch(cleanInvoice())
+
                             } else {
                                 openNotification(false, "Error", "Payment failed");
                             }

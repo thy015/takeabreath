@@ -9,6 +9,7 @@ import cardReducer from './cardSlice'
 import amenitySlice from './amenitySlice'
 import commentSlice from "./commentSlice"
 import invoiceSlice from "./invoiceSlice"
+import countInvoice from "./countInvoice"
 import {thunk} from 'redux-thunk'
 
 export const store = configureStore ({
@@ -23,7 +24,8 @@ export const store = configureStore ({
     amenity:amenitySlice,
     comment:commentSlice,
     invoice:invoiceSlice,
-    invoiceRevenue:revenueReducer
+    invoiceRevenue:revenueReducer,
+    countInvoice:countInvoice
   },
   middleware:(getDefaultMiddleware)=>getDefaultMiddleware().concat(thunk),
   devTools:window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

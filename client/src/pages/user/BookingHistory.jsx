@@ -25,7 +25,7 @@ const BookingPage = () => {
   dayjs.extend(utc);
   dayjs.extend(timezone);
 
-  const BE_PORT=import.meta.env.VITE_BE_PORT
+  const BE_PORT = import.meta.env.VITE_BE_PORT
   console.log(id)
   if (!id) {
     return <Alert message="Please try sign in first" type="info" showIcon />;
@@ -60,10 +60,10 @@ const BookingPage = () => {
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };
-  const disableCancelFunc=(checkInDay)=>{
-    const now=dayjs().tz('Asia/Ho_Chi_Minh')
-    const formattedCheckInDay=dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
-    if(formattedCheckInDay.isSame(now,'day')){
+  const disableCancelFunc = (checkInDay) => {
+    const now = dayjs().tz('Asia/Ho_Chi_Minh')
+    const formattedCheckInDay = dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
+    if (formattedCheckInDay.isSame(now, 'day')) {
       // after 12pm => disable
       const todayNoon = now.startOf('day').add(12)
       return now.isAfter(todayNoon)
@@ -88,11 +88,11 @@ const BookingPage = () => {
       disableCancelConfirmAfterClicked(invoiceID)
       const res = await
 
-          axios.post(
-              `${BE_PORT}/api/booking/bookingHistory/${invoiceID}/cancel`,
-              passingData,
-              { headers: { Authorization: `Bearer ${auth.token}` } }
-          );
+        axios.post(
+          `${BE_PORT}/api/booking/bookingHistory/${invoiceID}/cancel`,
+          passingData,
+          { headers: { Authorization: `Bearer ${auth.token}` } }
+        );
       console.log('Response:', res.data);
 
     } catch (error) {
@@ -100,7 +100,7 @@ const BookingPage = () => {
     }
   };
 
-  const {data,error,loading}=useGet(`${BE_PORT}/api/booking/bookingHistory/${id}`)
+  const { data, error, loading } = useGet(`${BE_PORT}/api/booking/bookingHistory/${id}`)
 
 
   //handle comment
@@ -124,10 +124,10 @@ const BookingPage = () => {
     }
     return false
   }
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     dispatch(setInvoice(data.data))
-  },[data])
+  }, [data])
 
   useEffect(() => {
     axios.get('http://localhost:4000/api/hotelList/get-comment-cus')
@@ -182,29 +182,15 @@ const BookingPage = () => {
   return (
 
     <div className="container mx-auto p-4">
-
       {/*sort*/}
       <div className='history-wrapper'>
         <div className='history-dropdown'>
-          {/* <div className='pl-4' onClick={handleSort}>Sort</div>
+          <div className='pl-4'>Sort</div>
           <div className='pr-2'>
             <IoMdArrowDropdown></IoMdArrowDropdown>
-          </div> */}
-          <ConfigProvider
-            theme={{
-              components: {
-                Select: {
-                  clearBg: "#d3d3d3"
-                },
-              },
-            }}
-          >
-            <Select className='w-full bg-light-gray' options={options} defaultValue={"defauld"} onChange={handleSortByOptions}></Select>
-
-          </ConfigProvider>
+          </div>
         </div>
       </div>
-
       <section className="my-10">
         <div className="relative flex">
           <img
@@ -226,15 +212,16 @@ const BookingPage = () => {
 
         {/* Booking details */}
 
-        {invoicesTemps?.map((resData, index) => {
+        {data.data.map((resData, index) => {
           const formattedCheckInDay = dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
           const formattedCheckOutDay = dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
           //stop rendering if found a cancel infor of that room
           if (resData.cancelInfo && resData.cancelInfo.length > 0) {
-
+            console.log('hiding', resData)
             return null
           }
-
+          console.log('invoice id', resData.invoiceInfo._id)
+          console.log('checkinday', resData.invoiceInfo.guestInfo.checkInDay)
           const isDisabledCancel = disableCancelFunc(resData.invoiceInfo.guestInfo.checkInDay);
           return (
             <div key={index} className='py-2'>
@@ -258,80 +245,32 @@ const BookingPage = () => {
                         <FaPhone className='mr-2'></FaPhone> {resData.hotelInfo.phoneNum}
                       </div>
                     </div>
-                    {/*Room Info*/}
-                    <div className='col-4 border-l flex'>
-                      <img
-                          src={resData.roomInfo.imgLink[0]}
-                          alt='pic'
-                          className="w-[100px] h-[100px] object-cover rounded-md"
-                      />
-                      <div className='text-left pl-4 w-full space-y-1'>
-                        <div className='font-semibold'>Room Information</div>
-                        <BetweenFlex className="justify-between flex">
-                          <span>Name:</span>
-                          <span className="ml-auto">{resData.roomInfo.roomName}</span>
-                        </BetweenFlex>
-                        <BetweenFlex>
-                          <span>Type:</span>
-                          <span className="ml-auto">{resData.roomInfo.typeOfRoom}</span>
-                        </BetweenFlex>
-                        <BetweenFlex>
-                          <span><IoIosBed /></span>
-                          <span className="ml-auto">{resData.roomInfo.numberOfBeds}</span>
-                        </BetweenFlex>
-                        <BetweenFlex>
-                          <span><IoPeople></IoPeople></span>
-                          <span>{resData.roomInfo.capacity}</span>
-                        </BetweenFlex>
-                      </div>
-                      </div>
-                    {/*Invoice Info*/}
-                    <div className='col-4 border-l'>
-                      <div>
-                        <div className='font-semibold'>Booking Information</div>
-                        <BetweenFlex>
-                          <div>
-                            <span>Check in: </span>
-                            <span>{formattedCheckInDay}</span>
-                          </div>
-                          <div>
-                            <span>Check out: </span>
-                            <span>{formattedCheckOutDay}</span>
-                          </div>
-                        </BetweenFlex>
-                        <BetweenFlex>
-                          <div>
-                            Guest Name:
-                          </div>
-                          <div>
-                            {resData.invoiceInfo.guestInfo.name}
-                          </div>
-                        </BetweenFlex>
-                        <BetweenFlex>
-                          <div>
-                            Pay via:
-                          </div>
-                          <div>
-                            {resData.invoiceInfo.guestInfo.paymentMethod}
-                          </div>
-                        </BetweenFlex>
-                        <BetweenFlex>
-                          <div>
-                            Total Rooms Booked:
-                          </div>
-                          <div>
-                            {resData.invoiceInfo.guestInfo.totalRoom}
-                          </div>
-                        </BetweenFlex>
-                        <BetweenFlex>
-                          <div>
-                            Price:
-                          </div>
-                          <div>
-                            {formatMoney(resData.invoiceInfo.guestInfo.totalPrice)} VND
-                          </div>
-                        </BetweenFlex>
-                      </div>
+                  </div>
+                  {/*Room Info*/}
+                  <div className='col-4 border-l flex'>
+                    <img
+                      src={resData.roomInfo.imgLink[0]}
+                      alt='pic'
+                      className="w-[100px] h-[100px] object-cover rounded-md"
+                    />
+                    <div className='text-left pl-4 w-full space-y-1'>
+                      <div className='font-semibold'>Room Information</div>
+                      <BetweenFlex className="justify-between flex">
+                        <span>Name:</span>
+                        <span className="ml-auto">{resData.roomInfo.roomName}</span>
+                      </BetweenFlex>
+                      <BetweenFlex>
+                        <span>Type:</span>
+                        <span className="ml-auto">{resData.roomInfo.typeOfRoom}</span>
+                      </BetweenFlex>
+                      <BetweenFlex>
+                        <span><IoIosBed /></span>
+                        <span className="ml-auto">{resData.roomInfo.numberOfBeds}</span>
+                      </BetweenFlex>
+                      <BetweenFlex>
+                        <span><IoPeople></IoPeople></span>
+                        <span>{resData.roomInfo.capacity}</span>
+                      </BetweenFlex>
                     </div>
                   </div>
                   {/*Invoice Info*/}
@@ -405,9 +344,7 @@ const BookingPage = () => {
                         disabled={expComment(resData.invoiceInfo?.guestInfo.checkOutDay, resData.invoiceInfo?._id)}
                         variant='outline-primary'
                         onClick={() => handleComment(resData)}
-                      >
-                        Rate The Accommodation
-                      </Button>
+                      >Rate The Accommodation</Button>
                     </div>
                     {clickCancel[resData.invoiceInfo._id] && (
                       <div>
@@ -490,7 +427,6 @@ const BookingPage = () => {
 };
 
 export default BookingPage;
-
 const DecoratedIcon = styled.button`
   display: flex;
   align-items: center;

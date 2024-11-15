@@ -158,7 +158,9 @@ const RegisterOwner = () => {
                     <div className="mt-4">
                       <Form>
                         <Form.Item
-                          label={<span className="white-label">Email</span>}
+                          label={
+                            (<div className='w-[100px] flex-center text-white'>{t('email')}</div>)
+                        }
                           name="email"
                         >
                           <Input
@@ -174,7 +176,9 @@ const RegisterOwner = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label={<span className="white-label">{t('password')}</span>}
+                          label={
+                            (<div className='w-[100px] flex-center text-white'>{t('password')}</div>)
+                        }
                           name="password"
                         >
                           <Input.Password
@@ -185,7 +189,9 @@ const RegisterOwner = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label={<span className="white-label">{t('name')}</span>}
+                          label={
+                            (<div className='w-[100px] flex-center text-white'>{t('name')}</div>)
+                        }
                           name='name'
                         >
                           <Input
@@ -198,7 +204,7 @@ const RegisterOwner = () => {
                         </Form.Item>
                         <Form.Item
                           label={
-                            <span className="white-label">{t('phone-number')}</span>
+                            (<div className='w-[100px] flex-center text-white'>{t('phone-number')}</div>)
                           } name='phone'
                         >
                           <Input
@@ -212,7 +218,7 @@ const RegisterOwner = () => {
                         {/* owner ++ */}
                         <Form.Item
                           label={
-                            <span className="white-label">{t('iden-card')}</span>
+                            (<div className='w-[100px] flex-center text-white'>{t('iden-card')}</div>)
                           }
                           name='idenCard'
                         >

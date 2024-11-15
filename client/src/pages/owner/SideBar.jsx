@@ -18,10 +18,10 @@ const items = [
         key: "owner/Room",
         label: (<p className='font-bold'>Phòng</p>),
     },
-    {
-        key: "owner/Vouchers",
-        label: (<p className='font-bold'>Phiếu giảm giá</p>),
-    },
+    // {
+    //     key: "owner/Vouchers",
+    //     label: (<p className='font-bold'>Phiếu giảm giá</p>),
+    // },
     {
         key: "owner/OggyPartner",
         label: (<p className='font-bold'>Oggy Partner</p>),

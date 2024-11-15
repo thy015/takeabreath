@@ -123,7 +123,9 @@ const LogInOwner = () => {
                     <div className="mt-4">
                       <Form>
                         <Form.Item
-                          label={<span className="white-label">Email</span>}
+                          label={
+                            (<div className='w-[100px] flex-center text-white'>{t('email')}</div>)
+                        }
                           name="email"
                         >
                           <Input
@@ -139,7 +141,9 @@ const LogInOwner = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label={<span className="white-label">Password</span>}
+                          label={
+                            (<div className='w-[100px] flex-center text-white'>{t('password')}</div>)
+                        }
                           name="password"
                         >
                           <Input.Password
@@ -174,9 +178,9 @@ const LogInOwner = () => {
               </div>
             </motion.div>
             <div className="col-5 relative border-l">
-              <div className="gryphen absolute flex mt-[100px] ml-6 text-white text-semibold text-[20px] italic">
-                {t('we-sincerely-appreciate-your-partnership')}
-              </div>
+              {/*<div className="gryphen absolute flex mt-[100px] ml-6 text-white text-semibold text-[20px] italic">*/}
+              {/*  {t('we-sincerely-appreciate-your-partnership')}*/}
+              {/*</div>*/}
 
               <img
                 className="w-full flex mt-56"

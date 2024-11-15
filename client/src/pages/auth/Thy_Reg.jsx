@@ -159,7 +159,9 @@ function handleLoginSSO() {
                     </div>
                     <div className="mt-4">
                       <Form>
-                        <Form.Item label="Email" name="email">
+                        <Form.Item label={
+                          (<div className='w-[100px] flex-center'>{t('email')}</div>)
+                        } name="email">
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={
@@ -172,7 +174,9 @@ function handleLoginSSO() {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label= {t('password')} name="password">
+                        <Form.Item label= {
+                          (<div className='w-[100px] flex-center'>{t('password')}</div>)
+                        } name="password">
                           <Input.Password
                             placeholder="ads123@"
                             name="password"
@@ -180,7 +184,9 @@ function handleLoginSSO() {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label={t('name')}>
+                        <Form.Item label={
+                          (<div className='w-[100px] flex-center'>{t('name')}</div>)
+                        }>
                           <Input
                             placeholder="Anderson"
                             suffix={<FaUser />}
@@ -189,7 +195,9 @@ function handleLoginSSO() {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label=  {t('phone-number')}>
+                        <Form.Item label=  {
+                          (<div className='w-[100px] flex-center'>{t('phone-number')}</div>)
+                        }>
                           <Input
                             placeholder="0908xxxxxx"
                             suffix={<FaPhoneFlip />}

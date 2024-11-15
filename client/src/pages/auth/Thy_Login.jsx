@@ -132,7 +132,9 @@ const Login = () => {
                     </div>
                     <div className="mt-12">
                       <Form>
-                        <Form.Item label={t('email')} name="email">
+                        <Form.Item label={
+                          (<div className='w-[100px] flex-center'>{t('email')}</div>)
+                        } name="email" className='css-label'>
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={
@@ -143,9 +145,12 @@ const Login = () => {
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
+
                           />
                         </Form.Item>
-                        <Form.Item label={t('password')} name="password">
+                        <Form.Item label={
+                          (<div className='w-[100px] flex-center'>{t('password')}</div>)
+                        } name="password" className='css-label'>
                           <Input.Password
                             placeholder="ads123@"
                             name="password"

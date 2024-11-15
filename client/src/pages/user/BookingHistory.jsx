@@ -41,6 +41,9 @@ const BookingPage = () => {
     }));
   };
 
+  const formatMoney = (money) => {
+    return new Intl.NumberFormat("de-DE").format(money);
+  };
   const disableCancelFunc=(checkInDay)=>{
     const now=dayjs().tz('Asia/Ho_Chi_Minh')
     const formattedCheckInDay=dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
@@ -227,7 +230,7 @@ const BookingPage = () => {
                             Price:
                           </div>
                           <div>
-                            {resData.invoiceInfo.guestInfo.totalPrice}
+                            {formatMoney(resData.invoiceInfo.guestInfo.totalPrice)} VND
                           </div>
                         </BetweenFlex>
                       </div>

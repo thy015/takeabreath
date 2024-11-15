@@ -181,7 +181,7 @@ const changeInvoiceState=async(req,res)=>{
       invoice.invoiceState = "paid";
       await invoice.save();
       res.cookie('completedPayment', true, { maxAge: 60000, httpOnly: false });
-      return res.status(200).json({ message: "Invoice state updated to paid" });
+      return res.status(200).json({ message: "Invoice state updated to paid",completedPayment:true });
     }
     else {
       return res.status(400).json({ message: "Invoice is not in waiting state" });

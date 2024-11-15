@@ -13,6 +13,7 @@ bookRouter.post('/',bookController.bookRoom)
 bookRouter.get(
   "/bookingHistory",)
 bookRouter.post("/completedTran", bookController.completedTran);
+bookRouter.post("/deleteInvoiceWaiting", bookController.deleteInvoiceWaiting);
 // change invoice state
 bookRouter.post('/change-invoice-state',bookController.changeInvoiceState)
 bookRouter.post('/',bookController.bookRoom)

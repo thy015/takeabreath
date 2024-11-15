@@ -24,7 +24,7 @@ const HotelDisplay_HotelTab = () => {
         <div>
 
           <div className="w-full">
-            <Tabs defaultActiveKey="1" size="large" tabBarGutter={80} >
+            <Tabs defaultActiveKey="1" size="large" tabBarGutter={80} className="flex-center p-2" >
               {tab_titles.map((tab) => (
                 <TabPane tab={tab.title} key={tab.key}>
                   {tab.content}

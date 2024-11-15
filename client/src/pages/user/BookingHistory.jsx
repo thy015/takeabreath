@@ -56,10 +56,14 @@ const BookingPage = () => {
     }));
   };
 
-  const disableCancelFunc = (checkInDay) => {
-    const now = dayjs().tz('Asia/Ho_Chi_Minh')
-    const formattedCheckInDay = dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
-    if (formattedCheckInDay.isSame(now, 'day')) {
+
+  const formatMoney = (money) => {
+    return new Intl.NumberFormat("de-DE").format(money);
+  };
+  const disableCancelFunc=(checkInDay)=>{
+    const now=dayjs().tz('Asia/Ho_Chi_Minh')
+    const formattedCheckInDay=dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
+    if(formattedCheckInDay.isSame(now,'day')){
       // after 12pm => disable
       const todayNoon = now.startOf('day').add(12)
       return now.isAfter(todayNoon)
@@ -254,32 +258,80 @@ const BookingPage = () => {
                         <FaPhone className='mr-2'></FaPhone> {resData.hotelInfo.phoneNum}
                       </div>
                     </div>
-                  </div>
-                  {/*Room Info*/}
-                  <div className='col-4 border-l flex'>
-                    <img
-                      src={resData.roomInfo.imgLink[0]}
-                      alt='pic'
-                      className="w-[100px] h-[100px] object-cover rounded-md"
-                    />
-                    <div className='text-left pl-4 w-full space-y-1'>
-                      <div className='font-semibold'>Room Information</div>
-                      <BetweenFlex className="justify-between flex">
-                        <span>Name:</span>
-                        <span className="ml-auto">{resData.roomInfo.roomName}</span>
-                      </BetweenFlex>
-                      <BetweenFlex>
-                        <span>Type:</span>
-                        <span className="ml-auto">{resData.roomInfo.typeOfRoom}</span>
-                      </BetweenFlex>
-                      <BetweenFlex>
-                        <span><IoIosBed /></span>
-                        <span className="ml-auto">{resData.roomInfo.numberOfBeds}</span>
-                      </BetweenFlex>
-                      <BetweenFlex>
-                        <span><IoPeople></IoPeople></span>
-                        <span>{resData.roomInfo.capacity}</span>
-                      </BetweenFlex>
+                    {/*Room Info*/}
+                    <div className='col-4 border-l flex'>
+                      <img
+                          src={resData.roomInfo.imgLink[0]}
+                          alt='pic'
+                          className="w-[100px] h-[100px] object-cover rounded-md"
+                      />
+                      <div className='text-left pl-4 w-full space-y-1'>
+                        <div className='font-semibold'>Room Information</div>
+                        <BetweenFlex className="justify-between flex">
+                          <span>Name:</span>
+                          <span className="ml-auto">{resData.roomInfo.roomName}</span>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <span>Type:</span>
+                          <span className="ml-auto">{resData.roomInfo.typeOfRoom}</span>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <span><IoIosBed /></span>
+                          <span className="ml-auto">{resData.roomInfo.numberOfBeds}</span>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <span><IoPeople></IoPeople></span>
+                          <span>{resData.roomInfo.capacity}</span>
+                        </BetweenFlex>
+                      </div>
+                      </div>
+                    {/*Invoice Info*/}
+                    <div className='col-4 border-l'>
+                      <div>
+                        <div className='font-semibold'>Booking Information</div>
+                        <BetweenFlex>
+                          <div>
+                            <span>Check in: </span>
+                            <span>{formattedCheckInDay}</span>
+                          </div>
+                          <div>
+                            <span>Check out: </span>
+                            <span>{formattedCheckOutDay}</span>
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Guest Name:
+                          </div>
+                          <div>
+                            {resData.invoiceInfo.guestInfo.name}
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Pay via:
+                          </div>
+                          <div>
+                            {resData.invoiceInfo.guestInfo.paymentMethod}
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Total Rooms Booked:
+                          </div>
+                          <div>
+                            {resData.invoiceInfo.guestInfo.totalRoom}
+                          </div>
+                        </BetweenFlex>
+                        <BetweenFlex>
+                          <div>
+                            Price:
+                          </div>
+                          <div>
+                            {formatMoney(resData.invoiceInfo.guestInfo.totalPrice)} VND
+                          </div>
+                        </BetweenFlex>
+                      </div>
                     </div>
                   </div>
                   {/*Invoice Info*/}

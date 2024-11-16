@@ -10,7 +10,8 @@ import {
   ConfigProvider,
   DatePicker,
   Radio,
-  message
+  message,
+  notification
 } from "antd";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -25,13 +26,27 @@ import { useForm } from "antd/es/form/Form";
 import { setInvoiceCount,cleanInvoice } from "../hooks/redux/countInvoice";
 function BookingConfirmationForm({ isShow, onCancel }) {
   const { auth,setAuth } = useContext(AuthContext);
-  // message in antd
   const [messageApi, contextHolder] = message.useMessage();
   const BE_PORT=import.meta.env.VITE_BE_PORT
   const [form] = useForm();
   const [payment, setPayment] = useState("");
+  const [vouchers, setVouchers] = useState([]);
   const [paymentModalVisible, setPaymentModalVisible] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
+  const [voucherCode, setVoucherCode] = useState('');
+  useEffect(() => {
+    const fetchVouchers = async () => {
+        try {
+            const response = await fetch('http://localhost:4000/api/voucher/sysvou');
+            const data = await response.json();
+            setVouchers(data);
+        } catch (error) {
+            console.error('Error fetching vouchers:', error);
+        }
+    };
+    fetchVouchers();
+}, []);
+const [isVoucherApplied, setIsVoucherApplied] = useState(false);  
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { count, listInvoiceID } = useSelector(state => state.countInvoice)
@@ -50,9 +65,11 @@ function BookingConfirmationForm({ isShow, onCancel }) {
     countRoom,
     completedPayment,
   } = useSelector((state) => state.inputDay);
-
-
-
+ const a =totalPrice;
+const[price,setPrice]=useState(totalPrice);
+useEffect(() => {
+  setPrice(totalPrice);
+}, [totalPrice]);
   // handle invoice state change spec for wowo
   useEffect(() => {
     const handlePaymentStorageChange = (e) => {
@@ -76,6 +93,31 @@ function BookingConfirmationForm({ isShow, onCancel }) {
         ({ behavior: 'smooth', block: 'end' })
     }
   };
+  const applyVoucher = () => {
+    if (isVoucherApplied) {
+        notification.error({ description: 'Voucher đã được áp dụng rồi' });
+        return;
+    }
+
+    const voucher = vouchers.find(v => v.code === voucherCode);
+
+    if (voucher) {
+        const currentDate = new Date();
+        const startDate = new Date(voucher.startDay);
+        const endDate = new Date(voucher.endDay);
+
+        if (currentDate >= startDate && currentDate <= endDate) {
+            setPrice(price - (voucher.discount / 100 * price)); // Apply discount
+            setIsVoucherApplied(true);  // Mark the voucher as applied
+            notification.success({ description: 'Áp dụng mã giảm giá thành công' });
+            setApply(true); // Ensure setApply is triggered to reflect the change
+        } else {
+            notification.error({ description: 'Voucher đã hết thời gian sử dụng' });
+        }
+    } else {
+        notification.error({ description: 'Voucher không hợp lệ' });
+    }
+};
 
   // inactive
   const handleInactive = async (reason) => {
@@ -168,7 +210,7 @@ function BookingConfirmationForm({ isShow, onCancel }) {
       inputPhoneNum: values.phoneNum,
       inputEmail: values.email,
       inputDob: dayjs(values.dob),
-      total: totalPrice,
+      total: price,
       checkInDay: dayjs(dayStart),
       checkOutDay: dayjs(dayEnd),
       totalDay: totalCheckInDay,
@@ -213,12 +255,23 @@ function BookingConfirmationForm({ isShow, onCancel }) {
     }
 
   };
-
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+        applyVoucher();
+    }
+};
+const handleCancel = () => {
+  onCancel();
+  setPrice(a);
+  setVoucherCode(''); 
+  setIsVoucherApplied(false); 
+  setApply(false); 
+};
   return (
     <div>
     <Modal
         open={isShow}
-        onCancel={onCancel}
+        onCancel={()=>{handleCancel()}}
         className="min-w-[80%] max-h-[100px]"
         okText="Confirm Booking"
         onOk={()=>form.submit()}
@@ -361,7 +414,17 @@ function BookingConfirmationForm({ isShow, onCancel }) {
                       Wowo
                     </Radio>
                   </Radio.Group>
+                  
                 </Form.Item>
+         <input
+  type="text"
+  placeholder="Nhập mã giảm giá"
+  value={voucherCode}
+  onChange={(e) => setVoucherCode(e.target.value)}
+  onKeyPress={handleKeyPress}
+  className="border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+/>
+
               </Form>
             </div>
 
@@ -439,13 +502,15 @@ function BookingConfirmationForm({ isShow, onCancel }) {
                 </div>
                 <div className="flex justify-between">
                   <div>Total price:</div>{" "}
-                  <div className="text-success">{formatMoney(totalPrice)} VND </div>
+                  <div className="text-success">{formatMoney(price)} VND </div>
                 </div>
               </div>
             </div>
           </div>
         </Col>
+     
       </Row>
+      
     </Modal>
     {/* confirm modal pop up after click confirm booking --2nd modal*/}
     <Modal
@@ -462,7 +527,7 @@ function BookingConfirmationForm({ isShow, onCancel }) {
     >
       <div className="text-center p-2 text-[16px]">
         <p>Confirm your payment using {payment}</p>
-        <p>Your total price is {formatMoney(totalPrice)} VND which is <span className="text-success">{convertPrice} USD </span></p>
+        <p>Your total price is {formatMoney(price)} VND which is <span className="text-success">{convertPrice} USD </span></p>
 
       </div>
       {payment==='paypal'? (

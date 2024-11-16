@@ -11,7 +11,7 @@ import commentSlice from "./commentSlice"
 import invoiceSlice from "./invoiceSlice"
 import countInvoice from "./countInvoice"
 import {thunk} from 'redux-thunk'
-
+import applyReducer from './applySlice';
 export const store = configureStore ({
   reducer:{
     searchResults:searchReducer,
@@ -25,7 +25,8 @@ export const store = configureStore ({
     comment:commentSlice,
     invoice:invoiceSlice,
     invoiceRevenue:revenueReducer,
-    countInvoice:countInvoice
+    countInvoice:countInvoice,
+    apply: applyReducer,
   },
   middleware:(getDefaultMiddleware)=>getDefaultMiddleware().concat(thunk),
   devTools:window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

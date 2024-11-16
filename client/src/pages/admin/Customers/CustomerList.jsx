@@ -93,7 +93,7 @@ const CustomersList = () => {
 
   const columns = [
     { title: "Họ Tên", dataIndex: "cusName", key: "cusName", width: '25%' },
-    { title: "Email", dataIndex: "email", key: "email", sorter: (a, b) => (a.email || "").localeCompare(b.email || ""), width: '25%' },
+    { title: "Email", dataIndex: "email", key: "email",  width: '25%' },
     { title: "Số Điện Thoại", dataIndex: "phoneNum", key: "phoneNum" },
     { title: "Sinh Nhật", dataIndex: "birthday", key: "birthday" },
     {

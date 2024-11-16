@@ -56,8 +56,7 @@ const Sidebar = () => {
   ];
 
   const addonItems = [
-    { label: "Lịch Làm Việc", to: "", icon: FaCalendar },
-    { label: "Cài Đặt", to: "settings", icon: FaRegSun },
+    { label: "Cài Đặt", to: "", icon: FaRegSun },
   ];
 
   return (

@@ -1,7 +1,7 @@
 const express = require("express")
 const VoucherRoute = express.Router()
 const {Voucher, SystemVoucher} = require("../../models/voucher.model")
-const {verifyOwner} = require("../../middleware/verify")
+const {verifyOwner, verifyAdmin} = require("../../middleware/verify")
 const moment =require('moment')
 const {addVoucher,getListVoucher,deleteVoucher,updateVoucher, updateSysVoucher, deleteSysVoucher} = require("./voucher.controller")
 // VoucherRoute.all('*',verifyOwner)
@@ -20,7 +20,7 @@ VoucherRoute.get("/sysvou", async(req,res)=>{
         return res.status(500).json({message:error.message})
     }
 })
-VoucherRoute.get("/sysvou/:id",async(req,res)=>{
+VoucherRoute.get("/sysvou/:id",verifyAdmin,async(req,res)=>{
     try {
         const a =await SystemVoucher.findById(req.params.id)
         return res.status(201).json(a)
@@ -29,20 +29,25 @@ VoucherRoute.get("/sysvou/:id",async(req,res)=>{
         return res.status(500).json({message:error.message})
     }
 })
-VoucherRoute.post("/updatevou/:id",updateSysVoucher);
-VoucherRoute.delete("/deletevou/:id",deleteSysVoucher);
-VoucherRoute.post('/addvou', async (req, res) => {
+VoucherRoute.post("/updatevou/:id",verifyAdmin,updateSysVoucher);
+VoucherRoute.delete("/deletevou/:id",verifyAdmin,deleteSysVoucher);
+VoucherRoute.post('/addvou', verifyAdmin, async (req, res) => {
     try {
         const newVoucher = new SystemVoucher(req.body);
         const existingVoucher = await SystemVoucher.findOne({ code: newVoucher.code });
+        
         if (existingVoucher) {
             return res.status(400).json({ success: false, message: "Mã voucher đã tồn tại" });
         }
-        const today = moment().startOf('day');
-        const end = moment(newVoucher.endDay);
-        if (!end.isAfter(today.add(1, 'day'))) {
+
+        const today = moment().startOf('day'); // Get the start of the current day
+        const end = moment(newVoucher.endDay); // Parse the end date from the request
+
+        // Ensure end date is at least 1 day after today
+        if (!end.isAfter(today)) {
             return res.status(400).json({ success: false, message: "Ngày kết thúc phải ít nhất là ngày sau hôm nay" });
         }
+
         await newVoucher.save();
         res.status(201).json({ status: 'OK', message: 'Voucher được tạo thành công', voucher: newVoucher });
         

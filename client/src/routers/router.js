@@ -37,6 +37,8 @@ import {OggyPartner} from "../pages/owner/OggyPartner/OggyPartner";
 import BookingHistory_BookingTab from "../pages/user/BookingHistory_BookingTab";
 import YourCancelRequest from "../pages/user/YourCancelRequest";
 import UserInfoCard from "../pages/owner/Profile/profileOwner";
+import Comment from "../pages/admin/Rooms/CommentsPage"
+import CommentsPage from "../pages/admin/Rooms/CommentsPage";
 export const routers = [
   {
     path: "/",
@@ -60,6 +62,7 @@ export const routers = [
       {path:"requests",page:cancelReqAdmin},
       {path:"vouchers",page:AdminVoucher},
       {path:"invoices",page:invoiceAdmin},
+      { path: "comments/:id", page: CommentsPage },
     ],
     isAdmin: true,
     isShowHeader: false,

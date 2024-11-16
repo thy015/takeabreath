@@ -4,9 +4,18 @@ const hotelListController = require("./hotelList.controller");
 const { Hotel, amenitiesEnum, roomSchema, hotelSchema, Comment } = require("../../models/hotel.model");
 const { Room } = require("../../models/hotel.model");
 const { Invoice } = require("../../models/invoice.model")
-const { verifyOwner, verifyLogin } = require("../../middleware/verify");
+const { verifyOwner, verifyLogin, verifyAdmin } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
+  try {
+    let createdHotel = await Hotel.find();
+
+    res.status(200).json(createdHotel);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+});
+ListRouter.get("/hotelad",verifyAdmin, async (req, res) => {
   try {
     let createdHotel = await Hotel.find();
 
@@ -110,6 +119,7 @@ ListRouter.get("/room", async (req, res) => {
   }
 });
 
+
 ListRouter.get("/list-room",
   verifyOwner,
   async (req, res) => {
@@ -138,7 +148,14 @@ ListRouter.get("/list-room",
       res.status(500).json({ message: e.message });
     }
   })
-
+ListRouter.get("/comment/room/:id",async(req,res)=>{
+  try {
+    const a =await Comment.find({roomID:req.params.id}).populate({path:"roomID",select:"roomName"});
+    res.json(a)
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+})
 ListRouter.post("/createRoom",
   verifyOwner,
   hotelListController.createRoom);
@@ -153,7 +170,6 @@ ListRouter.post("/commentRoom", verifyLogin, hotelListController.commentRoom)
 ListRouter.get("/get-comment-cus", verifyLogin, hotelListController.getCommentCus)
 ListRouter.get("/get-comment-room/:id",verifyOwner,hotelListController.getCommentRoom)
 module.exports = ListRouter;
-
 //This is the start of swagger docs
 
 /**

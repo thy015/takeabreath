@@ -85,6 +85,7 @@ const VouchersList = () => {
         voucherName: response.data.voucherName,
         discount: response.data.discount,
         dates: [moment(response.data.startDay), moment(response.data.endDay)],
+        ownerJoined:response.data.ownerJoined,
       });
       setSelectedVoucherId(voucherId);
       setHeader("Chỉnh sửa Voucher");
@@ -95,7 +96,12 @@ const VouchersList = () => {
   };
  
   const handleAddOrUpdateVoucher = async (values) => {
-   
+    const formattedValues = {
+      ...values,
+      startDay: values.dates[0].toISOString(), 
+      endDay: values.dates[1].toISOString(),
+      adminID: auth.user.id,
+    };
     try {
       if (selectedVoucherId) {
         await axios.post(`http://localhost:4000/api/voucher/updatevou/${selectedVoucherId}`, {
@@ -105,6 +111,7 @@ const VouchersList = () => {
           startDay: values.dates[0],
           endDay: values.dates[1],
           adminID:auth.user.id,
+          ownerJoined:values.ownerJoined,
         });
         setRefresh(prev => !prev); 
         notification.success({
@@ -114,12 +121,7 @@ const VouchersList = () => {
 
       } else {
         await axios.post("http://localhost:4000/api/voucher/addvou", {
-          voucherName:values.voucherName,
-          code:values.code,
-          discount: values.discount ,
-          startDay: values.dates[0],
-          endDay: values.dates[1],
-          adminID:auth.user.id,
+          ...formattedValues
         });
         setRefresh(prev => !prev); 
         notification.success({
@@ -173,7 +175,7 @@ const VouchersList = () => {
     );
 
   return (
-    <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]">
+    <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
       <div className="flex justify-between items-center">
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
           Danh sách Vouchers

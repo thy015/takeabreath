@@ -73,7 +73,7 @@ const getReqCancelRoomAccepted = async (req, res) => {
   try {
     const reqCancelsAccepted = await CancelRequest.find({ isAccept: "accepted" }).populate({
       path: 'invoiceID',
-      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
+      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay guestInfo.paymentMethod totalPrice totalRoom',
     }).populate({
       path:'adminID',
       select:"adminName"
@@ -91,7 +91,7 @@ const getReqCancelRoomRejected = async (req, res) => {
   try {
     const reqCancelsRejected = await CancelRequest.find({ isAccept: "rejected" }).populate({
       path: 'invoiceID',
-      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
+      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay guestInfo.paymentMethod totalPrice totalRoom',
     }).populate({
       path:'adminID',
       select:"adminName"

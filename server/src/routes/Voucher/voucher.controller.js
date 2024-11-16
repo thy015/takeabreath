@@ -100,7 +100,7 @@ const getListVoucher = async (req, res) => {
 }
 
 const updateSysVoucher = async(req,res)=>{
-    const{voucherName,discount,startDay,endDay,code,adminID}=req.body;
+    const{voucherName,discount,startDay,endDay,code,adminID,ownerJoined}=req.body;
     if(!voucherName||!discount||!startDay||!endDay||!code||!adminID){
         return res.json({success:false,message:"Vui lòng điền đủ thông tin"})
     }
@@ -111,7 +111,7 @@ const updateSysVoucher = async(req,res)=>{
             return res.status(400).json({success:false,message:"Ngày kết thúc phải ít nhất 1 ngày sau ngày hôm nay"})
         }
         const updateVou=await SystemVoucher.findByIdAndUpdate(req.params.id,
-            {voucherName,discount,endDay,startDay,code,adminID},
+            {voucherName,discount,endDay,startDay,code,adminID,ownerJoined},
             {new: true}
         )
         if (!updateVou) {

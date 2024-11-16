@@ -35,7 +35,7 @@ const DashboardView = () => {
 
   return (
     <div className="">
-      <div className="flex items-center justify-between h-[70px] shadow-lg px-[25px] ">
+      <div className="flex items-center justify-between h-[70px] shadow-lg px-[25px] border-b-2 ">
         <div className="flex items-center rounded-[5px]">
     
         </div>

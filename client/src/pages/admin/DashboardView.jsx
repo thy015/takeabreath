@@ -3,6 +3,7 @@ import { FaRegCalendarMinus, FaEllipsisV } from "react-icons/fa";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import axios from 'axios';
 import {ExportToExcel} from './../../component/ExportToExcel'
+import MostBookedRooms from '../../component/MostBookingRooms';
 const Main = () => {
     axios.defaults.withCredentials = true
     const fileName = "BaoCaoDoanhThu";
@@ -10,8 +11,25 @@ const Main = () => {
     const [totalDiscountMonth, setTotalDiscountMonth] = useState(0);
     const [totalDiscountYear, setTotalDiscountYear] = useState(0);
     const [monthlyData, setMonthlyData] = useState([]);
+    const [data,setData]=useState([]);
     const BE_PORT=import.meta.env.VITE_BE_PORT
+    const fetchOwners = async () => {
+        try {
+          const response = await axios.get("http://localhost:4000/api/booking/mostbookRoom");
+          console.log("API Response:", response.data); 
+          setData(response.data.rooms); 
+        } catch (error) {
+          console.error("Error fetching owners:", error);
+          setData([]);
+        }
+      };
+      
+      
     
+      useEffect(() => {
+        fetchOwners();
+      }, []); 
+      
 const[numb,setNumb]=useState(0);
     const formatToVND = (amount) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -74,7 +92,6 @@ const[numb,setNumb]=useState(0);
 
        
     }, []);
-console.log("monthly data la "+monthlyData)
     return (
         <div className='px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]'>
             <div className='flex items-center justify-between'>
@@ -145,6 +162,7 @@ console.log("monthly data la "+monthlyData)
 
       
             </div>
+            <MostBookedRooms rooms={data} className="items-start text-start justify-start"/>
         </div>
     );
 }

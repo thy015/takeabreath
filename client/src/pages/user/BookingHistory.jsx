@@ -185,10 +185,7 @@ const BookingPage = () => {
       {/*sort*/}
       <div className='history-wrapper'>
         <div className='history-dropdown'>
-          <div className='pl-4'>Sort</div>
-          <div className='pr-2'>
-            <IoMdArrowDropdown></IoMdArrowDropdown>
-          </div>
+         <Select options={options} defaultValue={"defauld"} className='w-full' onChange={handleSortByOptions}></Select>
         </div>
       </div>
       <section className="my-10">
@@ -212,7 +209,7 @@ const BookingPage = () => {
 
         {/* Booking details */}
 
-        {data.data.map((resData, index) => {
+        {invoicesTemps?.map((resData, index) => {
           const formattedCheckInDay = dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
           const formattedCheckOutDay = dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
           //stop rendering if found a cancel infor of that room

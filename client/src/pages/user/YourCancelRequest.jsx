@@ -1,11 +1,13 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import {AuthContext} from "../../hooks/auth.context";
-import {Alert, Spin} from "antd";
+import {Alert, Select, Spin} from "antd";
+import { useDispatch,useSelector } from 'react-redux';
 import {useGet} from "../../hooks/hooks";
 import {IoMdArrowDropdown} from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { filterSort, setCancel } from '../../hooks/redux/cancelSlice';
 // cancel req state
 const ChangeStateColor=({state})=>{
     let styleColor={
@@ -24,12 +26,47 @@ const YourCancelRequest = () => {
     const {auth}=useContext(AuthContext)
     const BE_PORT=import.meta.env.VITE_BE_PORT
     const id=auth?.user?.id
+    const cancelTemps=  useSelector(state=>state.cancel.cancelTemps)
+    const cancel=  useSelector(state=>state.cancel.cancel)
+
+    const dispatch = useDispatch()
     dayjs.extend(utc);
     dayjs.extend(timezone);
     if (!id) {
         return <Alert message="Please try sign in first" type="info" showIcon />;
     }
     const {data,error,loading}=useGet(`${BE_PORT}/api/cancelReq/${id}/cancelRequest`);
+    useEffect(()=>{
+        dispatch(setCancel(data.data))
+    },[data])
+
+    const handleSort = (value)=>{
+        const valueSet = {
+            value,
+            cancel
+        }
+        dispatch(filterSort(valueSet))
+    }
+
+    const options = [
+        {
+          label: "Mặc định",
+          value: "defauld"
+        },
+        {
+          label: "Xác nhận",
+          value: "accepted"
+        },
+        {
+          label: "Từ chối",
+          value: "rejected"
+        },
+        {
+          label: "Đang xử lý",
+          value: "processing"
+        },
+      ]
+
     if (loading) {
         return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
     }
@@ -40,6 +77,7 @@ const YourCancelRequest = () => {
     const formatMoney = (money) => {
         return new Intl.NumberFormat('de-DE').format(money)
     }
+    console.log(cancelTemps)
     return (
         <>
             <div className='w-full text-start font-afacad text-2xl absolute'>
@@ -47,13 +85,15 @@ const YourCancelRequest = () => {
             </div>
                 <div className='history-wrapper relative'>
                     <div className='history-dropdown'>
-                <div className='pl-4'>Sort</div>
+                <div className='pl-4'>
+                    <Select options={options} defaultValue={'defauld'} className='w-full' onChange={handleSort}></Select>
+                </div>
                 <div className='pr-2'>
                     <IoMdArrowDropdown></IoMdArrowDropdown>
                 </div>
                     </div>
                 </div>
-                {data.data.map((c) => {
+                {cancelTemps?.map((c) => {
                     let formattedRequestDay=dayjs(c.cancelRequest.dayReq)
                         .tz('Asia/Ho_Chi_Minh').format('D/MM/YYYY')
                     // processing => Processing

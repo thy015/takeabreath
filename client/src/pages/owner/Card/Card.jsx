@@ -15,8 +15,9 @@ function Card() {
     const [visible, setVisible] = useState(false)
     const cards = useSelector(state => state.card.cards)
     const idMobile =useMediaQuery({query:'(max-width: 640px)'})
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {
-        axios.get("http://localhost:4000/api/auth/list-card")
+        axios.get(`${BE_PORT}/api/auth/list-card`)
             .then(res => res.data)
             .then(data => {
                 const cards = data.cards.map((item) => (
@@ -35,7 +36,7 @@ function Card() {
     }, [])
 
     const handleDelete = (record)=>{
-        axios.post("http://localhost:4000/api/auth/delete-card",{numberCard:record.cardNumber})
+        axios.post(`${BE_PORT}/api/auth/delete-card`,{numberCard:record.cardNumber})
         .then(res=>res.data)
         .then(data=>{
             openNotification(true,"Gỡ thẻ thành công","")

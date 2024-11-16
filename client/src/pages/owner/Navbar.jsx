@@ -8,12 +8,13 @@ function Navbar({isMenuOpen,setIsMenuOpen}) {
     const {auth,setAuth} = useContext(AuthContext)
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     axios.defaults.withCredentials = true
     const showProfile = () => {
       setOpen(!open);
     };
     const hanldeLogout = ()=>{
-      axios.get("http://localhost:4000/api/auth/logout")
+      axios.get(`${BE_PORT}/api/auth/logout`)
       .then(res => {
         if (res.data.logout) {
           setAuth({
@@ -56,7 +57,7 @@ function Navbar({isMenuOpen,setIsMenuOpen}) {
 
             {open && (
               <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[10px]  space-y-[10px]">
-                <p className="cursor-pointer hover:text-[blue] font-semibold">
+                <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={()=>{navigate("Profile")}}>
                   Profile
                 </p>
                 <p className="cursor-pointer hover:text-[blue] font-semibold">

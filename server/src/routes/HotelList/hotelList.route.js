@@ -1,10 +1,10 @@
 const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
-const {Hotel,amenitiesEnum,roomSchema,hotelSchema} = require("../../models/hotel.model");
-const {Room} = require("../../models/hotel.model");
-const {Invoice} = require("../../models/invoice.model")
-const { verifyOwner } = require("../../middleware/verify");
+const { Hotel, amenitiesEnum, roomSchema, hotelSchema, Comment } = require("../../models/hotel.model");
+const { Room } = require("../../models/hotel.model");
+const { Invoice } = require("../../models/invoice.model")
+const { verifyOwner, verifyLogin } = require("../../middleware/verify");
 
 ListRouter.get("/hotel", async (req, res) => {
   try {
@@ -34,48 +34,48 @@ ListRouter.get("/hotel/:id/room", async (req, res) => {
     if (!hotelID) {
       return res.status(400).json({ message: "hotelID is required" });
     }
-    const rooms = await Room.find({hotelID:hotelID}).sort({money:1});
+    const rooms = await Room.find({ hotelID: hotelID }).sort({ money: 1 });
     res.status(200).json(rooms);
   } catch (e) {
     res.status(500).json(e);
   }
 });
 
-ListRouter.get('/room',async(req,res)=>{
-  try{
-    const room= await Room.find()
+ListRouter.get('/room', async (req, res) => {
+  try {
+    const room = await Room.find()
     res.status(200).json(room)
-  }catch(e){
+  } catch (e) {
     res.status(500).json(e)
   }
 })
 // search hotel
-ListRouter.post('/query',hotelListController.queryHotel)
-ListRouter.post("/createHotel", verifyOwner,hotelListController.createHotel);
-ListRouter.post("/updateHotel/:id", verifyOwner,hotelListController.updateHotels);
+ListRouter.post('/query', hotelListController.queryHotel)
+ListRouter.post("/createHotel", verifyOwner, hotelListController.createHotel);
+ListRouter.post("/updateHotel/:id", verifyOwner, hotelListController.updateHotels);
 // query hotel ordinate
 ListRouter.post('/google/geometry', hotelListController.googleGeometrySearch);
 // all hotel from owner that logged in
 ListRouter.get(
-    "/hotelOwner",
-    verifyOwner,
-    hotelListController.getHotelsByOwner
+  "/hotelOwner",
+  verifyOwner,
+  hotelListController.getHotelsByOwner
 );
-ListRouter.get('/hotelCities',async(req,res)=>{
-  try{
-    const hotels=await Hotel.find()
-    const cities=[...new Set( hotels.map((ht)=>ht.city))]
-    return res.status(200).json({cities})
-  }catch(e){
-    return res.status(500).json({message:'e in hotelList route'})
+ListRouter.get('/hotelCities', async (req, res) => {
+  try {
+    const hotels = await Hotel.find()
+    const cities = [...new Set(hotels.map((ht) => ht.city))]
+    return res.status(200).json({ cities })
+  } catch (e) {
+    return res.status(500).json({ message: 'e in hotelList route' })
   }
 })
-ListRouter.get('/hotelAmenities',async(req,res)=>{
-  try{
-    return res.status(200).json({ amenitiesEnum});
+ListRouter.get('/hotelAmenities', async (req, res) => {
+  try {
+    return res.status(200).json({ amenitiesEnum });
 
-  }catch(e){
-    return res.status(500).json({message:'e in hotelList controller'})
+  } catch (e) {
+    return res.status(500).json({ message: 'e in hotelList controller' })
   }
 })
 
@@ -88,12 +88,12 @@ ListRouter.get('/roomTypes', (req, res) => {
     return res.status(500).json({ message: 'Failed to fetch room types' });
   }
 });
-ListRouter.get('/hotelTypes',async(req,res)=>{
-  try{
-    const types=hotelSchema.path('hotelType').enumValues
-    return res.status(200).json({types})
-  }catch(e){
-    console.log('E in hotelList route',e.message )
+ListRouter.get('/hotelTypes', async (req, res) => {
+  try {
+    const types = hotelSchema.path('hotelType').enumValues
+    return res.status(200).json({ types })
+  } catch (e) {
+    console.log('E in hotelList route', e.message)
   }
 })
 ListRouter.get("/room", async (req, res) => {
@@ -111,41 +111,47 @@ ListRouter.get("/room", async (req, res) => {
 });
 
 ListRouter.get("/list-room",
-    verifyOwner,
-    async (req,res)=>{
-      try{
-        const ownerId= req.ownerID
-        const rooms = await Room.find({
-          ownerID:ownerId
-        }).populate("hotelID")
+  verifyOwner,
+  async (req, res) => {
+    try {
+      const ownerId = req.ownerID
+      const rooms = await Room.find({
+        ownerID: ownerId
+      }).populate("hotelID")
 
-        const getCountRoom = await Promise.all(
-          rooms.map(async (item) => {
-            let count = 0
-            const invoices = await Invoice.find({roomID:item._id})
-            
-            invoices.map(invoice=>{
-              count += invoice.guestInfo.totalRoom
-            })
-            // Thêm thuộc tính revenue vào object hotel
-            return { ...item.toObject(), revenue: count };
+      const getCountRoom = await Promise.all(
+        rooms.map(async (item) => {
+          let count = 0
+          const invoices = await Invoice.find({ roomID: item._id })
+          const commentCount = await Comment.countDocuments({
+            roomID: item._id
           })
-        );
-        res.status(200).json({status:true,rooms: getCountRoom});
-      } catch (e) {
-        res.status(500).json({message:e.message});
-      }
-    })
+          invoices.map(invoice => {
+            count += invoice.guestInfo.totalRoom
+          })
+          // Thêm thuộc tính revenue vào object hotel
+          return { ...item.toObject(), revenue: count,comments:commentCount  };
+        })
+      );
+      res.status(200).json({ status: true, rooms: getCountRoom});
+    } catch (e) {
+      res.status(500).json({ message: e.message });
+    }
+  })
 
 ListRouter.post("/createRoom",
-     verifyOwner,
-    hotelListController.createRoom);
+  verifyOwner,
+  hotelListController.createRoom);
 ListRouter.post("/updateRoom/:id"
-    , verifyOwner
-    , hotelListController.updateRoom);
+  , verifyOwner
+  , hotelListController.updateRoom);
 ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
 ListRouter.delete("/deleteRoom/:id", hotelListController.deleteRoom);
-ListRouter.get("/list-invoice-owner",verifyOwner,hotelListController.getInvoicesOwner)
+ListRouter.get("/list-invoice-owner", verifyOwner, hotelListController.getInvoicesOwner)
+
+ListRouter.post("/commentRoom", verifyLogin, hotelListController.commentRoom)
+ListRouter.get("/get-comment-cus", verifyLogin, hotelListController.getCommentCus)
+ListRouter.get("/get-comment-room/:id",verifyOwner,hotelListController.getCommentRoom)
 module.exports = ListRouter;
 
 //This is the start of swagger docs

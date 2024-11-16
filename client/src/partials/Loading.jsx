@@ -3,8 +3,9 @@ import React from 'react'
 const Loading = () => {
     return (
         <>
-        <div>Loading</div>
-            <img src='/img/OpenerLoading.gif' alt='Loading'/>
+        <div className='flex-center'>
+            <img src='/img/loading-2.gif' alt='Loading'/>
+        </div>
         </>
     )
 }

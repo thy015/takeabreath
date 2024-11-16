@@ -15,27 +15,18 @@ function Revienue() {
     const [countRoom, setCountRoom] = useState(0)
     const [countInvoice, setCountInvoice] = useState(0)
     const [totalDefauld, setTotal] = useState(0)
-    const invoices = useSelector(state => state.invoice.invoices)
-    const invoicesSearch = useSelector(state => state.invoice.invoicesSearch)
+    const invoices = useSelector(state => state.invoiceRevenue.invoices)
+    const invoicesSearch = useSelector(state => state.invoiceRevenue.invoicesSearch)
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const formatDay = (day) => {
         return dayjs(day).format("DD/MM/YYYY")
     }
-
-    const totalPrice = useMemo(() => {
-        const result = invoicesSearch.reduce((total, current) => {
-            return total + (current.guestInfo.totalPrice)
-        }, 0)
-
-        return result
-    }, [invoicesSearch])
-
-
-
     useEffect(() => {
-        axios.get("http://localhost:4000/api/hotelList/list-invoice-owner")
+        axios.get(`${BE_PORT}/api/hotelList/list-invoice-owner`)
             .then(res => res.data)
             .then(data => {
+                console.log(data)
                 setCountHotel(data.countHotel)
                 setCountRoom(data.countRoom)
                 setTotal(data.totalPrice)
@@ -53,6 +44,14 @@ function Revienue() {
                 console.log(err)
             })
     }, [])
+    const totalPrice = useMemo(() => {
+        const result = invoicesSearch?.reduce((total, current) => {
+            return total + (current.guestInfo.totalPrice)
+        }, 0)
+
+        return result
+    }, [invoicesSearch])
+
 
     const columns = [
         {
@@ -154,7 +153,7 @@ function Revienue() {
     ]
 
     const getDataSet = (invoices) => {
-        let result = isMobile ? []: [
+        let result = isMobile ? [] : [
             {
                 month: 1,
                 revenue: 0
@@ -269,9 +268,9 @@ function Revienue() {
                 <div>{formatMoney(totalPrice)} VNĐ</div>
             </div>
 
-            <div   className={isMobile ? "mr-[20px]":""}>
+            <div className={isMobile ? "mr-[20px]" : ""}>
                 <Table
-                  
+
                     columns={columns}
                     dataSource={invoicesSearch}
                     scroll={{

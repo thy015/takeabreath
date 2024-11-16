@@ -9,7 +9,8 @@ const Main = () => {
     const [totalDiscount, setTotalDiscount] = useState(0);
     const [totalDiscountMonth, setTotalDiscountMonth] = useState(0);
     const [totalDiscountYear, setTotalDiscountYear] = useState(0);
-    const [monthlyData, setMonthlyData] = useState([]); 
+    const [monthlyData, setMonthlyData] = useState([]);
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     
 const[numb,setNumb]=useState(0);
     const formatToVND = (amount) => {
@@ -20,7 +21,7 @@ const[numb,setNumb]=useState(0);
     };
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/booking/invoicepaid')
+        axios.get(`${BE_PORT}/api/booking/invoicepaid`)
             .then(response => {
                 const  data = response.data;
                 setNumb(data.length);

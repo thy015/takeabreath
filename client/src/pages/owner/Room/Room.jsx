@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, Table, Space, Typography, Popconfirm,Input } from 'antd'
+import { Button, Table, Space, Typography, Popconfirm, Input } from 'antd'
 import { useMediaQuery } from 'react-responsive';
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,14 +9,20 @@ import FormRoom from '../../../component/FormRoom'
 import axios from 'axios'
 import { openNotification } from '../../../hooks/notification'
 import { setHotels } from '../../../hooks/redux/hotelsSclice'
+import ViewComment from '../../../component/ViewComment';
 import { setRooms, deleteRoom, selectedRoom, searchRoom } from '../../../hooks/redux/roomsSlice'
 function Room() {
   const dispatch = useDispatch()
   const rooms = useSelector(state => state.room.roomSearch)
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
 
+  const [visibleComment, setVisibleComment] = useState(false)
+  const [record, setRecord] = useState(false)
+
+  const BE_PORT = import.meta.env.VITE_BE_PORT
   useEffect(() => {
-    axios.get("http://localhost:4000/api/hotelList/list-room")
+
+    axios.get(`${BE_PORT}/api/hotelList/list-room`)
       .then(res => res.data)
       .then(data => {
         const setRoom = data.rooms.map(item => {
@@ -37,7 +43,7 @@ function Room() {
 
 
   const handleDelete = (record) => {
-    axios.delete(`http://localhost:4000/api/hotelList/deleteRoom/${record._id}`)
+    axios.delete(`${BE_PORT}/api/hotelList/deleteRoom/${record._id}`)
       .then(res => res.data)
       .then(data => {
         dispatch(deleteRoom(record._id))
@@ -45,7 +51,7 @@ function Room() {
       })
       .catch(err => {
         console.log(err)
-        openNotification(false, "Xóa phòng thất bại !", err.response?.data?.message?? "Vui long thử lại sau")
+        openNotification(false, "Xóa phòng thất bại !", err.response?.data?.message ?? "Vui long thử lại sau")
       })
   }
 
@@ -54,7 +60,12 @@ function Room() {
     setVisible(true)
   }
 
-  const onSearch = (value)=>{
+  const handleClickRow = (record) => {
+    setRecord(record)
+    setVisibleComment(true)
+  }
+
+  const onSearch = (value) => {
     dispatch(searchRoom(value))
   }
 
@@ -93,6 +104,13 @@ function Room() {
       key: "revenue",
       sorter: (a, b) => a.revenue - b.revenue
     },
+    ,
+    {
+      title: "Số lượt đánh giá",
+      dataIndex: "comments",
+      key: "comments",
+      sorter: (a, b) => a.comments - b.comments
+    },
     {
       title: "Thuộc khách sạn",
       dataIndex: "nameHotel",
@@ -101,17 +119,27 @@ function Room() {
     {
       title: "Chỉnh sửa",
       key: "edit",
-      fixed: isMobile?"":"right",
+      fixed: isMobile ? "" : "right",
       width: 200,
       render: (_, record) => {
         return (
           <>
             <Space>
-              <Typography.Link onClick={() => handleUpdate(record)} >
+              <Typography.Link onClick={(event) => {
+                event.stopPropagation()
+                handleUpdate(record)
+              }
+              }>
                 <p>Cập nhật</p>
               </Typography.Link>
-              <Typography.Link >
-                <Popconfirm title="Bạn có muốn xóa không" okText="Có" cancelText="Không" onConfirm={() => handleDelete(record)}>
+              <Typography.Link onClick={(event) => {
+                event.stopPropagation()
+              }} >
+                <Popconfirm
+                  title="Bạn có muốn xóa không"
+                  okText="Có"
+                  cancelText="Không"
+                  onConfirm={()=>  handleDelete(record)}>
                   <p>Xóa</p>
                 </Popconfirm>
               </Typography.Link>
@@ -130,7 +158,7 @@ function Room() {
       <div className='w-full text-left py-[20px] px-[40px] d-flex justify-between items-center'>
         <Link >
           <Button
-            className={!isMobile ? "" :"hidden"}
+            className={!isMobile ? "" : "hidden"}
             onClick={() => setVisible(true)}
             type='primary'
             icon={<FontAwesomeIcon icon={faPlus} />}
@@ -138,7 +166,7 @@ function Room() {
             Thêm phòng
           </Button>
           <Button
-            className={isMobile ? "" :"hidden"}
+            className={isMobile ? "" : "hidden"}
             onClick={() => setVisible(true)}
             type='primary'
             icon={<FontAwesomeIcon icon={faPlus} />}
@@ -146,15 +174,20 @@ function Room() {
           </Button>
         </Link>
         <Input.Search
-            placeholder='Tim kiếm theo tên'
-            className='max-w-[200px]'
-            allowClear
-            enterButton
-            onSearch={onSearch}
-          />
+          placeholder='Tim kiếm theo tên'
+          className='max-w-[200px]'
+          allowClear
+          enterButton
+          onSearch={onSearch}
+        />
       </div>
 
       <Table
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: () => handleClickRow(record)
+          }
+        }}
         className='mr-[20px]'
         dataSource={rooms}
         columns={column}
@@ -172,6 +205,14 @@ function Room() {
         }}
       >
       </FormRoom>
+
+      <ViewComment
+        visible={visibleComment}
+        close={() => setVisibleComment(false)}
+        record={record}
+      >
+
+      </ViewComment>
     </div>
   )
 }

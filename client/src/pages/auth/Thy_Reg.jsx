@@ -23,6 +23,7 @@ const validateEmail = (email) => {
 
 const Register = () => {
   const sso = new SSO('TAB')
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const {t}=useTranslation()
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
@@ -80,7 +81,7 @@ const Register = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/signUpCus", formData);
+      const response = await axios.post(`${BE_PORT}/api/auth/signUpCus`, formData);
       if (response.status === 200) {
         openNotification(true, "Success register");
         navigate("/login");
@@ -97,7 +98,7 @@ const Register = () => {
 //sso
 
 function handleLoginSSO() {
-  sso.redirectToLogin("http://localhost:3000/sso")
+  sso.redirectToLogin("https://takeabreath.io.vn/sso")
 }
   return (
     <div>
@@ -158,7 +159,9 @@ function handleLoginSSO() {
                     </div>
                     <div className="mt-4">
                       <Form>
-                        <Form.Item label="Email" name="email">
+                        <Form.Item label={
+                          (<div className='w-[100px] flex-center'>{t('email')}</div>)
+                        } name="email">
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={
@@ -171,7 +174,9 @@ function handleLoginSSO() {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label= {t('password')} name="password">
+                        <Form.Item label= {
+                          (<div className='w-[100px] flex-center'>{t('password')}</div>)
+                        } name="password">
                           <Input.Password
                             placeholder="ads123@"
                             name="password"
@@ -179,7 +184,9 @@ function handleLoginSSO() {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label={t('name')}>
+                        <Form.Item label={
+                          (<div className='w-[100px] flex-center'>{t('name')}</div>)
+                        }>
                           <Input
                             placeholder="Anderson"
                             suffix={<FaUser />}
@@ -188,7 +195,9 @@ function handleLoginSSO() {
                             onChange={handleInputChange}
                           />
                         </Form.Item>
-                        <Form.Item label=  {t('phone-number')}>
+                        <Form.Item label=  {
+                          (<div className='w-[100px] flex-center'>{t('phone-number')}</div>)
+                        }>
                           <Input
                             placeholder="0908xxxxxx"
                             suffix={<FaPhoneFlip />}

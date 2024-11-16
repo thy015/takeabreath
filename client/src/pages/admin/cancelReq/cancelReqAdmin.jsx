@@ -16,6 +16,8 @@ const cancelReqAdmin = () => {
   const [cancelDetailModalVisible, setcancelDetailModalVisible] = useState(false); 
   const [selectedCancel, setselectedCancel] = useState(null); 
   const [refresh, setRefresh] = useState(false);
+  const BE_PORT=import.meta.env.VITE_BE_PORT
+
     const getName = (name) => {
       return name
         .split(' ')             
@@ -25,7 +27,7 @@ const cancelReqAdmin = () => {
     };
   const handleAccept=async(req,res)=>{
 try {
-  const response=await axios.post(`http://localhost:4000/api/cancelReq/accept/${cusID}`,{adminID:auth.user.id},  { withCredentials: true })
+  const response=await axios.post(`${BE_PORT}/api/cancelReq/accept/${cusID}`,{adminID:auth.user.id},  { withCredentials: true })
   if (response.data.success) {
     notification.success({
         message: 'Chấp Nhận Yêu Cầu Thành Công',
@@ -49,7 +51,7 @@ try {
   }
   const handleConfirm=async(req,res)=>{
     try {
-      const response=await axios.post(`http://localhost:4000/api/cancelReq/reject/${cusID}`,{adminID:auth.user.id,rejectedReason:reason},  { withCredentials: true })
+      const response=await axios.post(`${BE_PORT}/api/cancelReq/reject/${cusID}`,{adminID:auth.user.id,rejectedReason:reason},  { withCredentials: true })
       if (response.data.success) {
         notification.success({
             message: 'Từ Chối Yêu Cầu Thành Công',
@@ -76,14 +78,14 @@ try {
     error: processingError,
     loading: processingLoading,
     refetch: refetchProcessingData,
-  } = useGet("http://localhost:4000/api/cancelReq/processing",refresh);
+  } = useGet(`${BE_PORT}/api/cancelReq/processing`,refresh);
 
   const {
     data: acceptedData,
     error: acceptedError,
     loading: acceptedLoading,
     refetch: refetchAcceptedData,
-  } = useGet("http://localhost:4000/api/cancelReq/accepted",refresh);
+  } = useGet(`${BE_PORT}/api/cancelReq/accepted`,refresh);
   const handleDeleteCancel = () => {
     setDeleteModalVisible(false);
     setCusID(null);
@@ -95,7 +97,7 @@ try {
     error: rejectedError,
     loading: rejectedLoading,
     refetch: refetchRejectedData,
-  } = useGet("http://localhost:4000/api/cancelReq/rejected",refresh);
+  } = useGet(`${BE_PORT}/api/cancelReq/rejected`,refresh);
   const handleInfoClick = (orderID) => {
     const cancelDetails = acceptedDataFormatted.find(item => item._id === orderID)||rejectedDataFormatted.find(item => item._id === orderID)||processingDataFormatted.find(item => item._id === orderID); 
     setselectedCancel(cancelDetails);
@@ -114,7 +116,7 @@ try {
     data: customerData,
     error: customerError,
     loading: customerLoading,
-  } = useGet("http://localhost:4000/api/auth/customer");
+  } = useGet(`${BE_PORT}/api/auth/customer`);
 
   if (processingLoading || acceptedLoading || rejectedLoading || customerLoading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;

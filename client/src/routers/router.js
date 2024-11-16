@@ -22,7 +22,6 @@ import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
 import Login from "../pages/auth/Thy_Login";
 import Register from "../pages/auth/Thy_Reg";
 import LogInOwner from "../pages/auth/Thy_LoginOwner";
-import SuccessPayment from "../component/SuccessPayment";
 import Test from "../component/Test";
 import SSO from '../pages/auth/SSO'
 import AdminVoucher from "../pages/admin/Voucher/AdminVoucher";
@@ -37,6 +36,7 @@ import StrictLoginSSO from "../pages/auth/StrictLoginSSO";
 import {OggyPartner} from "../pages/owner/OggyPartner/OggyPartner";
 import BookingHistory_BookingTab from "../pages/user/BookingHistory_BookingTab";
 import YourCancelRequest from "../pages/user/YourCancelRequest";
+import UserInfoCard from "../pages/owner/Profile/profileOwner";
 export const routers = [
   {
     path: "/",
@@ -105,12 +105,6 @@ export const routers = [
   },
 
   {
-    path: "/booking-success",
-    page: SuccessPayment,
-    isShowHeader: true,
-    isShowFooter: true,
-  },
-  {
     path: "/hotel/:id",
     page: HotelDisplay_HotelTab,
     isShowHeader: true,
@@ -136,6 +130,7 @@ export const routers = [
       { path: "Room", page: Room}, 
       { path: "Revenue", page: Revienue}, 
       { path: "Card", page: Card},
+      { path: "Profile", page: UserInfoCard},
       {path:'OggyPartner',page:OggyPartner}
     ],
     isOwner:true,
@@ -158,6 +153,13 @@ export const routers = [
   },
   {
 
+    path: "*",
+    page: SSO,
+    isShowHeader: false,
+    isShowFooter: false,
+  },
+  {
+
     path: "/strict-signin-owner",
     page: StrictLoginSSO,
     isShowHeader: false,
@@ -170,13 +172,7 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
-  {
 
-    path: "*",
-    page: SSO,
-    isShowHeader: false,
-    isShowFooter: false,
-  },
 ]
 
 

@@ -14,7 +14,7 @@ import styled from 'styled-components'
 const Header = ({ children }) => {
 
   const { t } = useTranslation();
-
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const { auth, setAuth } = useContext(AuthContext)
   axios.defaults.withCredentials = true
     //log in
@@ -45,8 +45,7 @@ const Header = ({ children }) => {
       if(auth.user.name === '' || !auth.user.name){
         return auth?.user?.email 
       }else{
-        return auth?.user?.name 
-        
+        return auth?.user?.name
       }
     
     }else{
@@ -55,7 +54,7 @@ const Header = ({ children }) => {
   }
 
   const Logout = () => {
-    axios.get("http://localhost:4000/api/auth/logout")
+    axios.get(`${BE_PORT}/api/auth/logout`)
       .then(res => {
         if (res.data.logout) {
           openNotification(true,"Logout Successful !")
@@ -65,6 +64,7 @@ const Header = ({ children }) => {
               id: "",
               email: '',
               name: '',
+              role:''
             }
           })
         }
@@ -103,8 +103,6 @@ const Header = ({ children }) => {
       label: (
         <a
           className="no-underline"
-          target="_blank"
-          rel="noopener noreferrer"
           href="/mybooking"
         >
           My Reservation
@@ -118,7 +116,7 @@ const Header = ({ children }) => {
           className="no-underline"
           target="_blank"
           rel="noopener noreferrer"
-          href="http://localhost:3000/registerOwner"
+          href="https://takeabreath.io.vn/registerOwner"
         >
           Register Owner!
         </a>
@@ -209,9 +207,9 @@ const Header = ({ children }) => {
             </ul>
           
             <div className="items-start">
-            <ul class="flex space-x-4 cursor-pointer">           
+            <ul className="flex space-x-4 cursor-pointer">
             <li className="flex">
-          <ChangeLangButton color="white" underlineColor="yellow-200"/>
+          <ChangeLangButton color="white" underlineColor="yellow"/>
              </li>
             <li className="w-20">
            <p className={hoverEffect}> {t('partners')}</p>

@@ -22,13 +22,14 @@ const ChangeStateColor=({state})=>{
 }
 const YourCancelRequest = () => {
     const {auth}=useContext(AuthContext)
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const id=auth?.user?.id
     dayjs.extend(utc);
     dayjs.extend(timezone);
     if (!id) {
         return <Alert message="Please try sign in first" type="info" showIcon />;
     }
-    const {data,error,loading}=useGet(`http://localhost:4000/api/cancelReq/${id}/cancelRequest`);
+    const {data,error,loading}=useGet(`${BE_PORT}/api/cancelReq/${id}/cancelRequest`);
     if (loading) {
         return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
     }

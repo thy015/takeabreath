@@ -10,28 +10,25 @@ const ChangeLangButton = ({color,underlineColor}) => {
       i18n.changeLanguage(lng)
     }
   return (
-    <>
-      <div
-        className={
-          i18n.language === "vie"
-            ? `font-bold underline decoration-${underlineColor} pr-4`
-            : "pr-4"
-        }
-        onClick={() => changeLanguage("vie")}
-      >
-        <p className={hoverEffect}> {t("VIE")}</p>
-      </div>
-      <div
-        className={
-          i18n.language === "en"
-            ? `font-bold underline decoration-${underlineColor} pr-4`
-            : "pr-4"
-        }
-        onClick={() => changeLanguage("en")}
-      >
-        <p className={hoverEffect}>{t("EN")}</p>
-      </div>
-    </>
+      <>
+          <div
+              className={i18n.language === "vie" ? "font-bold pr-4" : "pr-4"}
+              style={i18n.language === "vie" ? {textDecoration: "underline", textDecorationColor: underlineColor} : {}}
+              onClick={() => changeLanguage("vie")}
+          >
+              <p className={hoverEffect}>{t("VIE")}</p>
+          </div>
+          <div
+              className={
+                  i18n.language === "en"
+                      ? "font-bold pr-4" : "pr-4"
+              }
+              style={i18n.language === "en" ? {textDecoration: "underline", textDecorationColor: underlineColor} : {}}
+              onClick={() => changeLanguage("en")}
+          >
+              <p className={hoverEffect}>{t("EN")}</p>
+          </div>
+      </>
   );
 };
 export default ChangeLangButton;

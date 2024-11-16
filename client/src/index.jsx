@@ -6,11 +6,12 @@ import { AuthWrapper } from './hooks/auth.context';
 import {Provider} from 'react-redux'
 import {store} from './hooks/redux/store';
 import '../src/localData/i18n'
+import Loading from "./partials/Loading";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthWrapper>
     <StrictMode>
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense fallback={<Loading/>}>
       <Provider store={store}>
       <App />
       </Provider>

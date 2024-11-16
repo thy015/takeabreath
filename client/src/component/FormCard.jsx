@@ -13,6 +13,7 @@ function FormCard({ visible, close }) {
     const onFinish = (value) => {
         const {numberCard,cvv,expDay} = value
         const currentDay = dayjs()
+        const BE_PORT=import.meta.env.VITE_BE_PORT
         console.log(numberCard.length)
         if(numberCard.length !== 16){
             openNotification(false,"Số thẻ phải đủ 16 số","")
@@ -29,7 +30,7 @@ function FormCard({ visible, close }) {
             return
         }
         
-        axios.post("http://localhost:4000/api/auth/insert-card",{numberCard,cvv,expDay})
+        axios.post(`${BE_PORT}/api/auth/insert-card`,{numberCard,cvv,expDay})
             .then(res=>res.data)
             .then(data=>{
                 dispatch(setCards(data.cards))

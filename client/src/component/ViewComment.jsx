@@ -4,6 +4,7 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import { openNotification } from '../hooks/notification'
 function ViewComment({ visible, close, record }) {
+    console.log(record)
     const [comment, setComment] = useState([])
     useEffect(() => {
         if (record) {
@@ -20,7 +21,7 @@ function ViewComment({ visible, close, record }) {
     }, [record])
     return (
         <Modal
-            title={"Đánh giá phòng" + record.roomName}
+            title={"Đánh giá phòng " + record?.roomName}
             open={visible}
             onCancel={close}
         >
@@ -29,11 +30,11 @@ function ViewComment({ visible, close, record }) {
                 return (
                     <Card
                         style={{ width: "100%", marginBottom: 16 }}
-                        title={`Đánh giá từ ${item.cusID.email}`}
+                        title={`Đánh giá từ ${item.cusID?.email}`}
                     >
-                        <p><strong>Ngày đánh giá:</strong> {item.createdDate}</p>
-                        <p><strong>Email:</strong> {item.cusID.email}</p>
-                        <p><strong>Ngày sinh:</strong> {dayjs(item.cusID.birthday).format('YYYY-MM-DD')}</p>
+                        <p><strong>Ngày đánh giá:</strong> {dayjs(item.createdDay).format("DD/MM/YYYY")}</p>
+                        <p><strong>Email:</strong> {item.cusID?.email}</p>
+                        <p><strong>Ngày sinh:</strong> {dayjs(item.cusID?.birthday).format("DD/MM/YYYY")}</p>
                         <p><strong>Điểm đánh giá:</strong> <Rate disabled value={item.ratePoint} /></p>
                         <p><strong>Nội dung:</strong> {item.content}</p>
                     </Card>

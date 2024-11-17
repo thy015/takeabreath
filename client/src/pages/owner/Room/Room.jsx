@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, Table, Space, Typography, Popconfirm, Input } from 'antd'
+import { Button, Table, Space, Typography, Popconfirm, Input, DatePicker, Select } from 'antd'
 import { useMediaQuery } from 'react-responsive';
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,15 +10,17 @@ import axios from 'axios'
 import { openNotification } from '../../../hooks/notification'
 import { setHotels } from '../../../hooks/redux/hotelsSclice'
 import ViewComment from '../../../component/ViewComment';
-import { setRooms, deleteRoom, selectedRoom, searchRoom } from '../../../hooks/redux/roomsSlice'
+import { setRooms, deleteRoom, selectedRoom, searchRoom, setRoomSearch,filterRoomsByHotel } from '../../../hooks/redux/roomsSlice'
 function Room() {
   const dispatch = useDispatch()
   const rooms = useSelector(state => state.room.roomSearch)
+  const oldRoom = useSelector(state=>state.room.rooms)
   const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
 
   const [visibleComment, setVisibleComment] = useState(false)
   const [record, setRecord] = useState(false)
-
+  const [hotel, setHotels] = useState([])
+  
   const BE_PORT = import.meta.env.VITE_BE_PORT
   useEffect(() => {
 
@@ -32,15 +34,40 @@ function Room() {
             nameHotel: item.hotelID.hotelName
           }
         })
+       
         dispatch(setRooms(setRoom))
       })
       .catch(err => {
         console.log(err)
         openNotification(false, "Lấy dữ liệu thất bại", err.messagse)
       })
+
+    axios.get(`${BE_PORT}/api/hotelList/hotelOwner`)
+      .then(res=>res.data)
+      .then(data=>{
+        let hotelsOptions = data.data.map(item=>{
+          return {
+            label:item.hotelName,
+            value:item._id
+          }
+        })
+        hotelsOptions = [
+          ...hotelsOptions,
+          {
+            value:"defauld",
+            label:"Mặc định"
+          }
+        ]
+        setHotels(hotelsOptions)
+      })
+      .catch(err=>{
+        console.log(err)
+      })
   }, [])
 
-
+  const formatMoney = (money) => {
+    return new Intl.NumberFormat('de-DE').format(money)
+}
 
   const handleDelete = (record) => {
     axios.delete(`${BE_PORT}/api/hotelList/deleteRoom/${record._id}`)
@@ -69,6 +96,51 @@ function Room() {
     dispatch(searchRoom(value))
   }
 
+  const onChangeDate = (dates, dateStrings) => {
+    if (!dates) {
+      dispatch(setRooms(oldRoom))
+    } else {
+      axios.put(`${BE_PORT}/api/hotelList/filter-room`, { arrayDate: dates })
+        .then(res => res.data)
+        .then(data => {
+          console.log(data)
+          const setRoom = data.room.map(item => {
+            return {
+              ...item,
+              _id:item._doc._id,
+              key: item._doc._id,
+              nameHotel: item._doc.hotelID.hotelName,
+              roomName: item._doc.roomName,
+              typeOfRoom:item._doc.typeOfRoom,
+              numberOfRooms:item._doc.numberOfRooms,
+              numberOfBeds:item._doc.numberOfBeds,
+              money:item._doc.money,
+              hotelID:{_id:item._doc.hotelID._id},
+              capacity:item._doc.capacity,
+              imgLink:item._doc.imgLink
+            }
+          })
+          dispatch(setRoomSearch(setRoom))
+        })
+        .catch(err => {
+          console.log(err)
+          openNotification(false, "Lọc thất bại", err.response?.data?.message)
+        })
+    }
+
+
+  }
+
+  const onChangeFilterRoomsByHotel = (value)=>{
+    console.log(value)
+    const setValue = {
+      idHotel : value,
+      rooms: oldRoom
+    }
+    dispatch(filterRoomsByHotel(setValue))
+    
+  }
+
   const column = [
     {
       title: "Phòng",
@@ -84,24 +156,29 @@ function Room() {
       title: "Số lượng phòng",
       dataIndex: "numberOfRooms",
       key: "numberOfRooms",
+      align: 'center',
       sorter: (a, b) => a.numberOfRooms - b.numberOfRooms
     },
     {
       title: "Số lượng giường",
       dataIndex: "numberOfBeds",
       key: "numberOfBeds",
+      align: 'center',
       sorter: (a, b) => a.numberOfBeds - b.numberOfBeds
     },
     {
       title: "Giá tiền",
       dataIndex: "money",
       key: "money",
-      sorter: (a, b) => a.money - b.money
+      sorter: (a, b) => a.money - b.money,
+      render: (text) => <p>{formatMoney(text)} VNĐ</p>,
+      align: 'center'
     },
     {
-      title: "Số lượng đặt phòng",
+      title: "Tổng số lượng đặt phòng",
       dataIndex: "revenue",
       key: "revenue",
+      align: 'center',
       sorter: (a, b) => a.revenue - b.revenue
     },
     ,
@@ -109,6 +186,7 @@ function Room() {
       title: "Số lượt đánh giá",
       dataIndex: "comments",
       key: "comments",
+      align: 'center',
       sorter: (a, b) => a.comments - b.comments
     },
     {
@@ -120,7 +198,7 @@ function Room() {
       title: "Chỉnh sửa",
       key: "edit",
       fixed: isMobile ? "" : "right",
-      width: 200,
+      width: 300,
       render: (_, record) => {
         return (
           <>
@@ -139,17 +217,23 @@ function Room() {
                   title="Bạn có muốn xóa không"
                   okText="Có"
                   cancelText="Không"
-                  onConfirm={()=>  handleDelete(record)}>
+                  onConfirm={() => handleDelete(record)}>
                   <p>Xóa</p>
                 </Popconfirm>
               </Typography.Link>
 
             </Space>
+            <Typography.Link onClick={(event) => {
+              event.stopPropagation()
+              handleClickRow(record)
+            }
+            }>
+              <p>Xem đánh giá</p>
+            </Typography.Link>
           </>
         )
       }
     },
-
   ]
   const [visible, setVisible] = useState(false)
   return (
@@ -173,6 +257,23 @@ function Room() {
           >
           </Button>
         </Link>
+        <div className='flex flex-col justify-center items-center'>
+          <p> Xem các phòng được đặt theo ngày</p>
+          <DatePicker.RangePicker
+            onChange={onChangeDate}
+          ></DatePicker.RangePicker>
+        </div>
+        <div className='flex flex-col justify-center items-center '>
+          <p> Lọc phòng theo khách sạn</p>
+          <Select
+            options={hotel}
+            defaultValue={"defauld"}
+            className='w-[200px]'
+            onChange={onChangeFilterRoomsByHotel}
+          >
+
+          </Select>
+        </div>
         <Input.Search
           placeholder='Tim kiếm theo tên'
           className='max-w-[200px]'
@@ -183,11 +284,6 @@ function Room() {
       </div>
 
       <Table
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: () => handleClickRow(record)
-          }
-        }}
         className='mr-[20px]'
         dataSource={rooms}
         columns={column}

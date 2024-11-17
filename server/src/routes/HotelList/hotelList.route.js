@@ -145,6 +145,7 @@ ListRouter.post("/createRoom",
 ListRouter.post("/updateRoom/:id"
   , verifyOwner
   , hotelListController.updateRoom);
+  ListRouter.put("/filter-room", verifyOwner,hotelListController.filterRoomDate);
 ListRouter.delete("/deleteHotel/:id", hotelListController.deleteHotel);
 ListRouter.delete("/deleteRoom/:id", hotelListController.deleteRoom);
 ListRouter.get("/list-invoice-owner", verifyOwner, hotelListController.getInvoicesOwner)

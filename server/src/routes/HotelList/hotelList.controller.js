@@ -5,8 +5,11 @@ const { Owner } = require("../../models/signUp.model");
 const dayjs = require("dayjs");
 const axios = require('axios')
 const isBetween = require("dayjs/plugin/isBetween");
-
+const isSameOrAfter = require("dayjs/plugin/isSameOrAfter")
+const isSameOrBefore = require("dayjs/plugin/isSameOrBefore")
 dayjs.extend(isBetween);
+dayjs.extend(isSameOrAfter)
+dayjs.extend(isSameOrBefore)
 const createRoom = async (req, res) => {
 
   const { numberOfBeds, numberOfRooms, typeOfRoom, money, hotelID, capacity, imgLink, roomName } = req.body;
@@ -42,12 +45,13 @@ const createRoom = async (req, res) => {
         hotel.numberOfRooms = hotel.numberOfRooms + 1;
         await hotel.save();
       }
-
+      const room = await createdRoom.populate("hotelID")
+      const newRoom = {...room,comments:0}
       // Respond with success
       return res.status(201).json({
         status: "OK",
         message: "Room created successfully",
-        data: createdRoom,
+        data: room ,
       });
     }
   } catch (e) {
@@ -410,8 +414,8 @@ const deleteRoom = async (req, res) => {
 
 const getInvoicesOwner = async (req, res) => {
   const { ownerID } = req
-  const countHotel = await Hotel.countDocuments({ownerID:ownerID})
-  const countRoom = await Room.countDocuments({ownerID:ownerID})
+  const countHotel = await Hotel.countDocuments({ ownerID: ownerID })
+  const countRoom = await Room.countDocuments({ ownerID: ownerID })
   const hotels = await Hotel.find({ ownerID: ownerID })
   const hotelIDs = hotels.map(hotel => hotel._id)
   const invoices = await Invoice.find({
@@ -474,7 +478,7 @@ const getCommentCus = async (req, res) => {
 }
 
 const getCommentRoom = async (req, res) => {
-  const  idRoom  = req.params.id
+  const idRoom = req.params.id
   if (!idRoom)
     return res.status(403), json({ message: "Mất dữ liệu" })
   try {
@@ -487,6 +491,64 @@ const getCommentRoom = async (req, res) => {
 
   }
 
+}
+
+const filterRoomDate = async (req, res) => {
+  const idOwner = req.ownerID
+  const arrayDate = req.body.arrayDate
+
+  if (!idOwner)
+    return res.status(403).json({ message: "Mất dữ liệu người dùng" })
+  if (!arrayDate)
+    return res.status(403).json({ message: "Bị dữ liệu ngày" })
+  const startDate = dayjs(arrayDate[0])
+  const endDate = dayjs(arrayDate[1])
+  try {
+
+
+    const room = await Room.find({ ownerID: idOwner }).populate("hotelID")
+    const hotels = await Hotel.find({ ownerID: idOwner })
+    const hotelIDs = hotels.map(hotel => hotel._id)
+
+    // lấy dữ liệu invoice theo room
+    const invoices = await Invoice.find({
+      "hotelID": { $in: hotelIDs }
+    }).populate("roomID hotelID cusID")
+
+
+    // lọc ra các invoice nằm trong khoản startDate và endDate
+    const filterInvoice = invoices.filter(item => {
+      const checkInDay = dayjs(item.guestInfo.checkInDay)
+      const checkOutDay = dayjs(item.guestInfo.checkOutDay)
+      return (
+        (checkInDay.isSameOrAfter(startDate) && checkInDay.isSameOrBefore(endDate)) ||
+        (checkOutDay.isSameOrAfter(startDate) && checkOutDay.isSameOrBefore(endDate))
+      );
+    })
+    const roomInvoiceCount = filterInvoice.reduce((acc, invoice) => {
+      const roomID = invoice.roomID._id;
+      acc[roomID] = (acc[roomID] || 0) + invoice.guestInfo.totalRoom;
+      return acc;
+    }, {});
+
+    const updateRoom = await Promise.all(
+      room.map(async (item) => {
+
+        const commentCount = await Comment.countDocuments({
+          roomID: item._id
+        })
+        return ({
+          ...item,
+          revenue: roomInvoiceCount[item._id] || 0,
+          comments: commentCount
+        })
+      })
+    )
+    console.log(updateRoom)
+    res.json({ message: "test", room: updateRoom })
+  } catch (err) {
+    return res.status(500).json({ message: err.message })
+  }
 }
 
 module.exports = {
@@ -502,5 +564,6 @@ module.exports = {
   googleGeometrySearch,
   commentRoom,
   getCommentCus,
-  getCommentRoom
+  getCommentRoom,
+  filterRoomDate
 };

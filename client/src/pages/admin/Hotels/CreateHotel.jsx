@@ -21,7 +21,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const [nations, setnation] = useState([])
   const [cities, setCities] = useState([])
   const [errMessage, setErrMessage] = useState('');
-  const BE_PORT=import.meta.env.VITE_BE_PORT
+  const BE_PORT = import.meta.env.VITE_BE_PORT
   const [images, setImages] = useState([])
   const [form] = Form.useForm();
   const { data: owners, error: ownerError, loading: ownerLoad } = useGet(`${BE_PORT}/api/auth/owner`);
@@ -29,31 +29,39 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const amenity = useSelector(state => state.amenity.amenity)
 
   const initalAmenities = {
-    bathroom:[],
-    bedroom:[],
-    dining:[],
-    entertainment:[],
-    heatingAndCooling:[],
-    location:[],
-    outdoor:[],
-    safety:[],
-    service:[],
-    view:[]   
-}
+    bathroom: [],
+    bedroom: [],
+    dining: [],
+    entertainment: [],
+    heatingAndCooling: [],
+    location: [],
+    outdoor: [],
+    safety: [],
+    service: [],
+    view: []
+  }
   // Get data 
   useEffect(() => {
 
     //Get Tinh Thanh
-    fetch("https://esgoo.net/api-tinhthanh/1/0.htm", {
+    fetch("https://provinces.open-api.vn/api/", {
       method: "GET"
     })
       .then(res => res.json())
       .then(data => {
-        const arrayCity = data.data
-        const temp = arrayCity.map(item => ({
+        console.log(data)
+        const arrayCity = data
+        let temp = arrayCity.map(item => ({
           value: item.name,
-          label: item.full_name
+          label: item.name
         }))
+        temp = [
+          ...temp,
+          {
+            value: "",
+            label: "Chọn thành phố"
+          }
+        ]
         setCities(temp)
       })
       .catch(err => console.log(err))
@@ -62,24 +70,39 @@ const CreateHotel = ({ visible, handleCancel }) => {
     axios.get(`${BE_PORT}/api/hotelList/hotelTypes`)
       .then(res => res.data)
       .then(data => {
-        setType(data.types)
+        const types = [
+          ...data.types,
+          "Chọn loại khách sạn"
+
+        ]
+        setType(types)
       })
       .catch(err => {
         console.log(err)
       })
 
     //Get nation
-    axios.get("https://restcountries.com/v3.1/all")
-      .then(res => {
-        const arrayNation = res.data
-        const temp = arrayNation.map(item => ({
-          value: item.name.common,
-          label: item.name.common
-        }))
-        setnation(temp.sort((a, b) => a.value.localeCompare(b.value)))
-      })
+    // axios.get("https://restcountries.com/v3.1/all")
+    //   .then(res => {
+    //     const arrayNation = res.data
+    //     const temp = arrayNation.map(item => ({
+    //       value: item.name.common,
+    //       label: item.name.common
+    //     }))
+    //     setnation(temp.sort((a, b) => a.value.localeCompare(b.value)))
+    //   })
 
-      .catch(err => { console.log(err) })
+    //   .catch(err => { console.log(err) })
+    setnation([
+      {
+        label: "Việt Nam",
+        value: "Việt Nam"
+      },
+      {
+        label: "Chọn quốc gia",
+        value: ""
+      }
+    ])
 
   }, [])
 
@@ -136,11 +159,21 @@ const CreateHotel = ({ visible, handleCancel }) => {
     );
   }
 
-  const option = type.map((item, index) => ({
-    ...item,
-    value: item,
-    label: item
-  }))
+  const option = type.map((item, index) => {
+    if (item === "Chọn loại khách sạn") {
+      return {
+        value: "",
+        label: item
+      }
+    }
+    return {
+      value: item,
+      label: item
+    }
+
+  })
+
+  console.log(option)
 
   const handleDelete = async (item) => {
     setImages(pre => pre.filter(image => image !== item))
@@ -168,6 +201,15 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const isEmpty = (obj) => Object.keys(obj).length === 0;
 
   const onFinish = async (values) => {
+
+    const {phoneNum} = values
+
+    if(phoneNum.length !=10){
+      openNotification(false,"Số điện thoại phải là 10 chữ số","")
+      return
+    }
+
+
     const form = {
       ...values,
       imgLink: images,
@@ -260,22 +302,6 @@ const CreateHotel = ({ visible, handleCancel }) => {
         </Form.Item>
 
         <Form.Item
-          label="Thành phố"
-          name="city"
-          rules={[{ required: true, message: 'Please input city!' }]}
-        >
-          <Select options={cities} style={{ width: "85%" }} />
-        </Form.Item>
-
-        <Form.Item
-          label="Loại chỗ ở"
-          name="hotelType"
-          rules={[{ required: true, message: 'Please input hotel type!' }]}
-        >
-          <Select style={{ width: "85%" }} options={option} />
-        </Form.Item>
-
-        <Form.Item
           label="Số điện thoại"
           name="phoneNum"
           rules={[{ required: true, message: 'Please input phone number!' }]}
@@ -283,18 +309,34 @@ const CreateHotel = ({ visible, handleCancel }) => {
           <Input placeholder={hotelSelected?.phoneNum ?? "Phone Number"} className='w-[85%]' maxLength={10} minLength={10} />
         </Form.Item>
         <Form.Item
+          label="Thành phố"
+          name="city"
+          rules={[{ required: true, message: 'Please input city!' }]}
+        >
+          <Select options={cities} style={{ width: "85%" }} defaultValue={""} className="text-center" />
+        </Form.Item>
+
+        <Form.Item
+          label="Loại chỗ ở"
+          name="hotelType"
+          rules={[{ required: true, message: 'Please input hotel type!' }]}
+        >
+          <Select style={{ width: "85%" }} options={option} defaultValue={""} className='text-center' />
+        </Form.Item>
+
+        <Form.Item
           label="Quốc gia"
           name="nation"
           rules={[{ required: true, message: 'Please input nation!' }]}
         >
-          <Select options={nations} style={{ width: "85%" }} />
+          <Select options={nations} style={{ width: "85%" }} defaultValue={""} className='text-center' />
         </Form.Item>
         <Form.Item
           label="Tiện ích"
           name="amenities"
 
         >
-          <Button className='w-[85%]' onClick={() => setVisibleAm(true)} > {hotelSelected.hotelAmenities || amenity.count >0 ? `Bạn đã thêm ${amenity.count} tiện ích` : "Thêm tiện ích"} </Button>
+          <Button className='w-[85%]' onClick={() => setVisibleAm(true)} > {hotelSelected.hotelAmenities || amenity.count > 0 ? `Bạn đã thêm ${amenity.count} tiện ích` : "Thêm tiện ích"} </Button>
         </Form.Item>
         <Form.Item
           label="Link hình ảnh"
@@ -347,7 +389,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
         close={() => {
           setVisibleAm(false)
         }}
-        ></ModalAmenities>
+      ></ModalAmenities>
     </Modal>
   );
 };

@@ -10,40 +10,57 @@ function FormRoom({ isVisible, close }) {
     const [images, setImages] = useState([])
     const [form] = useForm()
     const [typeRooms, setTypeRooms] = useState([])
+    const rooms = useSelector(state => state.room.rooms)
     const selectedRoom = useSelector(state => state.room.selectRoom)
     const hotels = useSelector(state => state.hotel.hotels)
     const dispatch = useDispatch()
     const BE_PORT = import.meta.env.VITE_BE_PORT
-
+    console.log(selectedRoom)
     useEffect(() => {
         axios.get(`${BE_PORT}/api/hotelList/roomTypes`)
             .then(res => res.data)
             .then(data => {
                 const array = data.types
-                const temp = array.map(item => ({
+                let temp = array.map(item => ({
                     value: item,
                     label: item
                 }))
+                temp = [
+                    ...temp,
+                    {
+                        value: "",
+                        label: "Chọn loại phòng"
+                    }
+                ]
                 setTypeRooms(temp)
             })
         axios.get(`${BE_PORT}/api/hotelList/hotelOwner`)
             .then(res => res.data)
             .then(data => {
-                const hotels = data.data.map((item => (
+                let hotels = data.data.map((item => (
                     {
                         ...item,
                         key: item._id
                     }
                 )))
+
+                hotels = [
+                    ...hotels,
+                    {
+                        value: "",
+                        label: "Chọn khách sạn"
+                    }
+                ]
                 dispatch(setHotels(hotels))
             })
             .catch(err => console.log(err))
 
     }, [])
+    console.log(hotels)
     const option = hotels.map(item => (
         {
-            value: item._id,
-            label: item.hotelName
+            value: item._id ?? item.value,
+            label: item.hotelName ?? item.label
         }
     ))
     useEffect(() => {
@@ -76,6 +93,9 @@ function FormRoom({ isVisible, close }) {
             ])
         }
     }
+    const formatMoney = (money) => {
+        return new Intl.NumberFormat('de-DE').format(money)
+    }
     const handleDelete = async (item) => {
         setImages(pre => pre.filter(image => image !== item))
     }
@@ -83,9 +103,9 @@ function FormRoom({ isVisible, close }) {
         form.submit()
     }
     const onFinish = async (values) => {
-        const {money} = values
-        if(money <0){
-            openNotification(false,"Giá tiền không được âm !","")
+        const { money } = values
+        if (money < 0) {
+            openNotification(false, "Giá tiền không được âm !", "")
             return
         }
         const formInput = {
@@ -97,20 +117,28 @@ function FormRoom({ isVisible, close }) {
             axios.post(`${BE_PORT}/api/hotelList/createRoom`, formInput)
                 .then(res => res.data)
                 .then(data => {
-                    dispatch(addRoom(data.data))
+                    const room = {
+                        ...data.data,
+                        nameHotel: data.data.hotelID.hotelName
+                    }
+                    dispatch(addRoom(room))
                     openNotification(true, "Tạo phòng thành công", "")
                     close()
                 })
                 .catch(err => {
                     console.log(err)
-                    openNotification(false, "Tạo phòng thất bại", err.response.data.message)
+                    openNotification(false, "Tạo phòng thất bại", err.response?.data?.message ?? "")
                 })
         } else {
             axios.post(`${BE_PORT}/api/hotelList//updateRoom/${selectedRoom._id}`, formInput)
                 .then(res => res.data)
                 .then(data => {
-                    console.log("[UPDATE]", data.data)
-                    dispatch(updateRooms(data.data))
+
+                    const setValue = {
+                        rooms: rooms,
+                        update: data.data
+                    }
+                    dispatch(updateRooms(setValue))
                     openNotification(true, "Cập nhật phòng thành công", "")
                     close()
                 })
@@ -120,6 +148,11 @@ function FormRoom({ isVisible, close }) {
                 })
         }
     }
+    const removeLettersAndReturnValue = (value) => {
+        // Kiểm tra và loại bỏ ký tự chữ (a-zA-Z) trong chuỗi
+        const result = value.replace(/[a-zA-Z]/g, '');
+        return result;
+    };
     const isEmpty = (obj) => Object.keys(obj).length === 0;
     return (
         <>
@@ -153,24 +186,17 @@ function FormRoom({ isVisible, close }) {
                         name={"roomName"}
                         rules={[{ required: true, message: 'Vui lòng nhâp tên phòng !' }]}
                     >
-                        <Input />
+                        <Input placeholder='Nhập tên phòng' />
                     </Form.Item>
 
-                    <Form.Item
 
-                        label={"Loại phòng"}
-                        name={"typeOfRoom"}
-                        rules={[{ required: true, message: 'Vui lòng nhâp tên loại phòng !' }]}
-                    >
-                        <Select options={typeRooms} />
-                    </Form.Item>
 
                     <Form.Item
                         label={"Sức chứa"}
                         name={"capacity"}
                         rules={[{ required: true, message: 'Vui lòng nhâp không gian phòng !' }]}
                     >
-                        <InputNumber className='w-[100%]' />
+                        <InputNumber className='w-[100%]' min={1} placeholder='Nhập sức chứa' />
                     </Form.Item>
 
                     <Form.Item
@@ -178,7 +204,7 @@ function FormRoom({ isVisible, close }) {
                         name={"numberOfRooms"}
                         rules={[{ required: true, message: 'Vui lòng nhâp số lượng phòng !' }]}
                     >
-                        <InputNumber className='inputnumber-room' max={100} min={0} />
+                        <InputNumber className='inputnumber-room w-[30%]' max={100} min={1} placeholder='Nhập số lượng phòng' />
                     </Form.Item>
 
                     <Form.Item
@@ -186,7 +212,7 @@ function FormRoom({ isVisible, close }) {
                         name={"numberOfBeds"}
                         rules={[{ required: true, message: 'Vui lòng nhâp số lượng giường !' }]}
                     >
-                        <InputNumber max={30} min={0} className='inputnumber-room ' />
+                        <InputNumber max={30} min={0} className='inputnumber-room w-[30%]' placeholder='Nhập số lượng giường' />
                     </Form.Item>
 
                     <Form.Item
@@ -194,8 +220,30 @@ function FormRoom({ isVisible, close }) {
                         label={"Giá tiền"}
                         name={"money"}
                         rules={[{ required: true, message: 'Vui lòng nhập giá tiền !' }]}
+
                     >
-                        <InputNumber />
+                        <InputNumber
+                            placeholder='Nhập giá tiền'
+                            addonAfter={"VNĐ"}
+                            formatter={(value) => {
+                                if (!value) return '';
+                                const numericValue = removeLettersAndReturnValue(value)
+                                return formatMoney(numericValue)
+                            }
+
+                            }
+                            parser={(value) => {
+                                // Loại bỏ 'VNĐ' và các ký tự không phải số
+                                return value.replace(/\s?VNĐ|[^0-9]/g, '');
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label={"Loại phòng"}
+                        name={"typeOfRoom"}
+                        rules={[{ required: true, message: 'Vui lòng nhâp tên loại phòng !' }]}
+                    >
+                        <Select options={typeRooms} placeholder='Nhập loại phòng' defaultValue={""} className='text-center' />
                     </Form.Item>
                     <Form.Item
                         label={"Thuộc khách sạn"}
@@ -203,7 +251,7 @@ function FormRoom({ isVisible, close }) {
                         rules={[{ required: true, message: 'Vui lòng chọn khách sạn !' }]}
                     >
 
-                        <Select className=' w-[87%]' options={option} />
+                        <Select className=' w-[87%] text-center' options={option} />
                     </Form.Item>
                     <Form.Item
                         label={"Chọn hình"}

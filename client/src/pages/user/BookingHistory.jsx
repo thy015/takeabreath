@@ -209,7 +209,7 @@ const BookingPage = () => {
 
         {/* Booking details */}
 
-        {invoicesTemps.length >0 ? invoicesTemps.map((resData, index) => {
+        {invoicesTemps?.length >0 ? invoicesTemps.map((resData, index) => {
           const formattedCheckInDay = dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
           const formattedCheckOutDay = dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
           //stop rendering if found a cancel infor of that room

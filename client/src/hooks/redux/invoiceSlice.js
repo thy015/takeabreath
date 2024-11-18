@@ -19,7 +19,7 @@ const invoiceSlice = createSlice({
             const invoices = action.payload.invoices
             const now = dayjs()
             switch (action.payload.value) {
-                case "defauld": {
+                case "default": {
                     state.invoiceTemps = invoices
                     break;
                 }

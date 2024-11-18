@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaRegCalendarMinus, FaEllipsisV } from "react-icons/fa";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import axios from 'axios';
-import {ExportToExcel} from './../../component/ExportToExcel'
+import {ExportToExcel} from '../../component/ExportToExcel'
 import MostBookedRooms from '../../component/MostBookingRooms';
 const Main = () => {
     axios.defaults.withCredentials = true
@@ -15,7 +15,7 @@ const Main = () => {
     const BE_PORT=import.meta.env.VITE_BE_PORT
     const fetchOwners = async () => {
         try {
-          const response = await axios.get("http://localhost:4000/api/booking/mostbookRoom");
+          const response = await axios.get(`${BE_PORT}/api/booking/mostbookRoom`);
           console.log("API Response:", response.data); 
           setData(response.data.rooms); 
         } catch (error) {

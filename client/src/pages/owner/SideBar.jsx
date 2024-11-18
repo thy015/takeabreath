@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Menu, ConfigProvider } from 'antd'
 import { MenuOutlined } from '@ant-design/icons';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMediaQuery } from 'react-responsive';
+import axios from 'axios';
+import { AuthContext } from '../../hooks/auth.context';
 const items = [
     {
         key: "owner/Revenue",
@@ -32,14 +34,51 @@ const items = [
     }
 
 ]
+const itemAccount = [
+    {
+        key: "owner/Profile",
+        label: (<p className='font-bold'>Tài khoản</p>),
+    },
+    {
+        key: "logout",
+        label: (<p className='font-bold'>Đăng xuất</p>),
+    }
+
+]
 
 
-function SideBar({isMenu,setIsMenuOpen}) {
+function SideBar({ isMenu, setIsMenuOpen }) {
     const navigate = useNavigate()
     const location = useLocation();
     const selectedKey = location.pathname.slice(1) || 'Revenue'
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+    const {setAuth} = useContext(AuthContext)
+    const BE_PORT = import.meta.env.VITE_BE_PORT
+    const hanldeLogout = () => {
+        axios.get(`${BE_PORT}/api/auth/logout`)
+            .then(res => {
+                if (res.data.logout) {
+                    setAuth({
+                        isAuthenticated: false,
+                        user: {
+                            id: "",
+                            email: '',
+                            name: '',
+                        }
+                    })
+                    navigate('/login')
+
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+    }
+
     const hanldeClickItem = ({ item, key, keyPath, domEvent }) => {
+        if (key == "logout") {
+            hanldeLogout()
+            return
+        }
         navigate(`/${key}`)
     }
     return (
@@ -65,16 +104,24 @@ function SideBar({isMenu,setIsMenuOpen}) {
                     <h1 className="text-white text-[20px] leading-[24px] font-extrabold cursor-pointer">
                         TakeABreath
                     </h1>
-                    <div className={ isMobile ?'absolute right-4 top-4':"hidden"} onClick={setIsMenuOpen}>
+                    <div className={isMobile ? 'absolute right-4 top-4' : "hidden"} onClick={setIsMenuOpen}>
                         <FontAwesomeIcon className={"text-[30px] text-white"} icon={faXmark} />
                     </div>
 
                 </div>
-                <p className="text-[12px] font-extrabold leading-[16px] text-white py-[10px]">
+                <p className="text-[20px] font-extrabold leading-[16px] text-white pb-[10px] mt-[30px]">
                     MANAGE
                 </p>
                 <Menu
                     items={items}
+                    onClick={hanldeClickItem}
+                    selectedKeys={[selectedKey]}
+                />
+                <p className="text-[20px] font-extrabold leading-[16px] text-white pb-[10px] mt-[20px] border-t-[1px] border-[#EDEDED]/[0.3] pt-[30px] ">
+                    PROFILE
+                </p>
+                <Menu
+                    items={itemAccount}
                     onClick={hanldeClickItem}
                     selectedKeys={[selectedKey]}
                 />

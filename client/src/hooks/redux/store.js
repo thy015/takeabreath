@@ -11,6 +11,7 @@ import commentSlice from "./commentSlice"
 import invoiceSlice from "./invoiceSlice"
 import countInvoice from "./countInvoice"
 import cancelRequest from "./cancelSlice"
+import ownerReducer from "./ownerSlice"
 import {thunk} from 'redux-thunk'
 
 export const store = configureStore ({
@@ -27,7 +28,8 @@ export const store = configureStore ({
     invoice:invoiceSlice,
     invoiceRevenue:revenueReducer,
     countInvoice:countInvoice,
-    cancel:cancelRequest
+    cancel:cancelRequest,
+    owner:ownerReducer
   },
   middleware:(getDefaultMiddleware)=>getDefaultMiddleware().concat(thunk),
   devTools:window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

@@ -22,7 +22,7 @@ export const AuthWrapper = ({ children }) => {
         }
     })
 
-    const [isLoading,setLoading] = useState(true)
+    const [isLoadingAuth,setLoadingAuth] = useState(true)
 
     const login=(decodedToken)=>{
         setAuth({
@@ -36,7 +36,7 @@ export const AuthWrapper = ({ children }) => {
         })
     }
     return (
-        <AuthContext.Provider value={{ auth,setAuth,login,isLoading,setLoading }}>
+        <AuthContext.Provider value={{ auth,setAuth,login,isLoadingAuth,setLoadingAuth }}>
             {children}
         </AuthContext.Provider>
     )

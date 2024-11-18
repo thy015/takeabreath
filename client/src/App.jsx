@@ -9,7 +9,7 @@ import { AuthContext } from "./hooks/auth.context";
 import ProtectedRoute from "./hooks/HOC/ProtectedRoute";
 
 function App() {
-    const { auth, setAuth,setLoading,isLoading } = useContext(AuthContext);
+    const { auth, setAuth,setLoadingAuth,isLoadingAuth } = useContext(AuthContext);
     axios.defaults.withCredentials = true;
     const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {
@@ -27,10 +27,10 @@ function App() {
                 role:userRes?.role ?? ""
               },
             });
-            setLoading(false)
+            setLoadingAuth(false)
           })
           .catch((err) => {
-            setLoading(false)
+            setLoadingAuth(false)
             console.log("[APP]", err);
           });
       };
@@ -101,7 +101,7 @@ function App() {
                                         <ProtectedRoute 
                                             allowedRoles={["owner"]} 
                                             user={auth.user}
-                                            isLoading={isLoading}
+                                            isLoading={isLoadingAuth}
                                         >
                                              <route.page />
                                         </ProtectedRoute>

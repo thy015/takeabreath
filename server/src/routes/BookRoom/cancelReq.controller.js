@@ -9,7 +9,7 @@ const handleCancelRoomAccept=async(req,res)=>{
   const {cancelReqID}=req.params;
   const {adminID}=req.body
   if(!adminID){
-    return res.status(403).json({message:'missing variables'})
+    return res.status(403).json({message:'Thiếu trường dữ liệu'})
   }
   try{
 
@@ -19,7 +19,7 @@ const handleCancelRoomAccept=async(req,res)=>{
     let matchedInvoice = await Invoice.findById(cancelReq.invoiceID);
 
     if (!cancelReq||!matchedPartner||!matchedInvoice) {
-      return res.status(403).json({message: 'Missing variables'});
+      return res.status(403).json({message: 'Thiếu trường dữ liệu'});
     }
     // hoan 70% cho cus
     let refundCusMoney=(matchedInvoice.guestInfo.totalPrice)*0.7
@@ -35,7 +35,7 @@ const handleCancelRoomAccept=async(req,res)=>{
 
       return res.status(200).json({
         success:true,
-        message:'Succ Acp cancel room',
+        message:'Chấp nhận yêu cầu hủy thành công',
         cancelReq:cancelReq,
         matchedInvoice:matchedInvoice,
         matchedPartner:matchedPartner,
@@ -48,18 +48,18 @@ const handleCancelRoomReject=async(req,res)=>{
   const {cancelReqID}=req.params;
   const {adminID,rejectedReason}=req.body
   if(!adminID||!rejectedReason){
-    return res.status(403).json({message:'missing variables'})
+    return res.status(403).json({message:'Thiếu dữ liệu'})
   }
   try {
     let cancelReq = await CancelRequest.findById(cancelReqID);
     if (!cancelReq) {
-      return res.status(404).json({message: 'Cancellation request not found'});
+      return res.status(404).json({message: 'Không tìm thấy yêu cầu hủy phòng'});
     }
     cancelReq.isAccept = 'rejected';
     cancelReq.adminID = adminID
     cancelReq.rejectedReason=rejectedReason
     await cancelReq.save();
-      return res.status(200).json({success:true,message:'Succ cancel req',
+      return res.status(200).json({success:true,message:'Từ chối yêu cầu hủy phòng thành công',
       cancelReq:cancelReq,
       })
   }catch(e){
@@ -73,11 +73,11 @@ const getReqCancelRoomAccepted = async (req, res) => {
   try {
     const reqCancelsAccepted = await CancelRequest.find({ isAccept: "accepted" }).populate({
       path: 'invoiceID',
-      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
+      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay guestInfo.paymentMethod totalPrice totalRoom',
     }).populate({
       path:'adminID',
       select:"adminName"
-    });
+    }).sort({dayReq:-1});
     return res.status(200).json(reqCancelsAccepted);
   } catch (e) {
     console.error("Error in getReqCancelRoomAccepted:", e);
@@ -91,11 +91,11 @@ const getReqCancelRoomRejected = async (req, res) => {
   try {
     const reqCancelsRejected = await CancelRequest.find({ isAccept: "rejected" }).populate({
       path: 'invoiceID',
-      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
+      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay guestInfo.paymentMethod totalPrice totalRoom',
     }).populate({
       path:'adminID',
       select:"adminName"
-    });;
+    }).sort({dayReq:-1});;
   
     return res.status(200).json(reqCancelsRejected);
   } catch (e) {
@@ -111,7 +111,7 @@ const getReqCancelRoomProcess = async (req, res) => {
     const reqCancelsProcessing = await CancelRequest.find({ isAccept: "processing" }).populate({
       path: 'invoiceID',
       select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
-    });
+    }).sort({dayReq:-1});
     return res.status(200).json(reqCancelsProcessing);
   } catch (e) {
     console.error("Error in getReqCancelRoomProcess:", e);
@@ -127,10 +127,10 @@ const inactiveCus = async (req, res) => {
 
   const cus = await Customer.findById(cusID);
   if (!cus) {
-    return res.status(404).json({ message: "Customer not found" });
+    return res.status(404).json({ message: "Không tìm thấy khách hàng" });
   }
   if (!reason) {
-    return res.status(400).json({ message: "Please provide a reason" });
+    return res.status(400).json({ message: "Vui lòng nhập lí do" });
   }
 
   try {
@@ -139,15 +139,15 @@ const inactiveCus = async (req, res) => {
     await cus.save();
 
     return res.status(200).json({
-      status: "OK",
-      message: "Inactive customer successfully",
+      success:true,
+      message: "Vô hiệu hóa khách hàng thành công",
       data: cus,
     });
   } catch (e) {
     console.error("Error in inactivating customer: ", e);
     return res.status(500).json({
-      status: "BAD",
-      message: "Error in inactivating customer",
+      success:false,
+      message: "Gặp lỗi trong quá trình vô hiệu hóa khách hàng",
       error: e.message,
     });
   }
@@ -158,7 +158,7 @@ const activeCus = async (req, res) => {
 
   const cus = await Customer.findById(cusID);
   if (!cus) {
-    return res.status(404).json({ message: "Customer not found" });
+    return res.status(404).json({ message: "Không tìm thấy khách hàng" });
   }
 
   try {
@@ -167,15 +167,15 @@ const activeCus = async (req, res) => {
     await cus.save();
 
     return res.status(200).json({
-      status: "OK",
-      message: "Active customer successfully",
+      success:true,
+      message: "Kích hoạt khách hàng thành công",
       data: cus,
     });
   } catch (e) {
     console.error("Error in activating customer: ", e);
     return res.status(500).json({
-      status: "BAD",
-      message: "Error in activating customer",
+      success: false,
+      message: "Gặp lỗi trong quá trình kích hoạt tài khoản khách hàng",
       error: e.message,
     });
   }

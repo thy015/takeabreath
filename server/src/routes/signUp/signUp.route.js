@@ -36,7 +36,7 @@ signUpRouter.put('/owner/:id',signUpController.updateOwner)
 signUpRouter.post("/signUpOwner", signUpController.signUpOwner);
 signUpRouter.post("/signInOwner", signUpController.signInOwner);
 // CRUD Cus
-signUpRouter.get("/customer", async (req, res) => {
+signUpRouter.get("/customer",verifyAdmin, async (req, res) => {
   try {
     const RegOwner = await Customer.find();
     res.status(200).json(RegOwner);

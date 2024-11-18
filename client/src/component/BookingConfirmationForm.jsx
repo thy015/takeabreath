@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef, forwardRef, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
 import axios from "axios";
 import dayjs from "dayjs";
 import {
@@ -10,7 +11,9 @@ import {
   ConfigProvider,
   DatePicker,
   Radio,
-  message
+  message,
+  notification,
+  Select
 } from "antd";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -20,18 +23,21 @@ import { RateStar } from "./Rate";
 import PayPalButton from "./PayPalButton";
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { setInvoiceID } from "../hooks/redux/inputDaySlice"
+import { setInvoiceID,setVoucherApplied } from "../hooks/redux/inputDaySlice"
 import { useForm } from "antd/es/form/Form";
 import { setInvoiceCount,cleanInvoice } from "../hooks/redux/countInvoice";
-function BookingConfirmationForm({ isShow, onCancel }) {
+const {Option}=Select;
+function BookingConfirmationForm({ isShow, onCancel,hotel }) {
   const { auth,setAuth } = useContext(AuthContext);
-  // message in antd
   const [messageApi, contextHolder] = message.useMessage();
   const BE_PORT=import.meta.env.VITE_BE_PORT
   const [form] = useForm();
   const [payment, setPayment] = useState("");
+  const [vouchers, setVouchers] = useState([]);
   const [paymentModalVisible, setPaymentModalVisible] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
+  const [voucherCode, setVoucherCode] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { count, listInvoiceID } = useSelector(state => state.countInvoice)
@@ -50,8 +56,37 @@ function BookingConfirmationForm({ isShow, onCancel }) {
     countRoom,
     completedPayment,
   } = useSelector((state) => state.inputDay);
-
-
+ const a =totalPrice;
+const[price,setPrice]=useState(totalPrice);
+useEffect(() => {
+  setPrice(totalPrice);
+}, [totalPrice]);
+useEffect(() => {
+  const fetchVouchers = async () => {
+    try {
+      const response = await axios.get(`${BE_PORT}/api/voucher/getVoucus/${hotel.ownerID}`);
+      const voucherData = [
+          ...(response.data.sysVou || []),
+          ...(response.data.ownerVou || []),
+      ];
+  
+      const formatVouchers = voucherData.map(voucher => ({
+          code: voucher.code || '',
+          name: voucher.voucherName || '',
+          discount: voucher.discount || 0,
+          startDay: voucher.startDay || '',
+          endDay: voucher.endDay || '',
+      }));
+  
+      setVouchers(formatVouchers);
+  } catch (error) {
+      console.error('Lỗi truy xuất vou:', error);
+  }
+  };
+  fetchVouchers();
+  if(voucherCode)
+    applyVoucher();
+}, [voucherCode]);
 
   // handle invoice state change spec for wowo
   useEffect(() => {
@@ -76,6 +111,19 @@ function BookingConfirmationForm({ isShow, onCancel }) {
         ({ behavior: 'smooth', block: 'end' })
     }
   };
+
+  //apply vou
+  const applyVoucher = () => {
+
+    const voucher = vouchers.find(v => v.code === voucherCode);
+    
+    if (voucher) {
+        dispatch(setVoucherApplied({ voucher }));
+        notification.success({ description: 'Áp dụng voucher thành công!' });
+    } else {
+        notification.error({ description: 'Voucher không hợp lệ!' });
+    }
+};
 
   // inactive
   const handleInactive = async (reason) => {
@@ -168,7 +216,7 @@ function BookingConfirmationForm({ isShow, onCancel }) {
       inputPhoneNum: values.phoneNum,
       inputEmail: values.email,
       inputDob: dayjs(values.dob),
-      total: totalPrice,
+      total: price,
       checkInDay: dayjs(dayStart),
       checkOutDay: dayjs(dayEnd),
       totalDay: totalCheckInDay,
@@ -214,11 +262,17 @@ function BookingConfirmationForm({ isShow, onCancel }) {
 
   };
 
+const handleCancel = () => {
+  onCancel();
+  setPrice(a);
+  setVoucherCode(''); 
+  
+};
   return (
     <div>
     <Modal
         open={isShow}
-        onCancel={onCancel}
+        onCancel={()=>{handleCancel()}}
         className="min-w-[80%] max-h-[100px]"
         okText="Confirm Booking"
         onOk={()=>form.submit()}
@@ -361,7 +415,43 @@ function BookingConfirmationForm({ isShow, onCancel }) {
                       Wowo
                     </Radio>
                   </Radio.Group>
+                  
                 </Form.Item>
+    {/* select vou */}
+    <div className="relative inline-block">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="px-4 py-2 bg-white border rounded-md flex items-center justify-between hover:bg-gray-50 focus:outline-none w-48"
+      >
+        <span className="text-gray-700">
+          {voucherCode || "Select Voucher"}
+        </span>
+        <ChevronDown className="w-4 h-4 text-gray-400 ml-2" />
+      </button>
+
+      {isOpen && (
+        <div className="absolute left-full ml-2 top-0 bg-white border rounded-md shadow-lg z-10">
+          <div className="max-w-md overflow-x-auto">
+            <div className="flex whitespace-nowrap">
+              {vouchers.map((voucher) => (
+                <div
+                  key={voucher.code}
+                  onClick={() => {
+                    setVoucherCode(voucher.code);
+                    setIsOpen(false);
+                  }}
+                  className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center border-r last:border-r-0 shrink-0"
+                >
+                  <span>{voucher.code}</span>
+                  <span className="text-gray-600 ml-2">{voucher.discount}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+
               </Form>
             </div>
 
@@ -439,13 +529,15 @@ function BookingConfirmationForm({ isShow, onCancel }) {
                 </div>
                 <div className="flex justify-between">
                   <div>Total price:</div>{" "}
-                  <div className="text-success">{formatMoney(totalPrice)} VND </div>
+                  <div className="text-success">{formatMoney(price)} VND </div>
                 </div>
               </div>
             </div>
           </div>
         </Col>
+     
       </Row>
+      
     </Modal>
     {/* confirm modal pop up after click confirm booking --2nd modal*/}
     <Modal
@@ -462,7 +554,7 @@ function BookingConfirmationForm({ isShow, onCancel }) {
     >
       <div className="text-center p-2 text-[16px]">
         <p>Confirm your payment using {payment}</p>
-        <p>Your total price is {formatMoney(totalPrice)} VND which is <span className="text-success">{convertPrice} USD </span></p>
+        <p>Your total price is {formatMoney(price)} VND which is <span className="text-success">{convertPrice} USD </span></p>
 
       </div>
       {payment==='paypal'? (

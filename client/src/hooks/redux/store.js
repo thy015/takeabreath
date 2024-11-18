@@ -13,7 +13,7 @@ import countInvoice from "./countInvoice"
 import cancelRequest from "./cancelSlice"
 import ownerReducer from "./ownerSlice"
 import {thunk} from 'redux-thunk'
-
+import applyReducer from './applySlice';
 export const store = configureStore ({
   reducer:{
     searchResults:searchReducer,
@@ -29,7 +29,9 @@ export const store = configureStore ({
     invoiceRevenue:revenueReducer,
     countInvoice:countInvoice,
     cancel:cancelRequest,
-    owner:ownerReducer
+    owner:ownerReducer,
+    apply: applyReducer,
+
   },
   middleware:(getDefaultMiddleware)=>getDefaultMiddleware().concat(thunk),
   devTools:window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

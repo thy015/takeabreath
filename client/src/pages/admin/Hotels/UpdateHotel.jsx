@@ -43,7 +43,7 @@ const UpdateHotel = () => {
         setErrMessage('Hotel updates failed!');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+      const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
       notification.error({
         message: 'Hotel Updates Failed',
         description: errorMessage,

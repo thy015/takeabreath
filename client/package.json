@@ -15,6 +15,7 @@
     "@mui/material": "^6.1.6",
     "@mui/x-charts": "latest",
     "@paypal/react-paypal-js": "^8.7.0",
+    "@popperjs/core": "^2.11.8",
     "@react-google-maps/api": "^2.20.3",
     "@reduxjs/toolkit": "^2.2.7",
     "@testing-library/jest-dom": "^5.17.0",

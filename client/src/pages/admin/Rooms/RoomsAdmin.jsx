@@ -9,6 +9,7 @@ const RoomList = () => {
   const url = id
     ? `${BE_PORT}/api/roomList/hotels/${id}/rooms`
     : `${BE_PORT}/api/roomList/rooms`;
+    const a =id? `/admin/rooms/bookinRoom/${id}` :`/admin/rooms/bookinRoom/`
     const { data:roomsData, error, loading } = useGet(url);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate(); 
@@ -91,7 +92,7 @@ const RoomList = () => {
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-        Tất cả các phòng
+        Tất cả các phòng {id?" của "+roomsData[0].hotelID.hotelName:""}
         </h1>
         <div className="flex space-x-4 items-center">
           <div className="relative">
@@ -106,7 +107,7 @@ const RoomList = () => {
           </div>
         </div>
       </div>
-      <Link to="bookinRoom" className="no-underline">
+      <Link to={a} className="no-underline">
       <div className="text-left leading-[34px] text-[#2739ab] hover:text-[#7e8adb]">
         Danh sách các phòng đang được đặt
       </div>
@@ -126,3 +127,4 @@ const RoomList = () => {
 };
 
 export default RoomList;
+

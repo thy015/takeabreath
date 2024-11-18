@@ -3,14 +3,15 @@ import { Table, Button, Alert, Spin, DatePicker } from "antd";
 import { useGet } from "../../../hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom"; 
+import {  useParams } from "react-router-dom"; 
 
 const RoomList = () => {
+  const{id}=useParams();
   const BE_PORT = import.meta.env.VITE_BE_PORT; 
-  const { data: roomsData, error, loading } = useGet(`${BE_PORT}/api/roomList/bookinRoom`);
+  const url = id ?  `${BE_PORT}/api/roomList/bookinRoom/${id}`:`${BE_PORT}/api/roomList/bookinRoom`
+  const { data: roomsData, error, loading } = useGet(url);
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState([null, null]); 
-  const navigate = useNavigate(); 
 
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
@@ -99,11 +100,6 @@ const RoomList = () => {
       render: (text) => text.toLocaleString(),
     },
     {
-      title: "Số lượng phòng",
-      dataIndex: "numberOfRooms",
-      key: "numberOfRooms",
-    },
-    {
       title: "Sức chứa",
       dataIndex: "capacity",
       key: "capacity",
@@ -133,7 +129,7 @@ const RoomList = () => {
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-          Các phòng đang được đặt
+        Các phòng đang được đặt {id?" của hotel "+roomsData[0].hotelID.hotelName:""}
         </h1>
         <div className="flex space-x-4 items-center">
         <DatePicker.RangePicker 
@@ -168,3 +164,4 @@ const RoomList = () => {
 };
 
 export default RoomList;
+

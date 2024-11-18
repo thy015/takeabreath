@@ -68,6 +68,7 @@ function Hotel() {
             dataIndex: 'numberOfRooms',
             key: 'numberOfRooms',
             sorter: (a, b) => a.numberOfRooms - b.numberOfRooms,
+            align:"center"
         },
 
         {
@@ -86,6 +87,7 @@ function Hotel() {
             title: 'Số điện thoại',
             dataIndex: 'phoneNum',
             key: 'phoneNum',
+            align:"center"
         },
 
         {
@@ -93,7 +95,7 @@ function Hotel() {
             dataIndex: 'numberOfRates',
             key: 'numberOfRates',
             sorter: (a, b) => a.numberOfRates - b.numberOfRates,
-
+            align:"center"
         },
 
         {
@@ -105,7 +107,8 @@ function Hotel() {
             title: 'Số lượng đã đặt',
             dataIndex: 'revenue',
             key: 'revenue',
-            sorter: (a, b) => a.revenue - b.revenue
+            sorter: (a, b) => a.revenue - b.revenue,
+            align:"center"
         },
         ,
         {

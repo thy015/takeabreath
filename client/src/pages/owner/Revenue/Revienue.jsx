@@ -58,6 +58,7 @@ function Revienue() {
             title: "ID Đơn Đặt Phòng",
             dataIndex: "_id",
             key: "_id",
+            align:"center"
         },
         {
             title: "Khách Hàng",
@@ -71,13 +72,15 @@ function Revienue() {
             title: "Số Điện Thoại",
             dataIndex: ['guestInfo', 'phone'], // Chỉnh sửa dataIndex
             key: 'phonCus',
+             align:"center"
         },
         {
             title: "Ngày Đặt",
             dataIndex: "createDay", // Đảm bảo đúng tên thuộc tính
             key: "createAt",
             render: (text) => formatDay(text),
-            sorter: (a, b) => new Date(a) - new Date(b)
+            sorter: (a, b) => new Date(a) - new Date(b),
+            align:"center"
         },
         {
             title: "Khách Sạn",
@@ -93,29 +96,38 @@ function Revienue() {
             title: "Ngày Vào",
             dataIndex: ['guestInfo', 'checkInDay'], // Chỉnh sửa dataIndex
             key: 'checkInDay',
-            render: (text) => formatDay(text)
+            render: (text) => formatDay(text),
+            align:"center"
         },
         {
             title: "Ngày Ra",
             dataIndex: ['guestInfo', 'checkOutDay'], // Chỉnh sửa dataIndex
             key: 'checkOutDay',
-            render: (text) => formatDay(text)
+            render: (text) => formatDay(text),
+            align:"center"
         },
         {
             title: "Tổng Phòng Đặt",
             dataIndex: ['guestInfo', 'totalRoom'], // Chỉnh sửa dataIndex
             key: 'totalRoom',
+            align:"center"
         },
         {
             title: "Tổng Tiền",
             dataIndex: ['guestInfo', 'totalPrice'], // Đảm bảo lấy đúng thuộc tính
             key: 'totalPrice',
-            render: (text) => formatMoney(text) + " VNĐ"
+            render: (text) => formatMoney(text) + " VNĐ",
+            align:"center"
         },
         {
             title: "Trạng Thái Đặt Phòng",
             dataIndex: "invoiceState",
             key: "invoiceState",
+        },
+        {
+            title: "Phương thức thanh toán",
+            dataIndex:['guestInfo', 'paymentMethod'],
+            key: "paymentMethod",
         },
     ];
     const formatMoney = (money) => {

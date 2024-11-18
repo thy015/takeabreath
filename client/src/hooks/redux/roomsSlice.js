@@ -14,8 +14,12 @@ const roomSclice = createSlice({
             state.rooms = action.payload
             state.roomSearch = action.payload
         },
+        setRoomSearch:(state,action)=>{
+            state.roomSearch = action.payload
+        },
         addRoom:(state,action)=>{
             state.roomSearch = [...state.rooms,action.payload]
+            state.rooms=[...state.rooms,action.payload]
         },
         deleteRoom:(state,action)=>{
             state.rooms = state.rooms.filter(item=>item._id!==action.payload)
@@ -25,11 +29,13 @@ const roomSclice = createSlice({
             state.selectRoom = action.payload
         },
         updateRooms:(state,action)=>{
-            state.roomSearch = state.rooms.map((item) => {
-                if (item._id === action.payload._id) {
+            const {rooms,update} = action.payload
+            console.log({rooms,update})
+            state.roomSearch = rooms.map((item) => {
+                if (item._id === update._id) {
                     return {
                         ...item, 
-                        ...action.payload
+                        ...update
                     };
                 }
                 return item
@@ -41,10 +47,20 @@ const roomSclice = createSlice({
             }else{
                 state.roomSearch = state.rooms.filter(room=>room.roomName.includes(action.payload) )
             }
+        },
+        filterRoomsByHotel:(state,action)=>{
+            const {idHotel,rooms} = action.payload
+            
+            state.roomSearch = rooms.filter(item=>{
+                if(idHotel === "defauld"){
+                    return true
+                }
+                return item.hotelID._id == idHotel
+            })
         }
     }
 })
 
 
-export const  {setRooms,addRoom,deleteRoom,selectedRoom,updateRooms,searchRoom} = roomSclice.actions
+export const  {setRooms,addRoom,deleteRoom,selectedRoom,updateRooms,searchRoom,setRoomSearch,filterRoomsByHotel} = roomSclice.actions
 export default roomSclice.reducer

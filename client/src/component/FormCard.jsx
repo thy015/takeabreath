@@ -63,6 +63,14 @@ function FormCard({ visible, close }) {
                     label="Nhập số thẻ"
                     name="numberCard"
                     maxLength= {16}
+                    rules={
+                        [
+                            {
+                                required:true,
+                                message:"Vui lòng nhập số thẻ"
+                            }
+                        ]
+                    }
                 >
                     <Input className='ml-[7px]' placeholder='Nhập số thẻ' />
                 </Form.Item>
@@ -71,6 +79,14 @@ function FormCard({ visible, close }) {
                         <Form.Item
                             label="Ngày hết hạn"
                             name={"expDay"}
+                            rules={
+                                [
+                                    {
+                                        required:true,
+                                        message:"Vui lòng nhập ngày hết hạn"
+                                    }
+                                ]
+                            }
                         >
                             <DatePicker />
                         </Form.Item>
@@ -82,6 +98,14 @@ function FormCard({ visible, close }) {
                             }}
                             label="Số CVV"
                             name={"cvv"}
+                            rules={
+                                [
+                                    {
+                                        required:true,
+                                        message:"Vui lòng nhập số CVV"
+                                    }
+                                ]
+                            }
                         >
                             <InputNumber maxLength={3} placeholder='Nhập CVV' />
                         </Form.Item>

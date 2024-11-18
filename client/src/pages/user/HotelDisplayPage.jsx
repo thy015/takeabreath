@@ -35,6 +35,7 @@ const HotelDisplayCompre = () => {
     searchMapLocation()
   }, [city, latitude,longitude]);
   const navigate = useNavigate();
+
   const { data, error, loading } = useGet(
     `${BE_PORT}/api/hotelList/hotel`
   );

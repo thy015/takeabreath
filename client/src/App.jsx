@@ -6,9 +6,10 @@ import Header from "./partials/Header";
 import Footer from "./partials/Footer";
 import { Fragment, useContext, useEffect } from "react";
 import { AuthContext } from "./hooks/auth.context";
+import ProtectedRoute from "./hooks/HOC/ProtectedRoute";
 
 function App() {
-    const { auth, setAuth } = useContext(AuthContext);
+    const { auth, setAuth,setLoading,isLoading } = useContext(AuthContext);
     axios.defaults.withCredentials = true;
     const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {
@@ -23,11 +24,13 @@ function App() {
                 id: userRes?.id ?? "",
                 email: userRes?.email ?? "",
                 name: userRes?.name ??  "",
-                  role:userRes?.role ?? ""
+                role:userRes?.role ?? ""
               },
             });
+            setLoading(false)
           })
           .catch((err) => {
+            setLoading(false)
             console.log("[APP]", err);
           });
       };
@@ -94,7 +97,16 @@ function App() {
                             return (
                                 <Route key={route.path}
                                        path={route.path}
-                                       element={<route.page />}>
+                                       element={
+                                        <ProtectedRoute 
+                                            allowedRoles={["owner"]} 
+                                            user={auth.user}
+                                            isLoading={isLoading}
+                                        >
+                                             <route.page />
+                                        </ProtectedRoute>
+                                      
+                                       }>
                                     {route.children &&
                                         route.children.map((child) => (
                                             <Route

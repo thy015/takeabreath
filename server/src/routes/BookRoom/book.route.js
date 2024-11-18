@@ -24,25 +24,24 @@ bookRouter.post("/applyVoucher", async (req, res) => {
 });
 bookRouter.get("/invoice",verifyAdmin, bookController.getInvoicesWithReceipts);
 bookRouter.get("/invoicepaid",verifyAdmin,bookController.getInvoicesPaid);
-bookRouter.get("/mostbookRoom",verifyAdmin, async (req, res) => {
+bookRouter.get("/mostbookRoom", verifyAdmin, async (req, res) => {
   try {
-    let total = 0;
-  
     const rooms = await Room.find();
     const getMostBook = await Promise.all(
       rooms.map(async (item) => {
-        const invoices = await Invoice.find({ roomID: item._id });
+        let revenuee = 0; 
 
+        const invoices = await Invoice.find({ roomID: item._id });
         const bookingnumbers = await Invoice.countDocuments({ roomID: item._id });
 
         invoices.map(invoice => {
-          total += invoice.guestInfo.totalPrice;
+          revenuee += invoice.guestInfo.totalPrice;
         });
 
         return { 
           ...item.toObject(), 
           books: bookingnumbers, 
-          revenue: total * 0.1 
+          revenue: revenuee 
         };
       })
     );
@@ -52,6 +51,7 @@ bookRouter.get("/mostbookRoom",verifyAdmin, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 bookRouter.get("/invoicewaiting",verifyAdmin,bookController.getInvoicesWaiting);
 bookRouter.post("/completedTran", bookController.completedTran);

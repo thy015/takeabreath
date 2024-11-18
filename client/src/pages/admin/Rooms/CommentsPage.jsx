@@ -30,12 +30,12 @@ const CommentsPage = () => {
   if (error) return <Alert message="Error" description={error} type="error" />;
 
   const columns = [
-    // {
-    //   title: "Người dùng",
-    //   dataIndex: ["cusID", "_id"], 
-    //   key: "cusID",
-    //   render: (cusID) => cusID ? cusID : "Anonymous", 
-    // },
+    {
+      title: "Người dùng",
+      dataIndex: ["cusID", "cusName"], 
+      key: "cusID",
+      render: (cusID) => cusID ? cusID : cusID, 
+    },
     {
       title: "Rate Point",
       dataIndex: "ratePoint",
@@ -53,6 +53,18 @@ const CommentsPage = () => {
       key: "createdDay",
       render: (text) => new Date(text).toLocaleString("vi-VN"), 
     },
+    {
+      title: "Thao tác",
+      key: "actions",
+      render: (_, record) => (
+        <button
+          className="bg-red-600 hover:bg-red-400 text-white px-3 py-1 ml-2 rounded"
+          onClick={() => navigate(`/admin/comments/${record._id}`)} 
+        >
+          Cảnh Cáo
+        </button>
+      ),
+    },
   ];
 
   return (
@@ -65,6 +77,7 @@ const CommentsPage = () => {
         dataSource={comments}
         rowKey={(record) => record._id}
         pagination={false}
+         className="mt-4 border-2 rounded-s"
       />
     </div>
   );

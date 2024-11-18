@@ -131,8 +131,8 @@ try {
   if (processingLoading || acceptedLoading || rejectedLoading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
-
-  if (processingError || acceptedError || rejectedError ) {
+  
+  if (processingError || acceptedError || rejectedError) {
     return (
       <Alert
         message="Error"
@@ -142,24 +142,24 @@ try {
       />
     );
   }
-
-  if ((!processingData || processingData.length === 0) &&
-      (!acceptedData || acceptedData.length === 0) &&
-      (!rejectedData || rejectedData.length === 0)) {
-    return <Alert message="Không tìm thấy khách hàng" type="info" showIcon />;
-  }
+  
 
 
 
 
 
   const formatDataWithAcceptDate = (data) =>
-    data.map((customer) => ({
+    data?.map((customer) => ({
       ...customer,
-      dayReq: new Date(customer.dayReq).toLocaleDateString('vi-VN'),
-      checkInDay: new Date(customer.invoiceID.guestInfo.checkInDay).toLocaleDateString('vi-VN'),
-      checkOutDay: new Date(customer.invoiceID.guestInfo.checkOutDay).toLocaleDateString('vi-VN'),
+      dayReq: new Date(customer.dayReq).toLocaleDateString("vi-VN"),
+      checkInDay: customer.invoiceID?.guestInfo?.checkInDay
+        ? new Date(customer.invoiceID.guestInfo.checkInDay).toLocaleDateString("vi-VN")
+        : "N/A", 
+      checkOutDay: customer.invoiceID?.guestInfo?.checkOutDay
+        ? new Date(customer.invoiceID.guestInfo.checkOutDay).toLocaleDateString("vi-VN")
+        : "N/A", 
     }));
+  
 
   const processingDataFormatted = formatDataWithAcceptDate(processingData || []);
   const acceptedDataFormatted = formatDataWithAcceptDate(acceptedData || []);

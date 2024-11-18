@@ -37,12 +37,23 @@ const inputDaySlice =createSlice({
             state.latitude=action.payload.latitude
                 state.longitude=action.payload.longitude
         },
+        setVoucherApplied: (state, action) => {
+            const { voucher } = action.payload;
+            let discountedPrice = state.firstPrice; 
+            if (voucher && voucher.discount) {
+                discountedPrice = state.firstPrice - (state.firstPrice * voucher.discount / 100);
+            }
+            state.totalPrice = discountedPrice;
+            state.convertPrice = (discountedPrice / 25000).toFixed(2);
+        },
+        
         // for paypal, need convert based on dollar rates
         setPaymentState:(state,action)=>{
             state.selectedHotel=action.payload.selectedHotel
             state.selectedRoom=action.payload.selectedRoom
             state.countRoom=action.payload.countRoom
             state.totalPrice=action.payload.totalPrice
+            state.firstPrice=action.payload.totalPrice
             state.convertPrice = (action.payload.totalPrice / 25000).toFixed(2);
         },
         setPaymentCompleted:(state,action)=>{
@@ -65,5 +76,5 @@ const inputDaySlice =createSlice({
         }
     }
 })
-export const {setInputDay,clearInputDay,setPaymentState,clearPaymentState,setPaymentCompleted,setInvoiceID,clearInvoiceID,setOrdinate}=inputDaySlice.actions
+export const {setVoucherApplied,setInputDay,clearInputDay,setPaymentState,clearPaymentState,setPaymentCompleted,setInvoiceID,clearInvoiceID,setOrdinate}=inputDaySlice.actions
 export default inputDaySlice.reducer

@@ -95,6 +95,7 @@ const InvoicesList = () => {
   placeholder={['Từ ngày', 'Đến ngày']} 
   className='h-10'
 />
+{/* <ExportToExcel apiData={[formattedData]} fileName={fileName} buttonName={"Tạo Hóa Đơn"} /> */}
         <div className="relative pb-2.5">
           <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3" />
           <input

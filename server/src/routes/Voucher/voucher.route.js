@@ -13,7 +13,7 @@ VoucherRoute.post("/list-voucher/update/:id",verifyOwner,updateVoucher)
 //admin 
 VoucherRoute.get("/sysvou", async(req,res)=>{
     try {
-        const a =await SystemVoucher.find();
+        const a =await SystemVoucher.find().sort({createdAt:-1});
             return res.status(201).json(a)
     } catch (error) {
         console.log(error);
@@ -29,21 +29,42 @@ VoucherRoute.get("/sysvou/:id",verifyAdmin,async(req,res)=>{
         return res.status(500).json({message:error.message})
     }
 })
+VoucherRoute.get("/getVoucus/:id", async (req, res) => {
+    try {
+        const currentDate = new Date();
+        const sysvou = await SystemVoucher.find({
+            ownerJoined: req.params.id,
+            startDay: { $lte: currentDate }, 
+            endDay: { $gte: currentDate }, 
+        });
+        const vou = await Voucher.find({
+            ownerID: req.params.id,
+            startDay: { $lte: currentDate },
+            endDay: { $gte: currentDate }, 
+        });
+        res.json({
+            sysVou: sysvou,
+            ownerVou: vou,
+        });
+    } catch (error) {
+        console.error('Lỗi truy xuất voucher:', error);
+        res.status(500).json({ message:  error.message });
+    }
+});
+
+
 VoucherRoute.post("/updatevou/:id",verifyAdmin,updateSysVoucher);
 VoucherRoute.delete("/deletevou/:id",verifyAdmin,deleteSysVoucher);
 VoucherRoute.post('/addvou', verifyAdmin, async (req, res) => {
     try {
         const newVoucher = new SystemVoucher(req.body);
-        const existingVoucher = await SystemVoucher.findOne({ code: newVoucher.code });
+        const exist = await SystemVoucher.findOne({ code: newVoucher.code });
         
-        if (existingVoucher) {
+        if (exist) {
             return res.status(400).json({ success: false, message: "Mã voucher đã tồn tại" });
         }
-
-        const today = moment().startOf('day'); // Get the start of the current day
-        const end = moment(newVoucher.endDay); // Parse the end date from the request
-
-        // Ensure end date is at least 1 day after today
+        const today = moment().startOf('day'); 
+        const end = moment(newVoucher.endDay); 
         if (!end.isAfter(today)) {
             return res.status(400).json({ success: false, message: "Ngày kết thúc phải ít nhất là ngày sau hôm nay" });
         }

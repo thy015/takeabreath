@@ -150,7 +150,7 @@ ListRouter.get("/list-room",
   })
 ListRouter.get("/comment/room/:id",async(req,res)=>{
   try {
-    const a =await Comment.find({roomID:req.params.id}).populate({path:"roomID",select:"roomName"});
+    const a =await Comment.find({roomID:req.params.id}).populate({path:"roomID",select:"roomName"}).populate({path:"cusID",select:"cusName"});
     res.json(a)
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -96,6 +96,10 @@ const VouchersList = () => {
   };
  
   const handleAddOrUpdateVoucher = async (values) => {
+    if(!values.code)
+    {
+      values.code =getName(values.voucherName)
+    }
     const formattedValues = {
       ...values,
       startDay: values.dates[0].toISOString(), 
@@ -106,7 +110,7 @@ const VouchersList = () => {
       if (selectedVoucherId) {
         await axios.post(`http://localhost:4000/api/voucher/updatevou/${selectedVoucherId}`, {
           voucherName:values.voucherName,
-          code: values.code != null ? values.code : getName(values.voucherName),
+          code: values.code,
           discount: values.discount ,
           startDay: values.dates[0],
           endDay: values.dates[1],
@@ -128,6 +132,7 @@ const VouchersList = () => {
           message: 'Thêm Voucher Mới Thành Công',
           description: 'Voucher đã được thêm thành công!',
         });
+        form.resetFields();
       }
  
       setIsModalVisible(false);
@@ -148,7 +153,7 @@ const VouchersList = () => {
  
   const columns = [
     { title: "Tên Voucher", dataIndex: "voucherName", key: "voucherName", width: '25%' },
-    { title: "Chiết Khấu", dataIndex: "discount", key: "discount", sorter: (a, b) => a.discount - b.discount, width: '15%' },
+    { title: "Chiết Khấu (%)", dataIndex: "discount", key: "discount", sorter: (a, b) => a.discount - b.discount, width: '15%' },
     { title: "Ngày Bắt Đầu", dataIndex: "startDay", key: "startDay", render: (startDay) => new Date(startDay).toLocaleDateString('vi-VN') },
     { title: "Ngày Kết Thúc", dataIndex: "endDay", key: "endDay", render: (endDay) => new Date(endDay).toLocaleDateString('vi-VN') },
     { title: "Mã Voucher", dataIndex: "code", key: "code" },
@@ -178,7 +183,7 @@ const VouchersList = () => {
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
       <div className="flex justify-between items-center">
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-          Danh sách Vouchers
+          Danh sách Voucher
         </h1>
         <div className="relative pb-2.5">
           <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3" />

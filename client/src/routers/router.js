@@ -3,11 +3,10 @@ import DashboardView from "../pages/admin/DashboardView";
 import HomePage from "../pages/user/HomePage";
 import HotelsAdmin from "../pages/admin/Hotels/HotelsAdmin";
 import AdminLayout from "../pages/admin/AdminLayout";
-import Calendar from "../pages/admin/Calendar";
+
 
 import Settings from "../pages/admin/Settings";
 import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin";
-import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
 
 import RegisterOwner from "../pages/auth/Thy_RegOwner";
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
@@ -39,6 +38,7 @@ import YourCancelRequest from "../pages/user/YourCancelRequest";
 import UserInfoCard from "../pages/owner/Profile/profileOwner";
 import Comment from "../pages/admin/Rooms/CommentsPage"
 import CommentsPage from "../pages/admin/Rooms/CommentsPage";
+import BookinRoom from "../pages/admin/Rooms/BookinRoom"
 export const routers = [
   {
     path: "/",
@@ -53,11 +53,11 @@ export const routers = [
       { path: "", page: DashboardView  }, 
       { path: "hotel", page: HotelsAdmin },
       { path: "dashboard", page: DashboardView  }, 
-      { path: "calendar", page: Calendar  }, 
       { path: "hotel/:id", page: HotelDisplay_HotelTab  }, 
       { path: "settings", page: Settings  }, 
       {path:"rooms", page:RoomsAdmin},
-      {path:"hotel/:id/rooms", page:RoomsOfHotel},
+      {path:"hotel/:id/rooms", page:RoomsAdmin},
+      {path:"rooms/bookinRoom",page:BookinRoom},
       {path:"customers", page:Customer},
       {path:"requests",page:cancelReqAdmin},
       {path:"vouchers",page:AdminVoucher},

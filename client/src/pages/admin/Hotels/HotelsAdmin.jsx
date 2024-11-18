@@ -57,7 +57,7 @@ const PropertyGrid = () => {
       width: 150,
       render: (text, record) => (
         <Space size="middle">
-          <Link to={`${record._id}/rooms`}>
+          <Link to={`/admin/hotel/${record._id}/rooms`}>
             <button className="bg-blue-800 text-white p-1.5 hover:bg-blue-500">
               Xem phòng
             </button>

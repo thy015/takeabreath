@@ -86,7 +86,7 @@ const PropertyGrid = () => {
     <div className="px-[25px] pt-[25px] h-full bg-[#F8F9FC] pb-[40px]">
       <div className="flex justify-between items-center">
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-          Hiển thị {displayData.length} khách sạn
+          Hiển thị {displayData.length} trên tổng số {data.length} khách sạn
         </h1>
         <div className="relative pb-2.5">
           <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3" />

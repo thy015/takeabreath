@@ -49,15 +49,14 @@ const Sidebar = () => {
     { label: "Khách Sạn", to: "hotel", icon: FaHotel },
     { label: "Khách Hàng", to: "customers", icon: FaUser },
     { label: "Phòng", to: "rooms", icon: FaRestroom },
-    { label: "Vouchers", to: "", icon: FaTicketAlt },
+    { label: "Vouchers", to: "vouchers", icon: FaTicketAlt },
     { label: "Hóa Đơn", to: "invoices", icon: FaReceipt },
     { label: "Yêu Cầu", to: "requests", icon: FaHand },
   
   ];
 
   const addonItems = [
-    { label: "Lịch Làm Việc", to: "calendar", icon: FaCalendar },
-    { label: "Cài Đặt", to: "settings", icon: FaRegSun },
+    { label: "Cài Đặt", to: "", icon: FaRegSun },
   ];
 
   return (
@@ -75,7 +74,7 @@ const Sidebar = () => {
         onClick={() => handleItemClick("Dashboard")}
       />
       <div className="pt-[15px] border-t-[1px] border-[#EDEDED]/[0.3]">
-        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">MANAGE</p>
+        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">QUẢN LÝ</p>
       </div>
 
       {manageItems.map((item) => (
@@ -87,7 +86,7 @@ const Sidebar = () => {
         />
       ))}
       <div className="pt-[5px] border-b-[1px] border-[#EDEDED]/[0.3]">
-        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">ADDONS</p>
+        <p className="text-[10px] font-extrabold leading-[16px] text-white/[0.4]">TÍNH NĂNG THÊM</p>
       </div>
 
       {addonItems.map((item) => (

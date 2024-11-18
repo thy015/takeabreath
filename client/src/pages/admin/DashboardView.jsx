@@ -3,6 +3,7 @@ import { FaRegCalendarMinus, FaEllipsisV } from "react-icons/fa";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import axios from 'axios';
 import {ExportToExcel} from './../../component/ExportToExcel'
+import MostBookedRooms from '../../component/MostBookingRooms';
 const Main = () => {
     axios.defaults.withCredentials = true
     const fileName = "BaoCaoDoanhThu";
@@ -10,8 +11,25 @@ const Main = () => {
     const [totalDiscountMonth, setTotalDiscountMonth] = useState(0);
     const [totalDiscountYear, setTotalDiscountYear] = useState(0);
     const [monthlyData, setMonthlyData] = useState([]);
+    const [data,setData]=useState([]);
     const BE_PORT=import.meta.env.VITE_BE_PORT
+    const fetchOwners = async () => {
+        try {
+          const response = await axios.get("http://localhost:4000/api/booking/mostbookRoom");
+          console.log("API Response:", response.data); 
+          setData(response.data.rooms); 
+        } catch (error) {
+          console.error("Error fetching owners:", error);
+          setData([]);
+        }
+      };
+      
+      
     
+      useEffect(() => {
+        fetchOwners();
+      }, []); 
+      
 const[numb,setNumb]=useState(0);
     const formatToVND = (amount) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -19,7 +37,6 @@ const[numb,setNumb]=useState(0);
             currency: 'VND',
         }).format(amount);
     };
-
     useEffect(() => {
         axios.get(`${BE_PORT}/api/booking/invoicepaid`)
             .then(response => {
@@ -28,31 +45,25 @@ const[numb,setNumb]=useState(0);
                 const currentDate = new Date();
                 const currentYear = currentDate.getFullYear();
                 const previousYear = currentYear - 1;
-                const monthlyRevenueCurrentYear = Array(12).fill(0);
-                const monthlyRevenuePreviousYear = Array(12).fill(0);
+                const monthlyCurrent = Array(12).fill(0);
+                const monthlyPrevious = Array(12).fill(0);
                 data.forEach(invoice => {
                     const invoiceDate = new Date(invoice.createDay);
                     const month = invoiceDate.getMonth();
                     const year = invoiceDate.getFullYear();
                     const totalPrice = invoice.guestInfo.totalPrice*0.10;
-
                     if (year === currentYear) {
-                        monthlyRevenueCurrentYear[month] += totalPrice;
+                        monthlyCurrent[month] += totalPrice;
                     } else if (year === previousYear) {
-                        monthlyRevenuePreviousYear[month] += totalPrice;
+                        monthlyPrevious[month] += totalPrice;
                     }
                 });
-
-      
                 const chartData = Array.from({ length: 12 }, (v, i) => ({
                     Tháng: new Intl.DateTimeFormat('vi-VN', { month: 'long' }).format(new Date(currentYear, i)),
-                    currentYear: monthlyRevenueCurrentYear[i],
-                    previousYear: monthlyRevenuePreviousYear[i],
+                    "Năm Nay": monthlyCurrent[i],
+                    "Năm Trước": monthlyPrevious[i],
                 }));
-
                 setMonthlyData(chartData); 
-
-               
                 const totalPriceSumMonth = data.reduce((sum, invoice) => {
                     const invoiceDate = new Date(invoice.createDay);
                     return sum + (invoiceDate.getMonth() === currentDate.getMonth() && invoiceDate.getFullYear() === currentYear ? invoice.guestInfo.totalPrice : 0);
@@ -71,10 +82,7 @@ const[numb,setNumb]=useState(0);
                 setTotalDiscountYear(totalPriceSumYear * 0.10);
             })
             .catch(error => console.error('Error fetching invoices:', error));
-
-       
     }, []);
-console.log("monthly data la "+monthlyData)
     return (
         <div className='px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]'>
             <div className='flex items-center justify-between'>
@@ -136,8 +144,8 @@ console.log("monthly data la "+monthlyData)
     <YAxis />
     <Tooltip formatter={(value) => formatToVND(value)} />
     <Legend />
-    <Line type="monotone" dataKey="currentYear" stroke="#8884d8" activeDot={{ r: 8 }} name="Doanh thu năm hiện tại" />
-    <Line type="monotone" dataKey="previousYear" stroke="#82ca9d" name="Doanh thu năm trước" />
+    <Line type="monotone" dataKey="Năm Nay" stroke="#8884d8" activeDot={{ r: 8 }} name="Doanh thu năm hiện tại" />
+    <Line type="monotone" dataKey="Năm Trước" stroke="#82ca9d" name="Doanh thu năm trước" />
 </LineChart>
 
                     </div>
@@ -145,6 +153,7 @@ console.log("monthly data la "+monthlyData)
 
       
             </div>
+            <MostBookedRooms rooms={data} className="items-start text-start justify-start"/>
         </div>
     );
 }

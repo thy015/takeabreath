@@ -273,7 +273,7 @@ const getInvoicesWithReceipts = async (req, res) => {
 
 const getInvoicesPaid = async (req, res) => {
   try {
-    const receipt = await Invoice.find({ invoiceState: "paid" });
+    const receipt = await Invoice.find({ invoiceState: "paid" }).sort({ createDay: -1 });;
     res.status(200).json(receipt);
   } catch (e) {
     console.error("Error fetching invoices paid:", e);
@@ -305,6 +305,7 @@ const deleteInvoiceWaiting = async (req, res) => {
   return res.json({ status: true, message: "Xóa thành công" })
 
 }
+
 module.exports = {
   bookRoom,
   getInvoicesWithReceipts,
@@ -314,5 +315,5 @@ module.exports = {
   getInvoicesPaid,
   changeInvoiceState,
   getInvoicesWaiting,
-  deleteInvoiceWaiting
+  deleteInvoiceWaiting,
 };

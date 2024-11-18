@@ -1,17 +1,29 @@
 import React, { useState } from "react";
-import { Spin, Alert, Table } from "antd";
+import { Spin, Alert, Table ,DatePicker} from "antd";
 import { useGet } from "../../hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import {ExportToExcel} from '../../component/ExportToExcel'
 const InvoicesList = () => {
+  const{RangePicker}=DatePicker;
   const BE_PORT=import.meta.env.VITE_BE_PORT
   const { data, error, loading } = useGet(`${BE_PORT}/api/booking/invoicepaid`);
   const [searchText, setSearchText] = useState(""); 
   const [fileName,setFileName]=useState("Hóa Đơn");
+  const [selectedDateRange, setSelectedDateRange] = useState([null, null]);
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
-
+  const handleDateChange = (dates) => {
+    setSelectedDateRange(dates);
+  };
+  const isDateInRange = (date) => {
+    if (!selectedDateRange[0] || !selectedDateRange[1]) return true;
+    const orderDate = new Date(date);
+    const startDate = new Date(selectedDateRange[0]);
+    const endDate = new Date(selectedDateRange[1]);
+    endDate.setHours(23, 59, 59, 999); 
+    return orderDate >= startDate && orderDate <= endDate;
+  };
   if (error) {
     return (
       <Alert
@@ -68,7 +80,7 @@ const InvoicesList = () => {
     .filter(invoice => 
       (invoice.guestInfo.name && invoice.guestInfo.name.toLowerCase().includes(searchText.toLowerCase())) ||
       (invoice.guestInfo.email && invoice.guestInfo.email.toLowerCase().includes(searchText.toLowerCase()))
-    );
+    ).filter(invoice => isDateInRange(invoice.createDay));;;
 
   return (
     <div className="px-[25px] pt-[25px] h-full bg-[#F8F9FC] pb-[40px]">
@@ -76,7 +88,14 @@ const InvoicesList = () => {
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
           Tất cả hóa đơn
         </h1>
-        <div className="flex mr-2">
+        <div className="flex gap-2 mt-4">
+        <RangePicker allowClear={false}
+  onChange={handleDateChange}
+  format="DD/MM/YYYY"
+  placeholder={['Từ ngày', 'Đến ngày']} 
+  className='h-10'
+/>
+{/* <ExportToExcel apiData={[formattedData]} fileName={fileName} buttonName={"Tạo Hóa Đơn"} /> */}
         <div className="relative pb-2.5">
           <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3" />
           <input

@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState,useContext } from "react";
-import { Spin, Alert,Button, notification,Modal } from "antd";
+import { Spin, Alert,Button, notification,Modal,DatePicker } from "antd";
 import { useGet } from "../../../hooks/hooks";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined,FilterOutlined} from "@ant-design/icons";
 import { ModalDelete,ModalActivate } from "../Customers/CustomerList";
 import { AuthContext } from "../../../hooks/auth.context";
 import axios from 'axios'
+import moment from "moment";
 const cancelReqAdmin = () => {
   axios.defaults.withCredentials = true
   const {auth,setAuth} = useContext(AuthContext)
@@ -17,7 +18,8 @@ const cancelReqAdmin = () => {
   const [selectedCancel, setselectedCancel] = useState(null); 
   const [refresh, setRefresh] = useState(false);
   const BE_PORT=import.meta.env.VITE_BE_PORT
-
+  const [filterDate, setFilterDate] = useState(null);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
     const getName = (name) => {
       return name
         .split(' ')             
@@ -25,6 +27,13 @@ const cancelReqAdmin = () => {
         .join('')                
         .toUpperCase();         
     };
+    const formatToVND = (amount) => {
+      return new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND',
+      }).format(amount);
+  };
+
   const handleAccept=async(req,res)=>{
 try {
   const response=await axios.post(`${BE_PORT}/api/cancelReq/accept/${cusID}`,{adminID:auth.user.id},  { withCredentials: true })
@@ -42,9 +51,9 @@ try {
     });
 }
 } catch (error) {
-  const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+  const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
   notification.error({
-      message: 'Customer Activation Failed',
+      message: 'Kích hoạt khách hàng thất bại',
       description: errorMessage,
   });
 }
@@ -66,9 +75,9 @@ try {
         });
     }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+      const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
       notification.error({
-          message: 'Customer Activation Failed',
+          message: 'Kích hoạt khách hàng thất bại',
           description: errorMessage,
       });
     }
@@ -77,26 +86,26 @@ try {
     data: processingData,
     error: processingError,
     loading: processingLoading,
-    refetch: refetchProcessingData,
   } = useGet(`${BE_PORT}/api/cancelReq/processing`,refresh);
 
   const {
     data: acceptedData,
     error: acceptedError,
     loading: acceptedLoading,
-    refetch: refetchAcceptedData,
   } = useGet(`${BE_PORT}/api/cancelReq/accepted`,refresh);
   const handleDeleteCancel = () => {
     setDeleteModalVisible(false);
     setCusID(null);
     setReason(""); 
   };
-
+  const handleFilterChange = (date, dateString) => {
+    setFilterDate(dateString);
+    setFilterModalVisible(false); 
+  };
   const {
     data: rejectedData,
     error: rejectedError,
     loading: rejectedLoading,
-    refetch: refetchRejectedData,
   } = useGet(`${BE_PORT}/api/cancelReq/rejected`,refresh);
   const handleInfoClick = (orderID) => {
     const cancelDetails = acceptedDataFormatted.find(item => item._id === orderID)||rejectedDataFormatted.find(item => item._id === orderID)||processingDataFormatted.find(item => item._id === orderID); 
@@ -108,68 +117,62 @@ try {
     setcancelDetailModalVisible(false); 
     setIsProcess(false)
   };
-
-  const formatToVND = (value) => {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+  const filterByDate = (data, date) => {
+    if (!date) return data;
+    const filterDateFormatted = moment(date, 'DD/MM/YYYY').startOf('day');
+    return data.filter((item) => {
+      const itemDate = moment(item.dayReq, 'DD/MM/YYYY');
+      return itemDate.isSame(filterDateFormatted, 'day');
+    });
   };
-  const {
-    data: customerData,
-    error: customerError,
-    loading: customerLoading,
-  } = useGet(`${BE_PORT}/api/auth/customer`);
+  
+  
 
-  if (processingLoading || acceptedLoading || rejectedLoading || customerLoading) {
+  if (processingLoading || acceptedLoading || rejectedLoading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
-
-  if (processingError || acceptedError || rejectedError || customerError) {
+  
+  if (processingError || acceptedError || rejectedError) {
     return (
       <Alert
         message="Error"
-        description="Failed to load customer requests."
+        description="Lỗi trong quá trình lấy yêu cầu khách hàng"
         type="error"
         showIcon
       />
     );
   }
+  
 
-  if ((!processingData || processingData.length === 0) &&
-      (!acceptedData || acceptedData.length === 0) &&
-      (!rejectedData || rejectedData.length === 0)) {
-    return <Alert message="No customer data found" type="info" showIcon />;
-  }
 
-  const createCustomerMap = (customers) => {
-    const customerMap = {};
-    customers.forEach(customer => {
-      customerMap[customer._id.toString()] = customer.cusName;
-    });
-    return customerMap;
-  };
-
-  const customerMap = createCustomerMap(customerData || []);
 
 
 
   const formatDataWithAcceptDate = (data) =>
-    data.map((customer) => ({
+    data?.map((customer) => ({
       ...customer,
-      dayReq: new Date(customer.dayReq).toLocaleDateString('vi-VN'),
-      checkInDay: new Date(customer.invoiceID.guestInfo.checkInDay).toLocaleDateString('vi-VN'),
-      checkOutDay: new Date(customer.invoiceID.guestInfo.checkOutDay).toLocaleDateString('vi-VN'),
-      cusName: customerMap[customer.cusID] || 'Unknown',
+      dayReq: new Date(customer.dayReq).toLocaleDateString("vi-VN"),
+      checkInDay: customer.invoiceID?.guestInfo?.checkInDay
+        ? new Date(customer.invoiceID.guestInfo.checkInDay).toLocaleDateString("vi-VN")
+        : "N/A", 
+      checkOutDay: customer.invoiceID?.guestInfo?.checkOutDay
+        ? new Date(customer.invoiceID.guestInfo.checkOutDay).toLocaleDateString("vi-VN")
+        : "N/A", 
     }));
+  
 
   const processingDataFormatted = formatDataWithAcceptDate(processingData || []);
   const acceptedDataFormatted = formatDataWithAcceptDate(acceptedData || []);
   const rejectedDataFormatted = formatDataWithAcceptDate(rejectedData || []);
-  
+  const filteredProcessingData = filterByDate(processingDataFormatted, filterDate);
+  const filteredAcceptedData = filterByDate(acceptedDataFormatted, filterDate);
+  const filteredRejectedData = filterByDate(rejectedDataFormatted, filterDate);
   return (
     <div className="grid grid-cols-3 gap-4 bg-[#F8F9FC] h-full mt-0.5">
     {/* yeu cau process */}
     <div className="p-4 flex flex-col overflow-y-auto">
-      <h3 className="font-semibold mb-2 text-yellow-600">ĐANG CHỜ: {processingDataFormatted.length}</h3>
-      {processingDataFormatted.map((item, index) => (
+      <h3 className="font-semibold mb-2 text-yellow-600">ĐANG CHỜ: {filteredProcessingData.length}</h3>
+      {filteredProcessingData.map((item, index) => (
         <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
           <div className="flex justify-between">
             <span>Ngày yêu cầu: {item.dayReq}</span>
@@ -191,8 +194,8 @@ try {
   
     {/* yeu cau reject */}
     <div className="p-4 flex flex-col overflow-y-auto">
-      <h3 className="font-semibold mb-2 text-red-500">ĐÃ TỪ CHỐI: {rejectedDataFormatted.length}</h3>
-      {rejectedDataFormatted.map((item, index) => (
+      <h3 className="font-semibold mb-2 text-red-500">ĐÃ TỪ CHỐI: {filteredRejectedData.length}</h3>
+      {filteredRejectedData.map((item, index) => (
         <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
           <div className="flex justify-between">
             <span>Ngày yêu cầu: {item.dayReq}</span>
@@ -210,8 +213,8 @@ try {
   
     {/* yeu cau accept */}
     <div className="p-4 flex flex-col overflow-y-auto">
-      <h3 className="font-semibold mb-2 text-green-500">ĐÃ ĐỒNG Ý: {acceptedDataFormatted.length}</h3>
-      {acceptedDataFormatted.map((item, index) => (
+      <h3 className="font-semibold mb-2 text-green-500">ĐÃ ĐỒNG Ý: {filteredAcceptedData.length}</h3>
+      {filteredAcceptedData.map((item, index) => (
         <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
           <div className="flex justify-between">
             <span>Ngày yêu cầu: {item.dayReq}</span>
@@ -271,7 +274,14 @@ try {
               <p className="flex items-center mb-1">
                 <strong className="w-[100px]">Trạng Thái:</strong> {selectedCancel.isAccept === 'accepted' ? 'Đã chấp nhận' : selectedCancel.isAccept === 'processing'?'Chờ xử lý':'Đã từ chối'}
               </p>
-              {isProcess === false && selectedCancel?.adminID && (
+              <p className="mb-1"><strong>Ngày nhận phòng:</strong> {new Date(selectedCancel.invoiceID.guestInfo.checkInDay).toLocaleDateString('vi-VN')}</p>
+                <p className="mb-1"><strong>Ngày trả phòng:</strong> {new Date(selectedCancel.invoiceID.guestInfo.checkOutDay).toLocaleDateString('vi-VN')}</p>
+                <p className="mb-1"><strong>Chứng minh nhân dân:</strong> {selectedCancel.invoiceID.guestInfo.idenCard}</p>
+            </div>
+            <div className="border-t border-gray-200 pt-4">
+              {/* <p className="mb-2"><strong>Thông tin Hóa Đơn:</strong></p> */}
+              <div>
+                {isProcess === false && selectedCancel?.adminID && (
   <>
     <p className="flex items-center mb-1">
       <strong className="w-[100px]">Admin xử lý:</strong> {selectedCancel.adminID.adminName || 'Không có'}
@@ -281,18 +291,35 @@ try {
     </p>
   </>
 )}
-            </div>
-            <div className="border-t border-gray-200 pt-4">
-              {/* <p className="mb-2"><strong>Thông tin Hóa Đơn:</strong></p> */}
-              <div>
-                <p className="mb-1"><strong>Ngày nhận phòng:</strong> {new Date(selectedCancel.invoiceID.guestInfo.checkInDay).toLocaleDateString('vi-VN')}</p>
-                <p className="mb-1"><strong>Ngày trả phòng:</strong> {new Date(selectedCancel.invoiceID.guestInfo.checkOutDay).toLocaleDateString('vi-VN')}</p>
-                <p className="mb-1"><strong>Chứng minh nhân dân:</strong> {selectedCancel.invoiceID.guestInfo.idenCard}</p>
               </div>
             </div>
           </div>
         )}
       </Modal>
+      <div className="fixed bottom-5 right-5">
+      
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+        <div onClick={() => setFilterModalVisible(true)} className="text-white shadow-xl flex items-center text-center justify-center p-3 rounded-full bg-gradient-to-r from-blue-800 to-blue-600 cursor-pointer hover:scale-105 transition-transform duration-300">
+          <FilterOutlined />
+        </div>
+        
+      </div>
+</div>
+<Modal
+  title="Lọc Theo Ngày"
+  visible={filterModalVisible}
+  onCancel={() => setFilterModalVisible(false)}
+  footer={null}
+>
+  <div className="flex justify-center">
+    <DatePicker
+      value={filterDate ? moment(filterDate, 'DD/MM/YYYY') : null}
+      onChange={handleFilterChange}
+      format="DD/MM/YYYY"
+      placeholder="Chọn ngày"
+    />
+  </div>
+</Modal>
   </div>
   
   );

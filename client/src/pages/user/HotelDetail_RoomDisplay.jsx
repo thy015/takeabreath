@@ -136,7 +136,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                                                     className={`w-full text-white ${totalCheckInDay===0? 'bg-gray-400':'bg-[#1677ff] hover:scale-105'}` }
                                             >Reserve
                                             </Button>
-                                            <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} />
+                                            <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} hotel={hotel} />
 
                                         </div>
                                     </div>

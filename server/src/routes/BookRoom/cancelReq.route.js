@@ -5,9 +5,9 @@ const {CancelRequest} = require("../../models/cancelReq.model");
 const {Invoice} = require("../../models/invoice.model");
 const {verifyAdmin} = require("../../middleware/verify");
 
-reqCancelRouter.get('/processing',reqCancelController.getReqCancelRoomProcess)
-reqCancelRouter.get('/accepted',reqCancelController.getReqCancelRoomAccepted)
-reqCancelRouter.get('/rejected',reqCancelController.getReqCancelRoomRejected)
+reqCancelRouter.get('/processing',verifyAdmin,reqCancelController.getReqCancelRoomProcess)
+reqCancelRouter.get('/accepted',verifyAdmin,reqCancelController.getReqCancelRoomAccepted)
+reqCancelRouter.get('/rejected',verifyAdmin,reqCancelController.getReqCancelRoomRejected)
 //get cancel req theo id user( + invoice)
 reqCancelRouter.get('/:id/cancelRequest',async(req,res)=>{
     const {id}=req.params;

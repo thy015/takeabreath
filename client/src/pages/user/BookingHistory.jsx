@@ -15,7 +15,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import ModalComment from '../../component/ModalComment';
 import { getComment } from '../../hooks/redux/commentSlice';
-import { refreshInvoice, setInvoice, sortInvoice } from '../../hooks/redux/invoiceSlice';
+import { refreshInvoice, setInvoices, sortInvoice } from '../../hooks/redux/revenueSlice';
 
 const BookingPage = () => {
   const dispatch = useDispatch()
@@ -35,8 +35,8 @@ const BookingPage = () => {
   const [clickCancel, setClickCancel] = useState(false)
   const [isClickedConfirmCancel, setClickedConfirmCancel] = useState(false);
 
-  const invoicesTemps = useSelector(state => state.invoice.invoiceTemps)
-  const invoices = useSelector(state => state.invoice.invoices)
+  const invoicesTemps = useSelector(state => state.invoiceRevenue.invoiceTemps)
+  const invoices = useSelector(state => state.invoiceRevenue.invoices)
 
   const [visible, setVisible] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState({})
@@ -127,7 +127,7 @@ const BookingPage = () => {
   }
 
   useEffect(() => {
-    dispatch(setInvoice(data.data))
+    dispatch(setInvoices(data.data))
   }, [data])
 
   useEffect(() => {

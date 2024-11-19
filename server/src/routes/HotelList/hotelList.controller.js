@@ -522,7 +522,9 @@ const filterRoomDate = async (req, res) => {
       const checkOutDay = dayjs(item.guestInfo.checkOutDay)
       return (
         (checkInDay.isSameOrAfter(startDate) && checkInDay.isSameOrBefore(endDate)) ||
-        (checkOutDay.isSameOrAfter(startDate) && checkOutDay.isSameOrBefore(endDate))
+        (checkOutDay.isSameOrAfter(startDate) && checkOutDay.isSameOrBefore(endDate)) ||
+        (checkInDay.isBefore(startDate) && checkOutDay.isAfter(endDate)) ||
+        (checkInDay.isSameOrBefore(endDate) && checkOutDay.isSameOrAfter(startDate))
       );
     })
     const roomInvoiceCount = filterInvoice.reduce((acc, invoice) => {

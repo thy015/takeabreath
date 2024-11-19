@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addHotel, updateHotels } from '../../../hooks/redux/hotelsSclice';
 import { openNotification } from '../../../hooks/notification';
 import ModalAmenities from '../../../component/ModalAmenities';
-import { addAmenity } from '../../../hooks/redux/amenitySlice';
+import { addAmenity } from '../../../hooks/redux/hotelsSclice';
 const { Option } = Select;
 
 const CreateHotel = ({ visible, handleCancel }) => {
@@ -26,7 +26,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
   const [form] = Form.useForm();
   const { data: owners, error: ownerError, loading: ownerLoad } = useGet(`${BE_PORT}/api/auth/owner`);
   const [visibleAm, setVisibleAm] = useState(false)
-  const amenity = useSelector(state => state.amenity.amenity)
+  const amenity = useSelector(state => state.hotel.amenity)
 
   const initalAmenities = {
     bathroom: [],

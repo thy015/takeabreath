@@ -8,12 +8,12 @@ const CommentsPage = () => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   useEffect(() => {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/hotelList/comment/room/${roomID}`
+          `${BE_PORT}/api/hotelList/comment/room/${roomID}`
         );
         setComments(response.data);
       } catch (err) {

@@ -54,13 +54,17 @@ function BookingConfirmationForm({ isShow, onCancel,hotel }) {
     totalPrice,
     convertPrice,
     countRoom,
+    firstPrice,
     completedPayment,
   } = useSelector((state) => state.inputDay);
- const a =totalPrice;
-const[price,setPrice]=useState(totalPrice);
+
+  const a =totalPrice;
+  const[price,setPrice]=useState(totalPrice);
+
 useEffect(() => {
   setPrice(totalPrice);
 }, [totalPrice]);
+
 useEffect(() => {
   const fetchVouchers = async () => {
     try {
@@ -99,6 +103,7 @@ useEffect(() => {
     window.addEventListener('storage', handlePaymentStorageChange)
     return () => window.removeEventListener('storage', handlePaymentStorageChange)
   }, [dispatch]);
+
   //radio
   const paymentRef = useRef(null)
 
@@ -191,7 +196,7 @@ useEffect(() => {
     }
   // check nếu đặt 5 lần ko thành công
     if(count === 5){
-      handleInactive("Bạn bị khóa vì đặt quá 5 lần không thành công. Hiểu là spam")
+      handleInactive("Bạn bị khóa vì đặt quá 5 lần không thành công")
 
     }
     
@@ -323,19 +328,23 @@ const handleCancel = () => {
                     rules={[
                       {
                         required: true,
-                        message: "Please input your fullname !s",
+                        message: "Please input your fullname !",
                       },
                     ]}
                 >
                   <Input className="min-w-[150px]" />
                 </Form.Item>
                 <Form.Item
-                    label="Identification Card"
+                    label="Identity Card"
                     name="idenCard"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your CCCD !",
+                        message: "Please input your identity card !",
+                      },
+                      {
+                        pattern: /^\d{12}$/,
+                        message: "Please input true identity card!",
                       },
                     ]}
                 >
@@ -349,6 +358,10 @@ const handleCancel = () => {
                         required: true,
                         message: "Please input your email !",
                       },
+                      {
+                        pattern:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+                        message: "Please input valid email address!"
+                      }
                     ]}
                 >
                   <Input />
@@ -357,22 +370,32 @@ const handleCancel = () => {
                 <Form.Item
                     label="Phone Number"
                     name="phoneNum"
-                    maxLength={10}
+                    maxLength={9}
                     rules={[
                       {
                         required: true,
                         message: "Please input your phone number !",
                       },
+                      {
+                        pattern:/^[0-9\-\+]{9,15}$/,
+                        message: "Please input valid phone number!"
+                      }
                     ]}
                 >
                   <PhoneInput
-                      defaultMask="... ... ... ."
+                      defaultMask="... ... ..."
                       enableLongNumbers={false}
                   ></PhoneInput>
                 </Form.Item>
 
                 <Form.Item name="dob" label="Select birthday">
-                  <DatePicker className="ml-[10px]" />
+                  <DatePicker className="ml-[10px]"  disabledDate={(current) => {
+                    const today = new Date();
+                    const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                    return current && current > eighteenYearsAgo;
+                  }}
+                  defaultPickerValue={dayjs().subtract(18,'year')}
+                  />
                 </Form.Item>
 
                 <Form.Item name="gender" label="Select gender">
@@ -419,7 +442,8 @@ const handleCancel = () => {
                   </Radio.Group>
                   
                 </Form.Item>
-    {/* select vou */}
+
+    {/* select voucher */}
     <div className="relative inline-block">
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -444,8 +468,8 @@ const handleCancel = () => {
                   }}
                   className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center border-r last:border-r-0 shrink-0"
                 >
-                  <span>{voucher.code}</span>
-                  <span className="text-gray-600 ml-2">{voucher.discount}%</span>
+                  <span>{voucher.name}</span>
+                  <span className="text-gray-600 ml-2">Discount {voucher.discount}%</span>
                 </div>
               ))}
             </div>
@@ -498,7 +522,7 @@ const handleCancel = () => {
             </div>
             {/* information booking */}
             <div
-                className="h-[150px] border-[1px] px-6 pt-2 border-gray-300 rounded-[10px]"
+                className="h-auto border-[1px] px-6 pt-2 border-gray-300 rounded-[10px]"
             >
               <Row>
                 <Col
@@ -529,10 +553,20 @@ const handleCancel = () => {
                     {countRoom} {countRoom === 1 ? "room" : "rooms"}
                   </div>
                 </div>
+                {voucherCode && (
+                    <>
+                      <div>
+                        <span className='float-right ml-2'>VND</span>
+                        <span className='text-danger line-through float-right'>{formatMoney(firstPrice)}</span>
+                      </div>
+                    </>
+                )}
                 <div className="flex justify-between">
                   <div>Total price:</div>{" "}
                   <div className="text-success">{formatMoney(price)} VND </div>
                 </div>
+
+
               </div>
             </div>
           </div>

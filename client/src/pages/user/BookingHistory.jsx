@@ -39,9 +39,7 @@ const BookingPage = () => {
   const invoices = useSelector(state => state.invoiceRevenue.invoices)
 
   const [visible, setVisible] = useState(false)
-  const [sortSelect, setSortSelect] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState({})
-
   const comment = useSelector(state => state.room.comments)
   const handleClickCancel = (invoiceID) => {
     setClickCancel((prevState) => ({
@@ -60,6 +58,7 @@ const BookingPage = () => {
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };
+
   const disableCancelFunc = (checkInDay) => {
     const now = dayjs().tz('Asia/Ho_Chi_Minh')
     const formattedCheckInDay = dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
@@ -130,7 +129,7 @@ const BookingPage = () => {
   }, [data])
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/hotelList/get-comment-cus')
+    axios.get(`${BE_PORT}/api/hotelList/get-comment-cus`)
       .then(res => {
         dispatch(getComment(res.data.message))
       })
@@ -143,19 +142,19 @@ const BookingPage = () => {
   //options sort
   const options = [
     {
-      label: "Mặc định",
-      value: "defauld"
+      label: "Default",
+      value: "default"
     },
     {
-      label: "Sắp tới",
+      label: "Upcoming",
       value: "future"
     },
     {
-      label: "Đang thuê",
+      label: "Currently",
       value: "current"
     },
     {
-      label: "Quá hạn",
+      label: "Expired",
       value: "expired"
     },
   ]
@@ -185,7 +184,7 @@ const BookingPage = () => {
       {/*sort*/}
       <div className='history-wrapper'>
         <div className='history-dropdown'>
-         <Select options={options} defaultValue={"defauld"} className='w-full' onChange={handleSortByOptions}></Select>
+         <Select options={options} defaultValue={"default"} className='w-full' onChange={handleSortByOptions}></Select>
         </div>
       </div>
       <section className="my-10">
@@ -313,7 +312,7 @@ const BookingPage = () => {
                           Price:
                         </div>
                         <div>
-                          {resData.invoiceInfo.guestInfo.totalPrice}
+                          {formatMoney(resData.invoiceInfo.guestInfo.totalPrice)} VND
                         </div>
                       </BetweenFlex>
                     </div>
@@ -412,7 +411,7 @@ const BookingPage = () => {
             </div>
           )
         }) : (
-          <p className='text-[30px] font-bold m-[10px]'>Hiện không có đơn đặt phòng nào</p>
+            <Alert type='info' message='No invoices match your inquiry' showIcon></Alert>
         )}
 
       </section>

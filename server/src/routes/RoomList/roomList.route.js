@@ -60,8 +60,40 @@ ListRouter.get("/bookinRoom", verifyAdmin, async (req, res) => {
     res.status(500).json({ message: e.message });
   }
 });
+ListRouter.get("/bookinRoom/:id", verifyAdmin, async (req, res) => {
+  try {
+    const currentDate = moment(); 
+    const rooms = await Hotel.Room.find({hotelID:req.params.id}).populate({ path: "hotelID", select: "hotelName" });
 
+    const roomDetails = await Promise.all(
+      rooms.map(async (room) => {
+        const invoices = await Invoice.find({ roomID: room._id, invoiceState:"paid"});
+        const activeInvoices = invoices.filter((invoice) => {
+          const checkInDay = moment(invoice.guestInfo.checkInDay);
+          const checkOutDay = moment(invoice.guestInfo.checkOutDay);
+          return currentDate.isBetween(checkInDay, checkOutDay, undefined, "[)");
+        });
 
+        if (activeInvoices.length === 0) return null; 
+
+        return {
+          ...room.toObject(),
+          moreIn4: activeInvoices.map((invoice) => ({
+            total:invoice.guestInfo.totalPrice,
+            cusName: invoice.guestInfo.name,
+            checkInDate: invoice.guestInfo.checkInDay,
+            checkOutDate: invoice.guestInfo.checkOutDay,
+          })),
+        };
+      })
+    );
+
+    const result = roomDetails.filter((room) => room !== null);
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
 
 
 ListRouter.get("/rooms/:_id",verifyAdmin, async (req, res) => {

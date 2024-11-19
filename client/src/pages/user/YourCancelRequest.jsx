@@ -51,7 +51,7 @@ const YourCancelRequest = () => {
     const options = [
         {
           label: "Mặc định",
-          value: "defauld"
+          value: "default"
         },
         {
           label: "Xác nhận",
@@ -80,13 +80,14 @@ const YourCancelRequest = () => {
     console.log(cancelTemps)
     return (
         <>
+
             <div className='w-full text-start font-afacad text-2xl absolute'>
                 Your <span className='text-success'>Ongoing</span> Request
             </div>
                 <div className='history-wrapper relative'>
                     <div className='history-dropdown'>
                 <div className='pl-4'>
-                    <Select options={options} defaultValue={'defauld'} className='w-full' onChange={handleSort}></Select>
+                    <Select options={options} defaultValue={'default'} className='w-full' onChange={handleSort}></Select>
                 </div>
                 <div className='pr-2'>
                     <IoMdArrowDropdown></IoMdArrowDropdown>

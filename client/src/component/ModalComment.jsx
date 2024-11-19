@@ -7,13 +7,14 @@ import { addComment } from '../hooks/redux/roomsSlice'
 function ModalComment({ open, close, selectedInvoice }) {
     const [form] = Form.useForm()
     const dispatch = useDispatch()
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     const hanldeOke = () => {
         form.submit()
     }
 
     const onFinish = (values) => {
         const { content, ratePoint } = values
-        axios.post("http://localhost:4000/api/hotelList/commentRoom",{
+        axios.post(`${BE_PORT}/api/hotelList/commentRoom`,{
             content,
             ratePoint,
             roomID:selectedInvoice.roomInfo._id,

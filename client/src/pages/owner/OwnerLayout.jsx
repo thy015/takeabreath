@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive';
 import { AuthContext } from '../../hooks/auth.context';
 import { openNotification } from '../../hooks/notification';
 function OwnerLayout() {
-    const { auth, setAuth } = useContext(AuthContext)
+    const { auth } = useContext(AuthContext)
     const navigate = useNavigate()
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
     const [isMenu, setIsMenu] = useState(isMobile);

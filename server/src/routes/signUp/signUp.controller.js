@@ -327,7 +327,8 @@ const checkExistedPartner=async(req,res)=>{
       id:existedPartner._id,
       name: existedPartner.ownerName,
       email: existedPartner.email,
-      ssoID:existedPartner.ssoID
+      ssoID:existedPartner.ssoID,
+      role:'owner',
     })
     return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true,sameSite:"none"})
         .json({

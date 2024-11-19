@@ -19,7 +19,7 @@ export default function ChartRevenue({ dataset }) {
         height: 300,
         sx: {
             [`.${axisClasses.left} .${axisClasses.label}`]: {
-                transform: isMobile? 'translate(-10px, 0)':'translate(-40px, 0)',
+                transform: isMobile? 'translate(-10px, 0)':'translate(-60px, 0)',
             },
         },
     };

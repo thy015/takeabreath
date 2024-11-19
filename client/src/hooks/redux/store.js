@@ -4,8 +4,6 @@ import inputDaySlice from './inputDaySlice'
 import hotelsReducer from './hotelsSclice'
 import roomReducer from './roomsSlice'
 import revenueReducer from './revenueSlice'
-import cardReducer from './cardSlice'
-import commentSlice from "./commentSlice"
 import cancelRequest from "./cancelSlice"
 import ownerReducer from "./ownerSlice"
 import {thunk} from 'redux-thunk'
@@ -16,8 +14,7 @@ export const store = configureStore ({
     inputDay:inputDaySlice,
     hotel:hotelsReducer,
     room:roomReducer,
-    card:cardReducer,
-    comment:commentSlice,
+    invoice:revenueReducer,
     invoiceRevenue:revenueReducer,
     cancel:cancelRequest,
     owner:ownerReducer,

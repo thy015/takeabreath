@@ -22,14 +22,17 @@ const verifyAdmin = async (req, res, next) => {
 const verifyOwner = async (req, res, next) => {
     const user = res.locals.user
     if (user) {
+        
         req.ownerID = user.partnerId
         next()
     } else {
         const token = req.cookies.token
+        
         if (!token)
             return res.status(401).json({ message: "Unauthorized" })
         const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
-        if (decode.idSSO) {
+        console.log(decode.payload.ssoID)
+        if (decode.payload.ssoID) {
             req.ownerID = decode.payload.id
             next()
             return

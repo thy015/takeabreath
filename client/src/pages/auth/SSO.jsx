@@ -25,9 +25,12 @@ const SSO = () => {
                 user: {
                   id: res.data.id,
                   name: res.data.name,
-                  email: res.data.email
+                  email: res.data.email,
+                  role: res.data.role,
                 }
               })
+              console.log('Console log auth', auth)
+
             })
             .catch(err => {
               console.log(err)
@@ -39,10 +42,10 @@ const SSO = () => {
               axios.post(`${BE_PORT}/api/auth/check-existed-partner`, {decodedToken},{withCredentials:true})
           // chưa đăng kí
           if(res.status===202){
-            console.log('set item token',token)
+            console.log('set item token fail',token)
           navigate('/strict-signin-owner', {state: decodedToken})
           } else if(res.status===200){
-            console.log('set item token',token)
+            console.log('set item token succ',token)
             openNotification(true, "Success login");
             navigate('/owner')
           }else{

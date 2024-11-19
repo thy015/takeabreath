@@ -4,12 +4,12 @@ import { useForm } from 'antd/es/form/Form'
 import axios from 'axios'
 import { openNotification } from '../hooks/notification'
 import { useSelector, useDispatch } from 'react-redux'
-import { addAmenity } from '../hooks/redux/amenitySlice'
+import { addAmenity } from '../hooks/redux/hotelsSclice'
 import { faPray } from '@fortawesome/free-solid-svg-icons'
 function ModalAmenities({ visible, close }) {
     const [form] = Form.useForm()
     const dispatch = useDispatch()
-    const amenity = useSelector(state => state.amenity.amenity)
+    const amenity = useSelector(state => state.hotel.amenity)
     const hotelSelected = useSelector(state => state.hotel.selectedHotel)
     const [amenities, setAmenities] = useState({})
     const [totalSelections, setTotalSelections] = useState(0);

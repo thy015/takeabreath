@@ -36,7 +36,7 @@ const BookingPage = () => {
   const [isClickedConfirmCancel, setClickedConfirmCancel] = useState(false);
 
   const invoicesTemps = useSelector(state => state.invoiceRevenue.invoiceTemps)
-  const invoices = useSelector(state => state.invoice.invoices)
+  const invoices = useSelector(state => state.invoiceRevenue.invoices)
 
   const [visible, setVisible] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState({})

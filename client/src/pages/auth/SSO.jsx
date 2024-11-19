@@ -18,31 +18,43 @@ const SSO = () => {
       localStorage.setItem('token',token)
       if (decodedToken && !isExpired) {
         console.log('receive token',decodedToken)
-        axios.post(`${BE_PORT}/api/auth/login-with-sso`, {decodedToken}, {withCredentials: true})
-            .then(res => {
-              setAuth({
-                isAuthenticated: true,
-                user: {
-                  id: res.data.id,
-                  name: res.data.name,
-                  email: res.data.email
-                }
-              })
-            })
-            .catch(err => {
-              console.log(err)
-            })
         if (decodedToken.role === 'user') {
+          axios.post(`${BE_PORT}/api/auth/login-with-sso`, {decodedToken}, {withCredentials: true})
+              .then(res => {
+                setAuth({
+                  isAuthenticated: true,
+                  user: {
+                    id: res?.data?.id ?? "",
+                    email: res?.data?.email ?? "",
+                    name: res?.data?.name ?? "",
+                    role: res?.data?.role ?? ''
+                  }
+                })
+                console.log('Console log auth', auth)
+
+              })
+              .catch(err => {
+                console.log(err)
+              })
           navigate('/');
         } else if (decodedToken.role === 'partner') {
           const res=await
               axios.post(`${BE_PORT}/api/auth/check-existed-partner`, {decodedToken},{withCredentials:true})
           // chưa đăng kí
           if(res.status===202){
-            console.log('set item token',token)
-          navigate('/strict-signin-owner', {state: decodedToken})
+            console.log('set item token fail',token)
+            navigate('/strict-signin-owner', {state: decodedToken})
           } else if(res.status===200){
-            console.log('set item token',token)
+            console.log('set item token succ',token)
+            setAuth({
+              isAuthenticated: true,
+              user: {
+                id: res?.data?.id ?? "",
+                email: res?.data?.email ?? "",
+                name: res?.data?.name ?? "",
+                role: res?.data?.role ?? ''
+              }
+            })
             openNotification(true, "Success login");
             navigate('/owner')
           }else{

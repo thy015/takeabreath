@@ -17,7 +17,7 @@ const MostBookedRooms = ({ rooms }) => {
                   {room.roomName}
                 </td>
                 <td className="px-4 py-2 text-sm text-gray-800">{room.books}</td>
-                <td className="px-4 py-2 text-sm text-gray-800">{(room.revenue * 0.1).toLocaleString()} VND</td>
+                {/* <td className="px-4 py-2 text-sm text-gray-800">{(room.revenue * 0.1).toLocaleString()} VND</td> */}
               </tr>
             ))}
           </tbody>

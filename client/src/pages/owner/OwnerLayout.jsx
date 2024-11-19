@@ -7,23 +7,23 @@ import { useMediaQuery } from 'react-responsive';
 import { AuthContext } from '../../hooks/auth.context';
 import { openNotification } from '../../hooks/notification';
 function OwnerLayout() {
-    const { auth, setAuth } = useContext(AuthContext)
+    const { auth } = useContext(AuthContext)
     const navigate = useNavigate()
     const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
     const [isMenu, setIsMenu] = useState(isMobile);
-    useEffect(() => {
-        if (auth.isAuthenticated) {
-            if (auth.user.role !== "owner") {
-                openNotification(false, "Bạn cũng có quyền truy cập", "")
-                navigate("/")
-            }
-        }
-
-    }, [auth])
-    useEffect(() => {
-        setIsMenu(isMobile)
-    }, [isMobile])
-    console.log("[isMenuOpen]", isMenu)
+    // useEffect(() => {
+    //     if (auth.isAuthenticated) {
+    //         if (auth.user.role !== "owner") {
+    //             openNotification(false, "Bạn không có quyền truy cập", "")
+    //             navigate("/")
+    //         }
+    //     }
+    //
+    // }, [auth])
+    // useEffect(() => {
+    //     setIsMenu(isMobile)
+    // }, [isMobile])
+    // console.log("[isMenuOpen]", isMenu)
 
     return (
         <div className='flex'>

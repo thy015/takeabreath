@@ -13,9 +13,6 @@ const MetricCard = ({ title, value, linkText, icon,link }) => {
         <span><FontAwesomeIcon icon={icon} className='text-white'/> </span>
       </div>
 
-      <style jsx>{`
-   
-      `}</style>
     </div>
   );
 };

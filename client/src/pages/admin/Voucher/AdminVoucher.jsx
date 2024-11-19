@@ -13,8 +13,9 @@ const VouchersList = () => {
   const [refresh, setRefresh] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [header, setHeader] = useState("Thêm Voucher");
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const [selectedVoucherId, setSelectedVoucherId] = useState(null);
-  const { data, error, loading } = useGet("http://localhost:4000/api/voucher/sysvou", refresh);
+  const { data, error, loading } = useGet(`${BE_PORT}/api/voucher/sysvou`, refresh);
   const [searchText, setSearchText] = useState("");
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -47,7 +48,7 @@ const VouchersList = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:4000/api/voucher/deletevou/${selectedVoucherId}`);
+      const response = await axios.delete(`${BE_PORT}/api/voucher/deletevou/${selectedVoucherId}`);
       if (response.status === 200) {
         notification.success({
           message: 'Xóa Voucher Thành Công',
@@ -79,7 +80,7 @@ const VouchersList = () => {
       }
   const handleEditVoucher = async (voucherId) => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/voucher/sysvou/${voucherId}`);
+      const response = await axios.get(`${BE_PORT}/api/voucher/sysvou/${voucherId}`);
       form.setFieldsValue({
         code:response.data.code,
         voucherName: response.data.voucherName,
@@ -108,7 +109,7 @@ const VouchersList = () => {
     };
     try {
       if (selectedVoucherId) {
-        await axios.post(`http://localhost:4000/api/voucher/updatevou/${selectedVoucherId}`, {
+        await axios.post(`${BE_PORT}/api/voucher/updatevou/${selectedVoucherId}`, {
           voucherName:values.voucherName,
           code: values.code,
           discount: values.discount ,
@@ -124,7 +125,7 @@ const VouchersList = () => {
         });
 
       } else {
-        await axios.post("http://localhost:4000/api/voucher/addvou", {
+        await axios.post(`${BE_PORT}/api/voucher/addvou`, {
           ...formattedValues
         });
         setRefresh(prev => !prev); 

@@ -14,10 +14,10 @@ const cancelSlice = createSlice({
         },
         filterSort: (state, action) => {
             const cancel = action.payload.cancel
-            if (action.payload.value == "defauld") {
+            if (action.payload.value === "default") {
                 state.cancelTemps = state.cancel
             } else {
-                state.cancelTemps = cancel.filter(item => item.cancelRequest.isAccept == action.payload.value)
+                state.cancelTemps = cancel.filter(item => item.cancelRequest.isAccept === action.payload.value)
 
             }
         }

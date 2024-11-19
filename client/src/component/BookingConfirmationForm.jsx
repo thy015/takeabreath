@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { setInvoiceID,setVoucherApplied } from "../hooks/redux/inputDaySlice"
 import { useForm } from "antd/es/form/Form";
-import { setInvoiceCount,cleanInvoice } from "../hooks/redux/countInvoice";
+import { setInvoiceCount,cleanInvoice } from "../hooks/redux/revenueSlice";
 const {Option}=Select;
 function BookingConfirmationForm({ isShow, onCancel,hotel }) {
   const { auth,setAuth } = useContext(AuthContext);
@@ -40,7 +40,7 @@ function BookingConfirmationForm({ isShow, onCancel,hotel }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { count, listInvoiceID } = useSelector(state => state.countInvoice)
+  const { count, listInvoiceID } = useSelector(state => state.invoiceRevenue)
   const formatMoney = (money) => {
     return new Intl.NumberFormat("de-DE").format(money);
   };
@@ -136,18 +136,20 @@ useEffect(() => {
       const response = await axios.put(`${BE_PORT}/api/cancelReq/inactiveCus/${auth.user.id}`, {
         reason: reason,
       });
-      if (response.status === 200 && response.data.message === 'Inactive customer successfully') {
+      if (response.status) {
         message.error("Tài khoản của bạn đã bị khóa")
         const resDeleteInvoice = await axios.post(`${BE_PORT}/api/booking/deleteInvoiceWaiting`, { listID: listInvoiceID })
-        console.log("Delete invoice waiting",resDeleteInvoice)
+        dispatch(cleanInvoice())
         hanldeLogout()
       } else {
+        console.log(response)
         notification.error({
           message: 'Customer Inactivation Failed',
           description: 'Customer inactivation failed!',
         });
       }
     } catch (error) {
+      console.log(error)
       const errorMessage = error.response?.data?.message || "An unknown error occurred.";
     }
   };

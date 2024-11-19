@@ -35,7 +35,9 @@ const allowedOrigins = ["http://localhost:3000",
     "https://takeabreath-frontend.vercel.app",
     "https://www.sandbox.paypal.com/xoplatform/logger/api/logger?disableSetCookie=true",
     "https://takeabreath.vercel.app",
-    "https://vercel.live/_next-live/feedback/feedback.html"
+    "https://vercel.live/_next-live/feedback/feedback.html",
+    "https://sso.htilssu.id.vn/",
+    "https://wowo.htilssu.id.vn/"
 
 ];
 

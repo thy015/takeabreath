@@ -14,7 +14,7 @@ import axios from "axios";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import ModalComment from '../../component/ModalComment';
-import { getComment } from '../../hooks/redux/commentSlice';
+import { getComment } from '../../hooks/redux/roomsSlice';
 import { refreshInvoice, setInvoices, sortInvoice } from '../../hooks/redux/revenueSlice';
 
 const BookingPage = () => {
@@ -36,13 +36,13 @@ const BookingPage = () => {
   const [isClickedConfirmCancel, setClickedConfirmCancel] = useState(false);
 
   const invoicesTemps = useSelector(state => state.invoiceRevenue.invoiceTemps)
-  const invoices = useSelector(state => state.invoice.invoices)
+  const invoices = useSelector(state => state.invoiceRevenue.invoices)
 
   const [visible, setVisible] = useState(false)
   const [sortSelect, setSortSelect] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState({})
 
-  const comment = useSelector(state => state.comment.comments)
+  const comment = useSelector(state => state.room.comments)
   const handleClickCancel = (invoiceID) => {
     setClickCancel((prevState) => ({
       ...prevState,

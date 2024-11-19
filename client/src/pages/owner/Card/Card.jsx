@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom'
 import FormCard from '../../../component/FormCard'
 import dayjs from 'dayjs'
 import axios from 'axios'
-import { setCards, addCards } from '../../../hooks/redux/cardSlice'
+import { setCards, addCards } from '../../../hooks/redux/ownerSlice'
 import { openNotification } from '../../../hooks/notification'
 function Card() {
     const dispatch = useDispatch()
     const [visible, setVisible] = useState(false)
-    const cards = useSelector(state => state.card.cards)
+    const cards = useSelector(state => state.owner.cards)
     const idMobile =useMediaQuery({query:'(max-width: 640px)'})
     const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {

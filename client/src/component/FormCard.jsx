@@ -4,7 +4,7 @@ import { Modal, Form, Input, InputNumber, DatePicker, Col, Row } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import dayjs from 'dayjs'
 import axios from "axios"
-import  {setCards} from '../hooks/redux/cardSlice'
+import  {setCards} from '../hooks/redux/ownerSlice'
 import { openNotification } from '../hooks/notification'
 
 function FormCard({ visible, close }) {

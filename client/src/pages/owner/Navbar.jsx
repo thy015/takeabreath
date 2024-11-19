@@ -6,6 +6,7 @@ import { MenuOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setOwner } from "../../hooks/redux/ownerSlice";
+import { Avatar } from "antd";
 function Navbar({ isMenuOpen, setIsMenuOpen }) {
   const { auth, setAuth } = useContext(AuthContext)
   const [open, setOpen] = useState(false);
@@ -65,8 +66,8 @@ function Navbar({ isMenuOpen, setIsMenuOpen }) {
               onClick={showProfile}
             >
               <p className="pt-[10px]">{auth.user.name.length > 0 ? auth.user.name : auth.user.email}</p>
-              <div className="h-[50px] w-[50px] bg-[#4E73DF] cursor-pointer flex items-center justify-center relative z-40">
-                <img src={owner.avatarLink?.length>0  ? owner.avatarLink: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"} alt="" />
+              <div className="h-[50px] w-[50px] cursor-pointer flex items-center justify-center relative z-40">
+                <Avatar className="w-full h-full" src={owner.avatarLink?.length>0  ? owner.avatarLink: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"} alt="" />
               </div>
 
               {open && (

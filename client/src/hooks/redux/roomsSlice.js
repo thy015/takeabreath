@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     rooms: [],
     selectRoom:{},
-    roomSearch:[]
+    roomSearch:[],
+    comments: []
 }
 
 const roomSclice = createSlice({
@@ -57,10 +58,17 @@ const roomSclice = createSlice({
                 }
                 return item.hotelID._id == idHotel
             })
+        },
+        //comment
+        getComment: (state, action) => {
+            state.comments = action.payload
+        },
+        addComment: (state,action)=>{
+            state.comments.push(action.payload)
         }
     }
 })
 
 
-export const  {setRooms,addRoom,deleteRoom,selectedRoom,updateRooms,searchRoom,setRoomSearch,filterRoomsByHotel} = roomSclice.actions
+export const  {setRooms,addRoom,deleteRoom,selectedRoom,updateRooms,searchRoom,setRoomSearch,filterRoomsByHotel,getComment,addComment} = roomSclice.actions
 export default roomSclice.reducer

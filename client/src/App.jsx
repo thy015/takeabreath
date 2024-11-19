@@ -27,6 +27,7 @@ function App() {
                 role: userRes?.role ?? ""
               },
             });
+            console.log("[USER SSO]",userRes)
           } catch (err) {
             console.log("[APP]", err);
             setAuth({
@@ -40,7 +41,7 @@ function App() {
       
         fetchUser();
       }, []);
-
+    console.log(auth)
     useEffect(() => {
         const loadScript = (src) => {
             let script

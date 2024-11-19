@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import React from 'react'
 import { openNotification } from '../hooks/notification'
-import { addComment } from '../hooks/redux/commentSlice'
+import { addComment } from '../hooks/redux/roomsSlice'
 function ModalComment({ open, close, selectedInvoice }) {
     const [form] = Form.useForm()
     const dispatch = useDispatch()

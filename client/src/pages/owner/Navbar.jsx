@@ -67,7 +67,7 @@ function Navbar({ isMenuOpen, setIsMenuOpen }) {
             >
               <p className="pt-[10px]">{auth.user.name.length > 0 ? auth.user.name : auth.user.email}</p>
               <div className="h-[50px] w-[50px] cursor-pointer flex items-center justify-center relative z-40">
-                <Avatar className="w-full h-full" src={owner.avatarLink?.length>0  ? owner.avatarLink: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"} alt="" />
+                {/* <Avatar className="w-full h-full" src={owner.avatarLink?.length>0  ? owner.avatarLink: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"} alt="" /> */}
               </div>
 
               {open && (

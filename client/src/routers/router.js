@@ -58,6 +58,7 @@ export const routers = [
       {path:"rooms", page:RoomsAdmin},
       {path:"hotel/:id/rooms", page:RoomsAdmin},
       {path:"rooms/bookinRoom",page:BookinRoom},
+      {path:"rooms/bookinRoom/:id",page:BookinRoom},
       {path:"customers", page:Customer},
       {path:"requests",page:cancelReqAdmin},
       {path:"vouchers",page:AdminVoucher},

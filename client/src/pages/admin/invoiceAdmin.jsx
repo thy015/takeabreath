@@ -39,7 +39,6 @@ const InvoicesList = () => {
     return <Alert message="No invoice data found" type="info" showIcon />;
   }
 
-
   const columns = [
     { title: "Họ Tên", dataIndex: "guestInfo", key: "name" ,
       render: (guestInfo) => (
@@ -71,6 +70,20 @@ const InvoicesList = () => {
     }
     ,
   ];
+  const exportData = data.map(invoice => ({
+    "Họ Tên": invoice.guestInfo.name,
+    "Tên Khách Sạn": invoice.guestInfo.idenCard,
+    "Email": invoice.guestInfo.email,
+    "Số Điện Thoại": invoice.guestInfo.phone,
+    "Ngày Sinh": new Date(invoice.guestInfo.dob).toLocaleDateString(),
+    "Giới Tính": invoice.guestInfo.gender,
+    "Phương Thức Thanh Toán": invoice.guestInfo.paymentMethod,
+    "Ngày Check-in": new Date(invoice.guestInfo.checkInDay).toLocaleDateString(),
+    "Ngày Check-out": new Date(invoice.guestInfo.checkOutDay).toLocaleDateString(),
+    "Tổng Giá": `${invoice.guestInfo.totalPrice.toLocaleString()} VND`,
+    "Tổng Số Phòng": invoice.guestInfo.totalRoom,
+    "Trạng Thái Hóa Đơn": invoice.invoiceState
+  }));
   
   const formattedData = data
     .map(invoice => ({
@@ -88,14 +101,20 @@ const InvoicesList = () => {
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
           Tất cả hóa đơn
         </h1>
-        <div className="flex gap-2 mt-4">
         <RangePicker allowClear={false}
   onChange={handleDateChange}
   format="DD/MM/YYYY"
   placeholder={['Từ ngày', 'Đến ngày']} 
   className='h-10'
 />
-{/* <ExportToExcel apiData={[formattedData]} fileName={fileName} buttonName={"Tạo Hóa Đơn"} /> */}
+        <div className="flex gap-2 mt-2">
+          <div className="mt-0.5">
+<ExportToExcel 
+  apiData={exportData} 
+  fileName="HoaDon" 
+  buttonName="Xuất dữ liệu"
+/>
+</div>
         <div className="relative pb-2.5">
           <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3" />
           <input
@@ -109,13 +128,15 @@ const InvoicesList = () => {
         </div>
       </div>
       <Table
-        className="mt-4 border-2 rounded-s"
+        className="mt-3 border-2 rounded-s"
         columns={columns}
         dataSource={formattedData}
         pagination={{ pageSize: 10 }}
       />
+ 
     </div>
   );
 };
 
 export default InvoicesList;
+

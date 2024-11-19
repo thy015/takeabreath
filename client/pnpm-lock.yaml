@@ -44,6 +44,9 @@ importers:
       '@paypal/react-paypal-js':
         specifier: ^8.7.0
         version: 8.7.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
       '@react-google-maps/api':
         specifier: ^2.20.3
         version: 2.20.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -73,7 +76,7 @@ importers:
         version: 1.7.7
       bootstrap:
         specifier: ^5.3.3
-        version: 5.3.3(@popperjs/core@2.11.5)
+        version: 5.3.3(@popperjs/core@2.11.8)
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -5910,9 +5913,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  bootstrap@5.3.3(@popperjs/core@2.11.5):
+  bootstrap@5.3.3(@popperjs/core@2.11.8):
     dependencies:
-      '@popperjs/core': 2.11.5
+      '@popperjs/core': 2.11.8
 
   boxen@8.0.1:
     dependencies:

@@ -2,16 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPaymentCompleted } from '../hooks/redux/inputDaySlice';
 import { openNotification } from '../hooks/notification';
-import { cleanInvoice } from '../hooks/redux/countInvoice';
+import { cleanInvoice } from '../hooks/redux/revenueSlice';
 import axios from 'axios';
 
 const PayPalButton = () => {
     const paypal = useRef();
     const dispatch = useDispatch();
     const { convertPrice, invoiceID } = useSelector((state) => state.inputDay);
-    const { count, listInvoiceID } = useSelector(state => state.countInvoice)
+    const { count, listInvoiceID } = useSelector(state => state.invoiceRevenue)
     const BE_PORT = import.meta.env.VITE_BE_PORT
-    console.log({ count, listInvoiceID })
     useEffect(() => {
         console.log("Current invoiceID in PayPalButton:", invoiceID);
     }, [invoiceID]);

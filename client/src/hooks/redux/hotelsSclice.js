@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState ={
     hotels:[],
     selectedHotel:{},
-    hotelSearch: []
+    hotelSearch: [],
+    amenity: {}
 }
 
 const hotelsSlice = createSlice({
@@ -42,9 +43,12 @@ const hotelsSlice = createSlice({
                 state.hotelSearch = state.hotels.filter(hotel=>hotel.hotelName.includes(action.payload) )
             }
             
+        },
+        addAmenity: (state, action) => {
+            state.amenity = action.payload
         }
     }
 })
 
-export const {setHotels,addHotel,deleteHotel,seletedHotel,updateHotels,searchHotels} = hotelsSlice.actions
+export const {setHotels,addHotel,deleteHotel,seletedHotel,updateHotels,searchHotels,addAmenity} = hotelsSlice.actions
 export default hotelsSlice.reducer

@@ -4,10 +4,12 @@ import { AuthContext } from '../../../hooks/auth.context';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { openNotification } from '../../../hooks/notification';
+import { useDispatch } from 'react-redux';
+import { setOwner } from '../../../hooks/redux/ownerSlice';
 const { Title, Text } = Typography;
 
 const UserInfoCard = () => {
-
+    const dispatch = useDispatch()
     const BE_PORT = import.meta.env.VITE_BE_PORT
     const [visible, setVisible] = useState(false);
     const [image, setImage] = useState("https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg")
@@ -20,8 +22,8 @@ const UserInfoCard = () => {
         axios.get(`${BE_PORT}/api/auth/get-owner`)
             .then(res => res.data)
             .then(data => {
-
                 setUser(data.owner)
+                dispatch(setOwner(data.owner))
                 form.setFieldsValue({
                     ownerName: data.owner.ownerName ?? "",
                     birthday:dayjs( data.owner.birthday) ?? "",
@@ -94,6 +96,7 @@ const UserInfoCard = () => {
             .then(data => {
                 setVisible(false);
                 setUser(newData)
+                dispatch(setOwner(newData))
                 openNotification(true, "Cập nhật thành công", "")
             })
             .catch(err => {
@@ -135,8 +138,9 @@ const UserInfoCard = () => {
                 className="w-full max-w-lg shadow-lg rounded-lg "
                 title={
                     <div className="flex items-center mx-[20px] mt-[20px]">
+                        {console.log(image)}
                         <Avatar
-                            src={image?? "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"}
+                            src={image.length> 0  ? image: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"}
                             size={64}
                             className="mr-4 border border-blue-500"
                         />

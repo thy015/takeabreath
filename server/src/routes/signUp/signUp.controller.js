@@ -302,6 +302,7 @@ const strictSignInPartner=async(req,res)=>{
       email: newPartner.email,
       ssoID:newPartner.ssoID
     })
+    console.log(newToken)
     return res.status(200).cookie('token',newToken,{httpOnly:true,secure:true,sameSite:"none"})
         .json({
           login: true,

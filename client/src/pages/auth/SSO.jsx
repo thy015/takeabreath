@@ -18,24 +18,24 @@ const SSO = () => {
       localStorage.setItem('token',token)
       if (decodedToken && !isExpired) {
         console.log('receive token',decodedToken)
-        axios.post(`${BE_PORT}/api/auth/login-with-sso`, {decodedToken}, {withCredentials: true})
-            .then(res => {
-              setAuth({
-                isAuthenticated: true,
-                user: {
-                  id: res.data.id,
-                  name: res.data.name,
-                  email: res.data.email,
-                  role: res.data.role,
-                }
-              })
-              console.log('Console log auth', auth)
-
-            })
-            .catch(err => {
-              console.log(err)
-            })
         if (decodedToken.role === 'user') {
+          axios.post(`${BE_PORT}/api/auth/login-with-sso`, {decodedToken}, {withCredentials: true})
+              .then(res => {
+                setAuth({
+                  isAuthenticated: true,
+                  user: {
+                    id: res.data.id,
+                    name: res.data.name,
+                    email: res.data.email,
+                    role: res.data.role,
+                  }
+                })
+                console.log('Console log auth', auth)
+
+              })
+              .catch(err => {
+                console.log(err)
+              })
           navigate('/');
         } else if (decodedToken.role === 'partner') {
           const res=await

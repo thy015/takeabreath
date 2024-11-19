@@ -112,15 +112,15 @@ function App() {
                         }
 
                         if (route.isOwner) {
-                            if (!auth.isAuthenticated || auth?.user?.role !== 'owner') {
-                                return (
-                                  <Route
-                                    key={route.path}
-                                    path={route.path}
-                                    element={<Navigate to="/" replace state={{ from: route.path }} />}
-                                  />
-                                );
-                              }
+                            // if (!auth.isAuthenticated || auth?.user?.role !== 'owner') {
+                            //     return (
+                            //       <Route
+                            //         key={route.path}
+                            //         path={route.path}
+                            //         element={<Navigate to="/" replace state={{ from: route.path }} />}
+                            //       />
+                            //     );
+                            //   }
                             return (
                                 <Route key={route.path}
                                        path={route.path}

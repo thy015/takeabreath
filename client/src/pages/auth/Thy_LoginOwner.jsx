@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 
 const LogInOwner = () => {
   const { t } = useTranslation();
-  const { auth, setAuth } = useContext(AuthContext)
+  const { setAuth } = useContext(AuthContext)
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
   const BE_PORT=import.meta.env.VITE_BE_PORT

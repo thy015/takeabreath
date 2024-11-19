@@ -1,7 +1,7 @@
 
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 
-import { Form, Input, Checkbox, Tooltip } from "antd";
+import { Form, Input,Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF } from "react-icons/fa";
@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 const Login = () => {
   const { t } = useTranslation()
 
-  const { auth, setAuth } = useContext(AuthContext)
+  const { setAuth } = useContext(AuthContext)
   // get the redirect url from the location
   const navigate = useNavigate();
   const BE_PORT=import.meta.env.VITE_BE_PORT

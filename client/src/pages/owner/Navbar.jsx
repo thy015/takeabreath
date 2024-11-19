@@ -12,19 +12,20 @@ function Navbar({ isMenuOpen, setIsMenuOpen }) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const owner = useSelector(state=>state.owner.owner)
+  const owner = useSelector(state => state.owner.owner)
   const BE_PORT = import.meta.env.VITE_BE_PORT
   axios.defaults.withCredentials = true
   useEffect(() => {
     axios.get(`${BE_PORT}/api/auth/get-owner`)
-        .then(res => res.data)
-        .then(data => {
-            dispatch(setOwner(data.owner))
-        })
-        .catch(err => {
-            console.log(err)
-        })
-}, [])
+      .then(res => res.data)
+      .then(data => {
+        console.log(data)
+        dispatch(setOwner(data.owner))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [])
   const showProfile = () => {
     setOpen(!open);
   };
@@ -67,7 +68,7 @@ function Navbar({ isMenuOpen, setIsMenuOpen }) {
             >
               <p className="pt-[10px]">{auth.user.name.length > 0 ? auth.user.name : auth.user.email}</p>
               <div className="h-[50px] w-[50px] cursor-pointer flex items-center justify-center relative z-40">
-                {/* <Avatar className="w-full h-full" src={owner.avatarLink?.length>0  ? owner.avatarLink: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"} alt="" /> */}
+                <Avatar className="w-full h-full" src={owner.avatarLink?.length>0  ? owner.avatarLink: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"} alt="" />
 
               </div>
 

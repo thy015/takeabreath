@@ -3,6 +3,7 @@ import { Spin, Alert, Table ,DatePicker} from "antd";
 import { useGet } from "../../hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import {ExportToExcel} from '../../component/ExportToExcel'
+import GeneratePDFButton from "../../component/ExportToPDF";
 const InvoicesList = () => {
   const{RangePicker}=DatePicker;
   const BE_PORT=import.meta.env.VITE_BE_PORT
@@ -14,7 +15,7 @@ const InvoicesList = () => {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
   const handleDateChange = (dates) => {
-    setSelectedDateRange(dates);
+    setSelectedDateRange(dates ? [dates[0], dates[1]] : [null, null]);
   };
   const isDateInRange = (date) => {
     if (!selectedDateRange[0] || !selectedDateRange[1]) return true;
@@ -52,19 +53,11 @@ const InvoicesList = () => {
     { title: "Ngày Check-out", dataIndex: ["guestInfo", "checkOutDay"],width:180,key: "checkOutDay", render: (checkOutDay) => new Date(checkOutDay).toLocaleDateString('vi-VN') },
     { title: "Tổng Giá", dataIndex: ["guestInfo", "totalPrice"], key: "totalPrice",width:120, render: (price) => `${price.toLocaleString()} VND` },
     {
-      title: "Xuất Hóa Đơn",
+      title: "Tùy Chọn",
       width: '15%',
       render: (text, record) => {
-        const formattedData = {
-          "Họ Tên": record.guestInfo.name,
-          "Email": record.guestInfo.email,
-          "Số Điện Thoại": record.guestInfo.phone,
-          "Ngày Check-in": new Date(record.guestInfo.checkInDay).toLocaleDateString(),
-          "Ngày Check-out": new Date(record.guestInfo.checkOutDay).toLocaleDateString(),
-          "Tổng Giá": `${record.guestInfo.totalPrice.toLocaleString()} VND`
-        };
         return (
-          <ExportToExcel apiData={[formattedData]} fileName={fileName} buttonName={"Tạo Hóa Đơn"} />
+   <GeneratePDFButton invoice={record}/>
         );
       }
     }
@@ -101,7 +94,7 @@ const InvoicesList = () => {
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
           Tất cả hóa đơn
         </h1>
-        <RangePicker allowClear={false}
+        <RangePicker 
   onChange={handleDateChange}
   format="DD/MM/YYYY"
   placeholder={['Từ ngày', 'Đến ngày']} 

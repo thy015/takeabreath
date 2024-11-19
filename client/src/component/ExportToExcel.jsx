@@ -17,7 +17,7 @@ export const ExportToExcel = ({ apiData, fileName, buttonName }) => {
   };
 
   return (
-    <button onClick={() => exportToCSV(apiData, fileName)} className='bg-[#003580] h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] hover:bg-blue-500'>
+    <button onClick={() => exportToCSV(apiData, fileName)} className='bg-[#003580] h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] p-3.5 mt-1 hover:bg-blue-500'>
  {buttonName||"Tạo báo cáo"}
     </button>
   );

@@ -20,6 +20,7 @@ const bookRouter = require("./src/routes/BookRoom/book.route");
 const reqCancelRouter = require("./src/routes/BookRoom/cancelReq.route");
 const VoucherRoute = require("./src/routes/Voucher/voucher.route")
 const MailRoute=require('./src/routes/MailService/mail.route')
+const PDFRoute =require('./src/routes/PDF-generated/pdf.route');
 //always put first
 
 // Cấu hình middleware
@@ -62,7 +63,8 @@ app.use("/api/auth", signUpRouter);
 app.use("/api/booking", bookRouter);
 app.use("/api/cancelReq", reqCancelRouter);
 app.use("/api/voucher", VoucherRoute);
-app.use('/api/email',MailRoute)
+app.use('/api/email',MailRoute);
+app.use('/api/pdf',PDFRoute);
 //mongo connect
 
 mongoose

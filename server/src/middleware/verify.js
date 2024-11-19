@@ -57,9 +57,11 @@ const verifyLogin = async (req, res, next) => {
     const token = req.cookies.token
     const user = res.locals.user
     if (user) {
+        console.log(user)
         const userDecode = {
             id:user.id,
-            email:user.email
+            email:user.email,
+            role:user.role
         }
         req.user= userDecode
         next()

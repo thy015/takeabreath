@@ -28,27 +28,23 @@ ListRouter.get("/rooms",verifyAdmin, async (req, res) => {
 
 ListRouter.get("/bookinRoom", verifyAdmin, async (req, res) => {
   try {
-    const currentDate = moment(); 
     const rooms = await Hotel.Room.find().populate({ path: "hotelID", select: "hotelName" });
 
     const roomDetails = await Promise.all(
       rooms.map(async (room) => {
         const invoices = await Invoice.find({ roomID: room._id, invoiceState:"paid"});
-        const activeInvoices = invoices.filter((invoice) => {
-          const checkInDay = moment(invoice.guestInfo.checkInDay);
-          const checkOutDay = moment(invoice.guestInfo.checkOutDay);
-          return currentDate.isBetween(checkInDay, checkOutDay, undefined, "[)");
-        });
 
-        if (activeInvoices.length === 0) return null; 
+        if (invoices.length === 0) return null; 
 
         return {
           ...room.toObject(),
-          moreIn4: activeInvoices.map((invoice) => ({
+          moreIn4: invoices.map((invoice) => ({
             total:invoice.guestInfo.totalPrice,
             cusName: invoice.guestInfo.name,
             checkInDate: invoice.guestInfo.checkInDay,
             checkOutDate: invoice.guestInfo.checkOutDay,
+            createDay:invoice.createDay,
+            id:invoice._id,
           })),
         };
       })
@@ -68,21 +64,18 @@ ListRouter.get("/bookinRoom/:id", verifyAdmin, async (req, res) => {
     const roomDetails = await Promise.all(
       rooms.map(async (room) => {
         const invoices = await Invoice.find({ roomID: room._id, invoiceState:"paid"});
-        const activeInvoices = invoices.filter((invoice) => {
-          const checkInDay = moment(invoice.guestInfo.checkInDay);
-          const checkOutDay = moment(invoice.guestInfo.checkOutDay);
-          return currentDate.isBetween(checkInDay, checkOutDay, undefined, "[)");
-        });
 
-        if (activeInvoices.length === 0) return null; 
+        if (invoices.length === 0) return null; 
 
         return {
           ...room.toObject(),
-          moreIn4: activeInvoices.map((invoice) => ({
+          moreIn4: invoices.map((invoice) => ({
             total:invoice.guestInfo.totalPrice,
             cusName: invoice.guestInfo.name,
             checkInDate: invoice.guestInfo.checkInDay,
             checkOutDate: invoice.guestInfo.checkOutDay,
+            createDay:invoice.createDay,
+            id:invoice._id,
           })),
         };
       })

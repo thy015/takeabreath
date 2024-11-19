@@ -7,14 +7,14 @@ const { RangePicker } = DatePicker;
 
 const ModalAdd = ({ visible, onCancel, onOk, form, header }) => {
   const [owners, setOwners] = useState([]);
-  
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   const disableDay = (current) => {
     return current && current < new Date().setHours(0, 0, 0, 0);
   };
 
   const fetchOwners = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/auth/owner");
+      const response = await axios.get(`${BE_PORT}/api/auth/owner`);
       setOwners(response.data);
     } catch (error) {
       console.error("Error fetching owners:", error);

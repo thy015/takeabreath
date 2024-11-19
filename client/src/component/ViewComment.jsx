@@ -6,9 +6,10 @@ import { openNotification } from '../hooks/notification'
 function ViewComment({ visible, close, record }) {
     console.log(record)
     const [comment, setComment] = useState([])
+    const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {
         if (record) {
-            axios.get(`http://localhost:4000/api/hotelList/get-comment-room/${record._id}`)
+            axios.get(`${BE_PORT}/api/hotelList/get-comment-room/${record._id}`)
                 .then(res => res.data)
                 .then(data => {
                     console.log(data)

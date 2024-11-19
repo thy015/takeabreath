@@ -8,12 +8,13 @@ import HotelDetail_RoomDisplay from "./HotelDetail_RoomDisplay";
 import {useSelector} from "react-redux";
 import {AmenitiesCard} from "../../component/AccommodationCard";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 const HotelDisplay_HotelDetail = () => {
   const { id } = useParams();
   const location=useLocation()
   const {countRoom,clickedHotel,attachedRooms}=useSelector((state)=>state.searchResults)
-
+const{t}=useTranslation();
   // query room data result, integrate countRoom
   const {roomData}=location.state || {roomData:[]}
   const specRoomData=roomData.filter(r=>r.hotelID===id)
@@ -55,7 +56,7 @@ const HotelDisplay_HotelDetail = () => {
                   type="solid"
                   className="bg-[#1677ff] text-white py-2 px-3 rounded-md hover:scale-105"
               >
-                Reserve
+{t('reverse')}
               </button>
             </div>
           </div>
@@ -98,7 +99,7 @@ const HotelDisplay_HotelDetail = () => {
                   <div className="mr-2">
                     {" "}
                     <RateText hotel={clickedHotel}></RateText>
-                    {clickedHotel.numberOfRates} people rated
+                    {clickedHotel.numberOfRates} {t('rated')}
                   </div>
                   <div
                       className="badge bg-[#0f4098]"
@@ -117,7 +118,7 @@ const HotelDisplay_HotelDetail = () => {
 
                 <div className="h-1/2 border-b ">
                   {/* The comment part */}
-                  <div className="h-full bg-slate-400">comment section</div>
+                  <div className="h-full bg-slate-400">{t('section')}</div>
                 </div>
               </div>
             </div>
@@ -133,14 +134,14 @@ const HotelDisplay_HotelDetail = () => {
 
         </Row>
         {/* Amen display */}
-        <div> <Title>What this place offers</Title>
+        <div> <Title>{t('offer')}</Title>
           <div className='flex flex-wrap'>
           <AmenitiesCard hotel={clickedHotel}></AmenitiesCard>
         </div>
         </div>
         {/* Comment */}
-        <div> <Title >Comments</Title> </div>
-        <div> <Title>Room Available</Title> </div>
+        <div> <Title >{t('comment')}</Title> </div>
+        <div> <Title>{t('available')}</Title> </div>
         {/* Room display */}
         <div>
           {/*bấm ở home*/}

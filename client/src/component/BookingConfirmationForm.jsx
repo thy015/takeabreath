@@ -26,8 +26,10 @@ import { useDispatch } from "react-redux"
 import { setInvoiceID,setVoucherApplied } from "../hooks/redux/inputDaySlice"
 import { useForm } from "antd/es/form/Form";
 import { setInvoiceCount,cleanInvoice } from "../hooks/redux/revenueSlice";
+import { useTranslation } from "react-i18next";
 const {Option}=Select;
 function BookingConfirmationForm({ isShow, onCancel,hotel }) {
+  const {t}=useTranslation();
   const { auth,setAuth } = useContext(AuthContext);
   const [messageApi, contextHolder] = message.useMessage();
   const BE_PORT=import.meta.env.VITE_BE_PORT
@@ -124,9 +126,9 @@ useEffect(() => {
     
     if (voucher) {
         dispatch(setVoucherApplied({ voucher }));
-        notification.success({ description: 'Áp dụng voucher thành công!' });
+        notification.success({ description: t('selectvou') });
     } else {
-        notification.error({ description: 'Voucher không hợp lệ!' });
+        notification.error({ description: t('selectvoufail') });
     }
 };
 
@@ -291,7 +293,7 @@ const handleCancel = () => {
         }}
         cancelButtonProps={{className:'py-3 px-6 text-lg'}}
     >
-      <h2 className="text-center font-semibold font-poppins"> TAB Booking Detail</h2>
+      <h2 className="text-center font-semibold font-poppins">{t('form')}</h2>
       <Row className="h-auto " wrap={true} gutter={24}>
         {/* input form */}
         <Col
@@ -299,7 +301,7 @@ const handleCancel = () => {
             className="border-[1px] p-6 h-[520px] border-gray-300 rounded-[10px] min-w-[550px]"
         >
           <h3 className="text-center mt-[18px] mb-[29px] font-afacad">
-            Enter your details
+          {t('detail')}
           </h3>
           <ConfigProvider
               theme={{
@@ -323,28 +325,28 @@ const handleCancel = () => {
                   className="w-[550px] h-auto mr-[34px] ml-[28px] "
               >
                 <Form.Item
-                    label="Fullname"
+                    label={t('Fullname')}
                     name="fullname"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your fullname !",
+                        message: t('rulename'),
                       },
                     ]}
                 >
                   <Input className="min-w-[150px]" />
                 </Form.Item>
                 <Form.Item
-                    label="Identity Card"
+                    label={t('identity')}
                     name="idenCard"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your identity card !",
+                        message: t('rulecard'),
                       },
                       {
                         pattern: /^\d{12}$/,
-                        message: "Please input true identity card!",
+                        message: t('rightcard'),
                       },
                     ]}
                 >
@@ -356,11 +358,11 @@ const handleCancel = () => {
                     rules={[
                       {
                         required: true,
-                        message: "Please input your email !",
+                        message: t('ruleemail'),
                       },
                       {
                         pattern:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-                        message: "Please input valid email address!"
+                        message:t('rightemail')
                       }
                     ]}
                 >
@@ -368,17 +370,17 @@ const handleCancel = () => {
                 </Form.Item>
 
                 <Form.Item
-                    label="Phone Number"
+                    label={t('phone')}
                     name="phoneNum"
                     maxLength={9}
                     rules={[
                       {
                         required: true,
-                        message: "Please input your phone number !",
+                        message: t('rulephone'),
                       },
                       {
                         pattern:/^[0-9\-\+]{9,15}$/,
-                        message: "Please input valid phone number!"
+                        message: t('rightphone')
                       }
                     ]}
                 >
@@ -388,8 +390,8 @@ const handleCancel = () => {
                   ></PhoneInput>
                 </Form.Item>
 
-                <Form.Item name="dob" label="Select birthday">
-                  <DatePicker className="ml-[10px]"  disabledDate={(current) => {
+                <Form.Item name="dob" label={t('birthday')}>
+                  <DatePicker className="ml-[10px]" placeholder={t('date')} disabledDate={(current) => {
                     const today = new Date();
                     const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
                     return current && current > eighteenYearsAgo;
@@ -398,17 +400,17 @@ const handleCancel = () => {
                   />
                 </Form.Item>
 
-                <Form.Item name="gender" label="Select gender">
+                <Form.Item name="gender" label={t('gender')}>
                   <Radio.Group className="ml-[10px]">
-                    <Radio value="male">Male</Radio>
-                    <Radio value="female">Female</Radio>
-                    <Radio value="unknown">Secret</Radio>
+                    <Radio value="male">{t('male')}</Radio>
+                    <Radio value="female">{t('female')}</Radio>
+                    <Radio value="unknown">{t('secret')}</Radio>
                   </Radio.Group>
                 </Form.Item>
 
                 <Form.Item
                     name="paymentMethod"
-                    label="Select payment method"
+                    label={t('payment')}
                     ref={paymentRef}
                 >
                   <Radio.Group
@@ -450,7 +452,7 @@ const handleCancel = () => {
         className="px-4 py-2 bg-white border rounded-md flex items-center justify-between hover:bg-gray-50 focus:outline-none w-48"
       >
         <span className="text-gray-700">
-          {voucherCode || "Select Voucher"}
+          {voucherCode || t('voucher')}
         </span>
         <ChevronDown className="w-4 h-4 text-gray-400 ml-2" />
       </button>
@@ -469,7 +471,7 @@ const handleCancel = () => {
                   className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center border-r last:border-r-0 shrink-0"
                 >
                   <span>{voucher.name}</span>
-                  <span className="text-gray-600 ml-2">Discount {voucher.discount}%</span>
+                  <span className="text-gray-600 ml-2">{t('discount')} {voucher.discount}%</span>
                 </div>
               ))}
             </div>
@@ -500,7 +502,7 @@ const handleCancel = () => {
                 {selectedHotel.nation}
               </p>
               <div className="text-[16px]">
-                Hotel Number: {selectedHotel.phoneNum}
+              {t('hotelphone')}: {selectedHotel.phoneNum}
               </div>
             </div>
             {/* information rooms */}
@@ -508,16 +510,16 @@ const handleCancel = () => {
                 className="h-[150px] p-6 border-[1px] border-gray-300 rounded-[10px]"
             >
               <p className="text-[15px] mb-[5px]  mt-[2px]">
-                Room contain {selectedRoom.capacity} people
+              {t('contain')} {selectedRoom.capacity} {t('nguoi')}
               </p>
               <p className="text-[16px] mb-[5px]">
                 <b>{selectedRoom.roomName}</b>
               </p>
 
               <div className="flex space-x-5">
-                <span>Type: {selectedRoom.typeOfRoom}</span>
-                <span>{selectedRoom.numberOfBeds} Bed</span>
-                <span>Room price: {formatMoney(selectedRoom.money)} VND</span>
+                <span>{t('loai')}: {selectedRoom.typeOfRoom}</span>
+                <span>{selectedRoom.numberOfBeds} {t('bedd')}</span>
+                <span>{t('roomprice')}: {formatMoney(selectedRoom.money)} VND</span>
               </div>
             </div>
             {/* information booking */}
@@ -529,14 +531,14 @@ const handleCancel = () => {
                     span={11}
                     className="border-r-[1px] border-y-slate-400 mr-[11px]"
                 >
-                  Check In
+                {t('checkin')}
                   <p>
                     <b> {dayjs(dayStart).format("DD/MM/YYYY")}</b>
                   </p>
                 </Col>
 
                 <Col span={12}>
-                  Check Out
+                {t('checkout')}
                   <p>
                     <b>{dayjs(dayEnd).format("DD/MM/YYYY")}</b>
                   </p>
@@ -544,11 +546,11 @@ const handleCancel = () => {
               </Row>
               <div className="flex flex-col justify-between">
                 <div className="flex justify-between">
-                  <div>Total length of day: </div>{" "}
-                  <div>{totalCheckInDay} days</div>
+                  <div>{t('totalday')}: </div>{" "}
+                  <div>{totalCheckInDay} {t('day')}</div>
                 </div>
                 <div className="flex justify-between">
-                  <div>Total room: </div>
+                  <div>{t('totalroom')}: </div>
                   <div>
                     {countRoom} {countRoom === 1 ? "room" : "rooms"}
                   </div>
@@ -562,7 +564,7 @@ const handleCancel = () => {
                     </>
                 )}
                 <div className="flex justify-between">
-                  <div>Total price:</div>{" "}
+                  <div>{t('price')}:</div>{" "}
                   <div className="text-success">{formatMoney(price)} VND </div>
                 </div>
 
@@ -578,7 +580,7 @@ const handleCancel = () => {
     {/* confirm modal pop up after click confirm booking --2nd modal*/}
     <Modal
         open={paymentModalVisible}
-        title={<div className="text-center font-lobster text-[26px] font-light">Payment Confirmation</div>}
+        title={<div className="text-center font-lobster text-[26px] font-light">{t('confirmation')}</div>}
         onCancel={()=>setPaymentModalVisible(false)}
         onOk={handlePaymentConfirmation}
         okButtonProps={{
@@ -589,21 +591,21 @@ const handleCancel = () => {
         }}
     >
       <div className="text-center p-2 text-[16px]">
-        <p>Confirm your payment using {payment}</p>
-        <p>Your total price is {formatMoney(price)} VND which is <span className="text-success">{convertPrice} USD </span></p>
+        <p>{t('1st')} {payment}</p>
+        <p>{t('2nd')} {formatMoney(price)} {t('3rd')} <span className="text-success">{convertPrice} USD </span></p>
 
       </div>
       {payment==='paypal'? (
           <>
-              <p>Please <span className="text-success">click the button</span> to confirm your payment,
-                otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
+              <p>{t('please')} <span className="text-success">{t('click')}</span> {t('confirmur')}
+              <span className="text-success"> {t('time')}</span></p>
           <PayPalButton></PayPalButton>
           </>
         ) : ''}
       {payment === 'wowo' ? (
           <>
-          <p>Please <span className="text-success">complete the payment on Wowo page,</span>
-            otherwise your payment will be cancel<span className="text-success"> in 20 minutes</span></p>
+         <p>{t('please')} <span className="text-success">{t('click')}</span> {t('confirmur')}
+         <span className="text-success"> {t('time')}</span></p>
           <img alt='wowopic' className='flex-center w-full h-[400px]'
                                  src='https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H'/>
           </>

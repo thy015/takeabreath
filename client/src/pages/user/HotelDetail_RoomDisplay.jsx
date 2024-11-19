@@ -6,12 +6,13 @@ import { useSelector,useDispatch } from "react-redux";
 import { AuthContext } from "../../hooks/auth.context";
 import { openNotification } from "../../hooks/notification";
 import {setPaymentState} from '../../hooks/redux/inputDaySlice'
+import { useTranslation } from "react-i18next";
 const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
     // State for room count, where room ID is the key
     const { totalCheckInDay } = useSelector((state) => state.inputDay)
     const dispatch=useDispatch()
     const [counts, setCounts] = useState({});
-
+const {t}=useTranslation();
     //open modal : Phuc
     const [isShow, setShow] = useState(false)
 
@@ -74,10 +75,10 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                                 <div className="py-12">
                                     <div className="pl-4 w-full">
                                         <ul className="room-info">
-                                            <li>Room Type: {room.typeOfRoom}</li>
-                                            <li>Capacity: {room.capacity} people</li>
-                                            <li>Total Bed: {room.numberOfBeds}</li>
-                                            <li>Number of rooms: {room.countRoom}</li>
+                                            <li>{t('type')}: {room.typeOfRoom}</li>
+                                            <li>{t('capacity')}: {room.capacity} people</li>
+                                            <li>{t('bed')}: {room.numberOfBeds}</li>
+                                            <li>{t('roomNumb')}: {room.countRoom}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -105,21 +106,22 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                                     <div>
                                         <ul className="flex items-start flex-col border-b">
                                             <li className="flex justify-between w-full mb-2 mt-2">
-                                                <span>Price x {returnCount} room: </span>
+                                            <span>{t('x1')}: </span>
+                                                {/* <span>Price x {returnCount} room: </span> */}
                                                 <span>{formatMoney(countRoomPrice)} VND</span>
                                             </li>
                                             <li className="flex justify-between w-full mb-2">
 
-                                                <span>For <span className="text-success">{totalCheckInDay} night </span>: </span>
+                                                <span>{t('for')} <span className="text-success">{totalCheckInDay} {t('night')} </span>: </span>
                                                 <span>{formatMoney(rangeRoomPrice)} VND</span>
                                             </li>
                                             <li className="flex justify-between w-full mb-2">
-                                                <span>Fees and taxes:</span>
+                                                <span>{t('taxes')}:</span>
                                                 <span> {formatMoney(fees)} VND</span>
                                             </li>
                                         </ul>
                                         <div className="flex justify-between w-full mt-2">
-                                            <span className="font-semibold">Total:</span>
+                                            <span className="font-semibold">{t('total')}:</span>
                                             <span className="text-success"> {formatMoney(totalPrice)} VND</span>
                                         </div>
                                         {/* reserve */}
@@ -134,7 +136,7 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                                                     }}
                                                     type='solid'
                                                     className={`w-full text-white ${totalCheckInDay===0? 'bg-gray-400':'bg-[#1677ff] hover:scale-105'}` }
-                                            >Reserve
+                                            >{t('reverse')}
                                             </Button>
                                             <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} hotel={hotel} />
 

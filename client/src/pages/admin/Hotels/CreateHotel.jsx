@@ -59,7 +59,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
           ...temp,
           {
             value: "",
-            label: "Chọn thành phố"
+            label: "Chọn tỉnh"
           }
         ]
         setCities(temp)
@@ -202,10 +202,10 @@ const CreateHotel = ({ visible, handleCancel }) => {
 
   const onFinish = async (values) => {
 
-    const {phoneNum} = values
+    const { phoneNum } = values
 
-    if(phoneNum.length !=10){
-      openNotification(false,"Số điện thoại phải là 10 chữ số","")
+    if (phoneNum.length != 10) {
+      openNotification(false, "Số điện thoại phải là 10 chữ số", "")
       return
     }
 
@@ -309,11 +309,17 @@ const CreateHotel = ({ visible, handleCancel }) => {
           <Input placeholder={hotelSelected?.phoneNum ?? "Phone Number"} className='w-[85%]' maxLength={10} minLength={10} />
         </Form.Item>
         <Form.Item
-          label="Thành phố"
+          label="Tỉnh"
           name="city"
           rules={[{ required: true, message: 'Please input city!' }]}
         >
-          <Select options={cities} style={{ width: "85%" }} defaultValue={""} className="text-center" />
+          <Select
+            showSearch
+            options={cities}
+            style={{ width: "85%" }}
+            defaultValue={""}
+            className="text-center"
+          />
         </Form.Item>
 
         <Form.Item

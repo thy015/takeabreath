@@ -74,11 +74,11 @@ function Room() {
       .then(res => res.data)
       .then(data => {
         dispatch(deleteRoom(record._id))
-        openNotification(true, "Xóa phòng thành công", "")
+        openNotification(true, "Vô hiệu hóa phòng thành công", "")
       })
       .catch(err => {
         console.log(err)
-        openNotification(false, "Xóa phòng thất bại !", err.response?.data?.message ?? "Vui long thử lại sau")
+        openNotification(false, "Vô hiệu hóa phòng thất bại !", err.response?.data?.message ?? "Vui long thử lại sau")
       })
   }
 
@@ -214,11 +214,11 @@ function Room() {
                 event.stopPropagation()
               }} >
                 <Popconfirm
-                  title="Bạn có muốn xóa không"
+                  title="Bạn có muốn vô hiệu hóa không"
                   okText="Có"
                   cancelText="Không"
                   onConfirm={() => handleDelete(record)}>
-                  <p>Xóa</p>
+                  <p>Vô hiệu hóa</p>
                 </Popconfirm>
               </Typography.Link>
 

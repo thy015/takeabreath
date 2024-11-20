@@ -3,6 +3,7 @@ import { Spin, Alert, Table ,DatePicker} from "antd";
 import { useGet } from "../../hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import {ExportToExcel} from '../../component/ExportToExcel'
+import GeneratePDFButton from "../../component/ExportToPDF";
 const InvoicesList = () => {
   const{RangePicker}=DatePicker;
   const BE_PORT=import.meta.env.VITE_BE_PORT
@@ -14,7 +15,7 @@ const InvoicesList = () => {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
   const handleDateChange = (dates) => {
-    setSelectedDateRange(dates);
+    setSelectedDateRange(dates ? [dates[0], dates[1]] : [null, null]);
   };
   const isDateInRange = (date) => {
     if (!selectedDateRange[0] || !selectedDateRange[1]) return true;
@@ -46,25 +47,19 @@ const InvoicesList = () => {
           {`${guestInfo.name}`}
         </div>
       ),},
-    { title: "Email", dataIndex: ["guestInfo", "email"], key: "email", width: '20%' },
+    { title: "Email", dataIndex: ["guestInfo", "email"], key: "email" },
     { title: "Số Điện Thoại", dataIndex: ["guestInfo", "phone"], key: "phone" },
-    { title: "Ngày Check-in", dataIndex: ["guestInfo", "checkInDay"],width:180, key: "checkInDay", render: (checkInDay) => new Date(checkInDay).toLocaleDateString('vi-VN') },
-    { title: "Ngày Check-out", dataIndex: ["guestInfo", "checkOutDay"],width:180,key: "checkOutDay", render: (checkOutDay) => new Date(checkOutDay).toLocaleDateString('vi-VN') },
-    { title: "Tổng Giá", dataIndex: ["guestInfo", "totalPrice"], key: "totalPrice",width:120, render: (price) => `${price.toLocaleString()} VND` },
+    { title: "Ngày Đặt Phòng", dataIndex: "createDay", key: "createDay",render: (checkInDay) => new Date(checkInDay).toLocaleDateString('vi-VN') },
+    { title: "Phòng", dataIndex: ["roomID", "roomName"], key: "roomID" },
+    { title: "Tổng Số Phòng", dataIndex: ["guestInfo", "totalRoom"], key: "totalRoom" },
+    { title: "Ngày Nhận Phòng", dataIndex: ["guestInfo", "checkInDay"], key: "checkInDay", render: (checkInDay) => new Date(checkInDay).toLocaleDateString('vi-VN') },
+    { title: "Ngày Trả Phòng", dataIndex: ["guestInfo", "checkOutDay"],key: "checkOutDay", render: (checkOutDay) => new Date(checkOutDay).toLocaleDateString('vi-VN') },
+    { title: "Tổng Giá", dataIndex: ["guestInfo", "totalPrice"], key: "totalPrice", render: (price) => `${price.toLocaleString()} VND` },
     {
-      title: "Xuất Hóa Đơn",
-      width: '15%',
+      title: "Tùy Chọn",
       render: (text, record) => {
-        const formattedData = {
-          "Họ Tên": record.guestInfo.name,
-          "Email": record.guestInfo.email,
-          "Số Điện Thoại": record.guestInfo.phone,
-          "Ngày Check-in": new Date(record.guestInfo.checkInDay).toLocaleDateString(),
-          "Ngày Check-out": new Date(record.guestInfo.checkOutDay).toLocaleDateString(),
-          "Tổng Giá": `${record.guestInfo.totalPrice.toLocaleString()} VND`
-        };
         return (
-          <ExportToExcel apiData={[formattedData]} fileName={fileName} buttonName={"Tạo Hóa Đơn"} />
+   <GeneratePDFButton invoice={record}/>
         );
       }
     }
@@ -101,7 +96,7 @@ const InvoicesList = () => {
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
           Tất cả hóa đơn
         </h1>
-        <RangePicker allowClear={false}
+        <RangePicker 
   onChange={handleDateChange}
   format="DD/MM/YYYY"
   placeholder={['Từ ngày', 'Đến ngày']} 
@@ -131,7 +126,10 @@ const InvoicesList = () => {
         className="mt-3 border-2 rounded-s"
         columns={columns}
         dataSource={formattedData}
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: 8 }}
+        scroll={{
+          x: 1500,
+        }}
       />
  
     </div>

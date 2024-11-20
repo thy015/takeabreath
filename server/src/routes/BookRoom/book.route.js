@@ -33,7 +33,6 @@ bookRouter.get("/mostbookRoom", verifyAdmin, async (req, res) => {
 
         const invoices = await Invoice.find({ roomID: item._id });
         const bookingnumbers = await Invoice.countDocuments({ roomID: item._id });
-
         invoices.map(invoice => {
           revenuee += invoice.guestInfo.totalPrice;
         });

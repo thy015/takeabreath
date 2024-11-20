@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 import axios from 'axios';
 import {ExportToExcel} from '../../component/ExportToExcel'
 import MostBookedRooms from '../../component/MostBookingRooms';
+import MostActiveCustomers from '../../component/MostBookedCus';
 const Main = () => {
     axios.defaults.withCredentials = true
     const fileName = "BaoCaoDoanhThu";
@@ -16,7 +17,6 @@ const Main = () => {
     const fetchOwners = async () => {
         try {
           const response = await axios.get(`${BE_PORT}/api/booking/mostbookRoom`);
-          console.log("API Response:", response.data); 
           setData(response.data.rooms); 
         } catch (error) {
           console.error("Error fetching owners:", error);
@@ -153,7 +153,18 @@ const[numb,setNumb]=useState(0);
 
       
             </div>
-            <MostBookedRooms rooms={data} className="items-start text-start justify-start"/>
+            <div className="flex relative bg-none gap-6 mt-8">
+  <div className="flex gap-6 bg-none w-full">
+    <div className="flex-1 shadow-lg  rounded-lg p-6">
+      <MostBookedRooms rooms={data} />
+    </div>
+    <div className="flex-1 shadow-lg rounded-lg p-6">
+      <MostActiveCustomers />
+    </div>
+  </div>
+</div>
+
+
         </div>
     );
 }

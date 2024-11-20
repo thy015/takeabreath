@@ -22,39 +22,49 @@ const PropertyGrid = () => {
       title: "Tên Khách Sạn",
       dataIndex: "hotelName",
       key: "hotelName",
-      width: 200,
+    },
+    {
+      title: "Thuộc Sở Hữu",
+      dataIndex: ["ownerID","ownerName"],
+      key: "ownerName",
+    },
+    {
+      title: "SDT",
+      dataIndex: "phoneNum",
+      key: "phoneNum",
     },
     {
       title: "Thành Phố",
       dataIndex: "city",
       key: "city",
-      width: 150,
     },
     {
       title: "Loại",
       dataIndex: "hotelType",
       key: "hotelType",
-      width: 150,
       sorter: (a, b) => a.hotelType.localeCompare(b.hotelType),
+    },
+    {
+      title: "Tổng Số Phòng",
+      dataIndex: "numberOfRooms",
+      key: "numberOfRooms",
+      sorter: (a, b) => b.numberOfRooms - a.numberOfRooms,
     },
     {
       title: "Đánh Giá",
       dataIndex: "rate",
       key: "rate",
-      width: 100,
       sorter: (a, b) => b.rate - a.rate,
     },
     {
       title: "Lượt Đánh Giá",
       dataIndex: "numberOfRates",
       key: "numberOfRates",
-      width: 150,
       sorter: (a, b) => b.numberOfRates - a.numberOfRates,
     },
     {
       title: "Tùy Chọn",
       key: "action",
-      width: 150,
       render: (text, record) => (
         <Space size="middle">
           <Link to={`/admin/hotel/${record._id}/rooms`}>
@@ -107,6 +117,9 @@ const PropertyGrid = () => {
         }))}
         className="mt-4 border-2 rounded-s"
         pagination={{ pageSize: 5 }}
+        scroll={{
+          x: 1500,
+        }}
       />
     </div>
   );

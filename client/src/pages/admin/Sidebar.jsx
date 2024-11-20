@@ -30,8 +30,8 @@ const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => (
 );
 
 const Sidebar = () => {
-  const defaultActiveItem = "Dashboard";
-  const [activeItem, setActiveItem] = useState(defaultActiveItem);
+  const defaultItem = "Dashboard";
+  const [activeItem, setActiveItem] = useState(defaultItem);
 
   useEffect(() => {
     const ActiveItem = localStorage.getItem("activeItem");
@@ -49,14 +49,14 @@ const Sidebar = () => {
     { label: "Khách Sạn", to: "hotel", icon: FaHotel },
     { label: "Khách Hàng", to: "customers", icon: FaUser },
     { label: "Phòng", to: "rooms", icon: FaRestroom },
-    { label: "Vouchers", to: "vouchers", icon: FaTicketAlt },
+    { label: "Voucher", to: "vouchers", icon: FaTicketAlt },
     { label: "Hóa Đơn", to: "invoices", icon: FaReceipt },
     { label: "Yêu Cầu", to: "requests", icon: FaHand },
   
   ];
 
   const addonItems = [
-    { label: "Cài Đặt", to: "", icon: FaRegSun },
+    { label: "Cài Đặt", to: "settings", icon: FaRegSun },
   ];
 
   return (

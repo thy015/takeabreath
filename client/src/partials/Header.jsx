@@ -57,6 +57,7 @@ const Header = ({ children }) => {
     axios.get(`${BE_PORT}/api/auth/logout`)
       .then(res => {
         if (res.data.logout) {
+          console.log(res.data)
           openNotification(true,"Logout Successful !")
           setAuth({
             isAuthenticated: false,

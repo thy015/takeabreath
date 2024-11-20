@@ -41,6 +41,9 @@ importers:
       '@mui/x-charts':
         specifier: latest
         version: 7.22.1(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@mui/material@6.1.6(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.1.6(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@onedoc/client':
+        specifier: ^0.1.33
+        version: 0.1.33
       '@onedoc/react-print':
         specifier: ^0.1.133
         version: 0.1.133(@types/react@18.3.12)
@@ -870,6 +873,9 @@ packages:
 
   '@octokit/types@13.6.1':
     resolution: {integrity: sha512-PHZE9Z+kWXb23Ndik8MKPirBPziOc0D2/3KH1P+6jK5nGWe96kadZuE4jev2/Jq7FvIfTlT2Ltg8Fv2x1v0a5g==}
+
+  '@onedoc/client@0.1.33':
+    resolution: {integrity: sha512-X9eC5AWWPSFho313/ssStMkGJO3NJit4AhqwWlv0gDWJTLJDcIZAibfjNdR71Z/un3ZK44rD9tQ/+3Wnhf5BNA==}
 
   '@onedoc/react-print@0.1.133':
     resolution: {integrity: sha512-HeQ+LKcLRV4Zl3G/U3k/ESJRZjfUbgqVyjccu6PxSU2yRoLAYNaifx9ATdaAUW4gk10VA4IB5nTTFRiAjzkUqw==}
@@ -5266,6 +5272,10 @@ snapshots:
   '@octokit/types@13.6.1':
     dependencies:
       '@octokit/openapi-types': 22.2.0
+
+  '@onedoc/client@0.1.33':
+    dependencies:
+      mime-types: 2.1.35
 
   '@onedoc/react-print@0.1.133(@types/react@18.3.12)':
     dependencies:

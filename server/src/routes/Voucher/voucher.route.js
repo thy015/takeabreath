@@ -33,7 +33,6 @@ VoucherRoute.get("/getVoucus/:id", async (req, res) => {
     try {
         const currentDate = new Date();
         const sysvou = await SystemVoucher.find({
-            ownerJoined: req.params.id,
             startDay: { $lte: currentDate }, 
             endDay: { $gte: currentDate }, 
         });

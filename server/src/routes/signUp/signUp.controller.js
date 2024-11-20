@@ -347,12 +347,12 @@ const checkExistedPartner=async(req,res)=>{
 }
 const logout = async (req, res) => {
   const link = process.env.BE_PORT
-  const domain = link.substring(8,link.length)
+  const domain = "takeabreath.vercel.app"
   console.log("[LINK]",link)
   console.log("[DOMAIN]",domain)
   console.log("[Token sso]", req.cookies.Token)
   try{
-    res.clearCookie('token',{ path: '/', domain: domain,secure: true}).json({ logout: true,message:"Delete token" + domain})
+    res.clearCookie('token',{ path: '/', domain: domain,secure: true}).json({ logout: true,message:"Delete token " + domain})
   }catch(err){
     return res.json({ logout: err.message })
   }

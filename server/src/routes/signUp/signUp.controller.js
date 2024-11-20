@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const { Owner, Admin, Customer} = require("../../models/signUp.model");
 const { generalAccessTokens } = require("../../middleware/jwt");
+const dotenv = require("dotenv");
+dotenv.config();
 //owner
 const signUpOwner = async (req, res) => {
 
@@ -344,12 +346,21 @@ const checkExistedPartner=async(req,res)=>{
 
 }
 const logout = async (req, res) => {
+  const link = process.env.BE_PORT
+  const domain = link.substring(8,link.length)
+  console.log("[LINK]",link)
+  console.log("[DOMAIN]",domain)
   console.log("[Token sso]", req.cookies.Token)
-  if (req.cookies.Token) {
-    res.clearCookie('Token')
+  try{
+    if (req.cookies.Token) {
+      res.clearCookie('Token')
+    }
+    res.clearCookie('token',{ path: '/', domain: domain, secure: true, sameSite: 'Strict' })
+    return res.json({ logout: true })
+  }catch(err){
+    return res.json({ logout: err.message })
   }
-  res.clearCookie('token')
-  return res.json({ logout: true })
+ 
 }
 
 // CRUD cus

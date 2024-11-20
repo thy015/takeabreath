@@ -9,7 +9,7 @@ import { AuthContext } from "../../../hooks/auth.context";
 import moment from 'moment'
 const VouchersList = () => {
   
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
   const [refresh, setRefresh] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [header, setHeader] = useState("Thêm Voucher");

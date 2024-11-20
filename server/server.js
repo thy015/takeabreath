@@ -65,7 +65,7 @@ app.use("/api/auth", signUpRouter);
 app.use("/api/booking", bookRouter);
 app.use("/api/cancelReq", reqCancelRouter);
 app.use("/api/voucher", VoucherRoute);
-app.use('/api/email',MailRoute)
+app.use('/api/email',MailRoute);
 //mongo connect
 
 mongoose

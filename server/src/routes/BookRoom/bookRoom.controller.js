@@ -273,7 +273,7 @@ const getInvoicesWithReceipts = async (req, res) => {
 
 const getInvoicesPaid = async (req, res) => {
   try {
-    const receipt = await Invoice.find({ invoiceState: "paid" }).sort({ createDay: -1 });;
+    const receipt = await Invoice.find({ invoiceState: "paid" }).sort({ createDay: -1 }).populate({path:"roomID",select:"roomName"}).populate({path:"cusID",select:"cusName"});;
     res.status(200).json(receipt);
   } catch (e) {
     console.error("Error fetching invoices paid:", e);

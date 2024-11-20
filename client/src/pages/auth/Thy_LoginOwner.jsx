@@ -61,6 +61,7 @@ const LogInOwner = () => {
             role: response?.data?.role ?? ''
           }
         })
+        localStorage.setItem("activeItem","Dashboard")
         navigate(response.data.redirect);
       }
     } catch (e) {

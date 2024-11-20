@@ -1,7 +1,7 @@
 const express = require("express");
 const signUpController = require("./signUp.controller");
 const signUpRouter = express.Router();
-const {Owner,Customer}=require('../../models/signUp.model');
+const {Owner,Customer, Admin}=require('../../models/signUp.model');
 const { verifyLogin, verifyAdmin,verifyOwner } = require("../../middleware/verify");
 // CRUD Owner
 signUpRouter.get("/owner", async (req, res) => {
@@ -86,7 +86,31 @@ signUpRouter.get("/get-owner",verifyOwner,async(req,res)=>{
 
 signUpRouter.post("/update-owner/:id",verifyOwner,signUpController.updateOnwerPhuc
 )
-
+signUpRouter.put('/admin/:id',verifyAdmin, async (req, res) => {
+  const { id } = req.params; 
+  const { email, adminName, imgLink } = req.body; 
+  try {
+    const updatedAdmin = await Admin.findByIdAndUpdate(
+      id,
+      { email, adminName, imgLink },
+      { new: true }
+    );
+    if (!updatedAdmin) {
+      return res.status(404).json({ error: 'Admin khong ton tai' });
+    }
+    res.json({ message: 'Update admin thanh cong', admin: updatedAdmin });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+signUpRouter.get("/admin/:id",verifyAdmin,async(req,res)=>{
+  try {
+    const admin = await Admin.findById(req.params.id);
+    res.json(admin)
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+})
 module.exports = signUpRouter;
 
 

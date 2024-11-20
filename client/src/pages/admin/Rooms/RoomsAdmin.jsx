@@ -41,58 +41,66 @@ const RoomList = () => {
       title: "Loại phòng",
       dataIndex: "typeOfRoom",
       key: "typeOfRoom",
+      sorter: (a, b) => a.typeOfRoom.localeCompare(b.typeOfRoom),
     },
     {
       title: "Giá",
       dataIndex: "money",
       key: "money",
+      sorter: (a, b) => a.money - b.money,
       render: (text) => text.toLocaleString(),
     },
     {
       title: "Số lượng phòng",
       dataIndex: "numberOfRooms",
       key: "numberOfRooms",
+      sorter: (a, b) => a.numberOfRooms - b.numberOfRooms,
     },
     {
       title: "Sức chứa",
       dataIndex: "capacity",
       key: "capacity",
+      sorter: (a, b) => a.capacity - b.capacity,
     },
     {
       title: "Số giường",
       dataIndex: "numberOfBeds",
       key: "numberOfBeds",
+      sorter: (a, b) => a.numberOfBeds - b.numberOfBeds,
     },
     {
       title: "Doanh thu",
       dataIndex: "revenue",
       key: "revenue",
+      sorter: (a, b) => a.revenue - b.revenue,
       render: (text) => text.toLocaleString(),
     },
     {
       title: "Số lượt đặt",
       dataIndex: "bookin",
       key: "bookin",
+      sorter: (a, b) => a.bookin - b.bookin,
     },
     {
       title: "Thao tác",
       key: "actions",
       render: (_, record) => (
         <button
-        className="bg-green-700 text-white px-3 py-1 ml-2 rounded hover:bg-green-500"
-        onClick={() => navigate(`/admin/comments/${record._id}`)} 
-      >
-        Xem đánh giá
-      </button>
+          className="bg-green-700 text-white px-3 py-1 ml-2 rounded hover:bg-green-500"
+          onClick={() => navigate(`/admin/comments/${record._id}`)}
+        >
+          Xem đánh giá
+        </button>
       ),
     },
   ];
+  
 
   return (
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-        Tất cả các phòng {id?" của "+roomsData[0].hotelID.hotelName:""}
+        Tất cả các phòng {id?" của "+roomsData[0]?.hotelID?.hotelName:""}
         </h1>
         <div className="flex space-x-4 items-center">
           <div className="relative">

@@ -72,9 +72,9 @@ const admin=new mongoose.Schema({
 adminName:{
   type:String,
   required:true,
-}
+},
+imgLink: { type: String, required: false },
 })
-//kết nối với db có sẵn chứ ko cho tạo
 const Admin = mongoose.model("Admin",admin);
 const Customer = mongoose.model('Customer', customerSchema);
 

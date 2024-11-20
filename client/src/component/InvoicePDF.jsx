@@ -54,7 +54,7 @@ export const QRInvoice = ({invoice}) => {
 
         <p className="p-0 leading-5">
          Hóa đơn này dựa trên thông tin quý khách đã đặt vào {new Date(invoice.createDay).toLocaleDateString('vi-VN')}
-          <Footnote>Không biết ghi gì.</Footnote>
+          <Footnote>Dựa trên thời gian thật.</Footnote>
         </p>
 
         <table className="w-full my-12">

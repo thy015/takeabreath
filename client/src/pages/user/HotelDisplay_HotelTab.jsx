@@ -28,7 +28,7 @@ const HotelDisplay_HotelTab = () => {
                 </TabPane>
               ))}
             </Tabs>
-            <h5 className="mt-7 font-afacad font-light text-[25px]"><span className="font-semibold text-[#0B377F]">{t('interested')}?</span>{t('query')}</h5>
+            <h5 className="mt-7 font-afacad font-light text-[25px]"><span className="font-semibold text-[#0B377F]">{t('interested')}? </span>{t('query')}</h5>
             <div className="my-6">
             <Booking tailwind_prop="w-full h-16"></Booking>
           </div>

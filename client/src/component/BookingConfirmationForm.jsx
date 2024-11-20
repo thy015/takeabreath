@@ -552,7 +552,7 @@ const handleCancel = () => {
                 <div className="flex justify-between">
                   <div>{t('totalroom')}: </div>
                   <div>
-                    {countRoom} {countRoom === 1 ? "room" : "rooms"}
+                    {countRoom} {t('room')}
                   </div>
                 </div>
                 {voucherCode && (

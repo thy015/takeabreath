@@ -106,8 +106,8 @@ const {t}=useTranslation();
                                     <div>
                                         <ul className="flex items-start flex-col border-b">
                                             <li className="flex justify-between w-full mb-2 mt-2">
-                                            <span>{t('x1')}: </span>
-                                                {/* <span>Price x {returnCount} room: </span> */}
+                                            {/* <span>{t('x1')}: </span> */}
+                                                <span>{t('x1')} {returnCount} {t('room')}: </span>
                                                 <span>{formatMoney(countRoomPrice)} VND</span>
                                             </li>
                                             <li className="flex justify-between w-full mb-2">

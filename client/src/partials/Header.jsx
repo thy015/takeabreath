@@ -68,6 +68,7 @@ const Header = ({ children }) => {
               role:''
             }
           })
+          navigate('/')
         }
       }).catch(err => {
         console.log(err)

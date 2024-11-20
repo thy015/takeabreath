@@ -15,22 +15,24 @@ const verifyAdmin = async (req, res, next) => {
 
     if (!adminExsisted)
         return res.status(401).json({ message: "You aren't an administrator !" })
-    const userPayload = decode.payload
-    req.user = userPayload
+    req.user = decode.payload
     next()
 }
 
 const verifyOwner = async (req, res, next) => {
     const user = res.locals.user
     if (user) {
+        
         req.ownerID = user.partnerId
         next()
     } else {
         const token = req.cookies.token
+        
         if (!token)
             return res.status(401).json({ message: "Unauthorized" })
         const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
-        if (decode.idSSO) {
+        console.log(decode.payload.ssoID)
+        if (decode.payload.ssoID) {
             req.ownerID = decode.payload.id
             next()
             return
@@ -57,11 +59,10 @@ const verifyLogin = async (req, res, next) => {
     const token = req.cookies.token
     const user = res.locals.user
     if (user) {
-        const userDecode = {
-            id:user.id,
-            email:user.email
+        req.user= {
+            id: user.id,
+            email: user.email
         }
-        req.user= userDecode
         next()
         return
     } else {
@@ -73,8 +74,7 @@ const verifyLogin = async (req, res, next) => {
         }
         try {
             const decode = await jwt.verify(token, process.env.ACCESS_TOKEN)
-            const userPayload = decode.payload
-            req.user = userPayload
+            req.user = decode.payload
             next()
             return
         } catch (err) {

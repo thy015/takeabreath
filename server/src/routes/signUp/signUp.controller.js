@@ -352,7 +352,7 @@ const logout = async (req, res) => {
   console.log("[DOMAIN]",domain)
   console.log("[Token sso]", req.cookies.Token)
   try{
-    res.clearCookie('token',{ path: '/', domain: domain,secure: true}).json({ logout: true,message:"Delete token " + domain})
+    res.clearCookie('token',{ path: '/', domain: domain,secure: true, sameSite: 'None' }).json({ logout: true,message:"Delete token 5: " + domain})
   }catch(err){
     return res.json({ logout: err.message })
   }

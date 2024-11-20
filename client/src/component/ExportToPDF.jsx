@@ -1,33 +1,46 @@
 import React from 'react';
-import axios from 'axios';
-import { QRInvoice } from './InvoicePDF'; 
+import { Onedoc } from '@onedoc/client';
 import { compile } from '@onedoc/react-print';
-import { notification, Button} from "antd";
-import { DownloadOutlined} from "@ant-design/icons";
-const GeneratePDFButton = ({invoice}) => {
-  const BE_PORT = import.meta.env.VITE_BE_PORT; 
-
+import { notification, Button } from "antd";
+import { DownloadOutlined } from "@ant-design/icons";
+import { QRInvoice } from './InvoicePDF';
+import ReactDOMServer,{ renderToString } from 'react-dom/server';
+const GeneratePDFButton = ({ invoice }) => {
   const handleGeneratePDF = async () => {
     try {
+      const onedoc = new Onedoc("3ed141d5-96a3-416b-9a7b-2d93d97805e2");
       const html = await compile(<QRInvoice invoice={invoice} />);
-      const response = await axios.post(
-        `${BE_PORT}/api/pdf/generate-pdf`, 
-        { component: html },
-        { responseType: 'arraybuffer' } 
-      );
-      const blob = new Blob([response.data], { type: 'application/pdf' });
+
+      const { file, error } = await onedoc.render({
+        html,
+        test: false,
+        save: false,
+        assets: [],
+      });
+
+      if (error) {
+        notification.error({ description: 'Failed to generate PDF' });
+        return;
+      }
+
+      const blob = new Blob([file], { type: 'application/pdf' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = 'HoaDon.pdf';
+      link.download = `Invoice-${invoice._id.slice(-6)}.pdf`;
       link.click();
+
     } catch (error) {
       console.error('Error generating PDF:', error);
-      notification.success({ description: 'Lỗi trong quá trình generate pdf bri!' });
+      notification.error({ description: 'Error in PDF generation process' });
     }
   };
 
   return (
-    <Button onClick={handleGeneratePDF} icon={<DownloadOutlined/>} className='border-2 rounded-lg p-1.5  hover:bg-blue-500 text-blue-800'></Button>
+    <Button 
+      onClick={handleGeneratePDF} 
+      icon={<DownloadOutlined/>} 
+      className='border-2 rounded-lg p-1.5 hover:bg-blue-500 text-blue-800'
+    />
   );
 };
 

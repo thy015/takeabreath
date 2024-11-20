@@ -6,6 +6,7 @@ import Header from "./partials/Header";
 import Footer from "./partials/Footer";
 import { Fragment, useContext, useEffect,useState } from "react";
 import { AuthContext } from "./hooks/auth.context";
+import { openNotification } from "./hooks/notification";
 
 function App() {
     const { auth, setAuth } = useContext(AuthContext);
@@ -111,15 +112,15 @@ function App() {
                         }
 
                         if (route.isOwner) {
-                            if (!auth.isAuthenticated || auth?.user?.role !== 'owner' ) {
-                                return (
-                                  <Route
-                                    key={route.path}
-                                    path={route.path}
-                                    element={<Navigate to="/" replace state={{ from: route.path }} />}
-                                  />
-                                );
-                              }
+                            // if (!auth.isAuthenticated || auth?.user?.role !== 'owner') {
+                            //     return (
+                            //       <Route
+                            //         key={route.path}
+                            //         path={route.path}
+                            //         element={<Navigate to="/" replace state={{ from: route.path }} />}
+                            //       />
+                            //     );
+                            //   }
                             return (
                                 <Route key={route.path}
                                        path={route.path}

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
  import { FaSearch, FaEnvelope, FaRegBell } from "react-icons/fa";
 import { AuthContext } from "../../hooks/auth.context";
 import { useNavigate,Link } from "react-router-dom";
@@ -7,8 +7,23 @@ const DashboardView = () => {
   const {auth,setAuth} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
-  const BE_PORT=import.meta.env.VITE_BE_PORT
+  const [admin,setAdmin]=useState(null);
   console.log("[Admin Page] ",auth)
+  const BE_PORT = import.meta.env.VITE_BE_PORT;
+  const fetchAdmin = async () => {
+    try {
+      const response = await axios.get(`${BE_PORT}/api/auth/admin/${auth?.user?.id}`);
+      setAdmin(response.data); 
+    } catch (error) {
+      console.error("Error fetching admin:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (auth?.user?.id) {
+      fetchAdmin();
+    }
+  }, []);
   axios.defaults.withCredentials = true
   const showProfile = () => {
     setOpen(!open);
@@ -49,9 +64,9 @@ const DashboardView = () => {
             onClick={showProfile}
           >
             <p className="pt-[10px]">{auth?.user?.name}</p>
-            <div className="h-[50px] w-[60px]  cursor-pointer flex items-center justify-center relative z-40">
-              <img src="/img/profile.png" alt="" />
-            </div>
+            <div className="h-[50px] w-[50px] rounded-full cursor-pointer flex items-center justify-center relative z-40">
+  <img src={admin?.imgLink} className="h-full w-full object-cover rounded-full" />
+</div>
 
             {open && auth.user.id !==""&& (
               <div className="bg-white border h-[100px] w-[150px] absolute bottom-[-100px] z-20 right-0 pt-[10px]  space-y-[10px]">

@@ -56,7 +56,7 @@ const Sidebar = () => {
   ];
 
   const addonItems = [
-    { label: "Cài Đặt", to: "", icon: FaRegSun },
+    { label: "Cài Đặt", to: "settings", icon: FaRegSun },
   ];
 
   return (

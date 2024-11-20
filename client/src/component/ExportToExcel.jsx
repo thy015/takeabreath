@@ -3,7 +3,6 @@ import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 
 export const ExportToExcel = ({ apiData, fileName, buttonName }) => {
-  console.log("api data la "+ apiData)
   const fileType =
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
   const fileExtension = ".xlsx";

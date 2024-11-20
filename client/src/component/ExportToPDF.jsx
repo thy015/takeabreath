@@ -2,7 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import { QRInvoice } from './InvoicePDF'; 
 import { compile } from '@onedoc/react-print';
-import { notification} from "antd";
+import { notification, Button} from "antd";
+import { DownloadOutlined} from "@ant-design/icons";
 const GeneratePDFButton = ({invoice}) => {
   const BE_PORT = import.meta.env.VITE_BE_PORT; 
 
@@ -26,7 +27,7 @@ const GeneratePDFButton = ({invoice}) => {
   };
 
   return (
-    <button onClick={handleGeneratePDF} className='border-2 rounded-lg p-1.5 bg-[#003580] hover:bg-blue-500 text-white'>Xuất Hóa Đơn</button>
+    <Button onClick={handleGeneratePDF} icon={<DownloadOutlined/>} className='border-2 rounded-lg p-1.5  hover:bg-blue-500 text-blue-800'></Button>
   );
 };
 

@@ -17,7 +17,7 @@ ListRouter.get("/hotel", async (req, res) => {
 });
 ListRouter.get("/hotelad",verifyAdmin, async (req, res) => {
   try {
-    let createdHotel = await Hotel.find();
+    let createdHotel = await Hotel.find().populate({path:"ownerID",select:"ownerName"});
 
     res.status(200).json(createdHotel);
   } catch (e) {

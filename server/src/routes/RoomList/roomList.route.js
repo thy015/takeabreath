@@ -82,6 +82,9 @@ ListRouter.get("/bookinRoom/:id", verifyAdmin, async (req, res) => {
     );
 
     const result = roomDetails.filter((room) => room !== null);
+    result.forEach((room) => {
+      room.moreIn4.sort((a, b) => new Date(a.createDay) - new Date(b.createDay));
+    });
     res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ message: e.message });

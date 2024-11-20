@@ -60,15 +60,17 @@ export const QRInvoice = ({invoice}) => {
         <table className="w-full my-12">
           <tr className="border-b border-gray-300">
           <th className="text-left font-bold py-2">Phòng</th>
+          <th className="text-left font-bold py-2">Tổng Số Phòng</th>
             <th className="text-right font-bold py-2">Ngày Nhận Phòng</th>
             <th className="text-right font-bold py-2">Ngày Trả Phòng</th>
             <th className="text-right font-bold py-2">Tổng Tiền</th>
           </tr>
           <tr>
             <td className="py-2">{invoice.roomID.roomName}</td>
-            <td className="py-2 text-right">{new Date(invoice.guestInfo.checkInDay).toLocaleDateString('vi-VN')}</td>
-            <td className="py-2 text-right">{new Date(invoice.guestInfo.checkOutDay).toLocaleDateString('vi-VN')}</td>
-            <td className="py-2 text-right">{invoice.guestInfo.totalPrice.toLocaleString()} VND</td>
+            <td className="py-2 text-center">{invoice.guestInfo.totalRoom}</td>
+            <td className="py-2 text-center">{new Date(invoice.guestInfo.checkInDay).toLocaleDateString('vi-VN')}</td>
+            <td className="py-2 text-center">{new Date(invoice.guestInfo.checkOutDay).toLocaleDateString('vi-VN')}</td>
+            <td className="py-2 text-center">{invoice.guestInfo.totalPrice.toLocaleString()} VND</td>
           </tr>
           {/* <tr>
             <td className="py-2 font-bold">Subtotal</td>

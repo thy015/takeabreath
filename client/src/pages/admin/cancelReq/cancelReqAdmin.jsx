@@ -8,7 +8,7 @@ import axios from 'axios'
 import moment from "moment";
 const cancelReqAdmin = () => {
   axios.defaults.withCredentials = true
-  const {auth,setAuth} = useContext(AuthContext)
+  const {auth} = useContext(AuthContext)
   const [cusID,setCusID]=useState();
   const [reason, setReason] = useState("");
   const[isProcess,setIsProcess]=useState(false);

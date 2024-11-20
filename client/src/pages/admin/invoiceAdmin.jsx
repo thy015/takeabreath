@@ -47,14 +47,16 @@ const InvoicesList = () => {
           {`${guestInfo.name}`}
         </div>
       ),},
-    { title: "Email", dataIndex: ["guestInfo", "email"], key: "email", width: '20%' },
+    { title: "Email", dataIndex: ["guestInfo", "email"], key: "email" },
     { title: "Số Điện Thoại", dataIndex: ["guestInfo", "phone"], key: "phone" },
-    { title: "Ngày Check-in", dataIndex: ["guestInfo", "checkInDay"],width:180, key: "checkInDay", render: (checkInDay) => new Date(checkInDay).toLocaleDateString('vi-VN') },
-    { title: "Ngày Check-out", dataIndex: ["guestInfo", "checkOutDay"],width:180,key: "checkOutDay", render: (checkOutDay) => new Date(checkOutDay).toLocaleDateString('vi-VN') },
-    { title: "Tổng Giá", dataIndex: ["guestInfo", "totalPrice"], key: "totalPrice",width:120, render: (price) => `${price.toLocaleString()} VND` },
+    { title: "Ngày Đặt Phòng", dataIndex: "createDay", key: "createDay",render: (checkInDay) => new Date(checkInDay).toLocaleDateString('vi-VN') },
+    { title: "Phòng", dataIndex: ["roomID", "roomName"], key: "roomID" },
+    { title: "Tổng Số Phòng", dataIndex: ["guestInfo", "totalRoom"], key: "totalRoom" },
+    { title: "Ngày Nhận Phòng", dataIndex: ["guestInfo", "checkInDay"], key: "checkInDay", render: (checkInDay) => new Date(checkInDay).toLocaleDateString('vi-VN') },
+    { title: "Ngày Trả Phòng", dataIndex: ["guestInfo", "checkOutDay"],key: "checkOutDay", render: (checkOutDay) => new Date(checkOutDay).toLocaleDateString('vi-VN') },
+    { title: "Tổng Giá", dataIndex: ["guestInfo", "totalPrice"], key: "totalPrice", render: (price) => `${price.toLocaleString()} VND` },
     {
       title: "Tùy Chọn",
-      width: '15%',
       render: (text, record) => {
         return (
    <GeneratePDFButton invoice={record}/>
@@ -124,7 +126,10 @@ const InvoicesList = () => {
         className="mt-3 border-2 rounded-s"
         columns={columns}
         dataSource={formattedData}
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: 8 }}
+        scroll={{
+          x: 1500,
+        }}
       />
  
     </div>

@@ -25,7 +25,8 @@ const HotelDisplayCompre = () => {
   const searchResults = useSelector((state) => state.searchResults);
   const { city, latitude, longitude} = useSelector((state) => state.inputDay);
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: google_api_key
+    googleMapsApiKey: google_api_key,
+    libraries: ["marker"],
   });
 
 
@@ -100,14 +101,14 @@ const HotelDisplayCompre = () => {
   //map default ordinate
   async function searchMapLocation() {
     try {
-        const res=await axios.post(`${BE_PORT}/api/hotelList/google/geometry`, {city})
-            .then(res => {
-              console.log(res.data);
-              dispatch(setOrdinate({
-                latitude:res.data.lat,
-                longitude:res.data.lng
-              }))
-            })
+      await axios.post(`${BE_PORT}/api/hotelList/google/geometry`, {city})
+          .then(res => {
+            console.log(res.data);
+            dispatch(setOrdinate({
+              latitude:res.data.lat,
+              longitude:res.data.lng
+            }))
+          });
     } catch (e) {
       console.error("Error fetching location:", e);
     }

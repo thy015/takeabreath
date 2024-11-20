@@ -33,12 +33,12 @@ const allowedOrigins = ["http://localhost:3000",
     "https://takeabreath.io.vn",
     "https://wowo.htilssu.id.vn/assets/remoteEntry.js",
     "https://takeabreath-frontend.vercel.app",
-    "https://www.sandbox.paypal.com/xoplatform/logger/api/logger?disableSetCookie=true",
+    "https://www.sandbox.paypal.com",
     "https://takeabreath.vercel.app",
-    "https://vercel.live/_next-live/feedback/feedback.html",
-    "https://sso.htilssu.id.vn/",
-    "https://wowo.htilssu.id.vn/"
-
+    "https://vercel.live",
+    "https://sso.htilssu.id.vn",
+    "https://wowo.htilssu.id.vn",
+    "https://maps.googleapis.com"
 ];
 
 app.use(

@@ -18,7 +18,7 @@ import axios from "axios";
 import isBetween from 'dayjs/plugin/isBetween';
 const { RangePicker } = DatePicker;
 import {useDispatch} from 'react-redux'
-import { countRoom, setSearchResult } from "../hooks/redux/searchSlice";
+import { setSearchResult } from "../hooks/redux/searchSlice";
 import { setInputDay } from "../hooks/redux/inputDaySlice";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -119,7 +119,7 @@ const Booking = ({tailwind_prop}) => {
         data.cities
           .filter((city) =>
               city.toLowerCase().includes(selectedCity.toLowerCase())))
-      ).slice(0,5)
+      )
       setFilteredCities(filteredCity);
       console.log(filteredCity)
     } else {
@@ -217,14 +217,19 @@ const Booking = ({tailwind_prop}) => {
                   menu={{
                     items: filteredCities.map((city, index) => ({
                       key: index,
-                      label: (<div onClick={() => handleCitySelect(city)} className='w-full'>
-                        {city}
-                      </div>),
+                      label: (
+                          <div onClick={() => handleCitySelect(city)} className="w-full">
+                            {city}
+                          </div>
+                      ),
                     })),
                   }}
                   trigger={["click"]}
                   open={showCities}
                   onOpenChange={(flag) => setShowCities(flag)}
+                  dropdownRender={(menu) => (
+                      <div style={{ maxHeight: "200px", overflowY: "auto" }}>{menu}</div>
+                  )}
               >
                 <Input
                     placeholder={t('where-you-want-to-go')}

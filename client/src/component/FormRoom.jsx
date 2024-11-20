@@ -130,7 +130,7 @@ function FormRoom({ isVisible, close }) {
                     openNotification(false, "Tạo phòng thất bại", err.response?.data?.message ?? "")
                 })
         } else {
-            axios.post(`${BE_PORT}/api/hotelList//updateRoom/${selectedRoom._id}`, formInput)
+            axios.post(`${BE_PORT}/api/hotelList/updateRoom/${selectedRoom._id}`, formInput)
                 .then(res => res.data)
                 .then(data => {
 

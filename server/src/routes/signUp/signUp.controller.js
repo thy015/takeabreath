@@ -355,7 +355,7 @@ const logout = async (req, res) => {
     if (req.cookies.Token) {
       res.clearCookie('Token')
     }
-    res.clearCookie('token',{ path: '/', domain: domain, secure: true, sameSite: 'Strict' })
+    res.clearCookie('token',{ path: '/', domain: 'takeabreath.vercel.app', secure: true, sameSite: 'None' })
     return res.json({ logout: true })
   }catch(err){
     return res.json({ logout: err.message })

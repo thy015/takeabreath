@@ -26,7 +26,6 @@ const HotelDisplayCompre = () => {
   const { city, latitude, longitude} = useSelector((state) => state.inputDay);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: google_api_key,
-    libraries: ["marker"],
   });
 
 

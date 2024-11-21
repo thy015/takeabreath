@@ -38,7 +38,6 @@ const Booking = ({tailwind_prop}) => {
   dayjs.extend(utc)
   dayjs.extend(timezone)
 
-
   const disabledDate = (current) => {
     return current && current < dayjs().startOf("day");
   };

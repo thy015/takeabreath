@@ -7,10 +7,10 @@ const MostActiveCustomers = () => {
   const [timeFrame, setTimeFrame] = useState("Tháng"); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const BE_PORT=import.meta.env.VITE_BE_PORT
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/booking/invoicepaid")
+      .get(`${BE_PORT}/api/booking/invoicepaid`)
       .then((response) => {
         setCustomers(response.data); 
         setLoading(false);
@@ -70,7 +70,7 @@ const MostActiveCustomers = () => {
   return (
     <div className="max-w-xl mt-8">
       <h2 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] text-center">
-      Các khách hàng đặt phòng nhiều nhất ({timeFrame})
+      Các khách hàng đặt phòng nhiều nhất
       </h2>
 
       <div className="flex justify-center space-x-4 mb-4">

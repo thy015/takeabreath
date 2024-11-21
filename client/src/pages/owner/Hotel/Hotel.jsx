@@ -38,11 +38,11 @@ function Hotel() {
             .then(res => res.data)
             .then(data => {
                 console.log(data)
-                openNotification(true, "Xóa khách sạn thành công !", "")
+                openNotification(true, "Vô hiệu hóa khách sạn thành công !", "")
                 dispatch(deleteHotel(record._id))
             })
             .catch(err => {
-                openNotification(false, "Xóa khách sạn thất bại !", err.response?.data?.message ?? "")
+                openNotification(false, "Vô hiệu hóa khách sạn thất bại !", err.response?.data?.message ?? "")
             })
     }
 
@@ -126,8 +126,8 @@ function Hotel() {
                                 <p>Cập nhật</p>
                             </Typography.Link>
                             <Typography.Link >
-                                <Popconfirm title="Bạn có muốn xóa không" okText="Có" cancelText="Không" onConfirm={() => handleDelete(record)}>
-                                    <p>Xóa</p>
+                                <Popconfirm title="Bạn có muốn vô hiệu hóa không" okText="Có" cancelText="Không" onConfirm={() => handleDelete(record)}>
+                                    <p>Vô hiệu hóa</p>
                                 </Popconfirm>
                             </Typography.Link>
 

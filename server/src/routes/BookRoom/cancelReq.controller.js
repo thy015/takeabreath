@@ -3,45 +3,60 @@
 const { CancelRequest, RefundCusMoney}=require("../../models/cancelReq.model");
 const { Customer, Owner,Admin} = require("../../models/signUp.model");
 const {Invoice} = require("../../models/invoice.model");
-const mongoose=require('mongoose')
-const handleCancelRoomAccept=async(req,res)=>{
+const {WoWoWallet} = require("@htilssu/wowo");
+const handleCancelRoomAccept = async (req, res) => {
   //chuyển ảo
-  const {cancelReqID}=req.params;
-  const {adminID}=req.body
-  if(!adminID){
-    return res.status(403).json({message:'Thiếu trường dữ liệu'})
+  const {cancelReqID} = req.params;
+  const {adminID} = req.body
+  if (!adminID) {
+    return res.status(403).json({message: 'Thiếu trường dữ liệu'})
   }
-  try{
-
+  try {
     // tim invoice, tim owner => cong tien invoice - 10% hoa hong vao await fund partner
     let cancelReq = await CancelRequest.findById(cancelReqID);
     let matchedPartner = await Owner.findById(cancelReq.ownerID);
     let matchedInvoice = await Invoice.findById(cancelReq.invoiceID);
 
-    if (!cancelReq||!matchedPartner||!matchedInvoice) {
+    if (!cancelReq || !matchedPartner || !matchedInvoice) {
       return res.status(403).json({message: 'Thiếu trường dữ liệu'});
     }
-    // hoan 70% cho cus
-    let refundCusMoney=(matchedInvoice.guestInfo.totalPrice)*0.7
-    cancelReq.isAccept = 'accepted';
-    cancelReq.adminID = adminID
-    cancelReq.refundAmount=refundCusMoney;
-    await cancelReq.save();
-
-    // tra lai 10% da lay luc cus dat
+    let refundCusMoney = (matchedInvoice.guestInfo.totalPrice) * 0.7
     let refundPartnerMoney = (matchedInvoice.guestInfo.totalPrice) * 0.1
-      matchedPartner.awaitFund = refundPartnerMoney || 0
-      await matchedPartner.save()
+      if (cancelReq.paymentMethod === 'paypal') {
+        try {
+          // hoan 70% cho cus
+          cancelReq.isAccept = 'accepted';
+          cancelReq.adminID = adminID
+          cancelReq.refundAmount = refundCusMoney;
+          await cancelReq.save();
 
-      return res.status(200).json({
-        success:true,
-        message:'Chấp nhận yêu cầu hủy thành công',
-        cancelReq:cancelReq,
-        matchedInvoice:matchedInvoice,
-        matchedPartner:matchedPartner,
-      })
-  }catch(e){
-    return res.status(500).json({message:'E in handleroomAcp',e})
+          // tra lai 10% da lay luc cus dat
+          matchedPartner.awaitFund = refundPartnerMoney || 0
+          await matchedPartner.save()
+
+          return res.status(200).json({
+            success: true,
+            message: 'Chấp nhận yêu cầu hủy thành công',
+            cancelReq: cancelReq,
+            matchedInvoice: matchedInvoice,
+            matchedPartner: matchedPartner,
+          })
+        } catch(e){
+          return res.status(500).json({message: e+'E in handle room acp controller'})
+        }
+      } else if(cancelReq.paymentMethod === 'wowo') {
+          const wowoWallet=new WoWoWallet(process.env.WOWO_SECRET)
+          let orderId=matchedInvoice._id
+            try {
+              const response = await wowoWallet.refundOrder(orderId)
+              console.log('Success:', response)
+              return res.status(200).json(response)
+            } catch(e){
+              return res.status(500).json({message: e+'E in handle room acp controller'})
+            }
+      }
+  } catch (e) {
+    return res.status(500).json({message: 'E in handleroomAcp', e})
   }
 }
 const handleCancelRoomReject=async(req,res)=>{

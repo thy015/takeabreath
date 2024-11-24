@@ -236,6 +236,7 @@ const cancelBooking = async (req, res) => {
     const dayDifference = parseInt(countDiffDay, 10);
     console.log(dayDifference)
     let invoiceMatched = await Invoice.findById(invoiceID)
+    let refundCusAmount = invoiceMatched.guestInfo.totalPrice*0.7
     if (dayDifference === 0) {
       let convertDayAcp = moment().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       let createDoneCancelRequest = await CancelRequest.create({
@@ -243,7 +244,9 @@ const cancelBooking = async (req, res) => {
         dayAcp: convertDayAcp,
         invoiceID: invoiceID,
         ownerID: invoiceMatched.ownerID,
-        cusID: id
+        cusID: id,
+        paymentMethod:invoiceMatched.guestInfo.paymentMethod,
+        refundAmount:refundCusAmount
       })
       console.log(createDoneCancelRequest)
       return res.status(200).json({ message: 'Success cancel room', data: createDoneCancelRequest })
@@ -253,7 +256,9 @@ const cancelBooking = async (req, res) => {
       cusID: id,
       ownerID: invoiceMatched.ownerID,
       // day counted til checkin day
-      dayDiffFromCheckIn: dayDifference
+      dayDiffFromCheckIn: dayDifference,
+      paymentMethod:invoiceMatched.guestInfo.paymentMethod,
+      refundAmount:refundCusAmount
     })
     return res.status(200).json({ message: 'Waiting cancel room approved', data: createWaitingCancelRequest })
   } catch (e) {

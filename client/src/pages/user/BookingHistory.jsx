@@ -3,10 +3,10 @@ import { AuthContext } from "../../hooks/auth.context";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import styled from "styled-components";
-import { Alert, ConfigProvider, Select, Spin } from "antd";
+import { Alert, Select, Spin } from "antd";
 import { useGet } from "../../hooks/hooks";
 import { FaLocationDot, FaPhone, FaCircleQuestion } from "react-icons/fa6"
-import { IoIosBed, IoMdArrowDropdown } from "react-icons/io";
+import { IoIosBed } from "react-icons/io";
 import { IoPeople } from "react-icons/io5";
 import { MdPolicy, MdOutlineCancel } from "react-icons/md";
 import dayjs from "dayjs";
@@ -15,7 +15,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import ModalComment from '../../component/ModalComment';
 import { getComment } from '../../hooks/redux/roomsSlice';
-import { refreshInvoice, setInvoices, sortInvoice } from '../../hooks/redux/revenueSlice';
+import { setInvoices, sortInvoice } from '../../hooks/redux/revenueSlice';
 
 const BookingPage = () => {
   const dispatch = useDispatch()

@@ -54,7 +54,7 @@ const cancelReqAdmin = () => {
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
             notification.error({
-                message: 'Kích hoạt khách hàng thất bại',
+                message: 'Lỗi không xác định',
                 description: errorMessage,
             });
         }
@@ -81,7 +81,7 @@ const cancelReqAdmin = () => {
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
             notification.error({
-                message: 'Kích hoạt khách hàng thất bại',
+                message: 'Lỗi không xác định',
                 description: errorMessage,
             });
         }
@@ -184,6 +184,7 @@ const cancelReqAdmin = () => {
                         <div className="flex items-center mt-2 justify-between">
                             <span className="text-yellow-600">ID: {item._id.slice(-6)}</span>
                             <div className="flex gap-2">
+
                                 <button onClick={() => {
                                     setActivateModalVisible(true), setCusID(item._id)
                                 }} className="bg-green-500 text-white px-2 rounded hover:bg-green-400  ">

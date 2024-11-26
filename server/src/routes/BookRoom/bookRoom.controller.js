@@ -264,7 +264,8 @@ const cancelBooking = async (req, res) => {
       // day counted til checkin day
       dayDiffFromCheckIn: dayDifference,
       paymentMethod:invoiceMatched.guestInfo.paymentMethod,
-      refundAmount:refundCusAmount
+      refundAmount:refundCusAmount,
+      wowoOrderID:invoiceMatched.wowoOrderID || 0
     })
     return res.status(200).json({ message: 'Waiting cancel room approved', data: createWaitingCancelRequest })
   } catch (e) {

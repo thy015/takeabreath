@@ -19,6 +19,12 @@ const ownerSchema = new mongoose.Schema({
       cardExpiration:{type: Date,  required: function () {
           return this.paymentMethod === 'Visa'
         }}, //08/27
+      cardWoWoID:{type: Number, required: function () {
+        return this.paymentMethod === 'Wowo'
+        }},
+      cardWoWoBalance:{type: Number,  required: function () {
+        return this.paymentMethod === 'Wowo'
+        }}
     }
   ],
   awaitFund:{type:Number,required:false,default:0},

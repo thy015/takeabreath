@@ -448,13 +448,13 @@ const deleteCardOwner = async (req, res) => {
   })
 
   await owner.save()
-  return res.status(200).json({ message: "Thêm thẻ thành công", cards: newPaymentCard })
+  return res.status(200).json({ message: "Xóa thẻ thành công", cards: newPaymentCard })
 }
 
 const getListCard = async (req, res) => {
   const ownerID = req.ownerID
   const owner = await Owner.findById({ _id: ownerID })
-  const paymentCard = owner.paymentCard
+  const paymentCard = owner.paymentCard.filter(c=>c.paymentMethod==='Visa')
 
   return res.status(200).json({ cards: paymentCard })
 }
@@ -514,8 +514,6 @@ function validateEmail(email) {
 module.exports = {
   signUpOwner,
   signInOwner,
-  validateEmail,
-  validateBirthDate,
   deleteCus,
   updateCus,
   deleteOwner,

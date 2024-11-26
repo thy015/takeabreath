@@ -47,7 +47,7 @@ const handleCancelRoomAccept = async (req, res) => {
         }
       } else if(cancelReq.paymentMethod === 'wowo') {
           const wowoWallet=new WoWoWallet(process.env.WOWO_SECRET)
-          let orderId=matchedInvoice._id
+          let orderId=matchedInvoice.wowoOrderID
           console.log('orderId', orderId)
 
         try {

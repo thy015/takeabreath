@@ -66,7 +66,10 @@ const bookRoom = async (req, res) => {
     }
     else if (dataBooking.paymentMethod === "wowo") {
       console.log('log', [room.roomName, room.money, dataBooking.totalRoom, dataBooking.total])
-
+      const updatedInvoice = await Invoice.findById(invoice._id);
+      if (!updatedInvoice) {
+        return res.status(404).json({ message: 'Invoice not found' });
+      }
       const wowoWallet = new WoWoWallet(`${process.env.WOWO_SECRET}`);
       const newOrder = {
         money: dataBooking.total,
@@ -83,6 +86,9 @@ const bookRoom = async (req, res) => {
         const orderResponse = await wowoWallet.createOrder(newOrder);
         console.log("Đơn hàng đã được tạo:", orderResponse);
         if (orderResponse.status === 'PENDING') {
+          updatedInvoice.wowoOrderID=orderResponse.id;
+          await updatedInvoice.save()
+
           return res.status(201).json({
             message: 'Created order',
             orderResponse: orderResponse

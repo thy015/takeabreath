@@ -8,13 +8,14 @@ import { Link } from 'react-router-dom'
 import FormCard from '../../../component/FormCard'
 import dayjs from 'dayjs'
 import axios from 'axios'
-import { setCards, addCards } from '../../../hooks/redux/ownerSlice'
+import { setCards } from '../../../hooks/redux/ownerSlice'
 import { openNotification } from '../../../hooks/notification'
+
 function Card() {
     const dispatch = useDispatch()
     const [visible, setVisible] = useState(false)
     const cards = useSelector(state => state.owner.cards)
-    const idMobile =useMediaQuery({query:'(max-width: 640px)'})
+    useMediaQuery({query:'(max-width: 640px)'});
     const BE_PORT=import.meta.env.VITE_BE_PORT
     useEffect(() => {
         axios.get(`${BE_PORT}/api/auth/list-card`)
@@ -29,7 +30,7 @@ function Card() {
 
                 dispatch(setCards(cards))
             })
-            .catch(err => {
+            .catch(() => {
                 openNotification(false, "Không có thẻ", "")
             })
 
@@ -49,11 +50,17 @@ function Card() {
 
             dispatch(setCards(cards))
         })
-        .catch(err=>{
+        .catch(()=>{
             openNotification(false,"Gỡ thẻ không thành công")
         })
     }
+    // wowo wallet
 
+    const handleOggyCard=async()=>{
+       await axios.post(`${BE_PORT}/api/wallet/createWallet`)
+            .then(res=>res)
+            .catch(err => console.log(err))
+    }
     const columns = [
         {
             title: 'Loại thẻ',
@@ -75,7 +82,7 @@ function Card() {
             dataIndex: 'cardExpiration',
             key: 'cardExpiration',
             render: (text) => dayjs(text).format("DD/MM/YYYY")
-        }, ,
+        },
         {
             title: 'Hành động',
             dataIndex: 'action',
@@ -105,6 +112,11 @@ function Card() {
             </div>
             <Table columns={columns} dataSource={cards} scroll={{x:"max-content"}}></Table>
             <FormCard visible={visible} close={() => setVisible(false)}></FormCard>
+
+        {/*    oggy card*/}
+            <div>Oggy Card</div>
+            <Button onClick={handleOggyCard}>Add New Card</Button>
+            <Button onClick={handleOggyCard}>Your Cards</Button>
         </div>
     )
 }

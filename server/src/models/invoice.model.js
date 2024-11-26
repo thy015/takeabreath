@@ -27,7 +27,7 @@ const InvoiceSchema = new mongoose.Schema({
   roomID: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
   hotelID: { type: mongoose.Schema.Types.ObjectId, ref: "Hotel", required: true },
     ownerID:{type:mongoose.Schema.Types.ObjectId, ref:'Owner',required: true },
-    wowoOrderID:{type:String,required:false},
+    wowoOrderID:{type:Number,required:false,default:0},
 });
 
 

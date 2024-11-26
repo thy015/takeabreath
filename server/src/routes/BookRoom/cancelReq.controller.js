@@ -1,7 +1,7 @@
 
 
-const { CancelRequest, RefundCusMoney}=require("../../models/cancelReq.model");
-const { Customer, Owner,Admin} = require("../../models/signUp.model");
+const { CancelRequest}=require("../../models/cancelReq.model");
+const { Customer, Owner} = require("../../models/signUp.model");
 const {Invoice} = require("../../models/invoice.model");
 const {WoWoWallet} = require("@htilssu/wowo");
 const handleCancelRoomAccept = async (req, res) => {
@@ -41,22 +41,27 @@ const handleCancelRoomAccept = async (req, res) => {
             matchedInvoice: matchedInvoice,
             matchedPartner: matchedPartner,
           })
-        } catch(e){
-          return res.status(500).json({message: e+'E in handle room acp controller'})
+        } catch (e) {
+          console.error('Detailed Error in handleCancelRoomAccept:', e);
+          return res.status(500).json({ message: 'E in handleroomAcp', error: e.message || e });
         }
       } else if(cancelReq.paymentMethod === 'wowo') {
           const wowoWallet=new WoWoWallet(process.env.WOWO_SECRET)
           let orderId=matchedInvoice._id
-            try {
-              const response = await wowoWallet.refundOrder(orderId)
+          console.log('orderId', orderId)
+
+        try {
+              const response = await wowoWallet.cancelOrder(orderId)
               console.log('Success:', response)
               return res.status(200).json(response)
-            } catch(e){
-              return res.status(500).json({message: e+'E in handle room acp controller'})
+            }catch (e) {
+              console.error('Detailed Error in handleCancelRoomAccept:', e);
+              return res.status(500).json({ message: 'E in handleroomAcp', error: e.message || e });
             }
       }
   } catch (e) {
-    return res.status(500).json({message: 'E in handleroomAcp', e})
+    console.error('Error in handleCancelRoomAccept:', e);
+    return res.status(500).json({message: 'E in handleroomAcp', error: e.message || e});
   }
 }
 const handleCancelRoomReject=async(req,res)=>{
@@ -110,7 +115,7 @@ const getReqCancelRoomRejected = async (req, res) => {
     }).populate({
       path:'adminID',
       select:"adminName"
-    }).sort({dayReq:-1});;
+    }).sort({dayReq:-1});
   
     return res.status(200).json(reqCancelsRejected);
   } catch (e) {

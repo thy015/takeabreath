@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, forwardRef, useEffect } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -27,11 +27,10 @@ import { setInvoiceID,setVoucherApplied } from "../hooks/redux/inputDaySlice"
 import { useForm } from "antd/es/form/Form";
 import { setInvoiceCount,cleanInvoice } from "../hooks/redux/revenueSlice";
 import { useTranslation } from "react-i18next";
-const {Option}=Select;
+
 function BookingConfirmationForm({ isShow, onCancel,hotel }) {
   const {t}=useTranslation();
   const { auth,setAuth } = useContext(AuthContext);
-  const [messageApi, contextHolder] = message.useMessage();
   const BE_PORT=import.meta.env.VITE_BE_PORT
   const [form] = useForm();
   const [payment, setPayment] = useState("");
@@ -140,7 +139,7 @@ useEffect(() => {
       });
       if (response.status) {
         message.error("Tài khoản của bạn đã bị khóa")
-        const resDeleteInvoice = await axios.post(`${BE_PORT}/api/booking/deleteInvoiceWaiting`, { listID: listInvoiceID })
+        await axios.post(`${BE_PORT}/api/booking/deleteInvoiceWaiting`, { listID: listInvoiceID });
         dispatch(cleanInvoice())
         hanldeLogout()
       } else {
@@ -151,8 +150,7 @@ useEffect(() => {
         });
       }
     } catch (error) {
-      console.log(error)
-      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+      console.log(error.response?.data?.message || "An unknown error occurred.");
     }
   };
 
@@ -188,7 +186,7 @@ useEffect(() => {
   // setCount and save orders
   const setCountOrders = (invoice, invoiceID) => {
     const state = invoice.invoiceState
-    if (state == "waiting") {
+    if (state === "waiting") {
       dispatch(setInvoiceCount(invoiceID))
     }
     // check nếu đặt 3 lần ko thành công
@@ -446,39 +444,39 @@ const handleCancel = () => {
                 </Form.Item>
 
     {/* select voucher */}
-    <div className="relative inline-block">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2 bg-white border rounded-md flex items-center justify-between hover:bg-gray-50 focus:outline-none w-48"
-      >
-        <span className="text-gray-700">
-          {voucherCode || t('voucher')}
-        </span>
-        <ChevronDown className="w-4 h-4 text-gray-400 ml-2" />
-      </button>
+    {/*<div className="relative inline-block">*/}
+    {/*  <button*/}
+    {/*    onClick={() => setIsOpen(!isOpen)}*/}
+    {/*    className="px-4 py-2 bg-white border rounded-md flex items-center justify-between hover:bg-gray-50 focus:outline-none w-48"*/}
+    {/*  >*/}
+    {/*    <span className="text-gray-700">*/}
+    {/*      {voucherCode || t('voucher')}*/}
+    {/*    </span>*/}
+    {/*    <ChevronDown className="w-4 h-4 text-gray-400 ml-2" />*/}
+    {/*  </button>*/}
 
-      {isOpen && (
-        <div className="absolute left-full ml-2 top-0 bg-white border rounded-md shadow-lg z-10">
-          <div className="max-w-md overflow-x-auto">
-            <div className="flex whitespace-nowrap">
-              {vouchers.map((voucher) => (
-                <div
-                  key={voucher.code}
-                  onClick={() => {
-                    setVoucherCode(voucher.code);
-                    setIsOpen(false);
-                  }}
-                  className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center border-r last:border-r-0 shrink-0"
-                >
-                  <span>{voucher.name}</span>
-                  <span className="text-gray-600 ml-2">{t('discount')} {voucher.discount}%</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    {/*  {isOpen && (*/}
+    {/*    <div className="absolute left-full ml-2 top-0 bg-white border rounded-md shadow-lg z-10">*/}
+    {/*      <div className="max-w-md overflow-x-auto">*/}
+    {/*        <div className="flex whitespace-nowrap">*/}
+    {/*          {vouchers.map((voucher) => (*/}
+    {/*            <div*/}
+    {/*              key={voucher.code}*/}
+    {/*              onClick={() => {*/}
+    {/*                setVoucherCode(voucher.code);*/}
+    {/*                setIsOpen(false);*/}
+    {/*              }}*/}
+    {/*              className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center border-r last:border-r-0 shrink-0"*/}
+    {/*            >*/}
+    {/*              <span>{voucher.name}</span>*/}
+    {/*              <span className="text-gray-600 ml-2">{t('discount')} {voucher.discount}%</span>*/}
+    {/*            </div>*/}
+    {/*          ))}*/}
+    {/*        </div>*/}
+    {/*      </div>*/}
+    {/*    </div>*/}
+    {/*  )}*/}
+    {/*</div>*/}
 
               </Form>
             </div>

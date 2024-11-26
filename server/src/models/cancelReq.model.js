@@ -39,7 +39,8 @@ const reqCancelSchema = new mongoose.Schema({
   },
   refundAmount: { type: Number, default: 0, required: false },
   refundDay: { type: Date, default: Date.now, required: true },
-  paymentMethod:{type:String,required:true,enum:['wowo','paypal']}
+  paymentMethod:{type:String,required:true,enum:['wowo','paypal']},
+  wowoOrderID:{type:String,required:false},
 });
 
 const CancelRequest = mongoose.model("CancelReq", reqCancelSchema);

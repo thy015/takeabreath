@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState, useContext} from "react";
-import {Spin, Alert, Button, notification, Modal, DatePicker} from "antd";
+import React, { useState, useContext} from "react";
+import {Spin, Alert, notification, Modal, DatePicker} from "antd";
 import {useGet} from "../../../hooks/hooks";
 import {InfoCircleOutlined, FilterOutlined} from "@ant-design/icons";
 import {ModalDelete, ModalActivate} from "../Customers/CustomerList";
@@ -97,6 +97,7 @@ const cancelReqAdmin = () => {
         error: acceptedError,
         loading: acceptedLoading,
     } = useGet(`${BE_PORT}/api/cancelReq/accepted`, refresh);
+
     const handleDeleteCancel = () => {
         setDeleteModalVisible(false);
         setCusID(null);

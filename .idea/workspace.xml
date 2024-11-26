@@ -4,12 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="test wowo wallet">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="handle booking unexpected room, failed in transfer wowo money">
+      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/component/BookingConfirmationForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/component/BookingConfirmationForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/hooks/redux/ownerSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/hooks/redux/ownerSlice.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/admin/cancelReq/cancelReqAdmin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/cancelReq/cancelReqAdmin.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/models/cancelReq.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/models/cancelReq.model.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/models/invoice.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/models/invoice.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/owner/Card/Card.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/owner/Card/Card.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/user/YourCancelRequest.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/user/YourCancelRequest.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/BookRoom/bookRoom.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/BookRoom/bookRoom.controller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/Wallet/wallet.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/Wallet/wallet.route.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,6 +142,7 @@
       <workItem from="1732092335604" duration="13254000" />
       <workItem from="1732459926475" duration="163000" />
       <workItem from="1732463972786" duration="428000" />
+      <workItem from="1732612486639" duration="34825000" />
     </task>
     <task id="LOCAL-00001" summary="change port">
       <option name="closed" value="true" />
@@ -368,7 +376,31 @@
       <option name="project" value="LOCAL" />
       <updated>1732455713458</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="change wowo API">
+      <option name="closed" value="true" />
+      <created>1732620411659</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1732620411660</updated>
+    </task>
+    <task id="LOCAL-00031" summary="wowo wallet">
+      <option name="closed" value="true" />
+      <created>1732632116942</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1732632116942</updated>
+    </task>
+    <task id="LOCAL-00032" summary="change modal, cancel req, add wowo wallet n delete">
+      <option name="closed" value="true" />
+      <created>1732646919896</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1732646919896</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -398,10 +430,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="change port" />
-    <MESSAGE value="e in deploy" />
-    <MESSAGE value="change import method n vite config" />
-    <MESSAGE value="test cookies" />
     <MESSAGE value="init vercel in vite" />
     <MESSAGE value="failed build" />
     <MESSAGE value="build ok, cant receive token from oggy" />
@@ -423,6 +451,10 @@
     <MESSAGE value="fixed show city, change cors, local data" />
     <MESSAGE value="fixed refund amount" />
     <MESSAGE value="test wowo wallet" />
-    <option name="LAST_COMMIT_MESSAGE" value="test wowo wallet" />
+    <MESSAGE value="change wowo API" />
+    <MESSAGE value="wowo wallet" />
+    <MESSAGE value="change modal, cancel req, add wowo wallet n delete" />
+    <MESSAGE value="handle booking unexpected room, failed in transfer wowo money" />
+    <option name="LAST_COMMIT_MESSAGE" value="handle booking unexpected room, failed in transfer wowo money" />
   </component>
 </project>

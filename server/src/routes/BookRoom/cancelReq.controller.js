@@ -49,11 +49,26 @@ const handleCancelRoomAccept = async (req, res) => {
           const wowoWallet=new WoWoWallet(process.env.WOWO_SECRET)
           let orderId=matchedInvoice.wowoOrderID
           console.log('orderId', orderId)
-
         try {
-              const response = await wowoWallet.cancelOrder(orderId)
+              const response = await wowoWallet.refundOrder(orderId)
               console.log('Success:', response)
-              return res.status(200).json(response)
+                cancelReq.isAccept = 'accepted';
+                cancelReq.adminID = adminID
+                cancelReq.refundAmount = refundCusMoney;
+                await cancelReq.save ();
+
+                matchedPartner.awaitFund = refundPartnerMoney || 0
+                await matchedPartner.save ()
+
+                return res.status (200).json ({
+                  success: true,
+                  message: 'Chấp nhận yêu cầu hủy thành công',
+                  cancelReq: cancelReq,
+                  matchedInvoice: matchedInvoice,
+                  matchedPartner: matchedPartner,
+                  wowoRefundOrder: response
+                })
+
             }catch (e) {
               console.error('Detailed Error in handleCancelRoomAccept:', e);
               return res.status(500).json({ message: 'E in handleroomAcp', error: e.message || e });
@@ -64,6 +79,7 @@ const handleCancelRoomAccept = async (req, res) => {
     return res.status(500).json({message: 'E in handleroomAcp', error: e.message || e});
   }
 }
+
 const handleCancelRoomReject=async(req,res)=>{
   const {cancelReqID}=req.params;
   const {adminID,rejectedReason}=req.body

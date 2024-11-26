@@ -12,8 +12,8 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@htilssu/wowo':
-        specifier: ^1.1.36
-        version: 1.1.36
+        specifier: ^1.1.37
+        version: 1.1.37
       '@onedoc/client':
         specifier: ^0.1.33
         version: 0.1.33
@@ -224,8 +224,8 @@ packages:
   '@emotion/weak-memoize@0.4.0':
     resolution: {integrity: sha512-snKqtPW01tN0ui7yu9rGv69aJXr/a/Ywvl11sUjNtEcRc+ng/mQriFL0wLXMef74iHa/EkftbDzU9F8iFbH+zg==}
 
-  '@htilssu/wowo@1.1.36':
-    resolution: {integrity: sha512-uHgyNDb1K3jH5OaKarJDx76gYKT6C5qBTuLr4MEuNYVx1jZ90BzZIC+JubgfNi/0T3qweAiJxU1IO56el4u0FA==}
+  '@htilssu/wowo@1.1.37':
+    resolution: {integrity: sha512-wXYpu2iYYlAm3f+49fQzhxRAkluYAzRcJrGmeTrN2nTYUpmakx7R3Z/IqQ2wd3gJhTydc8YJPzgsq0hW/SemAg==}
 
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
@@ -2816,7 +2816,7 @@ snapshots:
 
   '@emotion/weak-memoize@0.4.0': {}
 
-  '@htilssu/wowo@1.1.36':
+  '@htilssu/wowo@1.1.37':
     dependencies:
       axios: 1.7.7
       cheerio: 1.0.0

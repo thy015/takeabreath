@@ -1,24 +1,28 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {useDispatch, useSelector}               from "react-redux"
 import {FontAwesomeIcon}                        from '@fortawesome/react-fontawesome'
-import {faPlus}                                 from '@fortawesome/free-solid-svg-icons'
-import {Button, Popconfirm, Table}              from 'antd'
-import {useMediaQuery}                          from 'react-responsive'
+import {faPlus}                           from '@fortawesome/free-solid-svg-icons'
+import {Button, Modal, Popconfirm, Table} from 'antd'
+import {useMediaQuery}                    from 'react-responsive'
 import {Link}                                   from 'react-router-dom'
 import FormCard                                 from '../../../component/FormCard'
 import dayjs                                    from 'dayjs'
 import axios                                    from 'axios'
 import {setCards}                               from '../../../hooks/redux/ownerSlice'
 import {openNotification}                       from '../../../hooks/notification'
-import {AuthContext}                            from "../../../hooks/auth.context";
-
+import {AuthContext} from "../../../hooks/auth.context";
+import {setWoWoDetail}    from "../../../hooks/redux/ownerSlice";
 function Card () {
     const dispatch = useDispatch ()
     const {auth} = useContext (AuthContext)
     const id = auth?.user?.id
     const [visible, setVisible] = useState (false)
     const [wowoCardsData, setWowoCardsData] = useState ([])
+    const [isWoWoCardDetailPopUp, setIsWoWoCardDetailPopUp] = useState (false)
     const cards = useSelector (state => state.owner.cards)
+
+    const {wowoCardDetail}=useSelector(state => state.owner)
+
     useMediaQuery ({query: '(max-width: 640px)'});
     const BE_PORT = import.meta.env.VITE_BE_PORT
     useEffect (() => {
@@ -98,6 +102,17 @@ function Card () {
         }
     }
 
+    const handleClickDetailWoWoCard = async (record) => {
+        try {
+            const response = await axios.post(`${BE_PORT}/api/wallet/detailWoWoCard?cardWoWoID=${record.cardWoWoID}`);
+            dispatch(setWoWoDetail(response.data));
+            setIsWoWoCardDetailPopUp((prev) => !prev);
+        } catch (error) {
+            openNotification(false, "Không thể xem chi tiết thẻ");
+            console.error("Error fetching WoWo card details:", error.message);
+        }
+    };
+
     const columns = [
         {
             title: 'Loại thẻ',
@@ -121,7 +136,7 @@ function Card () {
             render: (text) => dayjs (text).format ("DD/MM/YYYY")
         },
         {
-            title: 'Hành động',
+            title: 'Xóa thẻ',
             dataIndex: 'action',
             key: 'action',
             render: (_, record) => (
@@ -134,6 +149,7 @@ function Card () {
 
             )
         },
+
     ]
     const wowoColumns = [
         {
@@ -165,6 +181,16 @@ function Card () {
 
             )
         },
+        {
+            title: 'Xem thông tin ví',
+            dataIndex: 'details',
+            key: 'details',
+            render: (_, record) => (
+                <Button info onClick={() => handleClickDetailWoWoCard(record)}>
+                    Xem
+                </Button>
+            )
+        },
     ];
 
     return (
@@ -181,13 +207,27 @@ function Card () {
                 </Link>
             </div>
             <Table columns={columns} dataSource={cards} scroll={{x: "max-content"}}></Table>
-            <Table columns={wowoColumns} dataSource={wowoCardsData} scroll={{x: "max-content"}}></Table>
+
             <FormCard visible={visible} close={() => setVisible (false)}></FormCard>
 
             {/*    oggy card*/}
-            <div>Oggy Card</div>
-            <Button onClick={handleOggyCard}>Add New Card</Button>
-            <Button onClick={handleOggyCard}>Your Cards</Button>
+            {isWoWoCardDetailPopUp && (
+                <Modal
+                    visible={isWoWoCardDetailPopUp}
+                    onCancel={() => setIsWoWoCardDetailPopUp (false)}
+                    footer={null}
+                >
+                    <h2>WoWo Card Details</h2>
+                    <p>Card ID: {wowoCardDetail?.walletDetails?.id}</p>
+                    <p>Balance: {wowoCardDetail?.walletDetails?.balance}</p>
+                    {/* Add more details as needed */}
+                </Modal>
+            )}
+            <div className='flex justify-between items-center w-full my-4'>
+                <div className='ml-4 font-afacad text-[20px]'>Oggy Card</div>
+                <Button onClick={handleOggyCard} className='mr-4'>Add New Card</Button>
+            </div>
+            <Table columns={wowoColumns} dataSource={wowoCardsData} scroll={{x: "max-content"}}></Table>
         </div>
     )
 }

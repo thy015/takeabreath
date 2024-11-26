@@ -26,6 +26,31 @@ const bookRoom = async (req, res) => {
     const convertCheckInDay = dayjs(dataBooking.checkInDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
     const convertCheckOutDay = dayjs(dataBooking.checkOutDay).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
     console.log('Convert check in and out day', convertCheckInDay, convertCheckOutDay)
+    // query room again to make sure it still available
+    let findRoomInvoices = await Invoice.find({ roomID: idRoom });
+    let totalRoomsBooked = dataBooking.totalRoom || 1;
+    let count = 0;
+
+    findRoomInvoices.forEach(invoice => {
+      const invoiceStart = dayjs(invoice.guestInfo.checkInDay);
+      const invoiceEnd = dayjs(invoice.guestInfo.checkOutDay);
+      const start = dayjs(dataBooking.checkInDay);
+      const end = dayjs(dataBooking.checkOutDay);
+
+      const isOverlapping =
+          dayjs(start).isBetween(invoiceStart, invoiceEnd, null, "[)") ||
+          dayjs(end).isBetween(invoiceStart, invoiceEnd, null, "(]")
+
+      if (isOverlapping) {
+        count += invoice.guestInfo.totalRoom;
+      }
+    });
+
+    if (count + totalRoomsBooked > room.numberOfRooms) {
+      return res.status(209).json({
+        message: 'Out of rooms due to unexpected booking from another guest'
+      })
+    }
     const invoice = await Invoice.create({
       ownerID: idOwner,
       hotelID: idHotel,

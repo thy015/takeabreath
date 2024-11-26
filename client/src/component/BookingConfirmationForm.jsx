@@ -27,6 +27,7 @@ import { setInvoiceID,setVoucherApplied } from "../hooks/redux/inputDaySlice"
 import { useForm } from "antd/es/form/Form";
 import { setInvoiceCount,cleanInvoice } from "../hooks/redux/revenueSlice";
 import { useTranslation } from "react-i18next";
+import {openNotification} from "../hooks/notification";
 
 function BookingConfirmationForm({ isShow, onCancel,hotel }) {
   const {t}=useTranslation();
@@ -258,6 +259,8 @@ useEffect(() => {
         } else {
           message.error("WoWo checkout URL is missing.");
         }
+      } else if(response.status === 209) {
+        message.error("Booking failed", message.error(response.data.message));
       }
       else {
         message.error("Booking failed", message.error(response.data.message));

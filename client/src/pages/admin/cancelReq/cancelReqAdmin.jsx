@@ -10,7 +10,7 @@ import moment from "moment";
 const cancelReqAdmin = () => {
     axios.defaults.withCredentials = true
     const {auth} = useContext(AuthContext)
-    const [cusID, setCusID] = useState();
+    const [cancelID, setCancelID] = useState();
     const [reason, setReason] = useState("");
     const [isProcess, setIsProcess] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -37,7 +37,7 @@ const cancelReqAdmin = () => {
 
     const handleAccept = async () => {
         try {
-            const response = await axios.post(`${BE_PORT}/api/cancelReq/accept/${cusID}`, {adminID: auth.user.id}, {withCredentials: true})
+            const response = await axios.post(`${BE_PORT}/api/cancelReq/accept/${cancelID}`, {adminID: auth.user.id}, {withCredentials: true})
             if (response.data.success) {
                 notification.success({
                     message: 'Chấp Nhận Yêu Cầu Thành Công',
@@ -61,7 +61,7 @@ const cancelReqAdmin = () => {
     }
     const handleConfirm = async () => {
         try {
-            const response = await axios.post(`${BE_PORT}/api/cancelReq/reject/${cusID}`, {
+            const response = await axios.post(`${BE_PORT}/api/cancelReq/reject/${cancelID}`, {
                 adminID: auth.user.id,
                 rejectedReason: reason
             }, {withCredentials: true})
@@ -100,7 +100,7 @@ const cancelReqAdmin = () => {
 
     const handleDeleteCancel = () => {
         setDeleteModalVisible(false);
-        setCusID(null);
+        setCancelID(null);
         setReason("");
     };
     const handleFilterChange = (date, dateString) => {
@@ -186,13 +186,13 @@ const cancelReqAdmin = () => {
                             <div className="flex gap-2">
 
                                 <button onClick={() => {
-                                    setActivateModalVisible(true), setCusID(item._id)
+                                    setActivateModalVisible(true), setCancelID(item._id)
                                 }} className="bg-green-500 text-white px-2 rounded hover:bg-green-400  ">
                                     Đồng ý
                                 </button>
 
                                 <button onClick={() => {
-                                    setDeleteModalVisible(true), setCusID(item._id)
+                                    setDeleteModalVisible(true), setCancelID(item._id)
                                 }} className="bg-red-600 text-white px-2 py-1 hover:bg-red-400 rounded">Từ chối
                                 </button>
                             </div>

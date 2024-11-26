@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     owner: {},
-    
+    cards: [],
+    wowoCardDetail: null,
 }
 
 const ownerSlice = createSlice({
@@ -14,10 +15,10 @@ const ownerSlice = createSlice({
         setCards:(state,action)=>{
             state.cards=action.payload
         },
-        addCards:(state,action)=>{
-            state.cards = state.cards.push(action.payload)
-        }
+        setWoWoDetail:(state,action)=>{
+            state.wowoCardDetail=action.payload
+        },
     }
 })
-export const { setOwner, setCards,addCards } = ownerSlice.actions
+export const { setOwner, setCards,setWoWoDetail} = ownerSlice.actions
 export default ownerSlice.reducer

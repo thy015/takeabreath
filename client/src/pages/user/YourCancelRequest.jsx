@@ -3,7 +3,6 @@ import {AuthContext} from "../../hooks/auth.context";
 import {Alert, Select, Spin} from "antd";
 import { useDispatch,useSelector } from 'react-redux';
 import {useGet} from "../../hooks/hooks";
-import {IoMdArrowDropdown} from "react-icons/io";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -89,9 +88,7 @@ const YourCancelRequest = () => {
                 <div className='pl-4'>
                     <Select options={options} defaultValue={'default'} className='w-full' onChange={handleSort}></Select>
                 </div>
-                <div className='pr-2'>
-                    <IoMdArrowDropdown></IoMdArrowDropdown>
-                </div>
+
                     </div>
                 </div>
                 {cancelTemps?.map((c) => {

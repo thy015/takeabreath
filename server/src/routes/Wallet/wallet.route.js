@@ -63,6 +63,29 @@ router.post('/wowoListCard',async(req,res)=>{
 
     return res.status(200).json({ cards: paymentCard })
 })
-
+router.post('/detailWoWoCard',async(req,res)=>{
+    const {cardWoWoID}=req.query
+    try {
+        const walletDetails = await wallet.getWallet(`${cardWoWoID}`);
+        return res.status(200).json({message:'Success query WOWO card detail',walletDetails})
+    }catch(e){
+        return res.status(500).json({message:`${e.message}`});
+    }
+})
+router.post('/transferWoWoMoney',async(req,res)=>{
+    const {cardWoWoID, amount}=req.query
+    try{
+        console.log("Transfer Request:", { cardWoWoID, amount })
+        const transferProceed=await wallet.transferMoney(`${cardWoWoID}`,amount)
+        if(transferProceed.status===200){
+            console.log(transferProceed)
+            return res.status(200).json(transferProceed)
+        }else{
+            return res.status(400).json({message: 'Cant transfer money'});
+        }
+    }catch(e){
+        return res.status(500).json({message:`${e.message}` || e});
+    }
+})
 module.exports = router;
 

@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {useDispatch, useSelector}               from "react-redux"
 import {FontAwesomeIcon}                        from '@fortawesome/react-fontawesome'
-import {faPlus}                           from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Popconfirm, Table} from 'antd'
-import {useMediaQuery}                    from 'react-responsive'
+import {faPlus}                                        from '@fortawesome/free-solid-svg-icons'
+import {Button, Form, Input, Modal, Popconfirm, Table} from 'antd'
+import {useMediaQuery}                                 from 'react-responsive'
 import {Link}                                   from 'react-router-dom'
 import FormCard                                 from '../../../component/FormCard'
 import dayjs                                    from 'dayjs'
@@ -19,6 +19,11 @@ function Card () {
     const [visible, setVisible] = useState (false)
     const [wowoCardsData, setWowoCardsData] = useState ([])
     const [isWoWoCardDetailPopUp, setIsWoWoCardDetailPopUp] = useState (false)
+    const [isWoWoTransferMoneyPopUp, setWoWoTransferMoneyPopUp] = useState (false)
+    const [formData, setFormData] = useState({
+        cardWoWoID: "",
+        amount: "",
+    });
     const cards = useSelector (state => state.owner.cards)
 
     const {wowoCardDetail}=useSelector(state => state.owner)
@@ -103,15 +108,42 @@ function Card () {
     }
 
     const handleClickDetailWoWoCard = async (record) => {
-        try {
             const response = await axios.post(`${BE_PORT}/api/wallet/detailWoWoCard?cardWoWoID=${record.cardWoWoID}`);
             dispatch(setWoWoDetail(response.data));
             setIsWoWoCardDetailPopUp((prev) => !prev);
-        } catch (error) {
-            openNotification(false, "Không thể xem chi tiết thẻ");
-            console.error("Error fetching WoWo card details:", error.message);
-        }
     };
+
+    const handleClickTransferWoWoCard=async(record) => {
+            const response = await axios.post(`${BE_PORT}/api/wallet/detailWoWoCard?cardWoWoID=${record.cardWoWoID}`);
+            dispatch(setWoWoDetail(response.data));
+            setWoWoTransferMoneyPopUp(prev=>!prev)
+    }
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+    const handleTransferFormSubmit=async() => {
+        try {
+            const {cardWoWoID, amount} = formData
+            if (amount > wowoCardDetail?.walletDetails?.balance) {
+                return openNotification (false, 'You dont have enough money')
+            }
+            const response = await axios.post (`${BE_PORT}/api/wallet/transferWoWoMoney?cardWoWoID=${cardWoWoID}&amount=${amount}`);
+            if (response.status === 200) {
+                openNotification ('Success transfer money');
+                setWoWoTransferMoneyPopUp (false)
+            } else {
+                openNotification (false, 'Unexpected error in cancel money');
+                console.log ('response.message', response.message)
+            }
+        }catch(e){
+            openNotification(false, 'Unexpected error in cancel money',e.message);
+        }
+    }
 
     const columns = [
         {
@@ -163,11 +195,6 @@ function Card () {
             key: 'cardWoWoID',
         },
         {
-            title: 'Số dư',
-            dataIndex: 'cardWoWoBalance',
-            key: 'cardWoWoBalance',
-        },
-        {
             title: 'Hành động',
             dataIndex: 'action',
             key: 'action',
@@ -178,7 +205,6 @@ function Card () {
                         Gỡ thẻ
                     </Button>
                 </Popconfirm>
-
             )
         },
         {
@@ -190,6 +216,17 @@ function Card () {
                     Xem
                 </Button>
             )
+        },
+        {
+            title: 'Chuyển tiền sang ví khác',
+            dataIndex: 'details',
+            key: 'details',
+            render: (_, record) => (
+                <Button info onClick={() => handleClickTransferWoWoCard(record)}>
+                    Chuyển tiền
+                </Button>
+            )
+
         },
     ];
 
@@ -213,13 +250,32 @@ function Card () {
             {/*    oggy card*/}
             {isWoWoCardDetailPopUp && (
                 <Modal
-                    visible={isWoWoCardDetailPopUp}
+                    open={isWoWoCardDetailPopUp}
                     onCancel={() => setIsWoWoCardDetailPopUp (false)}
                     footer={null}
                 >
                     <h2>WoWo Card Details</h2>
                     <p>Card ID: {wowoCardDetail?.walletDetails?.id}</p>
                     <p>Balance: {wowoCardDetail?.walletDetails?.balance}</p>
+                    {/* Add more details as needed */}
+                </Modal>
+            )}
+            {isWoWoTransferMoneyPopUp &&(
+                <Modal
+                    open={isWoWoTransferMoneyPopUp}
+                    onCancel={() => setWoWoTransferMoneyPopUp (false)}
+                    footer={null}
+                >
+                    <h2>Transfer WoWo Money</h2>
+                    <Form className='h-40'>
+                        <Form.Item name='cardWoWoID' label='To WoWo Card ID'>
+                            <Input value={formData.cardWoWoID} onChange={handleInputChange} name="cardWoWoID"></Input>
+                        </Form.Item>
+                        <Form.Item name='amount' label='Amount To Transfer'>
+                            <Input value={formData.amount} onChange={handleInputChange} name="amount"></Input>
+                        </Form.Item>
+                        <Button className='float-right' onClick={handleTransferFormSubmit}>Transfer</Button>
+                    </Form>
                     {/* Add more details as needed */}
                 </Modal>
             )}

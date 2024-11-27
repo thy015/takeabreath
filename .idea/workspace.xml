@@ -4,18 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="handle booking unexpected room, failed in transfer wowo money">
+    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="quick deploy">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/component/BookingConfirmationForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/component/BookingConfirmationForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/hooks/redux/ownerSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/hooks/redux/ownerSlice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/cancelReq/cancelReqAdmin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/cancelReq/cancelReqAdmin.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/owner/Card/Card.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/owner/Card/Card.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/user/YourCancelRequest.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/user/YourCancelRequest.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/BookRoom/bookRoom.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/BookRoom/bookRoom.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/routes/Wallet/wallet.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/Wallet/wallet.route.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,6 +63,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.server.executor&quot;: &quot;Run&quot;,
     &quot;npm.start.executor&quot;: &quot;Run&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.tools&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/snap/webstorm/420/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
@@ -79,7 +75,7 @@
       <recent name="$PROJECT_DIR$/client/public/img" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.start">
+  <component name="RunManager" selected="npm.dev">
     <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/server/package.json" />
       <command value="run" />
@@ -88,6 +84,16 @@
       </scripts>
       <node-interpreter value="project" />
       <package-manager value="pnpm" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="server" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="server" />
+      </scripts>
+      <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
@@ -102,7 +108,13 @@
     <list>
       <item itemvalue="npm.dev" />
       <item itemvalue="npm.start" />
+      <item itemvalue="npm.server" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.server" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -143,6 +155,9 @@
       <workItem from="1732459926475" duration="163000" />
       <workItem from="1732463972786" duration="428000" />
       <workItem from="1732612486639" duration="34825000" />
+      <workItem from="1732656539607" duration="20000" />
+      <workItem from="1732685065092" duration="5011000" />
+      <workItem from="1732690619623" duration="1010000" />
     </task>
     <task id="LOCAL-00001" summary="change port">
       <option name="closed" value="true" />
@@ -400,7 +415,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732646919896</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="handle booking unexpected room, failed in transfer wowo money">
+      <option name="closed" value="true" />
+      <created>1732656551937</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1732656551937</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -430,7 +453,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="init vercel in vite" />
     <MESSAGE value="failed build" />
     <MESSAGE value="build ok, cant receive token from oggy" />
     <MESSAGE value="oggy ok, test paste linktest" />
@@ -455,6 +477,7 @@
     <MESSAGE value="wowo wallet" />
     <MESSAGE value="change modal, cancel req, add wowo wallet n delete" />
     <MESSAGE value="handle booking unexpected room, failed in transfer wowo money" />
-    <option name="LAST_COMMIT_MESSAGE" value="handle booking unexpected room, failed in transfer wowo money" />
+    <MESSAGE value="quick deploy" />
+    <option name="LAST_COMMIT_MESSAGE" value="quick deploy" />
   </component>
 </project>

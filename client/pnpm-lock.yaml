@@ -33,8 +33,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2(@fortawesome/fontawesome-svg-core@6.6.0)(react@18.3.1)
       '@htilssu/wowo':
-        specifier: ^1.1.37
-        version: 1.1.37
+        specifier: ^1.1.40
+        version: 1.1.40
       '@mui/material':
         specifier: ^6.1.6
         version: 6.1.6(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -641,8 +641,8 @@ packages:
   '@googlemaps/markerclusterer@2.5.3':
     resolution: {integrity: sha512-x7lX0R5yYOoiNectr10wLgCBasNcXFHiADIBdmn7jQllF2B5ENQw5XtZK+hIw4xnV0Df0xhN4LN98XqA5jaiOw==}
 
-  '@htilssu/wowo@1.1.37':
-    resolution: {integrity: sha512-wXYpu2iYYlAm3f+49fQzhxRAkluYAzRcJrGmeTrN2nTYUpmakx7R3Z/IqQ2wd3gJhTydc8YJPzgsq0hW/SemAg==}
+  '@htilssu/wowo@1.1.40':
+    resolution: {integrity: sha512-80BhOlEebccNCAeQ9opzq5UIS0Sq5qAh23I2J+dyYQZj9syeQdpVTEh6mqOQ1ZHFkZuoWOPxEgNCSKs/Lmfavg==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -5070,7 +5070,7 @@ snapshots:
       fast-deep-equal: 3.1.3
       supercluster: 8.0.1
 
-  '@htilssu/wowo@1.1.37':
+  '@htilssu/wowo@1.1.40':
     dependencies:
       axios: 1.7.7
       cheerio: 1.0.0

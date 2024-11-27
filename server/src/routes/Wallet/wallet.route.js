@@ -72,20 +72,49 @@ router.post('/detailWoWoCard',async(req,res)=>{
         return res.status(500).json({message:`${e.message}`});
     }
 })
-router.post('/transferWoWoMoney',async(req,res)=>{
-    const {cardWoWoID, amount}=req.query
-    try{
-        console.log("Transfer Request:", { cardWoWoID, amount })
-        const transferProceed=await wallet.transferMoney(`${cardWoWoID}`,amount)
-        if(transferProceed.status===200){
-            console.log(transferProceed)
-            return res.status(200).json(transferProceed)
-        }else{
-            return res.status(400).json({message: 'Cant transfer money'});
+router.post('/transferWoWoMoney', async (req, res) => {
+    const { cardWoWoID, amount } = req.query;
+
+    try {
+        console.log("Transfer Request:", { cardWoWoID, amount });
+
+        const transferProceed = await wallet.transferMoney(`${cardWoWoID}`, amount);
+        console.log("Transfer Proceed:", transferProceed);
+
+        if (transferProceed) {
+            // Find the owner with the specific WoWo card
+            const owner = await Owner.findOne({
+                'paymentCard.cardWoWoID': Number(cardWoWoID)
+            });
+
+            if (!owner) {
+                return res.status(404).json({ message: 'Owner with specified WoWo card not found' });
+            }
+
+            const cardIndex = owner.paymentCard.findIndex(
+                (card) => card.cardWoWoID === Number(cardWoWoID)
+            );
+
+            if (cardIndex === -1) {
+                return res.status(404).json({ message: 'WoWo card not found in owner\'s payment cards' });
+            }
+
+            owner.paymentCard[cardIndex].cardWoWoBalance += Number(amount);
+            await owner.save();
+
+            return res.status(200).json({
+                message: 'Transfer successful',
+                transferDetails: transferProceed,
+                updatedCard: owner.paymentCard[cardIndex],
+            });
+        } else {
+            return res.status(400).json({ message: 'Error in transferring money' });
         }
-    }catch(e){
-        return res.status(500).json({message:`${e.message}` || e});
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ message: e.message || 'Internal server error' });
     }
-})
+});
+
 module.exports = router;
 

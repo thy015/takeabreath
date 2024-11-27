@@ -11,7 +11,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@htilssu/wowo": "^1.1.37",
+    "@htilssu/wowo": "^1.1.40",
     "@mui/material": "^6.1.6",
     "@mui/x-charts": "latest",
     "@onedoc/client": "^0.1.33",

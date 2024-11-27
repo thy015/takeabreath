@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="comment voucher">
+    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="update cancel room">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/owner/Room/Room.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/owner/Room/Room.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/BookRoom/bookRoom.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/BookRoom/bookRoom.controller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -70,7 +72,7 @@
       <recent name="$PROJECT_DIR$/client/public/img" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.start">
     <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/server/package.json" />
       <command value="run" />
@@ -153,7 +155,7 @@
       <workItem from="1732656539607" duration="20000" />
       <workItem from="1732685065092" duration="5011000" />
       <workItem from="1732690619623" duration="1010000" />
-      <workItem from="1732691641255" duration="1494000" />
+      <workItem from="1732691641255" duration="5701000" />
     </task>
     <task id="LOCAL-00001" summary="change port">
       <option name="closed" value="true" />
@@ -435,7 +437,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732691877651</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="update cancel room">
+      <option name="closed" value="true" />
+      <created>1732694312295</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1732694312296</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -465,7 +475,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="build ok, cant receive token from oggy" />
     <MESSAGE value="oggy ok, test paste linktest" />
     <MESSAGE value="delete node modules 3rd times, handle oggy storage payment" />
     <MESSAGE value="fixed css" />
@@ -490,6 +499,7 @@
     <MESSAGE value="handle booking unexpected room, failed in transfer wowo money" />
     <MESSAGE value="quick deploy" />
     <MESSAGE value="comment voucher" />
-    <option name="LAST_COMMIT_MESSAGE" value="comment voucher" />
+    <MESSAGE value="update cancel room" />
+    <option name="LAST_COMMIT_MESSAGE" value="update cancel room" />
   </component>
 </project>

@@ -181,7 +181,13 @@ function Room() {
       align: 'center',
       sorter: (a, b) => a.revenue - b.revenue
     },
-    ,
+    {
+      title: "Số phòng còn lại",
+      dataIndex: "roomAvailable",
+      key: "roomAvailable",
+      align: 'center',
+      sorter: (a, b) => a.comments - b.comments
+    },
     {
       title: "Số lượt đánh giá",
       dataIndex: "comments",

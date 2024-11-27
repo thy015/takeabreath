@@ -147,7 +147,6 @@ const completedTran = async (req, res) => {
   console.log(order, invoiceID)
 
   try {
-
     const invoice = await Invoice.findById(invoiceID);
     if (!invoice) {
       return res.status(404).json({ message: "Invoice not found" });
@@ -207,9 +206,12 @@ const changeInvoiceState = async (req, res) => {
     if (!invoice) {
       return res.status(404).json({ message: "Invoice not found" });
     }
+    const wowoWallet = new WoWoWallet(`${process.env.WOWO_SECRET}`);
+    let walletNumber=await wowoWallet.getOrder(invoice.wowoOrderID)
 
     if (invoice.invoiceState === "waiting") {
       invoice.invoiceState = "paid";
+      invoice.guestInfo.totalPrice = walletNumber.discountMoney;
       await invoice.save();
       res.cookie('completedPayment', true, { maxAge: 60000, httpOnly: false });
       return res.status(200).json({ message: "Invoice state updated to paid",completedPayment:true });

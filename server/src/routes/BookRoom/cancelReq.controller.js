@@ -51,7 +51,9 @@ const handleCancelRoomAccept = async (req, res) => {
           console.log('orderId', orderId)
         try {
               const response = await wowoWallet.refundOrder(orderId,`${matchedInvoice.guestInfo.totalPrice}`)
-              console.log('Success:', response)
+              console.log ('matchedInvoice', matchedInvoice)
+
+          console.log('Success:', response)
                 cancelReq.isAccept = 'accepted';
                 cancelReq.adminID = adminID
                 cancelReq.refundAmount = refundCusMoney;
@@ -60,11 +62,14 @@ const handleCancelRoomAccept = async (req, res) => {
                 matchedPartner.awaitFund = refundPartnerMoney || 0
                 await matchedPartner.save ()
 
+                let deleteInvoice=await Invoice.findByIdAndDelete(cancelReq.invoiceID)
+                if (!deleteInvoice) {
+                  return res.status(404).json({ message: "Invoice not found" });
+                }
                 return res.status (200).json ({
                   success: true,
                   message: 'Chấp nhận yêu cầu hủy thành công',
                   cancelReq: cancelReq,
-                  matchedInvoice: matchedInvoice,
                   matchedPartner: matchedPartner,
                   wowoRefundOrder: response
                 })

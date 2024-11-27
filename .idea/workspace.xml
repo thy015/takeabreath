@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="quick deploy">
+    <list default="true" id="156fd958-a44c-40be-a5b1-79eb7d5246e6" name="Changes" comment="comment voucher">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/owner/Card/Card.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/owner/Card/Card.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/Wallet/wallet.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/Wallet/wallet.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/BookRoom/cancelReq.controller.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,6 +153,7 @@
       <workItem from="1732656539607" duration="20000" />
       <workItem from="1732685065092" duration="5011000" />
       <workItem from="1732690619623" duration="1010000" />
+      <workItem from="1732691641255" duration="1494000" />
     </task>
     <task id="LOCAL-00001" summary="change port">
       <option name="closed" value="true" />
@@ -423,7 +419,23 @@
       <option name="project" value="LOCAL" />
       <updated>1732656551937</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="quick deploy">
+      <option name="closed" value="true" />
+      <created>1732691764329</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1732691764329</updated>
+    </task>
+    <task id="LOCAL-00035" summary="comment voucher">
+      <option name="closed" value="true" />
+      <created>1732691877651</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1732691877651</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -453,7 +465,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="failed build" />
     <MESSAGE value="build ok, cant receive token from oggy" />
     <MESSAGE value="oggy ok, test paste linktest" />
     <MESSAGE value="delete node modules 3rd times, handle oggy storage payment" />
@@ -478,6 +489,7 @@
     <MESSAGE value="change modal, cancel req, add wowo wallet n delete" />
     <MESSAGE value="handle booking unexpected room, failed in transfer wowo money" />
     <MESSAGE value="quick deploy" />
-    <option name="LAST_COMMIT_MESSAGE" value="quick deploy" />
+    <MESSAGE value="comment voucher" />
+    <option name="LAST_COMMIT_MESSAGE" value="comment voucher" />
   </component>
 </project>

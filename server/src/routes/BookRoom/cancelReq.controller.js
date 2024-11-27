@@ -50,7 +50,7 @@ const handleCancelRoomAccept = async (req, res) => {
           let orderId=matchedInvoice.wowoOrderID
           console.log('orderId', orderId)
         try {
-              const response = await wowoWallet.refundOrder(orderId)
+              const response = await wowoWallet.refundOrder(orderId,`${matchedInvoice.guestInfo.totalPrice}`)
               console.log('Success:', response)
                 cancelReq.isAccept = 'accepted';
                 cancelReq.adminID = adminID

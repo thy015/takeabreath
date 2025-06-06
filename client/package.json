@@ -67,7 +67,8 @@
   "scripts": {
     "start": "vite",
     "build": "VITE_CJS_TRACE=true vite build",
-    "lint": "eslint src/**/*.{js,jsx,mjs,cjs}"
+    "lint": "eslint src/**/*.{js,jsx,mjs,cjs}",
+    "test": "jest"
   },
   "eslintConfig": {
     "extends": [

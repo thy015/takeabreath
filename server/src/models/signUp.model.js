@@ -61,6 +61,26 @@ const customerSchema = new mongoose.Schema({
   reasonInact:{
     type:String,required:false
   },
+  paymentCard:[
+    {
+      paymentMethod: {type: String, required: true, enum: ['Visa','Paypal','Wowo']},
+      cardNumber:{type: String, required: function () {
+          return this.paymentMethod === 'Visa'
+        }},
+      cardCVV:{type: Number,  required: function () {
+          return this.paymentMethod === 'Visa'
+        }},       //234
+      cardExpiration:{type: Date,  required: function () {
+          return this.paymentMethod === 'Visa'
+        }}, //08/27
+      cardWoWoID:{type: Number, required: function () {
+        return this.paymentMethod === 'Wowo'
+        }},
+      cardWoWoBalance:{type: Number,  required: function () {
+        return this.paymentMethod === 'Wowo'
+        }}
+    }
+  ],
   //SSO đồ án
   ssoID:{type:String,required:false},
 });

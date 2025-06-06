@@ -6,7 +6,8 @@
     "dev": "nodemon -L server.js",
     "start": "node src/server.js",
     "pm": "nodemon src/testpromise.js",
-    "test": "jest"
+    "test": "jest",
+"build": "echo 'Building server...' && node src/server.js" 
   },
   "keywords": [],
   "author": "",

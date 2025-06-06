@@ -1,0 +1,40 @@
+name: Dependency Update
+
+on:
+  schedule:
+    - cron: "0 0 1 * *" # This runs at midnight on the first day of every month
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Update client dependencies
+        working-directory: ./client
+        run: |
+          pnpm update
+          pnpm install
+
+      - name: Update server dependencies
+        working-directory: ./server
+        run: |
+          pnpm update
+          pnpm install
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "auto: Update dependencies" || echo "No changes to commit"
+          git push

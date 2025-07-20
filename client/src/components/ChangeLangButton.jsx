@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-
+import React from "react";
 const ChangeLangButton = ({color,underlineColor}) => {
   const hoverEffect =
   `text-${color} text-[20px] cursor-pointer font-afacad transition-colors duration-300 w-8 hover:text-[#c3eaff] hover:scale-105 hover:bg-[#5576B4] hover:rounded-md`;

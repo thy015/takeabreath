@@ -8,6 +8,8 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+    volumes:
+      - ./client:/app
 
   serverapp:
     image: thy015/takeabreath:server
@@ -18,6 +20,8 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+    volumes:
+      - ./server:/app
 
 networks:
   app-network:

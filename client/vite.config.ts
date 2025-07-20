@@ -1,26 +1,27 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import replace from '@rollup/plugin-replace';
-
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 export default defineConfig({
-    base: '/',
-    plugins: [
-        react(),
-
-    ],
-    css: {
-        preprocessorOptions: {
-            scss: {
-                api: 'modern-compiler'
-            }
-        }
+  base: "/",
+  plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: "",
+      },
     },
-    server:{
-        host: '0.0.0.0',
-        open: true,
-        port: 3000,
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
-    build: {
-        outDir: 'dist',
-    },
+  },
+  server: {
+    host: "0.0.0.0",
+    open: true,
+    port: 3000,
+  },
+  build: {
+    outDir: "dist",
+  },
 });

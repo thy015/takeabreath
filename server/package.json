@@ -4,10 +4,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -L server.js",
-    "start": "node src/server.js",
+    "start": "node server.js",
     "pm": "nodemon src/testpromise.js",
-    "test": "jest",
-"build": "echo 'Building server...' && node src/server.js" 
+    "test": "jest --passWithNoTests",
+    "build": "echo 'Building server...' && node server.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +15,6 @@
   "description": "",
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
-    "@htilssu/wowo": "^1.1.40",
     "@onedoc/client": "^0.1.33",
     "@onedoc/react-print": "^0.1.133",
     "axios": "^1.7.2",

@@ -25,10 +25,10 @@ jobs:
         run: pnpm install
 
       - name: Run tests (if available)
-        run: pnpm test --passWithNoTests || echo "No tests found, skipping..."
+        run: pnpm test || echo "No tests found, skipping..."
         continue-on-error: true
 
-      - name: Build
+      - name: Build client
         run: pnpm run build
 
   server:
@@ -53,8 +53,8 @@ jobs:
         run: pnpm install
 
       - name: Run tests (if available)
-        run: pnpm test --passWithNoTests || echo "No tests found, skipping..."
+        run: pnpm test || echo "No tests found, skipping..."
         continue-on-error: true
 
-      - name: Build
+      - name: Build server
         run: pnpm run build

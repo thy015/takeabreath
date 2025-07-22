@@ -6,18 +6,18 @@ import { FaGoogle, FaFacebookF } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import axios from "axios";
 import { AuthContext } from "../../hooks/auth.context";
-import { openNotification } from "../../hooks/notification";
 import { motion } from "framer-motion";
-import ChangeLangButton from "../../component/ChangeLangButton"
+import ChangeLangButton from "../../component/ChangeLangButton";
 import { useTranslation } from "react-i18next";
-
+import { useToastNotifications } from "../../hooks/useToastNotification";
 
 const LogInOwner = () => {
   const { t } = useTranslation();
-  const { setAuth } = useContext(AuthContext)
+  const toast = useToastNotifications();
+  const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
-  const BE_PORT=import.meta.env.VITE_BE_PORT
+  const BE_PORT = import.meta.env.VITE_BE_PORT;
   const handleSignInClick = () => {
     setIsSignInClicked(true);
   };
@@ -26,7 +26,7 @@ const LogInOwner = () => {
     password: "",
     name: "",
     phone: "",
-    idenCard: '',
+    idenCard: "",
     agreeTerms: false,
   });
 
@@ -38,39 +38,36 @@ const LogInOwner = () => {
     });
   };
 
-
-
   const handleFormSubmit = async () => {
     const { email, password } = formData;
 
     if (!email || !password) {
-      openNotification(false, "Please fill all the fields");
+      toast.showError("Please fill all the fields");
       return;
     }
 
     try {
-      const response = await axios.post(`${BE_PORT}/api/auth/signInOwner`, formData);
+      const response = await axios.post(
+        `${BE_PORT}/api/auth/signInOwner`,
+        formData
+      );
       if (response.status === 200) {
-        openNotification(true, "Success login");
+        toast.showSuccess("Success login");
         setAuth({
           isAuthenticated: true,
           user: {
             id: response?.data?.id ?? "",
             email: response?.data?.email ?? "",
             name: response?.data?.name ?? "",
-            role: response?.data?.role ?? ''
-          }
-        })
-        localStorage.setItem("activeItem","Dashboard")
+            role: response?.data?.role ?? "",
+          },
+        });
+        localStorage.setItem("activeItem", "Dashboard");
         navigate(response.data.redirect);
       }
     } catch (e) {
       console.log(e);
-      openNotification(
-        false,
-        "Failed to register",
-        e.response.data.message
-      );
+      toast.showError(e.response.data.message || "Failed to register");
     }
   };
 
@@ -80,7 +77,6 @@ const LogInOwner = () => {
         <div className="col-2"></div>
         <div className="col-8">
           <div className="row bg-[#114098] h-full shadow-lg g-0">
-
             <motion.div
               className="col-7"
               initial={{ opacity: 0 }}
@@ -104,9 +100,9 @@ const LogInOwner = () => {
                 <div className="col-8">
                   <div className="py-32">
                     <h5 className="font-bold text-[#c3d7ef]">
-                      {t('welcome-back')}
+                      {t("welcome-back")}
                       <span className="text-white"> TAB</span>{" "}
-                      {t('partner-login-owner')} !
+                      {t("partner-login-owner")} !
                     </h5>
                     <div className="flex justify-center">
                       <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 text-[#114098] bg-white hover:scale-105 hover:text-black mx-2 cursor-pointer my-2">
@@ -118,15 +114,17 @@ const LogInOwner = () => {
                     </div>
                     <div className="flex items-center mt-2">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4 text-white">{t('or')}</div>
+                      <div className="mx-4 text-white">{t("or")}</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-4">
                       <Form>
                         <Form.Item
                           label={
-                            (<div className='w-[100px] flex-center text-white'>{t('email')}</div>)
-                        }
+                            <div className="w-[100px] flex-center text-white">
+                              {t("email")}
+                            </div>
+                          }
                           name="email"
                         >
                           <Input
@@ -143,8 +141,10 @@ const LogInOwner = () => {
                         </Form.Item>
                         <Form.Item
                           label={
-                            (<div className='w-[100px] flex-center text-white'>{t('password')}</div>)
-                        }
+                            <div className="w-[100px] flex-center text-white">
+                              {t("password")}
+                            </div>
+                          }
                           name="password"
                         >
                           <Input.Password
@@ -161,16 +161,19 @@ const LogInOwner = () => {
                             className="my-2 ml-8 hover:scale-105 bg-white"
                             style={{ color: "#114098" }}
                           >
-                            {t('sign-in')}
+                            {t("sign-in")}
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
 
                     <div className="flex justify-start mt-3 text-[#c3d7ef]">
-                      <span>{t('not-register-owner')}</span>
-                      <span className="text-white cursor-pointer no-underline ml-2" onClick={handleSignInClick}>
-                        {t('register-owner')}
+                      <span>{t("not-register-owner")}</span>
+                      <span
+                        className="text-white cursor-pointer no-underline ml-2"
+                        onClick={handleSignInClick}
+                      >
+                        {t("register-owner")}
                       </span>
                     </div>
                   </div>
@@ -188,8 +191,11 @@ const LogInOwner = () => {
                 src="/img/sign-in.svg"
                 alt="side-image"
               />
-              <div className='absolute flex top-[92%] left-[70%]'>
-                <ChangeLangButton color='white' underline='yellow-200'></ChangeLangButton>
+              <div className="absolute flex top-[92%] left-[70%]">
+                <ChangeLangButton
+                  color="white"
+                  underline="yellow-200"
+                ></ChangeLangButton>
               </div>
             </div>
           </div>

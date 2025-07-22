@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
-import {  useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF,FaAddressCard } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaGoogle, FaFacebookF, FaAddressCard } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import axios from "axios";
-import { openNotification } from "../../hooks/notification";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import ChangeLangButton from "../../component/ChangeLangButton";
+import { useToastNotifications } from "../../hooks/useToastNotification";
+
 const validateEmail = (email) => {
   return String(email)
     .toLowerCase()
@@ -19,8 +20,9 @@ const validateEmail = (email) => {
 };
 
 const RegisterOwner = () => {
-  const {t} = useTranslation();
-  const BE_PORT=import.meta.env.VITE_BE_PORT
+  const toast = useToastNotifications();
+  const { t } = useTranslation();
+  const BE_PORT = import.meta.env.VITE_BE_PORT;
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
   const handleSignInClick = () => {
@@ -31,7 +33,7 @@ const RegisterOwner = () => {
     password: "",
     name: "",
     phone: "",
-    idenCard:'',
+    idenCard: "",
     agreeTerms: false,
   });
 
@@ -51,49 +53,48 @@ const RegisterOwner = () => {
   };
 
   const handleFormSubmit = async () => {
-    const { email, password, name, phone, agreeTerms,idenCard } = formData;
+    const { email, password, name, phone, agreeTerms, idenCard } = formData;
 
-    if (!email || !password || !name || !phone||!idenCard) {
-      openNotification(false, "Please fill all the fields");
+    if (!email || !password || !name || !phone || !idenCard) {
+      toast.showError("Please fill all the fields");
       return;
     }
 
     if (!validateEmail(email)) {
-      openNotification(false, "Invalid email format");
+      toast.showError("Invalid email format");
       return;
     }
 
     if (password.length <= 8) {
-      openNotification(false, "Password should be at least 8 characters");
+      toast.showError("Password should be at least 8 characters");
       return;
     }
 
     if (phone.length !== 10 || !phone.startsWith("0")) {
-      openNotification(false, "Phone must be 10 digits and start with 0");
+      toast.showError("Phone must be 10 digits and start with 0");
       return;
     }
     if (idenCard.length !== 12) {
-      openNotification(false, "Invalid card");
+      toast.showError("Invalid card");
       return;
     }
     if (!agreeTerms) {
-      openNotification(false, "You must agree to the terms of service");
+      toast.showError("You must agree to the terms of service");
       return;
     }
     try {
-      const response = await axios.post(`${BE_PORT}/api/auth/signUpOwner`, formData);
+      const response = await axios.post(
+        `${BE_PORT}/api/auth/signUpOwner`,
+        formData
+      );
       console.log(response.data);
       if (response.status === 200) {
-        openNotification(true, "Success register");
+        toast.showError("Success register");
         navigate("/loginOwner");
       }
     } catch (e) {
       console.log(e + "Error passing form data");
-      openNotification(
-        false,
-        "Failed to register",
-        e.response.data.message
-      );
+      toast.showError(e.response.data.message || "Failed to register");
     }
   };
 
@@ -105,16 +106,19 @@ const RegisterOwner = () => {
           <div className="row bg-[#114098] h-full shadow-lg g-0">
             <div className="col-5 relative border-r">
               <div className="gryphen absolute flex mt-[100px] ml-16 text-white text-semibold text-[20px] italic">
-              {t('register-owner-describe')}
+                {t("register-owner-describe")}
               </div>
               <img
                 className="w-full flex mt-56"
                 src="/img/sign-up.svg"
                 alt="side-image"
               />
-              <div className='absolute flex top-[92%] left-[70%]'>
-                <ChangeLangButton color='white' underline='yellow-200'></ChangeLangButton>
-                </div>
+              <div className="absolute flex top-[92%] left-[70%]">
+                <ChangeLangButton
+                  color="white"
+                  underline="yellow-200"
+                ></ChangeLangButton>
+              </div>
             </div>
             <motion.div
               className="col-7"
@@ -139,7 +143,7 @@ const RegisterOwner = () => {
                 <div className="col-8">
                   <div className="py-7">
                     <h5 className="font-bold text-[#c3d7ef]">
-                    {t('be-an-owner')}{" "}
+                      {t("be-an-owner")}{" "}
                       <span className="text-white">TakeABreath</span>{" "}
                     </h5>
                     <div className="flex justify-center">
@@ -152,15 +156,17 @@ const RegisterOwner = () => {
                     </div>
                     <div className="flex items-center mt-2">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4 text-white">{t('or')}</div>
+                      <div className="mx-4 text-white">{t("or")}</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-4">
                       <Form>
                         <Form.Item
                           label={
-                            (<div className='w-[100px] flex-center text-white'>{t('email')}</div>)
-                        }
+                            <div className="w-[100px] flex-center text-white">
+                              {t("email")}
+                            </div>
+                          }
                           name="email"
                         >
                           <Input
@@ -177,8 +183,10 @@ const RegisterOwner = () => {
                         </Form.Item>
                         <Form.Item
                           label={
-                            (<div className='w-[100px] flex-center text-white'>{t('password')}</div>)
-                        }
+                            <div className="w-[100px] flex-center text-white">
+                              {t("password")}
+                            </div>
+                          }
                           name="password"
                         >
                           <Input.Password
@@ -190,9 +198,11 @@ const RegisterOwner = () => {
                         </Form.Item>
                         <Form.Item
                           label={
-                            (<div className='w-[100px] flex-center text-white'>{t('name')}</div>)
-                        }
-                          name='name'
+                            <div className="w-[100px] flex-center text-white">
+                              {t("name")}
+                            </div>
+                          }
+                          name="name"
                         >
                           <Input
                             placeholder="Anderson"
@@ -204,8 +214,11 @@ const RegisterOwner = () => {
                         </Form.Item>
                         <Form.Item
                           label={
-                            (<div className='w-[100px] flex-center text-white'>{t('phone-number')}</div>)
-                          } name='phone'
+                            <div className="w-[100px] flex-center text-white">
+                              {t("phone-number")}
+                            </div>
+                          }
+                          name="phone"
                         >
                           <Input
                             placeholder="0908xxxxxx"
@@ -218,9 +231,11 @@ const RegisterOwner = () => {
                         {/* owner ++ */}
                         <Form.Item
                           label={
-                            (<div className='w-[100px] flex-center text-white'>{t('iden-card')}</div>)
+                            <div className="w-[100px] flex-center text-white">
+                              {t("iden-card")}
+                            </div>
                           }
-                          name='idenCard'
+                          name="idenCard"
                         >
                           <Input
                             placeholder="12 digits"
@@ -236,7 +251,7 @@ const RegisterOwner = () => {
                             checked={formData.agreeTerms}
                             onChange={handleCheckboxChange}
                           >
-                            {t('i-agree')}
+                            {t("i-agree")}
                           </Checkbox>
                         </Form.Item>
                         <Form.Item>
@@ -245,17 +260,20 @@ const RegisterOwner = () => {
                             className="my-2 ml-8 hover:scale-105 bg-white"
                             style={{ color: "#114098" }}
                           >
-                            {t('create-account')}
+                            {t("create-account")}
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
-                   
+
                     <div className="flex justify-start mt-3 text-[#c3d7ef]">
-                      <span>{t('im-already-a-member')}</span>
-                        <span className="text-white cursor-pointer no-underline ml-2" onClick={handleSignInClick}>
-                          {t('sign-in-owner')}
-                        </span>
+                      <span>{t("im-already-a-member")}</span>
+                      <span
+                        className="text-white cursor-pointer no-underline ml-2"
+                        onClick={handleSignInClick}
+                      >
+                        {t("sign-in-owner")}
+                      </span>
                     </div>
                   </div>
                 </div>

@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../../lib/validators/auth/auth-validate";
 import { authApis } from "../../apis/auth/auth";
-import { openNotification } from "../../hooks/notification";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import ChangeLangButton from "../../component/ChangeLangButton";
@@ -37,10 +36,10 @@ const Register = () => {
   const onSubmit = async (data) => {
     try {
       await authApis.registerUser(data);
-      openNotification(true, "Success register");
+      toast.showSuccess("Success register");
       navigate("/");
     } catch (e) {
-      toast(e.message || "Failed to register");
+      toast.showError(e.message || "Failed to register");
     }
   };
 

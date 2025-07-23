@@ -5,11 +5,11 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Button, Popconfirm, Table } from "antd";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
-import FormCard from "../../../component/FormCard";
 import dayjs from "dayjs";
 import axios from "axios";
-import { setCards } from "../../../hooks/redux/ownerSlice";
-import { useToastNotifications } from "../../../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import FormCard from "@/components/FormCard";
+import {setCards} from "@/store/redux/ownerSlice";
 function Card() {
 
   const dispatch = useDispatch();

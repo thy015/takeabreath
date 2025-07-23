@@ -11,7 +11,6 @@ const morgan = require("morgan");
 const http = require("http");
 const swaggerUI=require('swagger-ui-express')
 const swaggerSpec=require('./docs/swagger')
-const {useSSOCallback} = require('@htilssu/wowo');
 
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 const RoomListRouter = require("./src/routes/RoomList/roomList.route");
@@ -28,7 +27,6 @@ const walletRouter = require("./src/routes/Wallet/wallet.route")
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("combined"));
-useSSOCallback(app)
 
 const allowedOrigins = ["http://localhost:3000",
     "https://takeabreath.io.vn",

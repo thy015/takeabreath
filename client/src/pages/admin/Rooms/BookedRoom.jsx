@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Table, Button, Alert, Spin, DatePicker } from "antd";
-import { useGet } from "../../../hooks/hooks";
+import { useGet } from "@/hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import {  useParams } from "react-router-dom"; 
 
-const RoomList = () => {
+const BookedRoom = () => {
   const{id}=useParams();
   const BE_PORT = import.meta.env.VITE_BE_PORT; 
   const url = id ?  `${BE_PORT}/api/roomList/bookinRoom/${id}`:`${BE_PORT}/api/roomList/bookinRoom`
@@ -112,7 +112,7 @@ const RoomList = () => {
     {
       title: "Thao tác",
       key: "actions",
-      render: (_, record) => (
+      render: (_) => (
         <Button 
           icon={<InfoCircleOutlined />} 
           className='text-blue-800' 
@@ -163,5 +163,5 @@ const RoomList = () => {
   );
 };
 
-export default RoomList;
+export default BookedRoom;
 

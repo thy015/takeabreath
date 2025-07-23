@@ -1,9 +1,6 @@
-
-
 const { CancelRequest}=require("../../models/cancelReq.model");
 const { Customer, Owner} = require("../../models/signUp.model");
 const {Invoice} = require("../../models/invoice.model");
-const {WoWoWallet} = require("@htilssu/wowo");
 const handleCancelRoomAccept = async (req, res) => {
   //chuyển ảo
   const {cancelReqID} = req.params;
@@ -22,7 +19,7 @@ const handleCancelRoomAccept = async (req, res) => {
     }
     let refundCusMoney = (matchedInvoice.guestInfo.totalPrice) * 0.7
     let refundPartnerMoney = (matchedInvoice.guestInfo.totalPrice) * 0.1
-      if (cancelReq.paymentMethod === 'paypal') {
+
         try {
           // hoan 70% cho cus
           cancelReq.isAccept = 'accepted';
@@ -45,40 +42,7 @@ const handleCancelRoomAccept = async (req, res) => {
           console.error('Detailed Error in handleCancelRoomAccept:', e);
           return res.status(500).json({ message: 'E in handleroomAcp', error: e.message || e });
         }
-      } else if(cancelReq.paymentMethod === 'wowo') {
-          const wowoWallet=new WoWoWallet(process.env.WOWO_SECRET)
-          let orderId=matchedInvoice.wowoOrderID
-          console.log('orderId', orderId)
-        try {
-              const response = await wowoWallet.refundOrder(orderId,`${matchedInvoice.guestInfo.totalPrice}`)
-              console.log ('matchedInvoice', matchedInvoice)
 
-          console.log('Success:', response)
-                cancelReq.isAccept = 'accepted';
-                cancelReq.adminID = adminID
-                cancelReq.refundAmount = refundCusMoney;
-                await cancelReq.save ();
-
-                matchedPartner.awaitFund = refundPartnerMoney || 0
-                await matchedPartner.save ()
-
-                let deleteInvoice=await Invoice.findByIdAndDelete(cancelReq.invoiceID)
-                if (!deleteInvoice) {
-                  return res.status(404).json({ message: "Invoice not found" });
-                }
-                return res.status (200).json ({
-                  success: true,
-                  message: 'Chấp nhận yêu cầu hủy thành công',
-                  cancelReq: cancelReq,
-                  matchedPartner: matchedPartner,
-                  wowoRefundOrder: response
-                })
-
-            }catch (e) {
-              console.error('Detailed Error in handleCancelRoomAccept:', e);
-              return res.status(500).json({ message: 'E in handleroomAcp', error: e.message || e });
-            }
-      }
   } catch (e) {
     console.error('Error in handleCancelRoomAccept:', e);
     return res.status(500).json({message: 'E in handleroomAcp', error: e.message || e});

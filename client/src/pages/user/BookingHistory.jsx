@@ -1,120 +1,117 @@
-import { Button } from 'react-bootstrap'
-import { AuthContext } from "../../hooks/auth.context";
-import React, { useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux'
+import {Button} from 'react-bootstrap'
+import React, {useContext, useEffect, useState} from "react";
+import {useDispatch, useSelector} from 'react-redux'
 import styled from "styled-components";
-import { Alert, Select, Spin } from "antd";
-import { useGet } from "../../hooks/hooks";
-import { FaLocationDot, FaPhone, FaCircleQuestion } from "react-icons/fa6"
-import { IoIosBed } from "react-icons/io";
-import { IoPeople } from "react-icons/io5";
-import { MdPolicy, MdOutlineCancel } from "react-icons/md";
+import {Alert, Select, Spin} from "antd";
+import {FaLocationDot, FaPhone, FaCircleQuestion} from "react-icons/fa6"
+import {IoIosBed} from "react-icons/io";
+import {IoPeople} from "react-icons/io5";
+import {MdPolicy, MdOutlineCancel} from "react-icons/md";
 import dayjs from "dayjs";
 import axios from "axios";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import ModalComment from '../../component/ModalComment';
-import { getComment } from '../../hooks/redux/roomsSlice';
-import { setInvoices, sortInvoice } from '../../hooks/redux/revenueSlice';
+import {AuthContext} from "@/hooks/auth.context";
+import {setInvoices, sortInvoice} from "@/store/redux/revenueSlice";
+import {getComment} from "@/store/redux/roomsSlice";
+import {useGet} from "@/hooks/hooks";
+import ModalComment from "@/components/ModalComment";
 
 const BookingPage = () => {
-  const dispatch = useDispatch()
-  const { auth } = useContext(AuthContext);
+  const dispatch = useDispatch ()
+  const {auth} = useContext (AuthContext);
   const id = auth?.user?.id;
 
-  dayjs.extend(utc);
-  dayjs.extend(timezone);
+  dayjs.extend (utc);
+  dayjs.extend (timezone);
 
   const BE_PORT = import.meta.env.VITE_BE_PORT
-  console.log(id)
+  console.log (id)
   if (!id) {
-    return <Alert message="Please try sign in first" type="info" showIcon />;
+    return <Alert message="Please try sign in first" type="info" showIcon/>;
   }
 
   //modal 1st cancel pop-up
-  const [clickCancel, setClickCancel] = useState(false)
-  const [isClickedConfirmCancel, setClickedConfirmCancel] = useState(false);
+  const [clickCancel, setClickCancel] = useState (false)
+  const [isClickedConfirmCancel, setClickedConfirmCancel] = useState (false);
 
-  const invoicesTemps = useSelector(state => state.invoiceRevenue.invoiceTemps)
-  const invoices = useSelector(state => state.invoiceRevenue.invoices)
+  const invoicesTemps = useSelector (state => state.invoiceRevenue.invoiceTemps)
+  const invoices = useSelector (state => state.invoiceRevenue.invoices)
 
-  const [visible, setVisible] = useState(false)
-  const [selectedInvoice, setSelectedInvoice] = useState({})
-  const comment = useSelector(state => state.room.comments)
+  const [visible, setVisible] = useState (false)
+  const [selectedInvoice, setSelectedInvoice] = useState ({})
+  const comment = useSelector (state => state.room.comments)
   const handleClickCancel = (invoiceID) => {
-    setClickCancel((prevState) => ({
+    setClickCancel ((prevState) => ({
       ...prevState,
       [invoiceID]: !prevState[invoiceID]
     }))
   }
   const closeCancelConfirm = (invoiceID) => {
-    setClickCancel((prevState) => ({
+    setClickCancel ((prevState) => ({
       ...prevState,
       [invoiceID]: false,
     }));
   };
 
-
   const formatMoney = (money) => {
-    return new Intl.NumberFormat("de-DE").format(money);
+    return new Intl.NumberFormat ("de-DE").format (money);
   };
 
   const disableCancelFunc = (checkInDay) => {
-    const now = dayjs().tz('Asia/Ho_Chi_Minh')
-    const formattedCheckInDay = dayjs(checkInDay).tz('Asia/Ho_Chi_Minh')
-    if (formattedCheckInDay.isSame(now, 'day')) {
+    const now = dayjs ().tz ('Asia/Ho_Chi_Minh')
+    const formattedCheckInDay = dayjs (checkInDay).tz ('Asia/Ho_Chi_Minh')
+    if (formattedCheckInDay.isSame (now, 'day')) {
       // after 12pm => disable
-      const todayNoon = now.startOf('day').add(12)
-      return now.isAfter(todayNoon)
-    }
-    else {
-      return formattedCheckInDay.isBefore(now)
+      const todayNoon = now.startOf ('day').add (12)
+      return now.isAfter (todayNoon)
+    } else {
+      return formattedCheckInDay.isBefore (now)
     }
   }
   const disableCancelConfirmAfterClicked = (invoiceID) => {
-    setClickedConfirmCancel((prevState) => ({
+    setClickedConfirmCancel ((prevState) => ({
       ...prevState,
       [invoiceID]: true,
     }));
   }
   // handle cancel confirm clicked
   const handleConfirmCancel = async (invoiceID, checkInDay, id) => {
-    const now = dayjs().tz('Asia/Ho_Chi_Minh');
-    const countDiffDay = dayjs(checkInDay).tz('Asia/Ho_Chi_Minh').diff(now, 'day');
+    const now = dayjs ().tz ('Asia/Ho_Chi_Minh');
+    const countDiffDay = dayjs (checkInDay).tz ('Asia/Ho_Chi_Minh').diff (now, 'day');
 
-    const passingData = { countDiffDay, id };
+    const passingData = {countDiffDay, id};
     try {
-      disableCancelConfirmAfterClicked(invoiceID)
+      disableCancelConfirmAfterClicked (invoiceID)
       const res = await
 
-        axios.post(
+        axios.post (
           `${BE_PORT}/api/booking/bookingHistory/${invoiceID}/cancel`,
           passingData,
-          { headers: { Authorization: `Bearer ${auth.token}` } }
+          {headers: {Authorization: `Bearer ${auth.token}`}}
         );
-      console.log('Response:', res.data);
+      console.log ('Response:', res.data);
 
     } catch (error) {
-      console.error('Error canceling booking:', error.message);
+      console.error ('Error canceling booking:', error.message);
     }
   };
 
-  const { data, error, loading } = useGet(`${BE_PORT}/api/booking/bookingHistory/${id}`)
-
+  const {data, error, loading} = useGet (`${BE_PORT}/api/booking/bookingHistory/${id}`)
 
   //handle comment
   const handleComment = async (resData) => {
-    setVisible(true)
-    setSelectedInvoice(resData)
+    setVisible (true)
+    setSelectedInvoice (resData)
   }
   //function check exp comment checkOutDay and was commented
   const expComment = (checkOutDay, invoiceID) => {
 
     // check day
-    const now = dayjs()
-    const dateDiff = now.diff(dayjs(checkOutDay), "day")
+    const now = dayjs ()
+    const dateDiff = now.diff (dayjs (checkOutDay), "day")
     // check commented 
-    const roomCommented = comment.find(item => item.invoiceID == invoiceID)
+    const roomCommented = comment.find (item => item.invoiceID == invoiceID)
     if (roomCommented) {
       return true
     }
@@ -124,20 +121,17 @@ const BookingPage = () => {
     return false
   }
 
-  useEffect(() => {
-    dispatch(setInvoices(data.data))
+  useEffect (() => {
+    dispatch (setInvoices (data.data))
   }, [data])
 
-  useEffect(() => {
-    axios.get(`${BE_PORT}/api/hotelList/get-comment-cus`)
-      .then(res => {
-        dispatch(getComment(res.data.message))
-      })
-      .catch(err => {
-        console.log(err)
-      })
+  useEffect (() => {
+    axios.get (`${BE_PORT}/api/hotelList/get-comment-cus`).then (res => {
+      dispatch (getComment (res.data.message))
+    }).catch (err => {
+      console.log (err)
+    })
   }, [])
-
 
   //options sort
   const options = [
@@ -164,19 +158,18 @@ const BookingPage = () => {
       value,
       invoices
     }
-    dispatch(sortInvoice(valueSet))
+    dispatch (sortInvoice (valueSet))
 
   }
-  console.log("[SORT]", invoicesTemps)
+  console.log ("[SORT]", invoicesTemps)
   // console.log(localStorage.getItem('invoiceData'))
   if (loading) {
-    return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
+    return <Spin size="large" style={{display: "block", margin: "auto"}}/>;
   }
 
   if (error) {
-    return <Alert message="Notice" description="You haven't make any reservation." type="info" showIcon />;
+    return <Alert message="Notice" description="You haven't make any reservation." type="info" showIcon/>;
   }
-
 
   return (
 
@@ -184,7 +177,7 @@ const BookingPage = () => {
       {/*sort*/}
       <div className='history-wrapper'>
         <div className='history-dropdown'>
-         <Select options={options} defaultValue={"default"} className='w-full' onChange={handleSortByOptions}></Select>
+          <Select options={options} defaultValue={"default"} className='w-full' onChange={handleSortByOptions}></Select>
         </div>
       </div>
       <section className="my-10">
@@ -201,24 +194,27 @@ const BookingPage = () => {
           />
           <div className="absolute">
             <div className="relative text-[#CBDCEB] text-4xl font-afacad p-4 z-10">Booking History</div>
-            <div className="absolute text-[#1A4297] text-4xl font-afacad p-4 z-10 inset-0 transform -translate-x-0.5 -translate-y-0.5">Booking History</div>
+            <div
+              className="absolute text-[#1A4297] text-4xl font-afacad p-4 z-10 inset-0 transform -translate-x-0.5 -translate-y-0.5">Booking
+              History
+            </div>
             <div className="inset-4 bg-white absolute rounded-b"></div>
           </div>
         </div>
 
         {/* Booking details */}
 
-        {invoicesTemps?.length >0 ? invoicesTemps.map((resData, index) => {
-          const formattedCheckInDay = dayjs(resData.invoiceInfo.guestInfo.checkInDay).format('DD/MM/YYYY')
-          const formattedCheckOutDay = dayjs(resData.invoiceInfo.guestInfo.checkOutDay).format('DD/MM/YYYY')
+        {invoicesTemps?.length > 0 ? invoicesTemps.map ((resData, index) => {
+          const formattedCheckInDay = dayjs (resData.invoiceInfo.guestInfo.checkInDay).format ('DD/MM/YYYY')
+          const formattedCheckOutDay = dayjs (resData.invoiceInfo.guestInfo.checkOutDay).format ('DD/MM/YYYY')
           //stop rendering if found a cancel infor of that room
           if (resData.cancelInfo && resData.cancelInfo.length > 0) {
-            console.log('hiding', resData)
+            console.log ('hiding', resData)
             return null
           }
-          console.log('invoice id', resData.invoiceInfo._id)
-          console.log('checkinday', resData.invoiceInfo.guestInfo.checkInDay)
-          const isDisabledCancel = disableCancelFunc(resData.invoiceInfo.guestInfo.checkInDay);
+          console.log ('invoice id', resData.invoiceInfo._id)
+          console.log ('checkinday', resData.invoiceInfo.guestInfo.checkInDay)
+          const isDisabledCancel = disableCancelFunc (resData.invoiceInfo.guestInfo.checkInDay);
           return (
             <div key={index} className='py-2'>
               <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
@@ -260,7 +256,7 @@ const BookingPage = () => {
                         <span className="ml-auto">{resData.roomInfo.typeOfRoom}</span>
                       </BetweenFlex>
                       <BetweenFlex>
-                        <span><IoIosBed /></span>
+                        <span><IoIosBed/></span>
                         <span className="ml-auto">{resData.roomInfo.numberOfBeds}</span>
                       </BetweenFlex>
                       <BetweenFlex>
@@ -312,7 +308,7 @@ const BookingPage = () => {
                           Price:
                         </div>
                         <div>
-                          {formatMoney(resData.invoiceInfo.guestInfo.totalPrice)} VND
+                          {formatMoney (resData.invoiceInfo.guestInfo.totalPrice)} VND
                         </div>
                       </BetweenFlex>
                     </div>
@@ -321,25 +317,27 @@ const BookingPage = () => {
                 {/*Cancel Information*/}
                 <div className="space-y-4">
                   <DecoratedIcon>
-                    <MdPolicy />
+                    <MdPolicy/>
                     <span className='ml-2'>Our Policy - Reimburse for room canceled</span>
                   </DecoratedIcon>
                   <DecoratedIcon>
-                    <FaCircleQuestion />
+                    <FaCircleQuestion/>
                     <span className='ml-2'>FAQs</span>
                   </DecoratedIcon>
                   <div>
                     <div className='space-x-2 flex items-end justify-end relative'>
                       <Button variant={isDisabledCancel ? 'muted' : 'danger'}
-                        onClick={() => { handleClickCancel(resData.invoiceInfo._id) }}
-                        disabled={isDisabledCancel}
+                              onClick={() => {
+                                handleClickCancel (resData.invoiceInfo._id)
+                              }}
+                              disabled={isDisabledCancel}
                       >
                         Cancel</Button>
                       <Button variant='success'>Book Again</Button>
                       <Button
-                        disabled={expComment(resData.invoiceInfo?.guestInfo.checkOutDay, resData.invoiceInfo?._id)}
+                        disabled={expComment (resData.invoiceInfo?.guestInfo.checkOutDay, resData.invoiceInfo?._id)}
                         variant='outline-primary'
-                        onClick={() => handleComment(resData)}
+                        onClick={() => handleComment (resData)}
                       >Rate The Accommodation</Button>
                     </div>
                     {clickCancel[resData.invoiceInfo._id] && (
@@ -348,9 +346,9 @@ const BookingPage = () => {
                           <div className='bg-red-300 pl-4 text-2xl font-semibold font-afacad relative'>
                             *Please make sure you read our policy below before cancel your room
                             <MdOutlineCancel className='absolute top-0 right-0 z-10 text-2xl mr-1 mt-1'
-                              onClick={() => {
-                                closeCancelConfirm(resData.invoiceInfo._id)
-                              }}>
+                                             onClick={() => {
+                                               closeCancelConfirm (resData.invoiceInfo._id)
+                                             }}>
                             </MdOutlineCancel>
                           </div>
                           <div
@@ -369,7 +367,7 @@ const BookingPage = () => {
                               <div className='text-muted'>
                                 Example: Your check-in day start at: 24/11/2024
                                 <div>
-                                  You'll receive 70% reimburse for your booking fees if you cancel before
+                                  You will receive 70% reimburse for your booking fees if you cancel before
                                   23/11/2024
                                 </div>
                               </div>
@@ -379,12 +377,12 @@ const BookingPage = () => {
                                 NO REIMBURSE
                               </Title>
                               <div>
-                                <BoldSpan> Within 24 hours before check-in day,</BoldSpan> you can't receive any
+                                <BoldSpan> Within 24 hours before check-in day,</BoldSpan> you can not receive any
                                 reimburse
                               </div>
                               <div className='text-muted'>
                                 Example: Your check-in day start at: 24/11/2024 and you cancel within 23/11-24/11
-                                <span> You won't receive any reimbursement  </span>
+                                <span> You will not receive any reimbursement  </span>
                               </div>
                             </div>
                           </div>
@@ -395,9 +393,9 @@ const BookingPage = () => {
                           </div>
                           <div className='flex items-end justify-end mr-3 py-3'>
                             <Button variant='outline-danger' onClick={() => {
-                              handleConfirmCancel(resData.invoiceInfo._id, resData.invoiceInfo.guestInfo.checkInDay, id)
+                              handleConfirmCancel (resData.invoiceInfo._id, resData.invoiceInfo.guestInfo.checkInDay, id)
                             }}
-                              disabled={isClickedConfirmCancel[resData.invoiceInfo._id]}
+                                    disabled={isClickedConfirmCancel[resData.invoiceInfo._id]}
                             >
                               Accept Cancel
                             </Button>
@@ -411,13 +409,13 @@ const BookingPage = () => {
             </div>
           )
         }) : (
-            <Alert type='info' message='No invoices match your inquiry' showIcon></Alert>
+          <Alert type='info' message='No invoices match your inquiry' showIcon></Alert>
         )}
 
       </section>
       <ModalComment
         open={visible}
-        close={() => setVisible(false)}
+        close={() => setVisible (false)}
         selectedInvoice={selectedInvoice}
       />
     </div>
@@ -426,33 +424,33 @@ const BookingPage = () => {
 
 export default BookingPage;
 const DecoratedIcon = styled.button`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border-top: 1px gray;
-  padding-top: 8px;
-  margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-top: 1px gray;
+    padding-top: 8px;
+    margin-bottom: 8px;
 `;
 const BetweenFlex = styled.div`
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 `
 const CancelConfirm = styled.div`
-  z-index: 10;
-  background: white;
-  align-items: start;
-  justify-content: center;
-  margin-top: 20px;
-  text-align: left;
-  border: black solid 1px ;
+    z-index: 10;
+    background: white;
+    align-items: start;
+    justify-content: center;
+    margin-top: 20px;
+    text-align: left;
+    border: black solid 1px;
 `
 const Title = styled.div`
-  text-align: center;
-  font-weight: 600;
-  font-size: large;
-  padding-bottom: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: large;
+    padding-bottom: 12px;
 `
 const BoldSpan = styled.span`
-  font-weight: 600;
-  color:green;
+    font-weight: 600;
+    color: green;
 `

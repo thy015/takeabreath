@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import axios from "axios";
-import { AuthContext } from "../../hooks/auth.context";
 import { motion } from "framer-motion";
-import ChangeLangButton from "../../component/ChangeLangButton";
 import { useTranslation } from "react-i18next";
-import { useToastNotifications } from "../../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {AuthContext} from "@/hooks/auth.context";
+import ChangeLangButton from "@/components/ChangeLangButton";
 
 const LogInOwner = () => {
   const { t } = useTranslation();

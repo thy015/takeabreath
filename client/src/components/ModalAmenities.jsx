@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Modal, Form, Select } from "antd";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { addAmenity } from "../hooks/redux/hotelsSclice";
-import { useToastNotifications } from "../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
 import PropTypes from "prop-types";
+import {addAmenity} from "@/store/redux/hotelsSclice";
 
 ModalAmenities.propTypes = {
   visible: PropTypes.bool.isRequired,

@@ -8,8 +8,8 @@ import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import ChangeLangButton from "../../component/ChangeLangButton";
-import { useToastNotifications } from "../../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import ChangeLangButton from "@/components/ChangeLangButton";
 
 const validateEmail = (email) => {
   return String(email)

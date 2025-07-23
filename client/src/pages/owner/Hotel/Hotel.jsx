@@ -5,15 +5,10 @@ import { Button, Table, Popconfirm, Typography, Space, Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { CreateHotel } from "../../admin/Hotels/CreateHotel";
-import {
-  setHotels,
-  deleteHotel,
-  seletedHotel,
-  searchHotels,
-} from "../../../hooks/redux/hotelsSclice";
 import axios from "axios";
-import { useToastNotifications } from "../../../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {deleteHotel, searchHotels, seletedHotel, setHotels} from "@/store/redux/hotelsSclice";
+import {CreateHotel} from "@/pages/admin/Hotels/CreateHotel";
 
 function Hotel() {
   const dispatch = useDispatch();

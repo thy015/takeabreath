@@ -11,22 +11,20 @@ import {
   Modal,
   Image,
 } from "antd";
-import { useGet } from "../../../hooks/hooks";
-import { AuthContext } from "../../../hooks/auth.context";
 import { useSelector, useDispatch } from "react-redux";
-import { addHotel, updateHotels } from "../../../hooks/redux/hotelsSclice";
-import ModalAmenities from "../../../component/ModalAmenities";
-import { addAmenity } from "../../../hooks/redux/hotelsSclice";
 import PropTypes from "prop-types";
-import { useToastNotifications } from "../../../hooks/useToastNotification";
-import { propTypes } from "react-bootstrap/esm/Image";
-
-CreateHotel.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  handleCancel: PropTypes.func.isRequired,
-};
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {AuthContext} from "@/hooks/auth.context";
+import {addAmenity, addHotel, updateHotels} from "@/store/redux/hotelsSclice";
+import ModalAmenities from "@/components/ModalAmenities";
+import {useGet} from "@/hooks/hooks";
 
 const CreateHotel = ({ visible, handleCancel }) => {
+  CreateHotel.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    handleCancel: PropTypes.func.isRequired,
+  };
+
   const toast = useToastNotifications();
   const { auth } = useContext(AuthContext);
   const dispatch = useDispatch();
@@ -410,13 +408,13 @@ const CreateHotel = ({ visible, handleCancel }) => {
   );
 };
 
-ModalDelete.propTypes = {
-  open: PropTypes.boolean.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onConfirm: PropTypes.func.isRequired,
-};
-
 const ModalDelete = ({ open, onClose, onConfirm }) => {
+  ModalDelete.propTypes = {
+    open: PropTypes.boolean.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+  };
+
   return (
     <Modal
       className="justify-center items-center"

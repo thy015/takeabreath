@@ -4,10 +4,15 @@ import { Modal, Form, Input, InputNumber, DatePicker, Col, Row } from "antd";
 import { useForm } from "antd/es/form/Form";
 import dayjs from "dayjs";
 import axios from "axios";
-import { setCards } from "../hooks/redux/ownerSlice";
-import { useToastNotifications } from "../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import PropTypes from "prop-types";
+import {setCards} from "@/store/redux/ownerSlice";
 
 function FormCard({ visible, close }) {
+  FormCard.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    close: PropTypes.func.isRequired,
+  }
   const toast = useToastNotifications();
   const dispatch = useDispatch();
   const [form] = useForm();

@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import React, { createContext, useState } from "react";
+import PropTypes from "prop-types";
 
 export const AuthContext = createContext({
     isAuthenticated: false,
@@ -6,10 +7,10 @@ export const AuthContext = createContext({
         id: '',
         email: '',
         name: '',
-        role:''
+        role: ''
     },
-    login:()=>{}
-})
+    login: () => {}
+});
 
 export const AuthWrapper = ({ children }) => {
     const [auth, setAuth] = useState({
@@ -17,29 +18,32 @@ export const AuthWrapper = ({ children }) => {
         user: {
             id: '',
             name: '',
-            email:'',
-            role:''
+            email: '',
+            role: ''
         }
-    })
+    });
 
-    const [isLoadingAuth,setLoadingAuth] = useState(true)
+    const [isLoadingAuth, setLoadingAuth] = useState(true);
 
-    const login=(decodedToken)=>{
+    const login = (decodedToken) => {
         setAuth({
-            isAuthenticated:true,
-            user:{
-                id:decodedToken.id ||'',
-                name:decodedToken.name ||'',
-                email:decodedToken.email ||'',
-                role:decodedToken.role ||''
+            isAuthenticated: true,
+            user: {
+                id: decodedToken.id || '',
+                name: decodedToken.name || '',
+                email: decodedToken.email || '',
+                role: decodedToken.role || ''
             }
-        })
-    }
+        });
+    };
+
     return (
-        <AuthContext.Provider value={{ auth,setAuth,login,isLoadingAuth,setLoadingAuth }}>
-            {children}
-        </AuthContext.Provider>
-    )
-}
+      <AuthContext.Provider value={{ auth, setAuth, login, isLoadingAuth, setLoadingAuth }}>
+          {children}
+      </AuthContext.Provider>
+    );
+};
 
-
+AuthWrapper.propTypes = {
+    children: PropTypes.node.isRequired
+};

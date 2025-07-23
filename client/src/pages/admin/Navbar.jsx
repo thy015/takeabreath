@@ -1,8 +1,8 @@
 import React, { useContext, useState,useEffect } from "react";
- import { FaSearch, FaEnvelope, FaRegBell } from "react-icons/fa";
-import { AuthContext } from "../../hooks/auth.context";
+ import { FaEnvelope, FaRegBell } from "react-icons/fa";
 import { useNavigate,Link } from "react-router-dom";
 import axios from "axios";
+import {AuthContext} from "@/hooks/auth.context";
 const DashboardView = () => {
   const {auth,setAuth} = useContext(AuthContext)
   const [open, setOpen] = useState(false);

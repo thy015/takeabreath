@@ -2,9 +2,9 @@ import { Modal, Form, Input, Rate } from "antd";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import React from "react";
-import { addComment } from "../hooks/redux/roomsSlice";
 import PropTypes from "prop-types";
-import { useToastNotifications } from "../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {addComment} from "@/store/redux/roomsSlice";
 
 ModalComment.propTypes = {
   open: PropTypes.bool.isRequired,

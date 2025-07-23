@@ -1,11 +1,10 @@
 const express = require("express");
 const bookController = require("./bookRoom.controller");
-const {CancelRequest} = require("../../models/cancelReq.model");
 const {Invoice} = require("../../models/invoice.model");
 const { verifyAdmin } = require("../../middleware/verify");
 const { Room } = require("../../models/hotel.model");
-const { verify } = require("jsonwebtoken");
 const bookRouter = express.Router();
+
 bookRouter.post("/applyVoucher", async (req, res) => {
   const { voucherCode, totalPrice } = req.body;
 

@@ -7,10 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { setClickedHotel } from "../../store/redux/searchSlice";
+import PropTypes from "prop-types";
+import {setClickedHotel} from "@/store/redux/searchSlice";
 
 // hotel display page
 const AccommodationCard = ({ hotel, onClick }) => {
+  AccommodationCard.propTypes = {
+    hotel:PropTypes.object.isRequired,
+    onClick:PropTypes.func.isRequired
+  }
   const { roomData } = useSelector((state) => state.searchResults);
   const filteredRoom = roomData?.filter((r) => r.hotelID === hotel._id)[0];
 
@@ -110,9 +115,12 @@ const PropertyCard = ({
   property,
   link_button,
   showButton = false,
-  edit,
-  showDeleteModal,
 }) => {
+  PropertyCard.propTypes = {
+    property: PropTypes.object.isRequired,
+    link_button: PropTypes.string.isRequired,
+    showButton: PropTypes.bool.isRequired,
+  }
   // handle click each hotel
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -186,12 +194,15 @@ const PropertyCard = ({
 };
 //amenities
 const AmenitiesCard = ({ hotel }) => {
+  AmenitiesCard.propTypes = {
+    hotel: PropTypes.object.isRequired,
+  }
   const amenData = hotel.hotelAmenities;
   const amenKeys = Object.keys(amenData);
 
   return (
     <div className="flex flex-wrap gap-2">
-      {amenKeys.map((a, index) => {
+      {amenKeys.map((a) => {
         const items = amenData[a];
         if (items.length > 0) {
           return items.flatMap((item, idx) => {
@@ -200,7 +211,7 @@ const AmenitiesCard = ({ hotel }) => {
 
             return individualItems.map((indItem, indIdx) => {
               const encodedItem = encodeURIComponent(indItem);
-              const imgSrc = `/icon/${a}/${encodedItem}.png` || "";
+              const imgSrc = `/icon/${a}/${encodedItem}.png`;
               console.log("indi items", indItem);
               console.log("encode", encodedItem);
               return (
@@ -236,6 +247,9 @@ const AmenitiesCard = ({ hotel }) => {
 
 // trang báo lá cải
 const PressReleasesCarousel = ({ cardData }) => {
+  PressReleasesCarousel.propTypes = {
+    cardData: PropTypes.array.isRequired,
+  }
   // setting carousels
   const settings = {
     dots: true,
@@ -290,6 +304,9 @@ const PressReleasesCarousel = ({ cardData }) => {
 };
 
 const OurAchievementsCard = ({ cardData }) => {
+  OurAchievementsCard.propTypes = {
+    cardData: PropTypes.array.isRequired,
+  }
   // setting carousels
   const settings = {
     arrows: true,

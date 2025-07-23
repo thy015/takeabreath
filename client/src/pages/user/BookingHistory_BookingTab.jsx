@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row, Tabs } from "antd";
 import BookingHistory from "./BookingHistory";
-import YourCancelRequest from "./YourCancelRequest";
+import CancelRequest from "@/pages/user/CancelRequest";
 const { TabPane } = Tabs;
 const BookingHistory_BookingTab = () => {
     const tab_titles = [
@@ -10,7 +10,7 @@ const BookingHistory_BookingTab = () => {
             title: "Booking History",
             content: <BookingHistory></BookingHistory>,
         },
-        { key: "2", title: "Your Cancel Request", content:<YourCancelRequest></YourCancelRequest>},
+        { key: "2", title: "Your Cancel Request", content:<CancelRequest></CancelRequest>},
         { key: "3", title: "Refund Amount", content: "" },
         // { key: "4", title: "Policies", content: "" },
 

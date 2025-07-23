@@ -1,21 +1,20 @@
 import React, {useEffect, useState} from "react";
-import Booking from "../../component/Booking";
 import { Row, Col, Checkbox, Collapse, Spin, Alert } from "antd";
-import { AccommodationCard } from "../../component/AccommodationCard";
-import { useGet } from "../../hooks/hooks";
-import { cardData } from "../../localData/localData";
 import { Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch,useSelector } from "react-redux";
 import {GoogleMap,Marker,useJsApiLoader} from "@react-google-maps/api";
-import {setOrdinate} from "../../hooks/redux/inputDaySlice";
-import {setClickedHotel} from "../../hooks/redux/searchSlice";
+import {cardData} from "@/localData/localData";
+import {useGet} from "@/hooks/hooks";
+import {setClickedHotel} from "@/store/redux/searchSlice";
+import {setOrdinate} from "@/store/redux/inputDaySlice";
+import {AccommodationCard} from "@/components/AccommodationCard";
+import Booking from "@/components/Booking";
 
 const { Panel } = Collapse;
   
 const HotelDisplayCompre = () => {
-
   const google_api_key=import.meta.env.VITE_API_KEY;
   const dispatch=useDispatch()
   const cardItems=cardData()

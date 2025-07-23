@@ -12,19 +12,24 @@ import {
 import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useCount, useGet } from "../hooks/hooks";
+import { useCount, useGet } from "@/hooks/hooks";
 import axios from "axios";
 import isBetween from "dayjs/plugin/isBetween";
 const { RangePicker } = DatePicker;
 import { useDispatch } from "react-redux";
-import { setSearchResult } from "../../store/redux/searchSlice";
-import { setInputDay } from "../../store/redux/inputDaySlice";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { useToastNotifications } from "../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {setSearchResult} from "@/store/redux/searchSlice";
+import {setInputDay} from "@/store/redux/inputDaySlice";
+import PropTypes from "prop-types";
 const Booking = ({ tailwind_prop}) => {
+  Booking.propTypes={
+    tailwind_prop:PropTypes.string
+  }
+
   const { t } = useTranslation();
   const toast = useToastNotifications()
   // onSearchResults

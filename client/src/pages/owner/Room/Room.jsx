@@ -14,18 +14,18 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import FormRoom from "../../../component/FormRoom";
 import axios from "axios";
-import ViewComment from "../../../component/ViewComment";
+import { useToastNotifications } from "@/hooks/useToastNotification";
 import {
-  setRooms,
   deleteRoom,
-  selectedRoom,
-  searchRoom,
-  setRoomSearch,
   filterRoomsByHotel,
-} from "../../../hooks/redux/roomsSlice";
-import { useToastNotifications } from "../../../hooks/useToastNotification";
+  searchRoom,
+  selectedRoom,
+  setRooms,
+  setRoomSearch
+} from "@/store/redux/roomsSlice";
+import FormRoom from "@/components/FormRoom";
+import ViewComment from "@/components/ViewComment";
 function Room() {
   const dispatch = useDispatch();
   const rooms = useSelector((state) => state.room.roomSearch);

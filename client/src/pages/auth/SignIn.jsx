@@ -6,10 +6,10 @@ import { FaGoogle, FaFacebookF } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { AuthContext } from "../../hooks/auth.context";
-import ChangeLangButton from "../../component/ChangeLangButton";
 import { useTranslation } from "react-i18next";
-import { useToastNotifications } from "../../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {AuthContext} from "@/hooks/auth.context";
+import ChangeLangButton from "@/components/ChangeLangButton";
 const Login = () => {
   const { t } = useTranslation();
   const toast = useToastNotifications();

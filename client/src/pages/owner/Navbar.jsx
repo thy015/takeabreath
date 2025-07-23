@@ -1,13 +1,18 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaSearch, FaEnvelope, FaRegBell } from "react-icons/fa";
-import { AuthContext } from "../../hooks/auth.context";
+import {  FaEnvelope, FaRegBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MenuOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setOwner } from "../../hooks/redux/ownerSlice";
 import { Avatar } from "antd";
-function Navbar({ isMenuOpen, setIsMenuOpen }) {
+import PropTypes from "prop-types";
+import {AuthContext} from "@/hooks/auth.context";
+import {setOwner} from "@/store/redux/ownerSlice";
+
+function Navbar({ setIsMenuOpen }) {
+  Navbar.propTypes = {
+    setIsMenuOpen: PropTypes.func.isRequired,
+  }
   const { auth, setAuth } = useContext(AuthContext)
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch()

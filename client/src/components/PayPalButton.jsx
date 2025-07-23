@@ -1,85 +1,83 @@
-import React, { useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setPaymentCompleted } from "../hooks/redux/inputDaySlice";
+import React, {useEffect, useRef} from "react";
+import {useSelector, useDispatch} from "react-redux";
 import axios from "axios";
-import { useToastNotifications } from "../hooks/useToastNotification";
+import {useToastNotifications} from "@/hooks/useToastNotification";
+import {setPaymentCompleted} from "@/store/redux/inputDaySlice";
 
 const PayPalButton = () => {
-  const toast = useToastNotifications();
-  const paypal = useRef();
-  const dispatch = useDispatch();
-  const { convertPrice, invoiceID } = useSelector((state) => state.inputDay);
-  const { listInvoiceID } = useSelector((state) => state.invoiceRevenue);
+  const toast = useToastNotifications ();
+  const paypal = useRef ();
+  const dispatch = useDispatch ();
+  const {convertPrice, invoiceID} = useSelector ((state) => state.inputDay);
+  const {listInvoiceID} = useSelector ((state) => state.invoiceRevenue);
   const BE_PORT = import.meta.env.VITE_BE_PORT;
-  useEffect(() => {
-    console.log("Current invoiceID in PayPalButton:", invoiceID);
+  useEffect (() => {
+    console.log ("Current invoiceID in PayPalButton:", invoiceID);
   }, [invoiceID]);
 
-  useEffect(() => {
+  useEffect (() => {
     const addPayPalScript = () => {
-      const script = document.createElement("script");
+      const script = document.createElement ("script");
       script.src =
         "https://www.paypal.com/sdk/js?client-id=Ab6o7lX12FWOd6xme7eB0yfeJmGnO4suKyitDec93zJC17TvYMX3V4QJ7cIVLUHzJGaYGT1uAURnKH6b";
       script.async = true;
       script.onload = () => {
-        window.paypal
-          .Buttons({
-            createOrder: (data, actions) => {
-              return actions.order.create({
-                intent: "CAPTURE",
-                purchase_units: [
-                  {
-                    description: "Test",
-                    amount: {
-                      currency_code: "USD",
-                      value: convertPrice,
-                    },
+        window.paypal.Buttons ({
+          createOrder: (data, actions) => {
+            return actions.order.create ({
+              intent: "CAPTURE",
+              purchase_units: [
+                {
+                  description: "Test",
+                  amount: {
+                    currency_code: "USD",
+                    value: convertPrice,
                   },
-                ],
-              });
-            },
-            onApprove: async (data, actions) => {
-              const order = await actions.order.capture();
-              console.log("Order:", order);
-              console.log("InvoiceID being sent:", invoiceID);
-              dispatch(setPaymentCompleted({ completedPayment: true }));
-              try {
-                const res = await axios.post(
-                  `${BE_PORT}/api/booking/completedTran`,
-                  { order, invoiceID }
+                },
+              ],
+            });
+          },
+          onApprove: async (data, actions) => {
+            const order = await actions.order.capture ();
+            console.log ("Order:", order);
+            console.log ("InvoiceID being sent:", invoiceID);
+            dispatch (setPaymentCompleted ({completedPayment: true}));
+            try {
+              const res = await axios.post (
+                `${BE_PORT}/api/booking/completedTran`,
+                {order, invoiceID}
+              );
+              if (res.status === 200) {
+                toast.showSuccess ("Payment success");
+                const resDeleteInvoice = await axios.post (
+                  `${BE_PORT}/api/booking/deleteInvoiceWaiting`,
+                  {listID: listInvoiceID}
                 );
-                if (res.status === 200) {
-                  toast.showSuccess("Payment success");
-                  const resDeleteInvoice = await axios.post(
-                    `${BE_PORT}/api/booking/deleteInvoiceWaiting`,
-                    { listID: listInvoiceID }
-                  );
-                  if (resDeleteInvoice.status === true) {
-                    console.log("Xoa thanh cong");
-                  }
-                } else {
-                  toast.showError(res.message || "Payment failed");
+                if (resDeleteInvoice.status === true) {
+                  console.log ("Xoa thanh cong");
                 }
-              } catch (e) {
-                console.log(
-                  "error",
-                  e.response?.data?.message || "An error occurred"
-                );
-                toast.showError(
-                  e.response?.data?.message || "An error occurred"
-                );
+              } else {
+                toast.showError (res.message || "Payment failed");
               }
-            },
-            onError: (err) => {
-              console.error(err);
-            },
-          })
-          .render(paypal.current);
+            } catch (e) {
+              console.log (
+                "error",
+                e.response?.data?.message || "An error occurred"
+              );
+              toast.showError (
+                e.response?.data?.message || "An error occurred"
+              );
+            }
+          },
+          onError: (err) => {
+            console.error (err);
+          },
+        }).render (paypal.current);
       };
-      document.body.appendChild(script);
+      document.body.appendChild (script);
     };
 
-    addPayPalScript();
+    addPayPalScript ();
   }, [invoiceID]);
 
   return (

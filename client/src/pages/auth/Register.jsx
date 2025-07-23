@@ -7,12 +7,12 @@ import { MdOutlineEmail } from "react-icons/md";
 import { FaUser, FaPhoneFlip } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema } from "../../lib/validators/auth/auth-validate";
-import { authApis } from "../../apis/auth/auth";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import ChangeLangButton from "../../component/ChangeLangButton";
-import { useToastNotifications } from "../../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {registerSchema} from "@/lib/validators/auth/auth-validate";
+import {authApis} from "@/apis/auth/auth";
+import ChangeLangButton from "@/components/ChangeLangButton";
 
 const Register = () => {
   const { t } = useTranslation();

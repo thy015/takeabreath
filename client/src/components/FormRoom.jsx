@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Form, Modal, Input, InputNumber, Image, Select } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { addRoom, updateRooms } from "../hooks/redux/roomsSlice";
-import { setHotels } from "../hooks/redux/hotelsSclice";
 import { useForm } from "antd/es/form/Form";
 import axios from "axios";
-import { useToastNotifications } from "../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import PropTypes from "prop-types";
+import {setHotels} from "@/store/redux/hotelsSclice";
+import {addRoom, updateRooms} from "@/store/redux/roomsSlice";
+
 function FormRoom({ isVisible, close }) {
+
+  FormRoom.propTypes={
+    isVisible:PropTypes.bool.isRequired,
+    close:PropTypes.func.isRequired
+  }
   const [images, setImages] = useState([]);
   const toast = useToastNotifications();
   const [form] = useForm();

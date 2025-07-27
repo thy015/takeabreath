@@ -1,8 +1,6 @@
 import {Button, Dropdown, Row, Col} from "antd";
 import React, {useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBars, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import "../index.scss";
 import {AuthContext} from "@/hooks/auth.context";
 import axios from "axios";
@@ -11,15 +9,16 @@ import ChangeLangButton from "@/components/ChangeLangButton";
 import styled from 'styled-components'
 import {useToastNotifications} from "@/hooks/useToastNotification";
 import PropTypes from "prop-types";
+import {ArrowLeft, Menu} from "lucide-react";
 
 const Header = ({children}) => {
+  const navigate = useNavigate ()
   const toast = useToastNotifications ()
   const {t} = useTranslation ();
   const BE_PORT = import.meta.env.VITE_BE_PORT
   const {auth, setAuth} = useContext (AuthContext)
   axios.defaults.withCredentials = true
   //log in
-  const navigate = useNavigate ()
   const handleLogInNavigate = (e) => {
     if (auth.isAuthenticated) {
       navigate ('/profile')
@@ -31,7 +30,7 @@ const Header = ({children}) => {
   const setLogout = () => {
     if (auth.isAuthenticated) {
       items.push ({
-        label: "Log Out", key: "4", onClick: handleClickMenuItem, icon: (<FontAwesomeIcon icon={faArrowLeft}/>),
+        label: "Log Out", key: "4", onClick: handleClickMenuItem, icon: (<ArrowLeft size={32}/>),
       })
     }
   }
@@ -216,9 +215,8 @@ const Header = ({children}) => {
                       placement="bottomRight"
 
                     >
-                      <FontAwesomeIcon
-                        icon={faBars}
-                        size="xl"
+                      <Menu
+                        size={24}
                         className="mt-1 text-white cursor-pointer"
                       />
                     </Dropdown>

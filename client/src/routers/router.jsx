@@ -27,11 +27,8 @@ import RegisterOwner from "@/pages/auth/RegisterOwner";
 import Test from "@/components/Test";
 import Register from "@/pages/auth/Register";
 import BookedRoom from "@/pages/admin/Rooms/BookedRoom";
-import "@/pages/admin/cancelReq/cancelReqAdmin";
-import "@/pages/admin/invoiceAdmin";
-import {createBrowserRouter} from "react-router-dom";
 
-export const routers = createBrowserRouter ([
+export const routers =  [
   {
     path: "/",
     element: <HomePage/>,
@@ -114,4 +111,4 @@ export const routers = createBrowserRouter ([
     path: "/about-us",
     element: <AboutUs/>,
   },
-]);
+]

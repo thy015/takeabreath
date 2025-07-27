@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  DiscordFilled,
-  FacebookFilled,
-  InstagramFilled,
-} from "@ant-design/icons";
-import {footerData} from '../localData/localData'
+import {footerData} from '@/localData/localData'
 import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t } = useTranslation();
@@ -21,9 +16,10 @@ const Footer = () => {
               <h3 className="font-lobster text-white mt-10">Take A Breath</h3>
               <p className="text-white">{t('footer-describe')}</p>
             <div className="flex text-white justify-center space-x-4 text-[24px] my-8">
-              <FacebookFilled></FacebookFilled>
-              <InstagramFilled></InstagramFilled>
-            <DiscordFilled></DiscordFilled>
+              <img src={'/icon/facebook.png'} alt="Facebook Icon" />
+              <img src={'/icon/instagram.png'} alt="Instagram Icon" />
+              <img src={'/icon/discord.png'} alt="Discord Icon"/>
+
             </div>
             </div>
           </div>

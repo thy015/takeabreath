@@ -41,22 +41,19 @@ const allowedOrigins = ["http://localhost:3000",
 ];
 
 app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (!origin) {
-                return callback(null, true);
-            }
-            if (allowedOrigins.some((allowedOrigin) => origin.startsWith(allowedOrigin))) {
-                return callback(null, true);
-            }
-            console.error("Blocked by CORS:", origin);
-            callback(new Error("Not allowed by CORS"));
-        },
-        credentials: true,
-    })
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
 );
 // swagger config
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
 console.log(`Swagger: https://takeabreath.vercel.app/api-docs`)
 app.use("/api/roomList", RoomListRouter);
 app.use("/api/hotelList", HotelListRouter);

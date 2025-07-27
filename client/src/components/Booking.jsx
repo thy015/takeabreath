@@ -9,7 +9,7 @@ import {
   Alert,
   Spin,
 } from "antd";
-import { CalendarOutlined } from "@ant-design/icons";
+import {CalendarFold} from 'lucide-react'
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useCount, useGet } from "@/hooks/hooks";
@@ -265,7 +265,7 @@ const Booking = ({ tailwind_prop}) => {
           <Col span={8}>
             <RangePicker
               placeholder={[t("check-in"), t("check-out")]}
-              suffixIcon={<CalendarOutlined />}
+              suffixIcon={<CalendarFold size={32}/>}
               disabledDate={disabledDate}
               onChange={handleDateChange}
               className="rounded-none "

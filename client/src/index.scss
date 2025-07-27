@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 //index scss contain restyle library contents and tailwind
 html{
   font-family: 'Poppins', sans-serif;
@@ -98,7 +97,6 @@ ul{
 .white-label{
   color: white!important;
 }
-
 @layer base {
   :root {
     --background: 0 0% 100%;

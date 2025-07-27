@@ -1,82 +1,49 @@
-import React, { useState, useContext } from "react";
-import { Form, Input, Tooltip } from "antd";
-import { Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF } from "react-icons/fa";
-import { MdOutlineEmail } from "react-icons/md";
-import { motion } from "framer-motion";
-import axios from "axios";
-import { useTranslation } from "react-i18next";
-import { useToastNotifications } from "@/hooks/useToastNotification";
-import {AuthContext} from "@/hooks/auth.context";
+import React, {useState} from "react";
+import {Form, Input, Tooltip} from "antd";
+import {Button} from "react-bootstrap";
+import {Link, useNavigate} from "react-router-dom";
+import {FaGoogle, FaFacebookF} from "react-icons/fa";
+import {MdOutlineEmail} from "react-icons/md";
+import {motion} from "framer-motion";
+import {useTranslation} from "react-i18next";
+import {useToastNotifications} from "@/hooks/useToastNotification";
 import ChangeLangButton from "@/components/ChangeLangButton";
+import {useForm} from "react-hook-form";
+import {authApis} from "@/apis/auth/auth";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {signInSchema} from "@/lib/validators/auth/auth-validate";
+
 const Login = () => {
-  const { t } = useTranslation();
-  const toast = useToastNotifications();
-  const { setAuth } = useContext(AuthContext);
-  // get the redirect url from the location
-  const navigate = useNavigate();
-  const BE_PORT = import.meta.env.VITE_BE_PORT;
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const {t} = useTranslation ();
+  const toast = useToastNotifications ();
+  const navigate = useNavigate ();
+  const [isRegisterClicked, setIsRegisterClicked] = useState(false);
+
+  const {register, handleSubmit, formState: {errors, isSubmitting}}
+    = useForm ({
+    resolvers: zodResolver (signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    }
   });
 
-  const [isRegisterClicked, setIsRegisterClicked] = useState(false);
-  const handleRegisterClick = () => {
-    setIsRegisterClicked(true);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
-  const handleFormSubmit = async () => {
-    const { email, password } = formData;
-
-    if (!email || !password) {
-      toast.showError("Please fill all the fields");
-      return;
+  const onSubmit = async (data) => {
+    try {
+      const resData = await authApis.signInUser (data)
+      if (resData.success) {
+        toast.showSuccess ("Login successful")
+        navigate (resData.redirect);
+      }
+    } catch (e) {
+      toast.showError (e.message || "Failed to login");
     }
+  }
 
-    if (!validateEmail(email)) {
-      toast.showError("Invalid email format");
-      return;
-    }
-
-    axios
-      .post(`${BE_PORT}/api/auth/signInCus`, { email, password })
-      .then((res) => {
-        if (res.data.login) {
-          console.log(res);
-          setAuth({
-            isAuthenticated: true,
-            user: {
-              id: res?.data?.id ?? "",
-              email: res?.data?.email ?? "",
-              name: res?.data?.name ?? "",
-              role: res?.data?.role ?? "",
-            },
-          });
-          toast.showSuccess("Login Successful");
-          navigate(res.data.redirect);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.showError(err.response.data.message || "Login Failed");
-      });
-  };
+  const handleRegisterClicked=()=>{
+    setIsRegisterClicked(!isRegisterClicked);
+    navigate("/register");
+  }
 
   return (
     <div>
@@ -96,11 +63,11 @@ const Login = () => {
                 </div>
                 <motion.div
                   className="col-8"
-                  initial={{ opacity: 0 }}
+                  initial={{opacity: 0}}
                   animate={{
                     opacity: isRegisterClicked ? 0 : 1,
                   }}
-                  exit={{ opacity: 0 }}
+                  exit={{opacity: 0}}
                   transition={{
                     duration: 0.75,
                     ease: "easeOut",
@@ -108,95 +75,94 @@ const Login = () => {
                   }}
                   onAnimationComplete={() => {
                     if (isRegisterClicked) {
-                      navigate("/register");
+                      navigate ("/register");
                     }
                   }}
                 >
                   <div className="pt-20">
                     <h5 className="font-bold">
-                      {t("sign-in-with")}
+                      {t ("sign-in-with")}
                       <span className="text-[#114098] ml-2">
                         TakeABreath
                       </span>{" "}
                     </h5>
                     <div className="flex justify-center">
-                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
-                        <FaGoogle />
+                      <div
+                        className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
+                        <FaGoogle/>
                       </div>
-                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
-                        <FaFacebookF />
+                      <div
+                        className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
+                        <FaFacebookF/>
                       </div>
                     </div>
                     <div className="flex items-center mt-4">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4">{t("or-register")}</div>
+                      <div className="mx-4">{t ("or-register")}</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-12">
-                      <Form>
+                      <Form onSubmitCapture={handleSubmit(onSubmit)}>
                         <Form.Item
                           label={
                             <div className="w-[100px] flex-center">
-                              {t("email")}
+                              {t ("email")}
                             </div>
                           }
-                          name="email"
+                          validateStatus={errors.email ? "error" : ""}
+                          help={errors.email?.message}
                           className="css-label"
                         >
                           <Input
                             placeholder="anderson@gmail.com"
                             suffix={
                               <Tooltip title="Email must be approriate, example: thymai@hotmail.com">
-                                <MdOutlineEmail />
+                                <MdOutlineEmail/>
                               </Tooltip>
                             }
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
+                            {...register("email")}
                           />
                         </Form.Item>
                         <Form.Item
                           label={
                             <div className="w-[100px] flex-center">
-                              {t("password")}
+                              {t ("password")}
                             </div>
                           }
-                          name="password"
-                          className="css-label"
+                          validateStatus={errors.password ? "error" : ""}
+                          help={errors.password?.message}
                         >
                           <Input.Password
                             placeholder="ads123@"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
+                            {...register("password")}
                           />
                         </Form.Item>
                         <Form.Item>
                           <Button
-                            onClick={handleFormSubmit}
+                            type='submit'
                             className="my-2 hover:scale-105"
+                            disabled={isSubmitting}
                           >
-                            {t("sign-in")}
+                            {t ("sign-in")}
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
                     <div className="flex justify-start mt-12">
-                      <span>{t("not-having-an-account-yet")}</span>
-
+                      <span>{t ("not-having-an-account-yet")}</span>
                       <span
                         className="text-[#114098] cursor-pointer no-underline ml-2"
-                        onClick={handleRegisterClick}
+                        onClick={handleRegisterClicked}
                       >
                         {" "}
-                        {t("register")}
+                        {t ("register")}
                       </span>
                     </div>
                     <div className="flex justify-start mt-3">
-                      <span>{t("im-an-owner")}</span>
+                      <span>{t ("im-an-owner")}</span>
                       <Link to="/loginOwner" className="no-underline">
                         <span className="text-[#114098] cursor-pointer no-underline ml-2">
-                          {t("sign-in-owner")}
+                          {t ("sign-in-owner")}
                         </span>
                       </Link>
                     </div>
@@ -208,7 +174,7 @@ const Login = () => {
             <div className="col-4 relative">
               {" "}
               <div className="gryphen italic text-white text-[20px] absolute flex mt-40 ml-8">
-                {t("have-your-fun-journey-with-tab")}
+                {t ("have-your-fun-journey-with-tab")}
               </div>
               <img
                 className="h-full w-full object-cover img-out"

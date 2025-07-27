@@ -1,27 +1,39 @@
+version: "3.8"
+
 services:
-  clientapp:
-    image: thy015/takeabreath:client
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+    env_file:
+      - ./client/.env
     networks:
       - app-network
     restart: unless-stopped
     volumes:
       - ./client:/app
+      - /app/node_modules
 
-  serverapp:
-    image: thy015/takeabreath:server
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     ports:
       - "4000:4000"
     environment:
       - NODE_ENV=production
+    env_file:
+      - ./server/.env
     networks:
       - app-network
     restart: unless-stopped
     volumes:
       - ./server:/app
+      - /app/node_modules
 
 networks:
   app-network:

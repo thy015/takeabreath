@@ -2,11 +2,11 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {Col, Row, DatePicker, Button, Table} from 'antd'
 import {useDispatch, useSelector} from 'react-redux'
 import {useMediaQuery} from 'react-responsive'
-import {faHotel, faBed, faReceipt, faMoneyBill1Wave} from "@fortawesome/free-solid-svg-icons"
 import dayjs from 'dayjs'
 import axios from 'axios'
 import MetricCard from './MetricCard'
 import ChartRevenue from './Chart'
+import {BedDouble, Hotel, Receipt, ReceiptText} from 'lucide-react'
 import {getInvoicesDay, setInvoices} from "@/store/redux/revenueSlice";
 
 function Revenue () {
@@ -134,28 +134,28 @@ function Revenue () {
       title: "Tổng khách sạn",
       value: countHotel,
       linkText: "Xem tất cả",
-      icon: faHotel,
+      icon: <Hotel size={32}/>,
       link: "/owner/Hotel",
     },
     {
       title: "Tổng phòng",
       value: countRoom,
       linkText: "Xem tất cả",
-      icon: faBed,
+      icon: <BedDouble size={32}/>,
       link: "/owner/Room",
     },
     {
       title: "Tổng đơn đặt phòng",
       value: countInvoice,
       linkText: "Xem tất cả",
-      icon: faReceipt,
+      icon: <ReceiptText size={32}/>,
       link: "/owner/Revenue",
     },
     {
       title: "Tổng doanh thu",
       value: formatMoney (totalDefault) + " VNĐ",
       linkText: "Xem tất cả",
-      icon: faMoneyBill1Wave,
+      icon: <Receipt size={32}/>,
       link: "/owner/Revenue",
     },
   ]

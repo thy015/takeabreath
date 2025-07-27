@@ -12,8 +12,6 @@ import {
   Select,
 } from "antd";
 import { useMediaQuery } from "react-responsive";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useToastNotifications } from "@/hooks/useToastNotification";
 import {
@@ -26,6 +24,7 @@ import {
 } from "@/store/redux/roomsSlice";
 import FormRoom from "@/components/FormRoom";
 import ViewComment from "@/components/ViewComment";
+import {Plus} from "lucide-react";
 function Room() {
   const dispatch = useDispatch();
   const rooms = useSelector((state) => state.room.roomSearch);
@@ -271,7 +270,7 @@ function Room() {
             className={!isMobile ? "" : "hidden"}
             onClick={() => setVisible(true)}
             type="primary"
-            icon={<FontAwesomeIcon icon={faPlus} />}
+            icon={<Plus size={32}/>}
           >
             Thêm phòng
           </Button>
@@ -279,7 +278,7 @@ function Room() {
             className={isMobile ? "" : "hidden"}
             onClick={() => setVisible(true)}
             type="primary"
-            icon={<FontAwesomeIcon icon={faPlus} />}
+            icon={<Plus size={32}/>}
           ></Button>
         </Link>
         <div className="flex flex-col justify-center items-center">

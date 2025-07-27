@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Spin, Alert, Table, Tag, Modal, notification,Space,Button,Form } from "antd";
+import React, { useState, useContext } from "react";
+import { Spin, Alert, Table, Modal, notification,Space,Button,Form } from "antd";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
-import { useGet } from "../../../hooks/hooks";
-import { EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useGet } from "@/hooks/hooks";
 import ModalAdd from "./AddVoucher";
-import { AuthContext } from "../../../hooks/auth.context";
+import { AuthContext } from "@/hooks/auth.context";
 import moment from 'moment'
+import {BadgeX, Pencil, Plus} from "lucide-react";
+import PropTypes from "prop-types";
 const VouchersList = () => {
   
   const { auth } = useContext(AuthContext);
@@ -54,7 +55,7 @@ const VouchersList = () => {
           message: 'Xóa Voucher Thành Công',
           description: 'Voucher đã được xóa thành công!',
         });
-        handleCancelDelete();
+        await handleCancelDelete ();
         setRefresh(prev => !prev);
       } else {
         notification.error({
@@ -62,10 +63,10 @@ const VouchersList = () => {
           description: 'Gặp lỗi trong quá trình xóa voucher!',
         });
       }
-    } catch (error) {
+    } catch (err) {
       notification.error({
         message: 'Xóa Voucher Thất Bại',
-        description: 'An error occurred while deleting the voucher.',
+        description: err.message || 'An error occurred while deleting the voucher.',
       });
     }
   };
@@ -163,8 +164,8 @@ const VouchersList = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-        <Button icon={<EditOutlined />}  onClick={() => handleEditVoucher(record._id)} className="text-yellow-500"  />
-        <Button icon={<DeleteOutlined />}  onClick={()=>showDeleteModal(record._id)}className="text-red-500" />
+        <Button icon={<Pencil size={32}/>}  onClick={() => handleEditVoucher(record._id)} className="text-yellow-500"  />
+        <Button icon={<BadgeX size={32}/>}  onClick={()=>showDeleteModal(record._id)}className="text-red-500" />
       </Space>
       ),
     },
@@ -205,7 +206,7 @@ const VouchersList = () => {
       />
       <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end">
         <div onClick={() => { setHeader("Thêm Voucher"); setIsModalVisible(true); }} className="text-white shadow-xl flex items-center text-center justify-center p-3 rounded-full bg-gradient-to-r from-blue-800 to-blue-600 cursor-pointer hover:scale-105 transition-transform duration-300">
-          <PlusOutlined />
+          <Plus size={32}/>
         </div>
         
       </div>
@@ -227,10 +228,15 @@ const VouchersList = () => {
 };
 
 const ModalDelete = ({ open, onClose, onConfirm,header }) => {
+  ModalDelete.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+    header: PropTypes.string.isRequired,
+  };
   return (
     <Modal open={open} className="justify-center items-center" footer={null}  closable={false}>
     <div className="text-center">
-  
       <div className="mx-auto my-4 w-48">
         <h3 className="text-lg font-black text-blue-800">Xóa {header}</h3>
         <p className="text-sm text-gray-500">

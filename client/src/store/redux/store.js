@@ -6,7 +6,6 @@ import roomReducer from './roomsSlice'
 import revenueReducer from './revenueSlice'
 import cancelRequest from "./cancelSlice"
 import ownerReducer from "./ownerSlice"
-import {thunk} from 'redux-thunk'
 export const store = configureStore ({
   reducer:{
     searchResults:searchReducer,
@@ -18,7 +17,7 @@ export const store = configureStore ({
     cancel:cancelRequest,
     owner:ownerReducer,
   },
-  middleware:(getDefaultMiddleware)=>getDefaultMiddleware().concat(thunk),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
   devTools:window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 })
 

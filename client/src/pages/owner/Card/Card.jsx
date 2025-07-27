@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Button, Popconfirm, Table } from "antd";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
@@ -10,6 +8,7 @@ import axios from "axios";
 import { useToastNotifications } from "@/hooks/useToastNotification";
 import FormCard from "@/components/FormCard";
 import {setCards} from "@/store/redux/ownerSlice";
+import {Plus} from "lucide-react";
 function Card() {
 
   const dispatch = useDispatch();
@@ -102,7 +101,7 @@ function Card() {
           <Button
             onClick={() => setVisible(true)}
             type="primary"
-            icon={<FontAwesomeIcon icon={faPlus} />}
+            icon={<Plus size={32}/>}
           >
             Thêm thẻ
           </Button>

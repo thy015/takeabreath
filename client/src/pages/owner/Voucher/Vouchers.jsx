@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {
   Button,
   Typography,
@@ -18,6 +16,7 @@ import moment from "moment";
 import {useToastNotifications} from "@/hooks/useToastNotification";
 import PropTypes from "prop-types";
 import TableVoucher from "@/components/TableVoucher";
+import {Plus} from "lucide-react";
 
 function Vouchers () {
   const toast = useToastNotifications ();
@@ -313,7 +312,7 @@ function Vouchers () {
     <div className="h-full ">
       <div className="max-w-[170px] text-left p-[20px]">
         <Link to="/Owner/AddVoucher">
-          <Button type="primary" icon={<FontAwesomeIcon icon={faPlus}/>}>
+          <Button type="primary" icon={<Plus size={32}/>}>
             Add voucher
           </Button>
         </Link>

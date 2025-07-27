@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Button, Table, Popconfirm, Typography, Space, Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useToastNotifications } from "@/hooks/useToastNotification";
 import {deleteHotel, searchHotels, seletedHotel, setHotels} from "@/store/redux/hotelsSclice";
 import {CreateHotel} from "@/pages/admin/Hotels/CreateHotel";
+import {Plus} from "lucide-react";
 
 function Hotel() {
   const dispatch = useDispatch();
@@ -156,7 +155,7 @@ function Hotel() {
               className={isMobile ? "hidden" : ""}
               onClick={() => setVisible(true)}
               type="primary"
-              icon={<FontAwesomeIcon icon={faPlus} />}
+              icon={<Plus size={32}/>}
             >
               Thêm khách sạn
             </Button>
@@ -164,7 +163,7 @@ function Hotel() {
               className={!isMobile ? "hidden" : ""}
               onClick={() => setVisible(true)}
               type="primary"
-              icon={<FontAwesomeIcon icon={faPlus} />}
+              icon={<Plus size={32}/>}
             ></Button>
           </Link>
           <Input.Search

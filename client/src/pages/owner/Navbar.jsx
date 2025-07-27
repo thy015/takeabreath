@@ -1,14 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import {  FaEnvelope, FaRegBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { MenuOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar } from "antd";
 import PropTypes from "prop-types";
 import {AuthContext} from "@/hooks/auth.context";
 import {setOwner} from "@/store/redux/ownerSlice";
-
+import {Logs} from 'lucide-react'
 function Navbar({ setIsMenuOpen }) {
   Navbar.propTypes = {
     setIsMenuOpen: PropTypes.func.isRequired,
@@ -61,7 +60,7 @@ function Navbar({ setIsMenuOpen }) {
 
           <div className="flex items-center gap-[20px]">
             <button className="md:hidden absolute top-4 left-4 z-10" onClick={() => setIsMenuOpen(true)}>
-              <MenuOutlined className="text-2xl text-[#003580]" />
+              <Logs size={32} className="text-2xl text-[#003580]" />
             </button>
             <div className="flex items-center gap-[25px] border-r-[1px] pr-[25px]">
               <FaRegBell />

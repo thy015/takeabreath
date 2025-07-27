@@ -35,9 +35,12 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      await authApis.registerUser(data);
-      toast.showSuccess("Success register");
-      navigate("/");
+      const resData = await authApis.registerUser(data);
+      if(resData.success){
+        toast.showSuccess("Success register");
+        navigate(resData.redirect);
+      }
+      toast.showError(resData.message || "Failed to register");
     } catch (e) {
       toast.showError(e.message || "Failed to register");
     }

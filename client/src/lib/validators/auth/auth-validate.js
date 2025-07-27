@@ -11,3 +11,8 @@ export const registerSchema = z.object({
     errorMap: () => ({ message: "You must agree to the terms of service" }),
   }),
 });
+
+export const signInSchema = z.object({
+  email: z.email("Invalid email format"),
+  password:z.string().min(8, "Password should be at least 8 characters"),
+})

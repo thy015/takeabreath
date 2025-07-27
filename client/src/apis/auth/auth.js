@@ -1,9 +1,13 @@
-import { axiosInstance } from "../../lib/axios";
+import { axiosInstance } from "@/lib/axios";
 
 class AuthApis {
   //POST
   async registerUser(formData) {
     const res = await axiosInstance.post("/api/auth/signUpCus", formData);
+    return res.data;
+  }
+  async signInUser(formData) {
+    const res = await axiosInstance.post("/api/auth/signInCus", formData)
     return res.data;
   }
 }

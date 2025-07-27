@@ -472,7 +472,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                       <span className="text-gray-700">
                         {voucherCode || t ("voucher")}
                       </span>
-                      <ChevronDown className="w-4 h-4 text-gray-400 ml-2"/>
+                      <ChevronDown size={32} className="w-4 h-4 text-gray-400 ml-2"/>
                     </button>
 
                     {isOpen && (

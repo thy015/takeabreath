@@ -8,10 +8,9 @@ import {
 } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { useToastNotifications } from "../../../hooks/useToastNotification";
+import { useToastNotifications } from "@/hooks/useToastNotification";
+import {ChevronLeft} from "lucide-react";
 function AddVoucher() {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -65,7 +64,7 @@ function AddVoucher() {
       });
   };
 
-  //Form addvoucher
+  //Form add voucher
   return (
     <div className="my-[10px] mx-[20px] flex flex-col items-center">
       <h2 className="mt-[30px] mb-[50px] font-bold">Add Voucher</h2>
@@ -133,7 +132,7 @@ function AddVoucher() {
                 to="/Owner/Vouchers"
                 className="mr-[20px] flex items-center"
               >
-                <FontAwesomeIcon icon={faCaretLeft} className="mr-[5px]" />
+                <ChevronLeft size={32} className="mr-[5px]" />
                 Back
               </Link>
               <Button className="p-[10px]" type="primary" htmlType="submit">

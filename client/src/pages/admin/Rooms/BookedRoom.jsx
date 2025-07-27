@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Table, Button, Alert, Spin, DatePicker } from "antd";
 import { useGet } from "@/hooks/hooks";
 import { FaSearch } from "react-icons/fa";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import {Info} from 'lucide-react'
 import {  useParams } from "react-router-dom"; 
 
 const BookedRoom = () => {
@@ -112,9 +112,9 @@ const BookedRoom = () => {
     {
       title: "Thao tác",
       key: "actions",
-      render: (_) => (
+      render: () => (
         <Button 
-          icon={<InfoCircleOutlined />} 
+          icon={<Info size={32}/>}
           className='text-blue-800' 
         />
       ),

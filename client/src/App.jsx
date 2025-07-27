@@ -1,13 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
-import {RouterProvider, Navigate} from "react-router-dom";
+import {RouterProvider, Outlet, createBrowserRouter, useLocation} from "react-router-dom";
 import axios from "axios";
 import {AuthContext} from "./hooks/auth.context";
 import {routers} from "./routers/router";
+import Header from "@/partials/Header";
+import Footer from "@/partials/Footer";
+import './index.scss'
 
 function App () {
   const {auth, setAuth} = useContext (AuthContext);
   const [isLoading, setIsLoading] = useState (true);
-  const [redirectPath, setRedirectPath] = useState (null);
+  const [setRedirectPath] = useState (null);
   const BE_PORT = import.meta.env.VITE_BE_PORT;
   useEffect (() => {
     const loadScript = (src) => {
@@ -87,15 +90,29 @@ function App () {
     return <div>Loading....</div>;
   }
 
-  // Redirect user based on role
-  if (redirectPath) {
-    return <Navigate to='/' replace/>;
-  }
+  const Layout = () => {
+    const location = useLocation ()
+    const noHeaderFooterRoutes = ['/owner', '/admin','/login','/register']
 
+    const shouldHideHeaderFooter = noHeaderFooterRoutes.some ((route) => location.pathname.startsWith (route))
+
+    return (<>
+      {!shouldHideHeaderFooter && <Header/>}
+      <Outlet/>
+      {!shouldHideHeaderFooter && <Footer/>}
+    </>)
+  };
+
+  const routerWithLayout = createBrowserRouter ([
+    {
+      element: <Layout/>,
+      children: routers,
+    },
+  ]);
 
   return (
     <div className="App">
-      <RouterProvider router={routers}/>
+      <RouterProvider router={routerWithLayout}/>
     </div>
   );
 }

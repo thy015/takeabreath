@@ -1,9 +1,9 @@
 import React from "react";
 import { Carousel, Row, Col, Spin, Alert } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "antd/dist/reset.css"; // Ensure you have antd's CSS
-import { useGet } from "../../hooks/hooks";
-import { PropertyCard } from "../../components/AccommodationCard";
+import "antd/dist/reset.css";
+import { useGet } from "@/hooks/hooks";
+import { PropertyCard } from "@/components/AccommodationCard";
 
 const PropertyGrid = () => {
   const slides = [];
@@ -35,7 +35,7 @@ const PropertyGrid = () => {
       <div key={i}>
         <Row gutter={[16, 16]}>
           {data.slice(i, i + 4).map((property, index) => (
-            <Col key={index} xs={24} sm={12} md={6}>
+            <Col className='flex-1 flex items-stretch h-[400px]' key={index} xs={24} sm={12} md={6}>
               <PropertyCard property={property} />
             </Col>
           ))}

@@ -83,7 +83,6 @@ const CancelRequest = () => {
   console.log (cancelTemps)
   return (
     <>
-
       <div className='w-full text-start font-afacad text-2xl absolute'>
         Your <span className='text-success'>Ongoing</span> Request
       </div>

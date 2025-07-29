@@ -1,26 +1,27 @@
 import {Button, Dropdown, Row, Col} from "antd";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import "../index.scss";
-import {AuthContext} from "@/hooks/auth.context";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
 import ChangeLangButton from "@/components/ChangeLangButton";
 import styled from 'styled-components'
 import {useToastNotifications} from "@/hooks/useToastNotification";
 import PropTypes from "prop-types";
-import {ArrowLeft, Menu} from "lucide-react";
+import {LogOut, Menu} from "lucide-react";
+import {useDispatch, useSelector} from "react-redux";
+import {clearAuthData} from "@/store/redux/auth";
 
 const Header = ({children}) => {
+  const auth = useSelector (state => state.auth);
   const navigate = useNavigate ()
   const toast = useToastNotifications ()
   const {t} = useTranslation ();
+  const dispatch = useDispatch ();
   const BE_PORT = import.meta.env.VITE_BE_PORT
-  const {auth, setAuth} = useContext (AuthContext)
   axios.defaults.withCredentials = true
   //log in
   const handleLogInNavigate = (e) => {
-    if (auth.isAuthenticated) {
+    if (auth?.name || "") {
       navigate ('/profile')
     } else {
       e.preventDefault ()
@@ -28,42 +29,41 @@ const Header = ({children}) => {
     }
   }
   const setLogout = () => {
-    if (auth.isAuthenticated) {
+    if (auth) {
       items.push ({
-        label: "Log Out", key: "4", onClick: handleClickMenuItem, icon: (<ArrowLeft size={32}/>),
+        label: "Log Out", key: "4", onClick: handleClickMenuItem, icon: (<LogOut size={16}/>),
       })
     }
   }
 
   const setText = () => {
-    if (auth.isAuthenticated) {
-      if (auth.user.name === '' || !auth.user.name) {
-        return auth?.user?.email
-      } else {
-        return auth?.user?.name
-      }
-
-    } else {
-      return t ('sign-in')
+    if (auth?.name) {
+      return auth.name;
     }
-  }
+    if (auth?.email) {
+      return auth.email;
+    }
+    return t ('sign-in');
+  };
 
-  const Logout = () => {
-    axios.get (`${BE_PORT}/api/auth/logout`).then (res => {
+  const Logout = async () => {
+    try {
+      const res = await axios.get (`${BE_PORT}/api/auth/logout`, {
+        withCredentials: true,
+      });
+
       if (res.data.logout) {
-        console.log (res.data)
-        toast.showSuccess ("Logout Successful")
-        setAuth ({
-          isAuthenticated: false, user: {
-            id: "", email: '', name: '', role: ''
-          }
-        })
-        navigate ('/')
+        toast.showSuccess ("Logout Successful");
+        dispatch (clearAuthData ()); // Clear Redux state
+        navigate ("/"); // Redirect to the home page
+      } else {
+        toast.showError ("Logout failed");
       }
-    }).catch (err => {
-      console.log (err)
-    })
-  }
+    } catch (err) {
+      console.error ("Error during logout:", err);
+      toast.showError ("An error occurred during logout");
+    }
+  };
 
   const handleClickMenuItem = (e) => {
     const key = e.key
@@ -87,41 +87,29 @@ const Header = ({children}) => {
 
   }
 
-  const hoverEffect = "text-white text-[20px] font-afacad transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105 no-underline hover:bg-[#5576B4] hover:rounded-md";
+  const hoverEffect = " text-center text-white text-[20px] font-afacad transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105 no-underline hover:bg-[#5576B4] hover:rounded-md";
 
   const items = [{
     label: (<a
-        className="no-underline"
-        href="/mybooking"
-      >
-        My Reservation
-      </a>), key: "0",
+      className="no-underline"
+      href="/mybooking"
+    >
+      My Reservation
+    </a>), key: "0",
   }, {
     label: (<a
-        className="no-underline"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://takeabreath.io.vn/registerOwner"
-      >
-        Register Owner!
-      </a>), danger: true, key: "1",
+      className="no-underline"
+      target="_blank"
+      rel="noopener noreferrer"
+      href="https://takeabreath.io.vn/registerOwner"
+    >
+      Register Owner!
+    </a>), danger: true, key: "1",
   }, {
     type: "divider", key: "divider-1",
-  }, {
-    label: "   Tiếng Việt", key: "2", icon: (<img
-        src="/img/vietFlag.png"
-        alt="Vietnam Flag"
-        style={{width: "16px", marginRight: "8px"}}
-      />),
-  }, {
-    label: "English", key: "3", icon: (<img
-        src="/img/united-states.png"
-        alt="USA Flag"
-        style={{width: "16px", marginRight: "8px"}}
-      />),
-  }];
+  }, {}];
   setLogout ()
-  //handle scroll 
+  //handle scroll
   const [scrollProgress, setScrollProgress] = useState (0)
   const handleScroll = () => {
     const scrollTop = window.scrollY
@@ -137,106 +125,105 @@ const Header = ({children}) => {
     }
   }, [])
   return (<div>
-      <div className="fixed z-50 w-full">
+    <div className="fixed z-50 w-full">
 
-        <Row justify={"center"} className="bg-[#114098]">
-          <Col span={2}></Col>
-          <Col span={20}>
-            <Link to='/' className="no-underline">
-              <div className="text-white text-[25px] font-lobster cursor-pointer float-left py-3 absolute ml-3">
-                {" "}
-                Take A Breath
-              </div>
-            </Link>
-            <div className="bg-[#114098] flex justify-between pt-12 pb-8">
-
-              <ul className="flex items-end ">
-                <Link to="/" className={hoverEffect}>
-                  <li className='w-28 '>
-                    {t ('booking')}
-                  </li>
-                </Link>
-                <Link to="/" className={hoverEffect}>
-                  <li className='w-28'>
-                    {t ('activities')}
-                  </li>
-                </Link>
-                <Link to="/" className={hoverEffect}>
-                  <li className='w-24'>
-                    {t ('coupons')}
-                  </li>
-                </Link>
-                <Link to="/" className={hoverEffect}>
-                  <li className='w-28'>
-                    {t ('favs')}
-                  </li>
-                </Link>
-
-              </ul>
-
-              <div className="items-start">
-                <ul className="flex space-x-4 cursor-pointer">
-                  <li className="flex">
-                    <ChangeLangButton color="white" underlineColor="yellow"/>
-                  </li>
-                  <li className="w-20">
-                    <p className={hoverEffect}> {t ('partners')}</p>
-                  </li>
-                  <Link to='/about-us' className='no-underline'>
-                    <li className='w-32'>
-                      <p className={hoverEffect}> {t ('about-us')}</p>
-                    </li>
-                  </Link>
-
-
-                  <li>
-
-                    <div onClick={handleLogInNavigate}>
-                      <Button>{setText ()}</Button>
-                    </div>
-                  </li>
-                  <li>
-                    {auth.isAuthenticated ? <></> : <Link to="/register" className="no-underline">
-                      <Button>{t ('register')}</Button>
-                    </Link>}
-
-                  </li>
-                  {""}
-                  <li>
-
-                  </li>
-                  <li>
-                    <Dropdown
-                      menu={{
-                        items, onClick: handleClickMenuItem
-                      }}
-                      trigger={["click"]}
-                      arrow
-                      placement="bottomRight"
-
-                    >
-                      <Menu
-                        size={24}
-                        className="mt-1 text-white cursor-pointer"
-                      />
-                    </Dropdown>
-                  </li>
-
-                </ul>
-              </div>
+      <Row justify={"center"} className="bg-[#114098]">
+        <Col span={2}></Col>
+        <Col span={20}>
+          <Link to='/' className="no-underline">
+            <div className="text-white text-[25px] font-lobster cursor-pointer float-left py-3 absolute ml-6">
+              {" "}
+              Take A Breath
             </div>
-          </Col>
-          <Col span={2}></Col>
-          {/* //progress bar */}
-        </Row>
-        <ProgressBar style={{width: `${scrollProgress}%`, marginTop: '-5px'}}></ProgressBar>
+          </Link>
+          <div className="bg-[#114098] flex justify-between pt-12 pb-8">
 
-      </div>
-      <div className="pt-[120px]">
-        {children}
+            <ul className="flex items-end justify-start">
+              <Link to="/" className={hoverEffect}>
+                <li className='w-28 '>
+                  {t ('booking')}
+                </li>
+              </Link>
+              <Link to="/" className={hoverEffect}>
+                <li className='w-28'>
+                  {t ('activities')}
+                </li>
+              </Link>
+              <Link to="/" className={hoverEffect}>
+                <li className='w-24'>
+                  {t ('coupons')}
+                </li>
+              </Link>
+              <Link to="/" className={hoverEffect}>
+                <li className='w-28'>
+                  {t ('favs')}
+                </li>
+              </Link>
 
-      </div>
-    </div>);
+            </ul>
+
+            <div className="items-start">
+              <ul className="flex space-x-4 cursor-pointer">
+                <li className="flex">
+                  <ChangeLangButton color="white" underlineColor="yellow"/>
+                </li>
+                <li className="w-20">
+                  <p className={hoverEffect}> {t ('partners')}</p>
+                </li>
+                <Link to='/about-us' className='no-underline'>
+                  <li className='w-32'>
+                    <p className={hoverEffect}> {t ('about-us')}</p>
+                  </li>
+                </Link>
+
+
+                <li>
+
+                  <div onClick={handleLogInNavigate}>
+                    <Button>{setText ()}</Button>
+                  </div>
+                </li>
+                <li>
+                  {auth.isAuthenticated ? <></> : <Link to="/register" className="no-underline">
+                    <Button>{t ('register')}</Button>
+                  </Link>}
+
+                </li>
+                {""}
+                <li>
+
+                </li>
+                <li>
+                  <Dropdown
+                    menu={{
+                      items, onClick: handleClickMenuItem
+                    }}
+                    trigger={["click"]}
+                    arrow
+                    placement="bottomRight"
+
+                  >
+                    <Menu
+                      size={24}
+                      className="mt-1 text-white cursor-pointer"
+                    />
+                  </Dropdown>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </Col>
+        <Col span={2}></Col>
+        {/* //progress bar */}
+      </Row>
+      <ProgressBar style={{width: `${scrollProgress}%`, marginTop: '-5px'}}></ProgressBar>
+
+    </div>
+    <div className="pt-[120px]">
+      {children}
+
+    </div>
+  </div>);
 };
 const ProgressBar = styled.div`
     position: fixed;

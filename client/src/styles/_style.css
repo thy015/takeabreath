@@ -1,0 +1,105 @@
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.highlight-red {
+  color: red !important;
+}
+
+/* Homepage Card */
+.card-wrapper {
+  border-radius: 0 0 32px 32px;
+  cursor: pointer;
+  transition: transform 0.25s ease-in-out;
+}
+
+.card-wrapper .card-rate {
+  background-color: #003580;
+  color: white;
+  padding: 0 8px;
+  border-radius: 5px;
+  font-weight: 800;
+}
+
+.card-wrapper .card-holder {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  width: 1000px;
+  height: 150px;
+  background-color: white;
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-wrapper:hover {
+  transform: scale(1.05);
+}
+
+/* Amenities Card */
+.card-amenities {
+  border-radius: 0 0 32px 32px;
+  cursor: pointer;
+  transition: transform 0.25s ease-in-out;
+  width: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+  height: 75px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-amenities .card-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  margin: 10px 16px;
+  object-fit: cover;
+  border-radius: 0;
+  padding: 8px;
+}
+
+/* Booking History */
+.history-wrapper {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 100%;
+}
+
+.history-wrapper .history-dropdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 128px;
+  height: 40px;
+}
+
+/* Chatbox Display */
+.page-children {
+  position: relative;
+}
+
+.page-children .chatbox-holder {
+  height: 100px;
+  position: fixed;
+  display: flex;
+  left: 0;
+  top: 10%;
+  padding: 16px;
+}
+
+.room-info {
+  text-align: left;
+  width: 100%;
+  font-family: 'Afacad Flux', sans-serif;
+  font-size: 20px;
+}

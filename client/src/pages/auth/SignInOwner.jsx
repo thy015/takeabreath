@@ -72,10 +72,9 @@ const LogInOwner = () => {
   };
 
   return (
-    <div>
-      <div className="row h-[650px]">
-        <div className="col-2"></div>
-        <div className="col-8">
+    <div className='min-h-screen flex-center bg-[#cfd9ea]'>
+      <div className="row h-auto">
+        <div className="col-12">
           <div className="row bg-[#114098] h-full shadow-lg g-0">
             <motion.div
               className="col-7"
@@ -99,7 +98,7 @@ const LogInOwner = () => {
                 <div className="col-2"></div>
                 <div className="col-8">
                   <div className="py-32">
-                    <h5 className="font-bold text-[#c3d7ef]">
+                    <h5 className="font-bold text-[#c3d7ef] text-center">
                       {t("welcome-back")}
                       <span className="text-white"> TAB</span>{" "}
                       {t("partner-login-owner")} !
@@ -155,7 +154,7 @@ const LogInOwner = () => {
                           />
                         </Form.Item>
 
-                        <Form.Item>
+                        <Form.Item className='flex-center'>
                           <Button
                             onClick={handleFormSubmit}
                             className="my-2 ml-8 hover:scale-105 bg-white"
@@ -187,7 +186,7 @@ const LogInOwner = () => {
               {/*</div>*/}
 
               <img
-                className="w-full flex mt-56"
+                className="w-full mt-20"
                 src="/img/sign-in.svg"
                 alt="side-image"
               />
@@ -200,7 +199,6 @@ const LogInOwner = () => {
             </div>
           </div>
         </div>
-        <div className="col-2"></div>
       </div>
     </div>
   );

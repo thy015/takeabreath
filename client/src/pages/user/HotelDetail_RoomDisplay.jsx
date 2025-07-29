@@ -1,14 +1,13 @@
-import React, { useContext, useState } from "react";
-import { Row, Col, Button } from "antd";
+import React, {useState} from "react";
+import {Row, Col, Button} from "antd";
 import BookingConfirmationForm from "@/components/BookingConfirmationForm";
-import { useSelector, useDispatch } from "react-redux";
-import { AuthContext } from "@/hooks/auth.context";
-import { useTranslation } from "react-i18next";
+import {useSelector, useDispatch} from "react-redux";
+import {useTranslation} from "react-i18next";
 import PropTypes from "prop-types";
 import {useToastNotifications} from "@/hooks/useToastNotification";
 import {setPaymentState} from "@/store/redux/inputDaySlice";
 
-const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
+const HotelDetail_RoomDisplay = ({roomData, hotel}) => {
 
   HotelDetail_RoomDisplay.propTypes = {
     roomData: PropTypes.object.isRequired,
@@ -16,19 +15,19 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
   };
 
   // State for room count, where room ID is the key
-  const { totalCheckInDay } = useSelector((state) => state.inputDay);
-  const dispatch = useDispatch();
-    const toast=useToastNotifications()
-  const [counts, setCounts] = useState({});
-  const { t } = useTranslation();
+  const {totalCheckInDay} = useSelector ((state) => state.inputDay);
+  const dispatch = useDispatch ();
+  const toast = useToastNotifications ()
+  const [counts, setCounts] = useState ({});
+  const {t} = useTranslation ();
   //open modal
-  const [isShow, setShow] = useState(false);
+  const [isShow, setShow] = useState (false);
 
-  //send totalPrice paypal
+  //send totalPrice PayPal
   const handleReserve = (selectedRoom, countRoom, totalPrice) => {
-    setShow(true);
-    dispatch(
-      setPaymentState({
+    setShow (true);
+    dispatch (
+      setPaymentState ({
         selectedHotel: hotel,
         selectedRoom: selectedRoom,
         countRoom: countRoom,
@@ -37,31 +36,31 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
       })
     );
   };
-  //get auth context
-  const { auth } = useContext(AuthContext);
+  //get auth from redux
+  const {auth} = useSelector (state => state.auth);
 
   const increment = (roomID) => {
-    setCounts((prevCounts) => ({
+    setCounts ((prevCounts) => ({
       ...prevCounts,
       [roomID]: (prevCounts[roomID] || 1) + 1, //if undefined => ini=0
     }));
   };
 
   const decrement = (roomID) => {
-    setCounts((prevCounts) => ({
+    setCounts ((prevCounts) => ({
       ...prevCounts,
-      [roomID]: Math.max((prevCounts[roomID] || 1) - 1, 1), //never go below 0, no need just in case
+      [roomID]: Math.max ((prevCounts[roomID] || 1) - 1, 1), //never go below 0, no need just in case
     }));
   };
 
   // Save total price
   const formatMoney = (money) => {
-    return new Intl.NumberFormat("de-DE").format(money);
+    return new Intl.NumberFormat ("de-DE").format (money);
   };
   return (
     <div>
       <div className="mt-4">
-        {roomData.map((room, index) => {
+        {roomData.map ((room, index) => {
           // room property
           const returnCount = counts[room._id] || 1;
           const countRoomPrice = room.money * returnCount;
@@ -87,16 +86,16 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                   <div className="pl-4 w-full">
                     <ul className="room-info">
                       <li>
-                        {t("type")}: {room.typeOfRoom}
+                        {t ("type")}: {room.typeOfRoom}
                       </li>
                       <li>
-                        {t("capacity")}: {room.capacity} people
+                        {t ("capacity")}: {room.capacity} people
                       </li>
                       <li>
-                        {t("bed")}: {room.numberOfBeds}
+                        {t ("bed")}: {room.numberOfBeds}
                       </li>
                       <li>
-                        {t("roomNumb")}: {room.countRoom}
+                        {t ("roomNumb")}: {room.countRoom}
                       </li>
                     </ul>
                   </div>
@@ -109,13 +108,13 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                   <div className="flex items-center justify-center space-x-4">
                     <Button
                       disabled={!counts[room._id] || counts[room._id] === 1}
-                      onClick={() => decrement(room._id)}
+                      onClick={() => decrement (room._id)}
                     >
                       -
                     </Button>
                     <div>{returnCount}</div>
                     <Button
-                      onClick={() => increment(room._id)}
+                      onClick={() => increment (room._id)}
                       disabled={
                         counts[room._id] === room.countRoom ||
                         room.countRoom === 1
@@ -130,30 +129,30 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                       <li className="flex justify-between w-full mb-2 mt-2">
                         {/* <span>{t('x1')}: </span> */}
                         <span>
-                          {t("x1")} {returnCount} {t("room")}:{" "}
+                          {t ("x1")} {returnCount} {t ("room")}:{" "}
                         </span>
-                        <span>{formatMoney(countRoomPrice)} VND</span>
+                        <span>{formatMoney (countRoomPrice)} VND</span>
                       </li>
                       <li className="flex justify-between w-full mb-2">
                         <span>
-                          {t("for")}{" "}
+                          {t ("for")}{" "}
                           <span className="text-success">
-                            {totalCheckInDay} {t("night")}{" "}
+                            {totalCheckInDay} {t ("night")}{" "}
                           </span>
                           :{" "}
                         </span>
-                        <span>{formatMoney(rangeRoomPrice)} VND</span>
+                        <span>{formatMoney (rangeRoomPrice)} VND</span>
                       </li>
                       <li className="flex justify-between w-full mb-2">
-                        <span>{t("taxes")}:</span>
-                        <span> {formatMoney(fees)} VND</span>
+                        <span>{t ("taxes")}:</span>
+                        <span> {formatMoney (fees)} VND</span>
                       </li>
                     </ul>
                     <div className="flex justify-between w-full mt-2">
-                      <span className="font-semibold">{t("total")}:</span>
+                      <span className="font-semibold">{t ("total")}:</span>
                       <span className="text-success">
                         {" "}
-                        {formatMoney(totalPrice)} VND
+                        {formatMoney (totalPrice)} VND
                       </span>
                     </div>
                     {/* reserve */}
@@ -161,13 +160,11 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                       <Button
                         disabled={totalCheckInDay === 0}
                         onClick={() => {
-                          if (auth.isAuthenticated) {
-                            handleReserve(room, returnCount, totalPrice);
+                          if (auth?.name !== "") {
+                            handleReserve (room, returnCount, totalPrice);
                           } else {
-                            toast.showError(
-                              false,
-                              "Reserve failed",
-                              "Please log in or register account !"
+                            toast.showError (
+                              "Please log in before booking !"
                             );
                           }
                         }}
@@ -178,11 +175,11 @@ const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
                             : "bg-[#1677ff] hover:scale-105"
                         }`}
                       >
-                        {t("reverse")}
+                        {t ("reverse")}
                       </Button>
                       <BookingConfirmationForm
                         isShow={isShow}
-                        onCancel={() => setShow(false)}
+                        onCancel={() => setShow (false)}
                         hotel={hotel}
                       />
                     </div>

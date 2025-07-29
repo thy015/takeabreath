@@ -1,10 +1,8 @@
-@use './styles/test' as test;
-@use './styles/style' as style;
+@import './styles/_style.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-//index scss contain restyle library contents and tailwind
 html{
   font-family: 'Poppins', sans-serif;
 }
@@ -24,10 +22,12 @@ body{
 }
 
 .slick-prev:before, .slick-prev:focus:before{
-  margin-left: 5px;
+  margin-left: -100px;
+  margin-top: 100px;
 }
 .slick-next:before, .slick-next:focus:before {
-  margin-left: -5px;
+  margin-left: 45px;
+  margin-top: 100px;
 }
 .card-no-border {
   border: none !important;
@@ -66,7 +66,10 @@ body{
 .ant-notification-notice{
   color: red !important;
 }
-
+.ant-input:hover,
+.ant-input:focus {
+  box-shadow: none !important;
+}
 
 ul{
   margin: 0!important;
@@ -92,7 +95,7 @@ ul{
 
 }
 .gryphen{
-  font-family: gryphen;
+  font-family: gryphen, serif;
 }
 .white-label{
   color: white!important;

@@ -53,18 +53,6 @@ const CommentsPage = () => {
       key: "createdDay",
       render: (text) => new Date(text).toLocaleString("vi-VN"), 
     },
-    // {
-    //   title: "Thao tác",
-    //   key: "actions",
-    //   render: (_, record) => (
-    //     <button
-    //       className="bg-red-600 hover:bg-red-400 text-white px-3 py-1 ml-2 rounded"
-    //       onClick={() => navigate(`/admin/comments/${record._id}`)} 
-    //     >
-    //       Cảnh Cáo
-    //     </button>
-    //   ),
-    // },
   ];
 
   return (

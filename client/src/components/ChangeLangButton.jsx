@@ -1,14 +1,15 @@
 import {useTranslation} from "react-i18next";
 import React from "react";
 import PropTypes from "prop-types";
+import {clsx} from "clsx";
 
 const ChangeLangButton = ({color, underlineColor}) => {
   ChangeLangButton.propTypes = {
     color:PropTypes.string,
     underlineColor:PropTypes.string,
   }
-  const hoverEffect =
-    `text-${color} text-[20px] cursor-pointer font-afacad transition-colors duration-300 w-8 hover:text-[#c3eaff] hover:scale-105 hover:bg-[#5576B4] hover:rounded-md`;
+  const hoverEffect =clsx(
+    `text-${color} text-center text-[20px] cursor-pointer font-afacad transition-colors duration-300 w-8 hover:text-black hover:scale-105 hover:bg-gray-400 hover:rounded-md`);
 
   //translate
   const {t, i18n} = useTranslation ();

@@ -1,34 +1,32 @@
-import React, { useState } from "react";
-import { Form, Input, Checkbox, Tooltip } from "antd";
-import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF, FaAddressCard } from "react-icons/fa";
-import { MdOutlineEmail } from "react-icons/md";
-import { FaUser, FaPhoneFlip } from "react-icons/fa6";
+import React, {useState} from "react";
+import {Form, Input, Checkbox, Tooltip} from "antd";
+import {Button} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
+import {FaGoogle, FaFacebookF, FaAddressCard} from "react-icons/fa";
+import {MdOutlineEmail} from "react-icons/md";
+import {FaUser, FaPhoneFlip} from "react-icons/fa6";
 import axios from "axios";
-import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
-import { useToastNotifications } from "@/hooks/useToastNotification";
+import {motion} from "framer-motion";
+import {useTranslation} from "react-i18next";
+import {useToastNotifications} from "@/hooks/useToastNotification";
 import ChangeLangButton from "@/components/ChangeLangButton";
 
 const validateEmail = (email) => {
-  return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
+  return String (email).toLowerCase ().match (
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
 };
 
 const RegisterOwner = () => {
-  const toast = useToastNotifications();
-  const { t } = useTranslation();
+  const toast = useToastNotifications ();
+  const {t} = useTranslation ();
   const BE_PORT = import.meta.env.VITE_BE_PORT;
-  const navigate = useNavigate();
-  const [isSignInClicked, setIsSignInClicked] = useState(false);
+  const navigate = useNavigate ();
+  const [isSignInClicked, setIsSignInClicked] = useState (false);
   const handleSignInClick = () => {
-    setIsSignInClicked(true);
+    setIsSignInClicked (true);
   };
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState ({
     email: "",
     password: "",
     name: "",
@@ -38,75 +36,74 @@ const RegisterOwner = () => {
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
+    const {name, value} = e.target;
+    setFormData ({
       ...formData,
       [name]: value,
     });
   };
 
   const handleCheckboxChange = (e) => {
-    setFormData({
+    setFormData ({
       ...formData,
       agreeTerms: e.target.checked,
     });
   };
 
   const handleFormSubmit = async () => {
-    const { email, password, name, phone, agreeTerms, idenCard } = formData;
+    const {email, password, name, phone, agreeTerms, idenCard} = formData;
 
     if (!email || !password || !name || !phone || !idenCard) {
-      toast.showError("Please fill all the fields");
+      toast.showError ("Please fill all the fields");
       return;
     }
 
-    if (!validateEmail(email)) {
-      toast.showError("Invalid email format");
+    if (!validateEmail (email)) {
+      toast.showError ("Invalid email format");
       return;
     }
 
     if (password.length <= 8) {
-      toast.showError("Password should be at least 8 characters");
+      toast.showError ("Password should be at least 8 characters");
       return;
     }
 
-    if (phone.length !== 10 || !phone.startsWith("0")) {
-      toast.showError("Phone must be 10 digits and start with 0");
+    if (phone.length !== 10 || !phone.startsWith ("0")) {
+      toast.showError ("Phone must be 10 digits and start with 0");
       return;
     }
     if (idenCard.length !== 12) {
-      toast.showError("Invalid card");
+      toast.showError ("Invalid card");
       return;
     }
     if (!agreeTerms) {
-      toast.showError("You must agree to the terms of service");
+      toast.showError ("You must agree to the terms of service");
       return;
     }
     try {
-      const response = await axios.post(
+      const response = await axios.post (
         `${BE_PORT}/api/auth/signUpOwner`,
         formData
       );
-      console.log(response.data);
+      console.log (response.data);
       if (response.status === 200) {
-        toast.showError("Success register");
-        navigate("/loginOwner");
+        toast.showError ("Success register");
+        navigate ("/loginOwner");
       }
     } catch (e) {
-      console.log(e + "Error passing form data");
-      toast.showError(e.response.data.message || "Failed to register");
+      console.log (e + "Error passing form data");
+      toast.showError (e.response.data.message || "Failed to register");
     }
   };
 
   return (
-    <div>
-      <div className="row h-[650px]">
-        <div className="col-2"></div>
-        <div className="col-8">
+    <div className='min-h-screen flex-center bg-[#cfd9ea]'>
+      <div className="row h-auto">
+        <div className="col-12">
           <div className="row bg-[#114098] h-full shadow-lg g-0">
             <div className="col-5 relative border-r">
               <div className="gryphen absolute flex mt-[100px] ml-16 text-white text-semibold text-[20px] italic">
-                {t("register-owner-describe")}
+                {t ("register-owner-describe")}
               </div>
               <img
                 className="w-full flex mt-56"
@@ -122,11 +119,11 @@ const RegisterOwner = () => {
             </div>
             <motion.div
               className="col-7"
-              initial={{ opacity: 0 }}
+              initial={{opacity: 0}}
               animate={{
                 opacity: isSignInClicked ? 0 : 1,
               }}
-              exit={{ opacity: 0 }}
+              exit={{opacity: 0}}
               transition={{
                 duration: 0.75,
                 ease: "easeOut",
@@ -134,7 +131,7 @@ const RegisterOwner = () => {
               }}
               onAnimationComplete={() => {
                 if (isSignInClicked) {
-                  navigate("/loginOwner");
+                  navigate ("/loginOwner");
                 }
               }}
             >
@@ -142,21 +139,23 @@ const RegisterOwner = () => {
                 <div className="col-2"></div>
                 <div className="col-8">
                   <div className="py-7">
-                    <h5 className="font-bold text-[#c3d7ef]">
-                      {t("be-an-owner")}{" "}
+                    <h5 className="font-bold text-[#c3d7ef] text-center">
+                      {t ("be-an-owner")}{" "}
                       <span className="text-white">TakeABreath</span>{" "}
                     </h5>
                     <div className="flex justify-center">
-                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 text-[#114098] bg-white hover:scale-105 hover:text-black mx-2 cursor-pointer my-2">
-                        <FaGoogle />
+                      <div
+                        className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 text-[#114098] bg-white hover:scale-105 hover:text-black mx-2 cursor-pointer my-2">
+                        <FaGoogle/>
                       </div>
-                      <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 text-[#114098] bg-white hover:scale-105 hover:text-black mx-2 cursor-pointer my-2">
-                        <FaFacebookF />
+                      <div
+                        className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 text-[#114098] bg-white hover:scale-105 hover:text-black mx-2 cursor-pointer my-2">
+                        <FaFacebookF/>
                       </div>
                     </div>
                     <div className="flex items-center mt-2">
                       <div className="border-t border-gray-300 flex-grow"></div>
-                      <div className="mx-4 text-white">{t("or")}</div>
+                      <div className="mx-4 text-white">{t ("or")}</div>
                       <div className="border-t border-gray-300 flex-grow"></div>
                     </div>
                     <div className="mt-4">
@@ -164,7 +163,7 @@ const RegisterOwner = () => {
                         <Form.Item
                           label={
                             <div className="w-[100px] flex-center text-white">
-                              {t("email")}
+                              {t ("email")}
                             </div>
                           }
                           name="email"
@@ -173,7 +172,7 @@ const RegisterOwner = () => {
                             placeholder="anderson@gmail.com"
                             suffix={
                               <Tooltip title="Email must be approriate, example: thymai@hotmail.com">
-                                <MdOutlineEmail />
+                                <MdOutlineEmail/>
                               </Tooltip>
                             }
                             name="email"
@@ -184,7 +183,7 @@ const RegisterOwner = () => {
                         <Form.Item
                           label={
                             <div className="w-[100px] flex-center text-white">
-                              {t("password")}
+                              {t ("password")}
                             </div>
                           }
                           name="password"
@@ -199,14 +198,14 @@ const RegisterOwner = () => {
                         <Form.Item
                           label={
                             <div className="w-[100px] flex-center text-white">
-                              {t("name")}
+                              {t ("name")}
                             </div>
                           }
                           name="name"
                         >
                           <Input
                             placeholder="Anderson"
-                            suffix={<FaUser />}
+                            suffix={<FaUser/>}
                             name="name"
                             value={formData.name}
                             onChange={handleInputChange}
@@ -215,14 +214,14 @@ const RegisterOwner = () => {
                         <Form.Item
                           label={
                             <div className="w-[100px] flex-center text-white">
-                              {t("phone-number")}
+                              {t ("phone-number")}
                             </div>
                           }
                           name="phone"
                         >
                           <Input
                             placeholder="0908xxxxxx"
-                            suffix={<FaPhoneFlip />}
+                            suffix={<FaPhoneFlip/>}
                             name="phone"
                             value={formData.phone}
                             onChange={handleInputChange}
@@ -232,14 +231,14 @@ const RegisterOwner = () => {
                         <Form.Item
                           label={
                             <div className="w-[100px] flex-center text-white">
-                              {t("iden-card")}
+                              {t ("iden-card")}
                             </div>
                           }
                           name="idenCard"
                         >
                           <Input
                             placeholder="12 digits"
-                            suffix={<FaAddressCard />}
+                            suffix={<FaAddressCard/>}
                             name="idenCard"
                             value={formData.idenCard}
                             onChange={handleInputChange}
@@ -251,28 +250,28 @@ const RegisterOwner = () => {
                             checked={formData.agreeTerms}
                             onChange={handleCheckboxChange}
                           >
-                            {t("i-agree")}
+                            {t ("i-agree")}
                           </Checkbox>
                         </Form.Item>
-                        <Form.Item>
+                        <Form.Item className='flex-center'>
                           <Button
                             onClick={handleFormSubmit}
                             className="my-2 ml-8 hover:scale-105 bg-white"
-                            style={{ color: "#114098" }}
+                            style={{color: "#114098"}}
                           >
-                            {t("create-account")}
+                            {t ("create-account")}
                           </Button>
                         </Form.Item>
                       </Form>
                     </div>
 
                     <div className="flex justify-start mt-3 text-[#c3d7ef]">
-                      <span>{t("im-already-a-member")}</span>
+                      <span>{t ("im-already-a-member")}</span>
                       <span
                         className="text-white cursor-pointer no-underline ml-2"
                         onClick={handleSignInClick}
                       >
-                        {t("sign-in-owner")}
+                        {t ("sign-in-owner")}
                       </span>
                     </div>
                   </div>
@@ -282,7 +281,6 @@ const RegisterOwner = () => {
             </motion.div>
           </div>
         </div>
-        <div className="col-2"></div>
       </div>
     </div>
   );

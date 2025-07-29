@@ -1,4 +1,4 @@
-import React, {useState, useContext, useRef, useEffect} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import {
@@ -11,7 +11,6 @@ import {
   DatePicker,
   Radio,
   message,
-  notification,
 } from "antd";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -24,9 +23,9 @@ import {useForm} from "antd/es/form/Form";
 import {useTranslation} from "react-i18next";
 import {ChevronDown} from "lucide-react";
 import PropTypes from 'prop-types';
-import {AuthContext} from "@/hooks/auth.context";
 import {cleanInvoice, setInvoiceCount} from "@/store/redux/revenueSlice";
 import {setInvoiceID, setVoucherApplied} from "@/store/redux/inputDaySlice";
+import {useToastNotifications} from "@/hooks/useToastNotification";
 
 function BookingConfirmationForm ({isShow, onCancel, hotel}) {
 
@@ -37,7 +36,6 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
   };
 
   const {t} = useTranslation ();
-  const {auth, setAuth} = useContext (AuthContext);
   const BE_PORT = import.meta.env.VITE_BE_PORT;
   const [form] = useForm ();
   const [payment, setPayment] = useState ("");
@@ -49,6 +47,8 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
   const navigate = useNavigate ();
   const dispatch = useDispatch ();
   const {count, listInvoiceID} = useSelector ((state) => state.invoiceRevenue);
+  const {auth} = useSelector (state => state.auth);
+  const toast = useToastNotifications ()
   const formatMoney = (money) => {
     return new Intl.NumberFormat ("de-DE").format (money);
   };
@@ -132,9 +132,9 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
 
     if (voucher) {
       dispatch (setVoucherApplied ({voucher}));
-      notification.success ({description: t ("selectvou")});
+      toast.showSuccess ("Applying voucher successfully!");
     } else {
-      notification.error ({description: t ("selectvoufail")});
+      toast.showError ("Applying voucher failed!");
     }
   };
 
@@ -142,7 +142,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
   const handleInactive = async (reason) => {
     try {
       const response = await axios.put (
-        `${BE_PORT}/api/cancelReq/inactiveCus/${auth.user.id}`,
+        `${BE_PORT}/api/cancelReq/inactiveCus/${auth.id}`,
         {
           reason: reason,
         }
@@ -153,38 +153,17 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
           listID: listInvoiceID,
         });
         dispatch (cleanInvoice ());
-        hanldeLogout ();
       } else {
         console.log (response);
-        notification.error ({
-          message: "Customer Inactivation Failed",
-          description: "Customer inactivation failed!",
-        });
+        toast.showError (
+          "Customer Inactivation Failed"
+        );
       }
     } catch (error) {
       console.log (
         error.response?.data?.message || "An unknown error occurred."
       );
     }
-  };
-
-  // logout when inactive
-  const hanldeLogout = () => {
-    axios.get (`${BE_PORT}/api/auth/logout`).then ((res) => {
-      if (res.data.logout) {
-        setAuth ({
-          isAuthenticated: false,
-          user: {
-            id: "",
-            email: "",
-            name: "",
-          },
-        });
-        navigate ("/login");
-      }
-    }).catch ((err) => {
-      console.log (err);
-    });
   };
 
   const checkFormValidity = async () => {
@@ -227,7 +206,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
   const onFinish = async (values) => {
     const idHotel = selectedHotel._id;
     const idRoom = selectedRoom._id;
-    const idCus = auth.user.id ?? "Chua login";
+    const idCus = auth.id;
     const dataBooking = {
       inputName: values.fullname,
       inputIdenCard: values.idenCard,
@@ -294,7 +273,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
         onCancel={() => {
           handleCancel ();
         }}
-        className="min-w-[80%] max-h-[100px]"
+        className="min-w-[80%]"
         okText="Confirm Booking"
         onOk={() => form.submit ()}
         okButtonProps={{
@@ -304,15 +283,16 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
             : "text-black text-lg py-3 px-6 bg-grey-500",
         }}
         cancelButtonProps={{className: "py-3 px-6 text-lg"}}
+        bodyStyle={{height: '100%', padding: 0}}
       >
-        <h2 className="text-center font-semibold font-poppins">{t ("form")}</h2>
-        <Row className="h-auto " wrap={true} gutter={24}>
+        <h2 className="text-center font-semibold text-[#114098} font-monospace">{t ("form")}</h2>
+        <Row className="flex items-stretch h-full" wrap={false} gutter={24}>
           {/* input form */}
           <Col
             span={16}
-            className="border-[1px] p-6 h-[520px] border-gray-300 rounded-[10px] min-w-[550px]"
+            className="border-[2px] p-6 h-auto border-[#114098] rounded-[10px] min-w-[550px] flex flex-col"
           >
-            <h3 className="text-center mt-[18px] mb-[29px] font-afacad">
+            <h3 className="text-center font-monospace font-semibold">
               {t ("detail")}
             </h3>
             <ConfigProvider
@@ -321,8 +301,15 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                   Form: {
                     labelColor: "black",
                   },
+                  Input: {
+                    hoverBorderColor: "#d9d9d9",
+                    activeBorderColor: "#d9d9d9",
+                    boxShadow: 'none',
+                    borderColor: '#d9d9d9',
+                  }
                 },
               }}
+
             >
               <div>
                 <Form
@@ -444,22 +431,6 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                       >
                         Paypal
                       </Radio>
-                      <Radio
-                        value="momo"
-                        onClick={() => {
-                          setPayment ("momo");
-                        }}
-                      >
-                        Momo
-                      </Radio>
-                      <Radio
-                        value="wowo"
-                        onClick={() => {
-                          setPayment ("wowo");
-                        }}
-                      >
-                        Wowo
-                      </Radio>
                     </Radio.Group>
                   </Form.Item>
 
@@ -504,10 +475,10 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
             </ConfigProvider>
           </Col>
           {/* information */}
-          <Col span={8}>
+          <Col span={8} className="flex flex-col space-y-4 flex-grow">
             {/* information hotel */}
             <div className="flex flex-col space-y-4">
-              <div className=" p-7 h-auto border-[1px] border-gray-300 rounded-[10px]">
+              <div className=" p-7 h-auto border-[2px] border-[#114098] rounded-[10px]">
                 {" "}
                 <div className="flex space-x-5">
                   <h4 className="font-lobster">{selectedHotel.hotelName}</h4>
@@ -522,7 +493,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                 </div>
               </div>
               {/* information rooms */}
-              <div className="h-[150px] p-6 border-[1px] border-gray-300 rounded-[10px]">
+              <div className="h-auto p-6 border-[2px] border-[#114098] rounded-[10px]">
                 <p className="text-[15px] mb-[5px]  mt-[2px]">
                   {t ("contain")} {selectedRoom.capacity} {t ("nguoi")}
                 </p>
@@ -543,25 +514,23 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                 </div>
               </div>
               {/* information booking */}
-              <div className="h-auto border-[1px] px-6 pt-2 border-gray-300 rounded-[10px]">
-                <Row>
-                  <Col
-                    span={11}
-                    className="border-r-[1px] border-y-slate-400 mr-[11px]"
-                  >
+              <div
+                className="h-[200px] flex justify-center flex-col border-[2px] px-6 pt-2 border-[#114098] rounded-[10px]">
+                <div className='flex items-center justify-between'>
+                  <div>
                     {t ("checkin")}
                     <p>
                       <b> {dayjs (dayStart).format ("DD/MM/YYYY")}</b>
                     </p>
-                  </Col>
+                  </div>
 
-                  <Col span={12}>
+                  <div>
                     {t ("checkout")}
                     <p>
                       <b>{dayjs (dayEnd).format ("DD/MM/YYYY")}</b>
                     </p>
-                  </Col>
-                </Row>
+                  </div>
+                </div>
                 <div className="flex flex-col justify-between">
                   <div className="flex justify-between">
                     <div>{t ("totalday")}:</div>

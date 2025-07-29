@@ -124,15 +124,6 @@ const HotelDisplayCompre = () => {
               <Booking tailwind_prop="flex w-full h-16" />
             </div>
           </div>
-          <div className="flex justify-start font-afacad">
-              {searchResults.hotelData?.length > 0 ? (
-                <h4 className="text-[30px] text-[#114098] ">
-                  {city}: {searchResults.hotelData.length} properties found
-                </h4>
-              ) : (
-                <h4 className="text-[30px] text-[#114098] ">Try searching for what you like:</h4>
-              )}
-            </div>
           <Row gutter={16} className="mt-6">
             <Col span={5}>
               <Breadcrumb></Breadcrumb>

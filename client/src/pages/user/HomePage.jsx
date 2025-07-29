@@ -45,7 +45,7 @@ const HomePage = () => {
         <Row className="pl-8">
           <Col span={2}></Col>
           <Col span={20}>
-            <div className="h-[800px]">
+            <div className="h-auto">
               <h4 className={h4Design}>{t ("type-of-accomodation")}</h4>
               {/* Carousel with card groups */}
               <div className="h-72">
@@ -73,8 +73,9 @@ const HomePage = () => {
                 </Carousel>
               </div>
               {/* display homestay */}
+              {/*TODO: Add lazy loading and skeleton*/}
               <h4 className={h4Design}>{t ("high-rated-accomodation")}</h4>
-              <div className="h-[400px]">
+              <div className="h-auto">
                 <PropertyGrid></PropertyGrid>
               </div>
             </div>

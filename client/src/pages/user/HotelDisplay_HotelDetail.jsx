@@ -139,8 +139,9 @@ const HotelDisplay_HotelDetail = () => {
           <AmenitiesCard hotel={clickedHotel}></AmenitiesCard>
         </div>
       </div>
-      {/* Comment */}
+      {/*TODO: Add comment card*/}
       <div><Title>{t ('comment')}</Title></div>
+
       <div><Title>{t ('available')}</Title></div>
       {/* Room display */}
       <div>

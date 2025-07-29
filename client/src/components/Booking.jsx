@@ -16,7 +16,7 @@ import { useCount, useGet } from "@/hooks/hooks";
 import axios from "axios";
 import isBetween from "dayjs/plugin/isBetween";
 const { RangePicker } = DatePicker;
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import utc from "dayjs/plugin/utc";
@@ -34,10 +34,15 @@ const Booking = ({ tailwind_prop}) => {
   const toast = useToastNotifications()
   // onSearchResults
   const dispatch = useDispatch();
+  const {city,dayStart,dayEnd}=useSelector((state) => state.inputDay)
+  // unformat when take out from selector
+  const unformarttedDayStart=dayStart ? dayjs(dayStart).format("DD/MM/YYYY") : ""
+  const unformarttedDayEnd=dayEnd ? dayjs(dayEnd).format("DD/MM/YYYY") : ""
   const navigate = useNavigate();
+
   //day handle
-  const [dayStart, setDayStart] = useState("");
-  const [dayEnd, setDayEnd] = useState("");
+  const [currentDayStart, setDayStart] = useState("");
+  const [currentDayEnd, setDayEnd] = useState("");
 
   dayjs.extend(isBetween);
   dayjs.extend(customParseFormat);
@@ -168,13 +173,15 @@ const Booking = ({ tailwind_prop}) => {
 
   const handleSearch = async () => {
     const people = aCount + cCount;
-    if (!selectedCity || !dayStart || !dayEnd || !people) {
+    if (!selectedCity || !currentDayStart || !currentDayEnd || !people) {
       return toast.showError("Please fill out all information before searching ")
     }
 
     //format before dispatch
-    const formattedDayStart = dayjs(dayStart).tz("Asia/Ho_Chi_Minh").format(); // GMT+7
-    const formattedDayEnd = dayjs(dayEnd).tz("Asia/Ho_Chi_Minh").format();
+    const formattedDayStart = dayjs(currentDayStart).tz("Asia/Ho_Chi_Minh").format(); // GMT+7
+    const formattedDayEnd = dayjs(currentDayEnd).tz("Asia/Ho_Chi_Minh").format();
+
+
     dispatch(
       setInputDay({
         dayStart: formattedDayStart,
@@ -253,7 +260,7 @@ const Booking = ({ tailwind_prop}) => {
               )}
             >
               <Input
-                placeholder={t("where-you-want-to-go")}
+                placeholder={city!=="" ? city : t("where-you-want-to-go")}
                 prefix={<img src="/icon/double-bed.png" alt="Bed Icon" />}
                 className="rounded-none h-full"
                 variant={false}
@@ -264,8 +271,8 @@ const Booking = ({ tailwind_prop}) => {
           </Col>
           <Col span={8}>
             <RangePicker
-              placeholder={[t("check-in"), t("check-out")]}
-              suffixIcon={<CalendarFold size={32}/>}
+              placeholder={dayStart && dayEnd !== "" ? [unformarttedDayStart,unformarttedDayEnd]:[t("check-in"), t("check-out")]}
+              suffixIcon={<CalendarFold size={24} color='gray'/>}
               disabledDate={disabledDate}
               onChange={handleDateChange}
               className="rounded-none "

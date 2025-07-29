@@ -1,118 +1,135 @@
-import React, {useContext, useEffect, useState} from "react";
-import {RouterProvider, Outlet, createBrowserRouter, useLocation} from "react-router-dom";
+import React, {  useEffect, useState } from "react";
+import {
+  RouterProvider,
+  Outlet,
+  createBrowserRouter,
+  useLocation, useNavigate,
+} from "react-router-dom";
 import axios from "axios";
-import {AuthContext} from "./hooks/auth.context";
-import {routers} from "./routers/router";
+import { routers } from "./routers/router";
 import Header from "@/partials/Header";
 import Footer from "@/partials/Footer";
-import './index.scss'
+import "./index.css";
+import {useDispatch, useSelector} from "react-redux";
+import {clearAuthData, setAuthData} from "@/store/redux/auth";
 
-function App () {
-  const {auth, setAuth} = useContext (AuthContext);
-  const [isLoading, setIsLoading] = useState (true);
-  const [setRedirectPath] = useState (null);
+function App() {
+  const auth=useSelector((state) => state.auth);
+  const [isLoading, setIsLoading] = useState(true);
+  const dispatch=useDispatch()
   const BE_PORT = import.meta.env.VITE_BE_PORT;
-  useEffect (() => {
+
+
+  useEffect(() => {
     const loadScript = (src) => {
-      return new Promise ((resolve, reject) => {
-        const script = document.createElement ("script");
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
         script.id = "chatbox";
         script.src = src;
-        script.onload = () => resolve ();
-        script.onerror = () => reject (new Error (`Script load error for ${src}`));
-        document.body.appendChild (script);
+        script.onload = () => resolve();
+        script.onerror = () =>
+          reject(new Error(`Script load error for ${src}`));
+        document.body.appendChild(script);
       });
     };
 
     const loadScripts = async () => {
       try {
-        if (auth?.user?.role === "customer") {
-          console.log ("Load Script");
-          await loadScript ("https://cdn.botpress.cloud/webchat/v2.2/inject.js");
-          await loadScript (
+        if (auth?.role === "customer" || !auth) {
+          console.log("Load Script");
+          await loadScript("https://cdn.botpress.cloud/webchat/v2.2/inject.js");
+          await loadScript(
             "https://files.bpcontent.cloud/2024/11/09/20/20241109202259-FMPWOTKL.js"
           );
-          console.log ("Scripts loaded successfully");
+          console.log("Scripts loaded successfully");
         } else {
-          const iframeChatbox = document.getElementsByName ("fab");
-          iframeChatbox.forEach ((element) => {
+          const iframeChatbox = document.getElementsByName("fab");
+          iframeChatbox.forEach((element) => {
             element.style.display = "none";
           });
         }
       } catch (error) {
-        console.error (error);
+        console.error(error);
       }
     };
 
-    loadScripts ();
-  }, [auth?.user?.role]);
+    loadScripts();
+  }, [auth?.role]);
 
-  useEffect (() => {
+  useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get (`${BE_PORT}/api/auth/verify`);
+        const response = await axios.get(`${BE_PORT}/api/auth/verify`, {
+          withCredentials: true,
+        });
         const userRes = response.data.user;
-        setAuth ({
-          isAuthenticated: true,
-          user: {
-            id: userRes?.id ?? "",
+
+        // Dispatch Redux action to set auth data
+        dispatch(
+          setAuthData({
             email: userRes?.email ?? "",
             name: userRes?.name ?? "",
+            id: userRes?.id ?? "",
             role: userRes?.role ?? "",
-          },
-        });
-
-        // Set redirect path based on user role
-        if (userRes?.role === "owner") {
-          setRedirectPath ("/owner");
-        } else if (userRes?.role === "admin") {
-          setRedirectPath ("/admin");
-        }
+          })
+        );
       } catch (err) {
-        console.log ("[APP]", err);
-        // Redirect to "/" if unauthorized
+        console.log("[APP]", err);
+
+        // Clear auth state if unauthorized
         if (err.response?.status === 401) {
-          setRedirectPath ("/");
+          dispatch(clearAuthData());
         }
-        setAuth ({
-          isAuthenticated: false,
-          user: null,
-        });
       } finally {
-        setIsLoading (false);
+        setIsLoading(false);
       }
     };
 
-    fetchUser ();
-  }, []);
+    fetchUser();
+  }, [dispatch, BE_PORT]);
 
   if (isLoading) {
     return <div>Loading....</div>;
   }
 
   const Layout = () => {
-    const location = useLocation ()
-    const noHeaderFooterRoutes = ['/owner', '/admin','/login','/register']
+    const location = useLocation();
+    const navigate = useNavigate();
+    const noHeaderFooterRoutes = ["/owner", "/admin", "/login", "/register"];
 
-    const shouldHideHeaderFooter = noHeaderFooterRoutes.some ((route) => location.pathname.startsWith (route))
+    useEffect(() => {
+      // Navigate based on user role after router is ready
+      if (auth?.role === "owner") {
+        navigate("/owner");
+      } else if (auth?.role === "admin") {
+        navigate("/admin");
+      }
+    }, [auth?.role, navigate]);
 
-    return (<>
-      {!shouldHideHeaderFooter && <Header/>}
-      <Outlet/>
-      {!shouldHideHeaderFooter && <Footer/>}
-    </>)
+    const shouldHideHeaderFooter = noHeaderFooterRoutes.some((route) =>
+      location.pathname.startsWith(route)
+    );
+
+    return (
+      <>
+        {!shouldHideHeaderFooter && <Header />}
+        <Outlet />
+        {!shouldHideHeaderFooter && <Footer />}
+      </>
+    );
   };
 
-  const routerWithLayout = createBrowserRouter ([
+
+  const routerWithLayout = createBrowserRouter([
     {
-      element: <Layout/>,
+      element: <Layout />,
       children: routers,
     },
   ]);
 
   return (
     <div className="App">
-      <RouterProvider router={routerWithLayout}/>
+      <RouterProvider router={routerWithLayout} />
     </div>
   );
 }

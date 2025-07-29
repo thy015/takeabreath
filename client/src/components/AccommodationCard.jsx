@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Card, Button, Row, Col } from "react-bootstrap";
-import { MdRoom } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
-import { RateStar } from "./Rate";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {Card, Button, Row, Col} from "react-bootstrap";
+import {MdRoom} from "react-icons/md";
+import {Link, useNavigate} from "react-router-dom";
+import {RateStar} from "./Rate";
+import {useDispatch, useSelector} from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,16 +11,16 @@ import PropTypes from "prop-types";
 import {setClickedHotel} from "@/store/redux/searchSlice";
 
 // hotel display page
-const AccommodationCard = ({ hotel, onClick }) => {
+const AccommodationCard = ({hotel, onClick}) => {
   AccommodationCard.propTypes = {
-    hotel:PropTypes.object.isRequired,
-    onClick:PropTypes.func.isRequired
+    hotel: PropTypes.object.isRequired,
+    onClick: PropTypes.func.isRequired
   }
-  const { roomData } = useSelector((state) => state.searchResults);
-  const filteredRoom = roomData?.filter((r) => r.hotelID === hotel._id)[0];
+  const {roomData} = useSelector ((state) => state.searchResults);
+  const filteredRoom = roomData?.filter ((r) => r.hotelID === hotel._id)[0];
 
   const formatMoney = (money) => {
-    return new Intl.NumberFormat("de-DE").format(money);
+    return new Intl.NumberFormat ("de-DE").format (money);
   };
 
   return (
@@ -49,7 +49,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
                   </span>
                   <span
                     className="badge bg-[#0f4098]"
-                    style={{ fontSize: "16px" }}
+                    style={{fontSize: "16px"}}
                   >
                     {hotel.rate}
                   </span>
@@ -58,7 +58,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
 
               <Card.Text className="flex gap-5">
                 <div className="flex items-center">
-                  <MdRoom className="text-red-600" />
+                  <MdRoom className="text-red-600"/>
                   <span className="ml-2">
                     {hotel.city} - {hotel.nation}
                   </span>
@@ -84,7 +84,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
                   <div className="font-semibold flex flex-col items-end">
                     {filteredRoom ? (
                       <div className="text-green-600 text-lg">
-                        From: {formatMoney(filteredRoom.money)} VND
+                        From: {formatMoney (filteredRoom.money)} VND
                       </div>
                     ) : null}
                     <div className="text-muted font-[14px]">
@@ -94,7 +94,7 @@ const AccommodationCard = ({ hotel, onClick }) => {
                       <Button
                         size="sm"
                         className="mt-10 float-end "
-                        style={{ backgroundColor: "#0f4098" }}
+                        style={{backgroundColor: "#0f4098"}}
                       >
                         See availability
                       </Button>
@@ -122,60 +122,60 @@ const PropertyCard = ({
     showButton: PropTypes.bool.isRequired,
   }
   // handle click each hotel
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [roomData, setRoomData] = useState(null);
+  const dispatch = useDispatch ();
+  const navigate = useNavigate ();
+  const [roomData, setRoomData] = useState (null);
   const BE_PORT = import.meta.env.VITE_BE_PORT;
-  useEffect(() => {
+  useEffect (() => {
     const fetchRoomData = async () => {
       try {
-        const res = await fetch(
+        const res = await fetch (
           `${BE_PORT}/api/hotelList/hotel/${property._id}/room`
         );
-        const data = await res.json();
-        setRoomData(data);
+        const data = await res.json ();
+        setRoomData (data);
       } catch (e) {
-        console.log("E in property card fe", e);
+        console.log ("E in property card fe", e);
       }
     };
-    fetchRoomData();
+    fetchRoomData ();
   }, [property._id]);
 
   const handleClickPropCard = () => {
-    dispatch(
-      setClickedHotel({
+    dispatch (
+      setClickedHotel ({
         clickedHotel: property,
         attachedRooms: roomData,
       })
     );
-    navigate(`/hotel/${property._id}`);
+    navigate (`/hotel/${property._id}`);
   };
   return (
-    <div className="link-property" onClick={handleClickPropCard}>
-      <Card className="card-wrapper">
+    <div className="link-property w-full h-full" onClick={handleClickPropCard}>
+      <Card className="card-wrapper ">
         <Card.Img
           className="h-[150px] object-cover rounded-tl-[12px] rounded-tr-[12px] rounded-b-none"
           variant="top"
           src={property.imgLink[0]}
         />
-        <Card.Body className="h-[210px] flex flex-col flex-grow-1">
+        <Card.Body className="h-[200px] flex flex-col items-center flex-1">
           <Card.Title>{property.hotelName}</Card.Title>
           <RateStar hotel={property}></RateStar>
-          <Card.Text className="whitespace-nowrap overflow-hidden text-ellipsis">
+          <Card.Text className="text-wrap overflow-hidden text-ellipsis">
             {property.address}
           </Card.Text>
           <div className="flex-center">
             <div className="card-rate">{property.rate}</div>
-            <div style={{ marginLeft: "8px" }}>
+            <div style={{marginLeft: "8px"}}>
               {property.numberOfRates} people have rated - {property.hotelType}
             </div>
           </div>
           {!showButton && (
             <div
               className="mt-2"
-              style={{ fontWeight: "bold", fontSize: "16px" }}
+              style={{fontWeight: "bold", fontSize: "16px"}}
             >
-              Start from ....{property.minPrice} vnd
+              Start from {property.smallestPrice} vnd
             </div>
           )}
           {showButton && (
@@ -193,60 +193,72 @@ const PropertyCard = ({
   );
 };
 //amenities
-const AmenitiesCard = ({ hotel }) => {
+const AmenitiesCard = ({hotel}) => {
   AmenitiesCard.propTypes = {
     hotel: PropTypes.object.isRequired,
-  }
+  };
+
   const amenData = hotel.hotelAmenities;
-  const amenKeys = Object.keys(amenData);
+  const amenKeys = Object.keys (amenData);
 
+  const formatKey = (key) => {
+    if (key === "heatingAndCooling") {
+      return "Heating & Cooling";
+    }
+    const words = [];
+    let currentWord = key[0].toUpperCase(); // Start with the first letter capitalized
+
+    for (let i = 1; i < key.length; i++) {
+      const char = key[i];
+      if (char === char.toUpperCase()) {
+        // Start a new word when encountering an uppercase letter
+        words.push(currentWord);
+        currentWord = char;
+      } else {
+        currentWord += char;
+      }
+    }
+    words.push(currentWord); // Add the last word
+    return words.join(" ");
+  };
   return (
-    <div className="flex flex-wrap gap-2">
-      {amenKeys.map((a) => {
-        const items = amenData[a];
+    <div className="grid grid-cols-4 gap-4">
+      {amenKeys.map ((key) => {
+        const items = amenData[key];
         if (items.length > 0) {
-          return items.flatMap((item, idx) => {
-            // split by comma n map
-            const individualItems = item.split(",").map((i) => i.trim());
+          return (
+            <div key={key} className="flex flex-col gap-2">
+              {/* Key as column header */}
+              <h5 className="font-afacad">{formatKey(key)}</h5>
+              {/* Amenities under the key */}
+              {items.map ((amenity, idx) => {
+                const encodedItem = encodeURIComponent (amenity);
+                const imgSrc = `/icon/${key}/${encodedItem}.png`;
 
-            return individualItems.map((indItem, indIdx) => {
-              const encodedItem = encodeURIComponent(indItem);
-              const imgSrc = `/icon/${a}/${encodedItem}.png`;
-              console.log("indi items", indItem);
-              console.log("encode", encodedItem);
-              return (
-                <div className="card-amenities " key={`${a}-${idx}-${indIdx}`}>
-                  <div className="row g-0 w-full h-full">
-                    <div className="col-5">
-                      <img
-                        className="card-img"
-                        src={imgSrc}
-                        alt={`${indItem} icon`}
-                        onError={(e) => {
-                          // cant find pic=> fallback here
-                          e.target.src = `/icon/Avatar%20Cute/kitten.png`;
-                        }}
-                      />
-                    </div>
-                    <div className="col-7">
-                      <div className="pt-2 font-oswald text-xl flex items-center justify-start h-full">
-                        <p>{indItem}</p>
-                      </div>
-                    </div>
+                return (
+                  <div key={idx} className="flex items-center gap-2">
+                    <img
+                      className="w-5"
+                      src={imgSrc}
+                      alt={`${amenity} icon`}
+                      onError={(e) => {
+                        e.target.src = `/icon/Avatar%20Cute/kitten.png`;
+                      }}
+                    />
+                    <span>{amenity}</span>
                   </div>
-                </div>
-              );
-            });
-          });
+                );
+              })}
+            </div>
+          );
         }
         return null;
       })}
     </div>
   );
 };
-
-// trang báo lá cải
-const PressReleasesCarousel = ({ cardData }) => {
+// trang báo
+const PressReleasesCarousel = ({cardData}) => {
   PressReleasesCarousel.propTypes = {
     cardData: PropTypes.array.isRequired,
   }
@@ -275,7 +287,7 @@ const PressReleasesCarousel = ({ cardData }) => {
   };
   return (
     <Slider {...settings}>
-      {cardData.map((c, index) => (
+      {cardData.map ((c, index) => (
         <div key={index}>
           <Card
             style={{
@@ -288,7 +300,7 @@ const PressReleasesCarousel = ({ cardData }) => {
             <Card.Img
               src={c.imgLink}
               alt={c.imgAlt}
-              style={{ borderRadius: "none" }}
+              style={{borderRadius: "none"}}
             />
             <Card.Body>
               <Card.Text>{c.dateReleased}</Card.Text>
@@ -303,7 +315,7 @@ const PressReleasesCarousel = ({ cardData }) => {
   );
 };
 
-const OurAchievementsCard = ({ cardData }) => {
+const OurAchievementsCard = ({cardData}) => {
   OurAchievementsCard.propTypes = {
     cardData: PropTypes.array.isRequired,
   }
@@ -318,18 +330,18 @@ const OurAchievementsCard = ({ cardData }) => {
       <button
         className="slick-prev slick-arrow"
         aria-label="Previous"
-        style={{ color: "black", fontSize: "20px" }}
+        style={{color: "black", fontSize: "20px"}}
       >
-        &#10094; {/* Mũi tên trái */}
+        &#10094; {/* Left arrow */}
       </button>
     ),
     nextArrow: (
       <button
         className="slick-next slick-arrow"
         aria-label="Next"
-        style={{ color: "black", fontSize: "20px" }}
+        style={{color: "black", fontSize: "20px"}}
       >
-        &#10095; {/* Mũi tên phải */}
+        &#10095; {/* Right arrow */}
       </button>
     ),
     responsive: [
@@ -349,7 +361,7 @@ const OurAchievementsCard = ({ cardData }) => {
   };
   return (
     <Slider {...settings}>
-      {cardData.map((c, index) => (
+      {cardData.map ((c, index) => (
         <div key={index}>
           <Card
             style={{

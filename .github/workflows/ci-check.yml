@@ -36,6 +36,8 @@ jobs:
     defaults:
       run:
         working-directory: ./server
+    env:
+      MONGO_DB: ${{ secrets.MONGO_DB }}
     steps:
       - uses: actions/checkout@v3
 

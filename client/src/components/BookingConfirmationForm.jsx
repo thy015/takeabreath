@@ -267,6 +267,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
     setVoucherCode ("");
   };
   return (
+    // TODO: Get rid of antd for UI, change to ShadCN
     <div>
       <Modal
         open={isShow}

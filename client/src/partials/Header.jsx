@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import {LogOut, Menu} from "lucide-react";
 import {useDispatch, useSelector} from "react-redux";
 import {clearAuthData} from "@/store/redux/auth";
+import {authApis} from "@/apis/auth/auth";
 
 const Header = ({children}) => {
   const auth = useSelector (state => state.auth);
@@ -17,7 +18,6 @@ const Header = ({children}) => {
   const toast = useToastNotifications ()
   const {t} = useTranslation ();
   const dispatch = useDispatch ();
-  const BE_PORT = import.meta.env.VITE_BE_PORT
   axios.defaults.withCredentials = true
   //log in
   const handleLogInNavigate = (e) => {
@@ -48,14 +48,11 @@ const Header = ({children}) => {
 
   const Logout = async () => {
     try {
-      const res = await axios.get (`${BE_PORT}/api/auth/logout`, {
-        withCredentials: true,
-      });
-
-      if (res.data.logout) {
+      const res=authApis.logOut()
+      if (res.logout) {
         toast.showSuccess ("Logout Successful");
-        dispatch (clearAuthData ()); // Clear Redux state
-        navigate ("/"); // Redirect to the home page
+        dispatch (clearAuthData ());
+        navigate ("/");
       } else {
         toast.showError ("Logout failed");
       }

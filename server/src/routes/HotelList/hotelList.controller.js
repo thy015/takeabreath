@@ -483,9 +483,27 @@ const getCommentRoom = async (req, res) => {
     return res.status (200).json ({comments: comment})
   } catch (err) {
     return res.status (500).json ({message: "Lỗi hệ thống", err: err.message})
-
   }
+}
+const getHotelComment=async(req, res) => {
+  const hotelId=req.params.hotelId
+  if (!hotelId){
+    return res.status(403).json({message:"No hotelId found"})
+  }
+  try{
+    // Find all rooms associated with the hotel
+    const allRooms = await Room.find({ hotelID: hotelId });
 
+    // Extract room IDs
+    const roomIds = allRooms.map((room) => room._id);
+
+    // Find comments for the rooms
+    const comments = await Comment.find({ roomID: { $in: roomIds } }).populate("cusID");
+    return res.status(200).json({comments:comments})
+  }catch(e){
+    console.error(e)
+    return res.status(500).json({message:"Unknown error",err: e.message})
+  }
 }
 
 const filterRoomDate = async (req, res) => {
@@ -560,5 +578,6 @@ module.exports = {
   commentRoom,
   getCommentCus,
   getCommentRoom,
-  filterRoomDate
+  filterRoomDate,
+  getHotelComment
 };

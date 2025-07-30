@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Table, Input, Alert, Spin } from "antd";
-import { useGet } from "../../../hooks/hooks";
+import { Table, Alert, Spin } from "antd";
+import { useGet } from "@/hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom"; 
 const RoomList = () => {
@@ -87,7 +87,7 @@ const RoomList = () => {
       render: (_, record) => (
         <button
           className="bg-green-700 text-white px-3 py-1 ml-2 rounded hover:bg-green-500"
-          onClick={() => navigate(`/admin/comments/${record._id}`)}
+          onClick={() => navigate(`/admin/comment/${record._id}`)}
         >
           Xem đánh giá
         </button>

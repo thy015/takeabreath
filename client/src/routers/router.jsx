@@ -50,7 +50,7 @@ export const routers =  [
       {path: "requests", element: <cancelReqAdmin/>},
       {path: "vouchers", element: <AdminVoucher/>},
       {path: "invoices", element: <invoiceAdmin/>},
-      {path: "comments/:id", element: <CommentsPage/>},
+      {path: "comment/:id", element: <CommentsPage/>},
     ],
   },
   {

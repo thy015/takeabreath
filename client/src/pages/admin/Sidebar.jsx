@@ -5,15 +5,23 @@ import {
   FaHotel,
   FaUser,
   FaRegSun,
-  FaCalendar,
   FaChevronRight,
   FaRestroom,
   FaTicketAlt,
   FaReceipt,
 } from "react-icons/fa";
 import { FaHand } from "react-icons/fa6";
+import PropTypes from "prop-types";
 
-const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => (
+const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => {
+  SidebarItem.propTypes = {
+    icon: PropTypes.elementType.isRequired,
+    label: PropTypes.string.isRequired,
+    to: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired,
+  };
+  return(
   <Link
     to={to}
     className={`no-underline flex items-center justify-between pl-5 gap-[10px] py-[10px] w-full cursor-pointer ${
@@ -27,7 +35,7 @@ const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => (
     </div>
     <FaChevronRight className="pr-2" color={active ? "#003580" : "white"} />
   </Link>
-);
+)};
 
 const Sidebar = () => {
   const defaultItem = "Dashboard";

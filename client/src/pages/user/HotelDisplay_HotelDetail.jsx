@@ -9,6 +9,7 @@ import styled from "styled-components";
 import {useTranslation} from "react-i18next";
 import {RateStar, RateText} from "@/components/Rate";
 import {AmenitiesCard} from "@/components/AccommodationCard";
+import {useHotelComments} from "@/hooks/useQuery";
 
 const HotelDisplay_HotelDetail = () => {
   const {id} = useParams ();
@@ -26,7 +27,10 @@ const HotelDisplay_HotelDetail = () => {
       countRoom: countEach ? countEach.countRoom : 0
     }
   })
+  // get comments
 
+  console.log('Hotel ID:', id);
+  const {data,isLoading,isError,error}=useHotelComments(id);
   return (
     <div>
       <Row gutter={18}>
@@ -139,9 +143,27 @@ const HotelDisplay_HotelDetail = () => {
           <AmenitiesCard hotel={clickedHotel}></AmenitiesCard>
         </div>
       </div>
-      {/*TODO: Add comment card*/}
-      <div><Title>{t ('comment')}</Title></div>
 
+      <div><Title>{t ('comment')}</Title></div>
+      {isLoading ? (
+        <p>Loading comments...</p>
+      ) : isError ? (
+        <p>Error loading comments: {error.message}</p>
+      ) : data && data.comments && data.comments.length > 0 ? (
+        <ul>
+          {data.comments.map((comment) => (
+            <li key={comment.id}>
+              {/*TODO: Create card for comment*/}
+              <p>
+                <strong>{comment?.cusID?.email}</strong>: {comment.content}
+              </p>
+              <p>Rating: {comment.ratePoint}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className='text-lg'>This hotel has no comment yet.</p>
+      )}
       <div><Title>{t ('available')}</Title></div>
       {/* Room display */}
       <div>

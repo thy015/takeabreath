@@ -89,3 +89,5 @@ const server = http.createServer(app);
 server.listen(PORT, () => {
   console.log(`Now streaming on ${PORT}`);
 });
+
+module.exports=app

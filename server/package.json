@@ -7,7 +7,7 @@
     "start": "node server.js",
     "pm": "nodemon src/testpromise.js",
     "test": "jest --passWithNoTests",
-    "build": "echo 'Building server...' && node server.js"
+    "healthcheck": "echo 'Checking server health...' && node healthcheck.js"
   },
   "keywords": [],
   "author": "",

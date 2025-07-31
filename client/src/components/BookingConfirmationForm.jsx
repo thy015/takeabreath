@@ -1,57 +1,81 @@
-import React, {useState, useRef, useEffect} from "react";
-import axios from "axios";
-import dayjs from "dayjs";
-import {
-  Modal,
-  Col,
-  Row,
-  Form,
-  Input,
-  ConfigProvider,
-  DatePicker,
-  Radio,
-  message,
-} from "antd";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import {useSelector} from "react-redux";
-import {RateStar} from "./Rate";
-import PayPalButton from "./PayPalButton";
-import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {useForm} from "antd/es/form/Form";
-import {useTranslation} from "react-i18next";
-import {ChevronDown} from "lucide-react";
-import PropTypes from 'prop-types';
-import {cleanInvoice, setInvoiceCount} from "@/store/redux/revenueSlice";
-import {setInvoiceID, setVoucherApplied} from "@/store/redux/inputDaySlice";
-import {useToastNotifications} from "@/hooks/useToastNotification";
+import React from 'react'
+import {useState, useRef, useEffect} from "react"
+import axios from "axios"
+import dayjs from "dayjs"
+import PhoneInput from "react-phone-input-2"
+import "react-phone-input-2/lib/style.css"
+import {useSelector} from "react-redux"
+import {RateStar} from "./Rate"
+import PayPalButton from "./PayPalButton"
+import {useNavigate} from "react-router-dom"
+import {useDispatch} from "react-redux"
+import {useTranslation} from "react-i18next"
+import {ChevronDown, CalendarIcon} from "lucide-react"
+import PropTypes from "prop-types"
+import {cleanInvoice, setInvoiceCount} from "@/store/redux/revenueSlice"
+import {setInvoiceID, setVoucherApplied} from "@/store/redux/inputDaySlice"
+import {useToastNotifications} from "@/hooks/useToastNotification"
+
+import {Button} from "@/components/ui/button"
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog"
+import {Input} from "@/components/ui/input"
+import {Label} from "@/components/ui/label"
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
+import {Calendar} from "@/components/ui/calendar"
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover"
+import {cn} from "@/lib/utils"
+
+import {useForm, Controller} from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import * as z from "zod"
+
+const bookingSchema = z.object ({
+  fullname: z.string ().min (2, {
+    message: "Fullname must be at least 2 characters.",
+  }),
+  idenCard: z.string ().regex (/^\d{12}$/, {
+    message: "Identity Card must be 12 digits.",
+  }),
+  email: z.string ().email ({
+    message: "Invalid email address.",
+  }),
+  phoneNum: z.string ().regex (/^[0-9\-+]{9,15}$/, {
+    message: "Invalid phone number.",
+  }),
+  dob: z.date (),
+  gender: z.string ().optional (),
+  paymentMethod: z.string (),
+})
 
 function BookingConfirmationForm ({isShow, onCancel, hotel}) {
-
   BookingConfirmationForm.propTypes = {
     isShow: PropTypes.bool.isRequired,
     onCancel: PropTypes.func.isRequired,
     hotel: PropTypes.object.isRequired,
-  };
+  }
 
-  const {t} = useTranslation ();
-  const BE_PORT = import.meta.env.VITE_BE_PORT;
-  const [form] = useForm ();
-  const [payment, setPayment] = useState ("");
-  const [vouchers, setVouchers] = useState ([]);
-  const [paymentModalVisible, setPaymentModalVisible] = useState (false);
-  const [isFormValid, setIsFormValid] = useState (false);
-  const [voucherCode, setVoucherCode] = useState ("");
-  const [isOpen, setIsOpen] = useState (false);
-  const navigate = useNavigate ();
-  const dispatch = useDispatch ();
-  const {count, listInvoiceID} = useSelector ((state) => state.invoiceRevenue);
-  const {auth} = useSelector (state => state.auth);
+  const {t} = useTranslation ()
+  const BE_PORT = import.meta.env.VITE_BE_PORT
+
+  // Form state
+  const [payment, setPayment] = useState ("")
+  const [vouchers, setVouchers] = useState ([])
+  const [paymentModalVisible, setPaymentModalVisible] = useState (false)
+  const [isFormValid, setIsFormValid] = useState (false)
+  const [voucherCode, setVoucherCode] = useState ("")
+  const [isOpen, setIsOpen] = useState (false)
+  const [datePickerOpen, setDatePickerOpen] = useState (false)
+
+  const navigate = useNavigate ()
+  const dispatch = useDispatch ()
+  const {count, listInvoiceID} = useSelector ((state) => state.invoiceRevenue)
+  const {auth} = useSelector ((state) => state.auth)
   const toast = useToastNotifications ()
+
   const formatMoney = (money) => {
-    return new Intl.NumberFormat ("de-DE").format (money);
-  };
+    return new Intl.NumberFormat ("de-DE").format (money)
+  }
+
   //redux query
   const {
     dayStart,
@@ -64,166 +88,152 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
     countRoom,
     firstPrice,
     completedPayment,
-  } = useSelector ((state) => state.inputDay);
+  } = useSelector ((state) => state.inputDay)
 
-  const a = totalPrice;
-  const [price, setPrice] = useState (totalPrice);
+  const [price, setPrice] = useState (totalPrice)
 
   useEffect (() => {
-    setPrice (totalPrice);
-  }, [totalPrice]);
+    setPrice (totalPrice)
+  }, [totalPrice])
+
+  useEffect (() => {
+    if (!auth) {
+      console.error ("Auth is undefined or not available in Redux state.");
+    }
+  }, [auth]);
 
   useEffect (() => {
     const fetchVouchers = async () => {
       try {
-        const response = await axios.get (
-          `${BE_PORT}/api/voucher/getVoucus/${hotel.ownerID}`
-        );
-        const voucherData = [
-          ...(response.data.sysVou || []),
-          ...(response.data.ownerVou || []),
-        ];
-
+        const response = await axios.get (`${BE_PORT}/api/voucher/getVoucus/${hotel.ownerID}`)
+        const voucherData = [...(response.data.sysVou || []), ...(response.data.ownerVou || [])]
         const formatVouchers = voucherData.map ((voucher) => ({
           code: voucher.code || "",
           name: voucher.voucherName || "",
           discount: voucher.discount || 0,
           startDay: voucher.startDay || "",
           endDay: voucher.endDay || "",
-        }));
-
-        setVouchers (formatVouchers);
+        }))
+        setVouchers (formatVouchers)
       } catch (error) {
-        console.error ("Lỗi truy xuất vou:", error);
+        console.error ("Lỗi truy xuất vou:", error)
       }
-    };
-    fetchVouchers ();
-    if (voucherCode) applyVoucher ();
-  }, [voucherCode]);
+    }
+    fetchVouchers ()
+    if (voucherCode) applyVoucher ()
+  }, [voucherCode])
 
-  // handle invoice state change spec for wowo
-  useEffect (() => {
-    const handlePaymentStorageChange = (e) => {
-      if (e.key === "completedPayment" && e.newValue === "true") {
-        dispatch (completedPayment (true));
-        localStorage.removeItem ("completedPayment");
-      }
-    };
-    window.addEventListener ("storage", handlePaymentStorageChange);
-    return () =>
-      window.removeEventListener ("storage", handlePaymentStorageChange);
-  }, [dispatch]);
+  // React Hook Form setup - UPDATE THIS SECTION
+  const {
+    control,
+    handleSubmit,
+    formState: {errors, isSubmitting, isValid},
+  } = useForm ({
+    resolver: zodResolver (bookingSchema),
+    mode: "onChange", // Enable real-time validation
+    defaultValues: {
+      fullname: "",
+      idenCard: "",
+      email: "",
+      phoneNum: "",
+      dob: null,
+      gender: "",
+      paymentMethod: "",
+    },
+  })
 
   //radio
-  const paymentRef = useRef (null);
-
-  const handlePaymentChange = (e) => {
-    const selectedValue = e.target.value;
-    setPayment (selectedValue);
-
-    if (paymentRef.current) {
-      paymentRef.current.scrollIntoView ({behavior: "smooth", block: "end"});
-    }
-  };
+  const paymentRef = useRef (null)
 
   //apply vou
   const applyVoucher = () => {
-    const voucher = vouchers.find ((v) => v.code === voucherCode);
-
+    const voucher = vouchers.find ((v) => v.code === voucherCode)
     if (voucher) {
-      dispatch (setVoucherApplied ({voucher}));
-      toast.showSuccess ("Applying voucher successfully!");
+      dispatch (setVoucherApplied ({voucher}))
+      toast.showSuccess ("Applying voucher successfully!")
     } else {
-      toast.showError ("Applying voucher failed!");
+      toast.showError ("Applying voucher failed!")
     }
-  };
+  }
+
+  //radio - add this function
+  const handlePaymentChange = (value) => {
+    setPayment (value)
+    if (paymentRef.current) {
+      paymentRef.current.scrollIntoView ({behavior: "smooth", block: "end"})
+    }
+  }
+
+  useEffect (() => {
+    setIsFormValid (isValid && Object.keys (errors).length === 0)
+  }, [isValid, errors])
 
   // inactive
   const handleInactive = async (reason) => {
     try {
-      const response = await axios.put (
-        `${BE_PORT}/api/cancelReq/inactiveCus/${auth.id}`,
-        {
-          reason: reason,
-        }
-      );
+      const response = await axios.put (`${BE_PORT}/api/cancelReq/inactiveCus/${auth.id}`, {
+        reason: reason,
+      })
       if (response.status) {
-        message.error ("Tài khoản của bạn đã bị khóa");
+        toast.showError ("Tài khoản của bạn đã bị khóa")
         await axios.post (`${BE_PORT}/api/booking/deleteInvoiceWaiting`, {
           listID: listInvoiceID,
-        });
-        dispatch (cleanInvoice ());
+        })
+        dispatch (cleanInvoice ())
       } else {
-        console.log (response);
-        toast.showError (
-          "Customer Inactivation Failed"
-        );
+        console.log (response)
+        toast.showError ("Customer Inactivation Failed")
       }
     } catch (error) {
-      console.log (
-        error.response?.data?.message || "An unknown error occurred."
-      );
+      console.log (error.response?.data?.message || "An unknown error occurred.")
     }
-  };
-
-  const checkFormValidity = async () => {
-    try {
-      await form.validateFields ();
-      setIsFormValid (true);
-    } catch (e) {
-      setIsFormValid (false);
-      console.log (e.message)
-    }
-  };
+  }
 
   // setCount and save orders
   const setCountOrders = (invoice, invoiceID) => {
-    const state = invoice.invoiceState;
+    const state = invoice.invoiceState
     if (state === "waiting") {
-      dispatch (setInvoiceCount (invoiceID));
+      dispatch (setInvoiceCount (invoiceID))
     }
     // check nếu đặt 3 lần ko thành công
     if (count === 2) {
-      message.warning (
-        "Bạn đã đặt quá 3 lần không thành công. Nếu quá 5 lần thì bạn sẽ bị khóa tài khoản"
-      );
-      return;
+      toast.showWarning ("Bạn đã đặt quá 3 lần không thành công. Nếu quá 5 lần thì bạn sẽ bị khóa tài khoản")
+      return
     }
     // check nếu đặt 5 lần ko thành công
     if (count === 5) {
-      handleInactive ("Bạn bị khóa vì đặt quá 5 lần không thành công");
+      handleInactive ("Bạn bị khóa vì đặt quá 5 lần không thành công")
     }
-  };
+  }
 
   //2nd modal
   const handlePaymentConfirmation = () => {
-    message.success ("Payment successful!");
-    setPaymentModalVisible (false);
-    dispatch (cleanInvoice ());
-    navigate ("/mybooking");
-    onCancel ();
-  };
-  const onFinish = async (values) => {
-    const idHotel = selectedHotel._id;
-    const idRoom = selectedRoom._id;
-    const idCus = auth.id;
+    toast.showSuccess ("Payment successful!")
+    setPaymentModalVisible (false)
+    dispatch (cleanInvoice ())
+    navigate ("/mybooking")
+    onCancel ()
+  }
+
+  // UPDATE the onSubmit function to include your original logic:
+  const onSubmit = async (data) => {
+    const idHotel = selectedHotel._id
+    const idRoom = selectedRoom._id
+    const idCus = auth.id
     const dataBooking = {
-      inputName: values.fullname,
-      inputIdenCard: values.idenCard,
-      inputGender: values.gender,
-      paymentMethod: values.paymentMethod,
-      inputPhoneNum: values.phoneNum,
-      inputEmail: values.email,
-      inputDob: dayjs (values.dob),
+      inputName: data.fullname,
+      inputIdenCard: data.idenCard,
+      inputGender: data.gender,
+      paymentMethod: data.paymentMethod,
+      inputPhoneNum: data.phoneNum,
+      inputEmail: data.email,
+      inputDob: dayjs (data.dob),
       total: price,
       checkInDay: dayjs (dayStart),
       checkOutDay: dayjs (dayEnd),
       totalDay: totalCheckInDay,
       totalRoom: countRoom,
-    };
-    const BE_PORT = import.meta.env.VITE_BE_PORT;
-    // need handle voucher
-    // console.log("[INFORMATION BOOKING]", idHotel, idCus, idRoom, dataBooking);
+    }
 
     try {
       const response = await axios.post (`${BE_PORT}/api/booking`, {
@@ -231,222 +241,235 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
         idCus,
         idRoom,
         dataBooking,
-      });
-      console.log ("[RESPONSE]", response.data);
+      })
+      console.log ("[RESPONSE]", response.data)
 
-      // paypal
       if (response.status === 200) {
-        setCountOrders (response.data.data, response.data.invoiceID);
-        // console.log('[Invoice ID]',response.data.invoiceID)
-        dispatch (setInvoiceID ({invoiceID: response.data.invoiceID}));
-        setPaymentModalVisible (true);
-        //   wowo
-      } else if (response.status === 201) {
-        // console.log('check url', response.data.orderResponse.checkoutUrl)
-        const checkoutUrl = response.data.orderResponse.checkoutUrl;
-        if (checkoutUrl) {
-          window.open (checkoutUrl, "_blank");
-          setPaymentModalVisible (true);
-        } else {
-          message.error ("WoWo checkout URL is missing.");
-        }
+        setCountOrders (response.data.data, response.data.invoiceID)
+        dispatch (setInvoiceID ({invoiceID: response.data.invoiceID}))
+        setPaymentModalVisible (true)
       } else if (response.status === 209) {
-        message.error ("Booking failed", message.error (response.data.message));
+        toast.showError ("Booking failed: " + response.data.message)
       } else {
-        message.error ("Booking failed", message.error (response.data.message));
+        toast.showError ("Booking failed: " + response.data.message)
       }
     } catch (e) {
-      console.log (e);
-      console.log ("[ERROR]", e.response.message);
+      console.log (e)
+      console.log ("[ERROR]", e.response?.message)
+      toast.showError (e.response?.data?.message || "Booking failed")
     }
-  };
+  }
 
-  const handleCancel = () => {
-    onCancel ();
-    setPrice (a);
-    setVoucherCode ("");
-  };
   return (
-    // TODO: Get rid of antd for UI, change to ShadCN
     <div>
-      <Modal
-        open={isShow}
-        onCancel={() => {
-          handleCancel ();
-        }}
-        className="min-w-[80%]"
-        okText="Confirm Booking"
-        onOk={() => form.submit ()}
-        okButtonProps={{
-          disabled: !isFormValid,
-          className: isFormValid
-            ? "bg-[#114098] text-white text-lg py-3 px-6"
-            : "text-black text-lg py-3 px-6 bg-grey-500",
-        }}
-        cancelButtonProps={{className: "py-3 px-6 text-lg"}}
-        bodyStyle={{height: '100%', padding: 0}}
-      >
-        <h2 className="text-center font-semibold text-[#114098} font-monospace">{t ("form")}</h2>
-        <Row className="flex items-stretch h-full" wrap={false} gutter={24}>
-          {/* input form */}
-          <Col
-            span={16}
-            className="border-[2px] p-6 h-auto border-[#114098] rounded-[10px] min-w-[550px] flex flex-col"
-          >
-            <h3 className="text-center font-monospace font-semibold">
-              {t ("detail")}
-            </h3>
-            <ConfigProvider
-              theme={{
-                components: {
-                  Form: {
-                    labelColor: "black",
-                  },
-                  Input: {
-                    hoverBorderColor: "#d9d9d9",
-                    activeBorderColor: "#d9d9d9",
-                    boxShadow: 'none',
-                    borderColor: '#d9d9d9',
-                  }
-                },
-              }}
+      <Dialog open={isShow} onOpenChange={onCancel}>
+        <DialogContent className="max-w-[80vw] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-center font-semibold text-[#114098] font-monospace">{t ("form")}</DialogTitle>
+          </DialogHeader>
 
-            >
-              <div>
-                <Form
-                  onFinish={onFinish}
-                  scrollToFirstError={true}
-                  onValuesChange={checkFormValidity}
-                  labelCol={{
-                    span: 8,
-                  }}
-                  labelAlign="left"
-                  form={form}
-                  className="w-[550px] h-auto mr-[34px] ml-[28px] "
-                >
-                  <Form.Item
-                    label={t ("Fullname")}
-                    name="fullname"
-                    rules={[
-                      {
-                        required: true,
-                        message: t ("rulename"),
-                      },
-                    ]}
-                  >
-                    <Input className="min-w-[150px]"/>
-                  </Form.Item>
-                  <Form.Item
-                    label={t ("identity")}
-                    name="idenCard"
-                    rules={[
-                      {
-                        required: true,
-                        message: t ("rulecard"),
-                      },
-                      {
-                        pattern: /^\d{12}$/,
-                        message: t ("rightcard"),
-                      },
-                    ]}
-                  >
-                    <Input className="min-w-[150px]"/>
-                  </Form.Item>
-                  <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                      {
-                        required: true,
-                        message: t ("ruleemail"),
-                      },
-                      {
-                        pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-                        message: t ("rightemail"),
-                      },
-                    ]}
-                  >
-                    <Input/>
-                  </Form.Item>
+          <div className="flex gap-6 h-full">
+            {/* Input form */}
+            <div className="flex-[2] items-center flex-center flex-col border-2 p-6 border-[#114098] rounded-[10px] min-w-[550px]">
+              <h3 className="text-center font-monospace font-semibold text-lg mb-4">{t ("detail")}</h3>
 
-                  <Form.Item
-                    label={t ("phone")}
-                    name="phoneNum"
-                    maxLength={9}
-                    rules={[
-                      {
-                        required: true,
-                        message: t ("rulephone"),
-                      },
-                      {
-                        pattern: /^[0-9\-+]{9,15}$/,
-                        message: t ("rightphone"),
-                      },
-                    ]}
-                  >
-                    <PhoneInput
-                      defaultMask="... ... ..."
-                      enableLongNumbers={false}
-                    ></PhoneInput>
-                  </Form.Item>
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <Label htmlFor="fullname" className="text-right">
+                    {t ("Fullname")}
+                  </Label>
+                  <div className="col-span-2">
+                    <Controller
+                      name="fullname"
+                      control={control}
+                      render={({field}) => (
+                        <Input
+                          id="fullname"
+                          placeholder={t ("Fullname")}
+                          {...field}
+                          className={cn (errors.fullname && "border-red-500")}
+                          style={{width: '90%'}}
 
-                  <Form.Item name="dob" label={t ("birthday")}>
-                    <DatePicker
-                      className="ml-[10px]"
-                      placeholder={t ("date")}
-                      disabledDate={(current) => {
-                        const today = new Date ();
-                        const eighteenYearsAgo = new Date (
-                          today.getFullYear () - 18,
-                          today.getMonth (),
-                          today.getDate ()
-                        );
-                        return current && current > eighteenYearsAgo;
-                      }}
-                      defaultPickerValue={dayjs ().subtract (18, "year")}
+                        />
+                      )}
                     />
-                  </Form.Item>
+                    {errors.fullname && <p className="text-red-500 text-sm mt-1">{errors.fullname?.message}</p>}
+                  </div>
+                </div>
 
-                  <Form.Item name="gender" label={t ("gender")}>
-                    <Radio.Group className="ml-[10px]">
-                      <Radio value="male">{t ("male")}</Radio>
-                      <Radio value="female">{t ("female")}</Radio>
-                      <Radio value="unknown">{t ("secret")}</Radio>
-                    </Radio.Group>
-                  </Form.Item>
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <Label htmlFor="idenCard" className="text-right">
+                    {t ("identity")}
+                  </Label>
+                  <div className="col-span-2">
+                    <Controller
+                      name="idenCard"
+                      control={control}
+                      render={({field}) => (
+                        <Input
+                          id="idenCard"
+                          placeholder={t ("identity")}
+                          {...field}
+                          className={cn (errors.idenCard && "border-red-500")}
+                          style={{width: '90%'}}
+                        />
+                      )}
+                    />
+                    {errors.idenCard && <p className="text-red-500 text-sm mt-1">{errors.idenCard?.message}</p>}
+                  </div>
+                </div>
 
-                  <Form.Item
-                    name="paymentMethod"
-                    label={t ("payment")}
-                    ref={paymentRef}
-                  >
-                    <Radio.Group
-                      className="ml-[10px]"
-                      onChange={handlePaymentChange}
-                    >
-                      <Radio
-                        value="paypal"
-                        onClick={() => {
-                          setPayment ("paypal");
-                        }}
-                      >
-                        Paypal
-                      </Radio>
-                    </Radio.Group>
-                  </Form.Item>
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <Label htmlFor="email" className="text-right">
+                    Email
+                  </Label>
+                  <div className="col-span-2">
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({field}) => (
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="Email"
+                          {...field}
+                          className={cn (errors.email && "border-red-500")}
+                          style={{width: '90%'}}
+                        />
+                      )}
+                    />
+                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email?.message}</p>}
+                  </div>
+                </div>
 
-                  {/* select voucher */}
-                  <div className="relative inline-block">
-                    <button
-                      onClick={() => setIsOpen (!isOpen)}
-                      className="px-4 py-2 bg-white border rounded-md flex items-center justify-between hover:bg-gray-50 focus:outline-none w-48"
-                    >
-                      <span className="text-gray-700">
-                        {voucherCode || t ("voucher")}
-                      </span>
-                      <ChevronDown size={32} className="w-4 h-4 text-gray-400 ml-2"/>
-                    </button>
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <Label htmlFor="phoneNum" className="text-right">
+                    {t ("phone")}
+                  </Label>
+                  <div className="col-span-2">
+                    <Controller
+                      name="phoneNum"
+                      control={control}
+                      render={({field}) => (
+                        <PhoneInput
+                          defaultMask="... ... ..."
+                          enableLongNumbers={false}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                    {errors.phoneNum && <p className="text-red-500 text-sm mt-1">{errors.phoneNum?.message}</p>}
+                  </div>
+                </div>
 
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <Label className="text-right">{t ("birthday")}</Label>
+                  <div className="col-span-2">
+                    <Controller
+                      name="dob"
+                      control={control}
+                      render={({field}) => (
+                        <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn (
+                                "w-full justify-start text-left font-normal",
+                                !field.value && "text-muted-foreground",
+                              )}
+                              style={{width: '90%'}}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4"/>
+                              {field.value ? dayjs (field.value).format ("DD/MM/YYYY") : t ("date")}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              captionLayout='dropdown'
+                              mode="single"
+                              selected={field.value}
+                              onSelect={(date) => {
+                                field.onChange (date)
+                                setDatePickerOpen (false)
+                              }}
+                              defaultMonth={new Date (new Date ().getFullYear () - 18, 0, 1)} // Focus on 18 years ago
+                              disabled={(date) => {
+                                const today = new Date ()
+                                const eighteenYearsAgo = new Date (
+                                  today.getFullYear () - 18,
+                                  today.getMonth (),
+                                  today.getDate (),
+                                )
+                                return date > eighteenYearsAgo
+                              }}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    />
+                    {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob?.message}</p>}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <Label className="text-right">{t ("gender")}</Label>
+                  <div className="col-span-2">
+                    <Controller
+                      name="gender"
+                      control={control}
+                      render={({field}) => (
+                        <RadioGroup value={field.value} onValueChange={field.onChange} className="flex gap-4">
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="male" id="male"/>
+                            <Label htmlFor="male">{t ("male")}</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="female" id="female"/>
+                            <Label htmlFor="female">{t ("female")}</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="unknown" id="unknown"/>
+                            <Label htmlFor="unknown">{t ("secret")}</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 items-center" ref={paymentRef}>
+                  <Label className="text-right">{t ("payment")}</Label>
+                  <div className="col-span-2">
+                    <Controller
+                      name="paymentMethod"
+                      control={control}
+                      render={({field}) => (
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={(value) => {
+                            field.onChange (value)
+                            handlePaymentChange (value) // Add this line
+                          }}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="paypal" id="paypal"/>
+                            <Label htmlFor="paypal">Paypal</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Voucher selector */}
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <Label className="text-right">Voucher</Label>
+                  <div className="col-span-2 relative">
+                    <Button variant="outline" onClick={() => setIsOpen (!isOpen)} className="w-48 justify-between">
+                      <span>{voucherCode || t ("voucher")}</span>
+                      <ChevronDown className="w-4 h-4"/>
+                    </Button>
                     {isOpen && (
                       <div className="absolute left-full ml-2 top-0 bg-white border rounded-md shadow-lg z-10">
                         <div className="max-w-md overflow-x-auto">
@@ -455,8 +478,8 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                               <div
                                 key={voucher.code}
                                 onClick={() => {
-                                  setVoucherCode (voucher.code);
-                                  setIsOpen (false);
+                                  setVoucherCode (voucher.code)
+                                  setIsOpen (false)
                                 }}
                                 className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center border-r last:border-r-0 shrink-0"
                               >
@@ -471,37 +494,34 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                       </div>
                     )}
                   </div>
-                </Form>
+                </div>
               </div>
-            </ConfigProvider>
-          </Col>
-          {/* information */}
-          <Col span={8} className="flex flex-col space-y-4 flex-grow">
-            {/* information hotel */}
-            <div className="flex flex-col space-y-4">
-              <div className=" p-7 h-auto border-[2px] border-[#114098] rounded-[10px]">
-                {" "}
-                <div className="flex space-x-5">
+            </div>
+
+            {/* Information */}
+            <div className="flex-1 flex flex-col space-y-4">
+              {/* Hotel information */}
+              <div className="p-7 border-2 border-[#114098] rounded-[10px]">
+                <div className="flex space-x-5 mb-2">
                   <h4 className="font-lobster">{selectedHotel.hotelName}</h4>
-                  <RateStar hotel={selectedHotel}></RateStar>{" "}
+                  <RateStar hotel={selectedHotel}/>
                 </div>
                 <p className="text-[16px] mb-[5px]">
-                  {selectedHotel.address}, {selectedHotel.city},{" "}
-                  {selectedHotel.nation}
+                  {selectedHotel.address}, {selectedHotel.city}, {selectedHotel.nation}
                 </p>
                 <div className="text-[16px]">
                   {t ("hotelphone")}: {selectedHotel.phoneNum}
                 </div>
               </div>
-              {/* information rooms */}
-              <div className="h-auto p-6 border-[2px] border-[#114098] rounded-[10px]">
-                <p className="text-[15px] mb-[5px]  mt-[2px]">
+
+              {/* Room information */}
+              <div className="p-6 border-2 border-[#114098] rounded-[10px]">
+                <p className="text-[15px] mb-[5px] mt-[2px]">
                   {t ("contain")} {selectedRoom.capacity} {t ("nguoi")}
                 </p>
                 <p className="text-[16px] mb-[5px]">
                   <b>{selectedRoom.roomName}</b>
                 </p>
-
                 <div className="flex space-x-5">
                   <span>
                     {t ("loai")}: {selectedRoom.typeOfRoom}
@@ -514,17 +534,17 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                   </span>
                 </div>
               </div>
-              {/* information booking */}
+
+              {/* Booking information */}
               <div
-                className="h-[200px] flex justify-center flex-col border-[2px] px-6 pt-2 border-[#114098] rounded-[10px]">
-                <div className='flex items-center justify-between'>
+                className="h-[250px] flex justify-center flex-col border-2 px-6 pt-2 border-[#114098] rounded-[10px]">
+                <div className="flex items-center justify-between mb-4">
                   <div>
                     {t ("checkin")}
                     <p>
-                      <b> {dayjs (dayStart).format ("DD/MM/YYYY")}</b>
+                      <b>{dayjs (dayStart).format ("DD/MM/YYYY")}</b>
                     </p>
                   </div>
-
                   <div>
                     {t ("checkout")}
                     <p>
@@ -532,10 +552,9 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                     </p>
                   </div>
                 </div>
-                <div className="flex flex-col justify-between">
+                <div className="flex flex-col justify-between space-y-2">
                   <div className="flex justify-between">
                     <div>{t ("totalday")}:</div>
-                    {" "}
                     <div>
                       {totalCheckInDay} {t ("day")}
                     </div>
@@ -546,86 +565,89 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                       {countRoom} {t ("room")}
                     </div>
                   </div>
-                  {voucherCode && (
-                    <>
-                      <div>
-                        <span className="float-right ml-2">VND</span>
-                        <span className="text-danger line-through float-right">
-                          {formatMoney (firstPrice)}
-                        </span>
-                      </div>
-                    </>
-                  )}
-                  <div className="flex justify-between">
-                    <div>{t ("price")}:</div>
-                    {" "}
-                    <div className="text-success">
-                      {formatMoney (price)} VND{" "}
+
+                  <div className="flex justify-between items-center">
+                    <div>{t("price")}:</div>
+                    <div className="flex flex-col items-end">
+                      <div className="text-green-600">{formatMoney(price)} VND</div>
+                      {voucherCode && (
+                        <div className="text-red-500 line-through">{formatMoney(firstPrice)} VND</div>
+                      )}
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
-          </Col>
-        </Row>
-      </Modal>
-      {/* confirm modal pop up after click confirm booking --2nd modal*/}
-      <Modal
-        open={paymentModalVisible}
-        title={
-          <div className="text-center font-lobster text-[26px] font-light">
-            {t ("confirmation")}
           </div>
-        }
-        onCancel={() => setPaymentModalVisible (false)}
-        onOk={handlePaymentConfirmation}
-        okButtonProps={{
-          disabled: !completedPayment,
-          className: completedPayment
-            ? "bg-success text-white text-lg py-3 px-6"
-            : "text-black text-lg py-3 px-6 bg-grey-500",
-        }}
-      >
-        <div className="text-center p-2 text-[16px]">
-          <p>
-            {t ("1st")} {payment}
-          </p>
-          <p>
-            {t ("2nd")} {formatMoney (price)} {t ("3rd")}{" "}
-            <span className="text-success">{convertPrice} USD </span>
-          </p>
-        </div>
-        {payment === "paypal" ? (
-          <>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmit (onSubmit)} // Change from onClick={onSubmit}
+              disabled={!isFormValid || isSubmitting}
+              className={cn (
+                "text-lg py-3 px-6",
+                isFormValid && !isSubmitting
+                  ? "bg-[#114098] text-white hover:bg-[#0d3580]"
+                  : "bg-gray-500 text-black cursor-not-allowed",
+              )}
+            >
+              {isSubmitting ? "Processing..." : "Confirm Booking"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment confirmation modal */}
+      <Dialog open={paymentModalVisible} onOpenChange={setPaymentModalVisible}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-center font-lobster text-[26px] font-light">{t ("confirmation")}</DialogTitle>
+          </DialogHeader>
+
+          <div className="text-center p-2 text-[16px] space-y-2">
             <p>
-              {t ("please")} <span className="text-success">{t ("click")}</span>{" "}
-              {t ("confirmur")}
-              <span className="text-success"> {t ("time")}</span>
+              {t ("1st")} {payment}
             </p>
-            <PayPalButton></PayPalButton>
-          </>
-        ) : (
-          ""
-        )}
-        {payment === "wowo" ? (
-          <>
             <p>
-              {t ("please")} <span className="text-success">{t ("click")}</span>{" "}
-              {t ("confirmur")}
-              <span className="text-success"> {t ("time")}</span>
+              {t ("2nd")} {formatMoney (price)} {t ("3rd")} <span className="text-green-600">{convertPrice} USD</span>
             </p>
-            <img
-              alt="wowopic"
-              className="flex-center w-full h-[400px]"
-              src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1WwRPG59Xn5KZL5YsZNvHbo0Sds6gCzCYbK0tG7fAO8mh1t_H"
-            />
-          </>
-        ) : (
-          ""
-        )}
-      </Modal>
+          </div>
+
+          {payment === "paypal" && (
+            <div className="space-y-2">
+              <p>
+                {t ("please")} <span className="text-green-600">{t ("click")}</span> {t ("confirmur")}
+                <span className="text-green-600"> {t ("time")}</span>
+              </p>
+              <PayPalButton/>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPaymentModalVisible (false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handlePaymentConfirmation}
+              disabled={!completedPayment}
+              className={cn (
+                "text-lg py-3 px-6",
+                completedPayment
+                  ? "bg-green-600 text-white hover:bg-green-700"
+                  : "bg-gray-500 text-black cursor-not-allowed",
+              )}
+            >
+              Confirm Payment
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  );
+  )
 }
 
-export default BookingConfirmationForm;
+export default BookingConfirmationForm

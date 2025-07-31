@@ -100,6 +100,11 @@ ul{
 .white-label{
   color: white!important;
 }
+
+.react-phone-input-2 .form-control{
+  border-color: #CBDCEB;
+  width: 100%;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

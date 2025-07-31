@@ -10,6 +10,7 @@ import {useTranslation} from "react-i18next";
 import {RateStar, RateText} from "@/components/Rate";
 import {AmenitiesCard} from "@/components/AccommodationCard";
 import {useHotelComments} from "@/hooks/useQuery";
+import {CommentList} from "@/components/CommentCard";
 
 const HotelDisplay_HotelDetail = () => {
   const {id} = useParams ();
@@ -149,18 +150,10 @@ const HotelDisplay_HotelDetail = () => {
         <p>Loading comments...</p>
       ) : isError ? (
         <p>Error loading comments: {error.message}</p>
-      ) : data && data.comments && data.comments.length > 0 ? (
-        <ul>
-          {data.comments.map((comment) => (
-            <li key={comment.id}>
-              {/*TODO: Create card for comment*/}
-              <p>
-                <strong>{comment?.cusID?.email}</strong>: {comment.content}
-              </p>
-              <p>Rating: {comment.ratePoint}</p>
-            </li>
-          ))}
-        </ul>
+      ) :
+        // Have data
+        data && data.comments && data.comments.length > 0 ? (
+        <CommentList comments={data.comments}></CommentList>
       ) : (
         <p className='text-lg'>This hotel has no comment yet.</p>
       )}

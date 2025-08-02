@@ -1,46 +1,61 @@
-const express = require('express');
-const reqCancelRouter = express.Router();
-const reqCancelController=require('./cancelReq.controller');
-const {CancelRequest} = require("../../models/cancelReq.model");
-const {Invoice} = require("../../models/invoice.model");
-const {verifyAdmin} = require("../../middleware/verify");
+const express = require ('express');
+const reqCancelRouter = express.Router ();
+const reqCancelController = require ('./cancelReq.controller');
+const {CancelRequest} = require ("../../models/cancelReq.model");
+const {Invoice} = require ("../../models/invoice.model");
+const {verifyAdmin} = require ("../../middleware/verify");
 
-reqCancelRouter.get('/processing',verifyAdmin,reqCancelController.getReqCancelRoomProcess)
-reqCancelRouter.get('/accepted',verifyAdmin,reqCancelController.getReqCancelRoomAccepted)
-reqCancelRouter.get('/rejected',verifyAdmin,reqCancelController.getReqCancelRoomRejected)
+reqCancelRouter.get ('/processing', verifyAdmin, reqCancelController.getReqCancelRoomProcess)
+reqCancelRouter.get ('/accepted', verifyAdmin, reqCancelController.getReqCancelRoomAccepted)
+reqCancelRouter.get ('/rejected', verifyAdmin, reqCancelController.getReqCancelRoomRejected)
+
 //get cancel req theo id user( + invoice)
-reqCancelRouter.get('/:id/cancelRequest',async(req,res)=>{
-    const {id}=req.params;
-    try{
-        let cancelRequest=await CancelRequest.find({cusID:id})
-        if(cancelRequest.length>0){
-            let invoiceMatchId=cancelRequest.map(request=>request.invoiceID)
-            let invoices=await Invoice.find({_id:{$in:invoiceMatchId}})
-            let invoiceMap={}
-            invoices.forEach(invoice => {
-                invoiceMap[invoice._id] = invoice;
-            });
-            const responseData = cancelRequest.map(request => ({
-                cancelRequest: request,
-                invoice: invoiceMap[request.invoiceID] || null
-            }));
+reqCancelRouter.get ('/:id/cancelRequest', async (req, res) => {
+  const {id} = req.params;
+  try {
+    let cancelRequest = await CancelRequest.find ({cusID: id})
+    if (cancelRequest.length > 0) {
+      let invoiceMatchId = cancelRequest.map (request => request.invoiceID)
+      let invoices = await Invoice.find ({_id: {$in: invoiceMatchId}})
+      let invoiceMap = {}
+      invoices.forEach (invoice => {
+        invoiceMap[invoice._id] = invoice;
+      });
+      const responseData = cancelRequest.map (request => ({
+        cancelRequest: request,
+        invoice: invoiceMap[request.invoiceID] || null
+      }));
 
-            return res.status(200).json({message:'Cancel Request',
-                data:responseData
-            });
-        }
-        return res.status(204).json({message:'You havent cancel any req',data:responseData});
-    }catch(e){
-        return res.status(500).json({message:'internal e in signUp router',e})
+      return res.status (200).json ({
+        message: 'Cancel Request',
+        data: responseData
+      });
     }
+    return res.status (204).json ({message: 'You havent cancel any req', data: responseData});
+  } catch (e) {
+    return res.status (500).json ({message: 'internal e in signUp router', e})
+  }
 })
 
-reqCancelRouter.put('/active/:id', verifyAdmin,reqCancelController.activeCus);
-reqCancelRouter.put('/inactive/:id',verifyAdmin ,reqCancelController.inactiveCus);
-reqCancelRouter.put('/inactiveCus/:id' ,reqCancelController.inactiveCus);
-reqCancelRouter.post('/accept/:cancelReqID',verifyAdmin,reqCancelController.handleCancelRoomAccept)
-reqCancelRouter.post('/reject/:cancelReqID',verifyAdmin,reqCancelController.handleCancelRoomReject)
-module.exports=reqCancelRouter
+reqCancelRouter.put ('/active/:id', verifyAdmin, reqCancelController.activeCus);
+reqCancelRouter.put ('/inactive/:id', verifyAdmin, reqCancelController.inactiveCus);
+reqCancelRouter.put ('/inactiveCus/:id', reqCancelController.inactiveCus);
+reqCancelRouter.post ('/accept/:cancelReqID', verifyAdmin, reqCancelController.handleCancelRoomAccept)
+reqCancelRouter.post ('/reject/:cancelReqID', verifyAdmin, reqCancelController.handleCancelRoomReject)
+// Get cancel req base on invoice id
+reqCancelRouter.post('/:invoiceId', verifyAdmin, async (req, res) => {
+  const { invoiceId } = req.params;
+  try {
+    const cancelReq = await CancelRequest.findOne({ invoiceID: invoiceId });
+    if (!cancelReq) {
+      return res.status(404).json({ message: 'Cancellation request not found' });
+    }
+    return res.status(200).json({ message: 'Cancellation request found', data: cancelReq });
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server error', error: e.message });
+  }
+});
+module.exports = reqCancelRouter
 
 //swagger
 /**

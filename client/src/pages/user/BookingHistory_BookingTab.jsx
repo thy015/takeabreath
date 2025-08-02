@@ -12,14 +12,13 @@ const BookingHistory_BookingTab = () => {
       content: <BookingHistory></BookingHistory>,
     },
     {key: "2", title: "Your Cancel Request", content: <CancelRequest></CancelRequest>},
-    {key: "3", title: "Refund Amount", content: ""},
     // { key: "4", title: "Policies", content: "" },
 
   ];
   return (
     <Row>
-      <Col span={4}/>
-      <Col span={16}>
+      <Col span={2}/>
+      <Col span={20}>
         <div className="w-full p-4">
           <Tabs defaultActiveKey="1" size="large" className='text-center flex-center w-full'>
             {tab_titles.map ((tab) => (
@@ -30,7 +29,7 @@ const BookingHistory_BookingTab = () => {
           </Tabs>
         </div>
       </Col>
-      <Col span={4}/>
+      <Col span={2}/>
     </Row>
   );
 };

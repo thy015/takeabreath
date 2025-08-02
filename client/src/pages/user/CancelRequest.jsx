@@ -1,18 +1,19 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {Alert, Select, Spin} from "antd";
 import {useDispatch, useSelector} from 'react-redux';
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import {AuthContext} from "@/hooks/auth.context";
 import {filterSort, setCancel} from "@/store/redux/cancelSlice";
 import PropTypes from "prop-types";
 import {useGet} from "@/hooks/hooks";
+// TODO: Change from accept base on admin to auto
+// TODO: Add card for user
 // cancel req state
 const ChangeStateColor = ({state}) => {
-    ChangeStateColor.propTypes={
-        state:PropTypes.string.isRequired
-    }
+  ChangeStateColor.propTypes = {
+    state: PropTypes.string.isRequired
+  }
   let styleColor = {
     color: state === 'Processing' ? '#d59e00'
       : state === 'Accepted' ? 'green'
@@ -26,19 +27,19 @@ const ChangeStateColor = ({state}) => {
   )
 }
 const CancelRequest = () => {
-  const {auth} = useContext (AuthContext)
+  const auth = useSelector (state => state.auth)
   const BE_PORT = import.meta.env.VITE_BE_PORT
-  const id = auth?.user?.id
+  const userId = auth?.id
   const cancelTemps = useSelector (state => state.cancel.cancelTemps)
   const cancel = useSelector (state => state.cancel.cancel)
 
   const dispatch = useDispatch ()
   dayjs.extend (utc);
   dayjs.extend (timezone);
-  if (!id) {
+  if (!userId) {
     return <Alert message="Please try sign in first" type="info" showIcon/>;
   }
-  const {data, error, loading} = useGet (`${BE_PORT}/api/cancelReq/${id}/cancelRequest`);
+  const {data, error, loading} = useGet (`${BE_PORT}/api/cancelReq/${userId}/cancelRequest`);
   useEffect (() => {
     dispatch (setCancel (data.data))
   }, [data])
@@ -53,19 +54,19 @@ const CancelRequest = () => {
 
   const options = [
     {
-      label: "Mặc định",
+      label: "Default",
       value: "default"
     },
     {
-      label: "Xác nhận",
+      label: "Accepted",
       value: "accepted"
     },
     {
-      label: "Từ chối",
+      label: "Failed",
       value: "rejected"
     },
     {
-      label: "Đang xử lý",
+      label: "Processing",
       value: "processing"
     },
   ]
@@ -97,10 +98,9 @@ const CancelRequest = () => {
       {cancelTemps?.map ((c) => {
         let formattedRequestDay = dayjs (c.cancelRequest.dayReq).tz ('Asia/Ho_Chi_Minh').format ('D/MM/YYYY')
         // processing => Processing
-        let uppercaseState = c.cancelRequest.isAccept.toUpperCase ().charAt (0) + c.cancelRequest.isAccept.toLowerCase ().slice (1);
+        let uppercaseState = c.cancelRequest.cancelState.toUpperCase ().charAt (0) + c.cancelRequest.cancelState.toLowerCase ().slice (1);
         // format day and money
         let formattedRefundAmount = formatMoney (c.cancelRequest.refundAmount)
-        let formattedDayAcp = dayjs (c.cancelRequest.refundDay).tz ('Asia/Ho_Chi_Minh').format ('D/MM/YYYY')
         return (
           <div key={c.cancelRequest._id}>
             <div className='card-wrapper w-full '>
@@ -126,19 +126,11 @@ const CancelRequest = () => {
                       <div className='col-7 text-left'>
                         <div> Contact Email: {c.invoice.guestInfo.email}</div>
                         <div> Payment Method: {c.invoice.guestInfo.paymentMethod}</div>
-                        <div> Total Price: {c.invoice.guestInfo.totalPrice}</div>
+                        <div> Paid: {formatMoney (c.invoice.guestInfo.totalPrice)} vnd</div>
                       </div>
                       <div className='col-5'>
                         <div className='flex items-end h-full italic flex-col text-right'>
-                          {uppercaseState === 'Accepted' && (
-                            <>
-                              <div>Refund Amount: {formattedRefundAmount} VND</div>
-                              <div>Accept day: {formattedDayAcp} </div>
-                            </>
-                          )}
-                          {uppercaseState === 'Rejected' && (
-                            <div>Reason:{c.cancelRequest.rejectedReason}</div>
-                          )}
+                          <div>Refund Amount: <span className='text-green-500 font-bold'> {formattedRefundAmount} VND </span></div>
                           <ChangeStateColor state={uppercaseState}></ChangeStateColor>
                         </div>
                       </div>

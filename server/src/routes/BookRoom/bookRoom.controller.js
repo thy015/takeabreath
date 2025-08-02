@@ -153,32 +153,6 @@ const completedTran = async (req, res) => {
   }
 };
 
-const changeInvoiceState = async (req, res) => {
-  const {invoiceID} = req.query
-  try {
-    const invoice = await Invoice.findById (invoiceID);
-
-    if (!invoice) {
-      return res.status (404).json ({message: "Invoice not found"});
-    }
-    const wowoWallet = new WoWoWallet (`${process.env.WOWO_SECRET}`);
-    let walletNumber = await wowoWallet.getOrder (invoice.wowoOrderID)
-
-    if (invoice.invoiceState === "waiting") {
-      invoice.invoiceState = "paid";
-      invoice.guestInfo.totalPrice = walletNumber.discountMoney;
-      await invoice.save ();
-      res.cookie ('completedPayment', true, {maxAge: 60000, httpOnly: false});
-      return res.status (200).json ({message: "Invoice state updated to paid", completedPayment: true});
-    } else {
-      return res.status (400).json ({message: "Invoice is not in waiting state"});
-    }
-  } catch (e) {
-    console.error ("[ERROR]", e);
-    return res.status (500).json ({message: "Internal server error"});
-  }
-}
-
 const queryBookingHistory = async (req, res) => {
   const id = req.params.id;
   if (!id) {
@@ -203,11 +177,9 @@ const queryBookingHistory = async (req, res) => {
         })
       )
       // console.log(bookingInfo)
-      return res.status (200).json ({
-        data: bookingInfo
-      });
+      return res.status (200).json ({bookingInfo});
     } else {
-      return res.status (200).json ({data: bookingInfo});
+      return res.status (200).json ({bookingInfo});
     }
   } catch (e) {
     return res.status (500).json ({message: "Error in controller", error: e});
@@ -226,29 +198,18 @@ const cancelBooking = async (req, res) => {
     let refundCusAmount = invoiceMatched.guestInfo.totalPrice * 0.7
     if (dayDifference === 0) {
       let convertDayAcp = moment ().tz ('Asia/Ho_Chi_Minh').format ('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
-      let createDoneCancelRequest = await CancelRequest.create ({
-        isAccept: 'accepted',
+      let createCancelRequest = await CancelRequest.create ({
         dayAcp: convertDayAcp,
         invoiceID: invoiceID,
         ownerID: invoiceMatched.ownerID,
+        dayDiffFromCheckIn: dayDifference,
         cusID: id,
         paymentMethod: invoiceMatched.guestInfo.paymentMethod,
         refundAmount: refundCusAmount
       })
-      console.log (createDoneCancelRequest)
-      return res.status (200).json ({message: 'Success cancel room', data: createDoneCancelRequest})
+      console.log (createCancelRequest)
+      return res.status (200).json ({message: 'Successfully cancel, waiting money to transfer', data: createCancelRequest})
     }
-    let createWaitingCancelRequest = await CancelRequest.create ({
-      invoiceID: invoiceID,
-      cusID: id,
-      ownerID: invoiceMatched.ownerID,
-      // day counted til checkin day
-      dayDiffFromCheckIn: dayDifference,
-      paymentMethod: invoiceMatched.guestInfo.paymentMethod,
-      refundAmount: refundCusAmount,
-      wowoOrderID: invoiceMatched.wowoOrderID || 0
-    })
-    return res.status (200).json ({message: 'Waiting cancel room approved', data: createWaitingCancelRequest})
   } catch (e) {
     return res.status (500).json ({message: 'I server in cancel Booking controller'})
   }
@@ -310,7 +271,6 @@ module.exports = {
   cancelBooking,
   completedTran,
   getInvoicesPaid,
-  changeInvoiceState,
   getInvoicesWaiting,
   deleteInvoiceWaiting,
 };

@@ -1,14 +1,13 @@
-const mongoose = require("mongoose");
+const mongoose = require ("mongoose");
 
-const reqCancelSchema = new mongoose.Schema({
-  isAccept: {
+const reqCancelSchema = new mongoose.Schema ({
+  cancelState: {
     type: String,
     default: "processing",
-    enum: ["processing", "accepted", "rejected"],
+    enum: ["processing", "transferred"],
     required: false,
   },
-  dayReq: { type: Date, default: Date.now, required: false },
-  dayAcp: { type: Date, required: false },
+  dayReq: {type: Date, default: Date.now, required: false},
   cusID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Customer",
@@ -24,26 +23,21 @@ const reqCancelSchema = new mongoose.Schema({
     ref: "Invoice",
     required: true,
   },
-  dayDiffFromCheckIn:{
-    type:Number,
-    required:false
+  dayDiffFromCheckIn: {
+    type: Number,
+    required: false
   },
-  ownerID:{
+  ownerID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Owner",
     required: true,
   },
-  rejectedReason:{
-    type:String,
-    required:false
-  },
-  refundAmount: { type: Number, default: 0, required: false },
-  refundDay: { type: Date, default: Date.now, required: true },
-  paymentMethod:{type:String,required:true,enum:['wowo','paypal']},
-  wowoOrderID:{type:String,required:false},
+  refundAmount: {type: Number, default: 0, required: false},
+  refundDay: {type: Date, default: Date.now, required: true},
+  refundMethod: {type: String, required: false, enum: ['card', 'paypal'], default: 'card'},
 });
 
-const CancelRequest = mongoose.model("CancelReq", reqCancelSchema);
+const CancelRequest = mongoose.model ("CancelReq", reqCancelSchema);
 
 module.exports = {
   CancelRequest,

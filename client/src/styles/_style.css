@@ -33,7 +33,7 @@
   margin-top: 12px;
   margin-bottom: 12px;
   width: 1000px;
-  height: 150px;
+  height: auto;
   background-color: white;
   box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
 }

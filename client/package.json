@@ -43,6 +43,7 @@
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^2.7.3",
     "install": "^0.13.0",
+    "isSameOrBefore": "link:dayjs/plugin/isSameOrBefore",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",

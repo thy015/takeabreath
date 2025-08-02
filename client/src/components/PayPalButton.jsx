@@ -24,6 +24,7 @@ const PayPalButton = () => {
       script.onload = () => {
         window.paypal.Buttons ({
           createOrder: (data, actions) => {
+            console.log('Convert Price',convertPrice)
             return actions.order.create ({
               intent: "CAPTURE",
               purchase_units: [

@@ -3,6 +3,7 @@ const bookController = require("./bookRoom.controller");
 const {Invoice} = require("../../models/invoice.model");
 const { verifyAdmin } = require("../../middleware/verify");
 const { Room } = require("../../models/hotel.model");
+const {SystemVoucher} = require ("../../models/voucher.model");
 const bookRouter = express.Router();
 
 bookRouter.post("/applyVoucher", async (req, res) => {
@@ -58,8 +59,7 @@ bookRouter.get(
   "/bookingHistory",)
 bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post("/deleteInvoiceWaiting", bookController.deleteInvoiceWaiting);
-// change invoice state
-bookRouter.post('/change-invoice-state',bookController.changeInvoiceState)
+
 bookRouter.post('/',bookController.bookRoom)
 // id cus
 bookRouter.get(

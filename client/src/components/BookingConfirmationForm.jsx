@@ -15,7 +15,6 @@ import PropTypes from "prop-types"
 import {cleanInvoice, setInvoiceCount} from "@/store/redux/revenueSlice"
 import {setInvoiceID, setVoucherApplied} from "@/store/redux/inputDaySlice"
 import {useToastNotifications} from "@/hooks/useToastNotification"
-
 import {Button} from "@/components/ui/button"
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input"
@@ -24,28 +23,9 @@ import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
 import {Calendar} from "@/components/ui/calendar"
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover"
 import {cn} from "@/lib/utils"
-
 import {useForm, Controller} from "react-hook-form"
 import {zodResolver} from "@hookform/resolvers/zod"
-import * as z from "zod"
-
-const bookingSchema = z.object ({
-  fullname: z.string ().min (2, {
-    message: "Fullname must be at least 2 characters.",
-  }),
-  idenCard: z.string ().regex (/^\d{12}$/, {
-    message: "Identity Card must be 12 digits.",
-  }),
-  email: z.string ().email ({
-    message: "Invalid email address.",
-  }),
-  phoneNum: z.string ().regex (/^[0-9\-+]{9,15}$/, {
-    message: "Invalid phone number.",
-  }),
-  dob: z.date (),
-  gender: z.string ().optional (),
-  paymentMethod: z.string (),
-})
+import {bookingSchema} from "@/lib/validators/booking/booking-validate";
 
 function BookingConfirmationForm ({isShow, onCancel, hotel}) {
   BookingConfirmationForm.propTypes = {
@@ -69,7 +49,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
   const navigate = useNavigate ()
   const dispatch = useDispatch ()
   const {count, listInvoiceID} = useSelector ((state) => state.invoiceRevenue)
-  const {auth} = useSelector ((state) => state.auth)
+  const auth = useSelector ((state) => state.auth)
   const toast = useToastNotifications ()
 
   const formatMoney = (money) => {
@@ -234,7 +214,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
       totalDay: totalCheckInDay,
       totalRoom: countRoom,
     }
-
+    console.log ('auth Id', auth.id)
     try {
       const response = await axios.post (`${BE_PORT}/api/booking`, {
         idHotel,
@@ -270,7 +250,8 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
 
           <div className="flex gap-6 h-full">
             {/* Input form */}
-            <div className="flex-[2] items-center flex-center flex-col border-2 p-6 border-[#114098] rounded-[10px] min-w-[550px]">
+            <div
+              className="flex-[2] items-center flex-center flex-col border-2 p-6 border-[#114098] rounded-[10px] min-w-[550px]">
               <h3 className="text-center font-monospace font-semibold text-lg mb-4">{t ("detail")}</h3>
 
               <div className="space-y-4">
@@ -331,7 +312,7 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                         <Input
                           id="email"
                           type="email"
-                          placeholder="Email"
+                          placeholder={auth.email !== "" ? auth.email : "Email"}
                           {...field}
                           className={cn (errors.email && "border-red-500")}
                           style={{width: '90%'}}
@@ -567,11 +548,11 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                   </div>
 
                   <div className="flex justify-between items-center">
-                    <div>{t("price")}:</div>
+                    <div>{t ("price")}:</div>
                     <div className="flex flex-col items-end">
-                      <div className="text-green-600">{formatMoney(price)} VND</div>
+                      <div className="text-green-600">{formatMoney (price)} VND</div>
                       {voucherCode && (
-                        <div className="text-red-500 line-through">{formatMoney(firstPrice)} VND</div>
+                        <div className="text-red-500 line-through">{formatMoney (firstPrice)} VND</div>
                       )}
                     </div>
                   </div>

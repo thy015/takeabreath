@@ -51,7 +51,7 @@ const DashboardView = () => {
 
             {open && auth.id !== "" && (
               <div
-                className="bg-white border h-[100px] w-[150px] absolute bottom-[-100px] z-20 right-0 pt-[10px]  space-y-[10px]">
+                className="bg-white border h-auto w-[150px] absolute bottom-[-100px] z-20 right-0 pt-[10px] p-2 space-y-[10px]">
                 <Link to="settings" className="no-underline text-black"><p
                   className="cursor-pointer hover:text-[blue] font-semibold">
                   Cài Đặt

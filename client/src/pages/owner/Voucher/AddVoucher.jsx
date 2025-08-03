@@ -4,7 +4,6 @@ import {
   ConfigProvider,
   DatePicker,
   Button,
-  InputNumber,
 } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -90,7 +89,7 @@ function AddVoucher() {
             rules={[{ required: true, message: "Please input voucher name!" }]}
           >
             <Input
-              className="input-addvoucher"
+              className="h-10 p-4"
               placeholder="Enter voucher name"
             />
           </Form.Item>
@@ -98,14 +97,10 @@ function AddVoucher() {
           <Form.Item
             label="Discount"
             name="discount"
-            rules={[{ required: true, message: "Please input discount!" }]}
+            rules={[{ required: true, message: "Please input discount!", min:0,max:50 }]}
           >
-            <InputNumber
-              min={0}
-              max={50}
-              type="number"
-              addonAfter="%"
-              className="input-addvoucher w-full"
+            <Input
+              className="h-10 p-4"
               placeholder="Enter discount ( Less than 50% )"
             />
           </Form.Item>
@@ -115,13 +110,13 @@ function AddVoucher() {
             name="date"
             rules={[{ required: true, message: "Please select date!" }]}
           >
-            <DatePicker.RangePicker className="input-addvoucher w-full" />
+            <DatePicker.RangePicker  className="h-10 p-4"/>
           </Form.Item>
 
           <Form.Item label="Code" name="code">
             <Input
               maxLength={5}
-              className="input-addvoucher"
+              className="h-10 p-4"
               placeholder="Please enter code (If not, it will be automatic)"
             />
           </Form.Item>
@@ -129,10 +124,10 @@ function AddVoucher() {
           <Form.Item>
             <div className="flex justify-between items-center">
               <Link
-                to="/Owner/Vouchers"
+                to="/owner/vouchers"
                 className="mr-[20px] flex items-center"
               >
-                <ChevronLeft size={32} className="mr-[5px]" />
+                <ChevronLeft size={24} className="mr-[5px]" />
                 Back
               </Link>
               <Button className="p-[10px]" type="primary" htmlType="submit">

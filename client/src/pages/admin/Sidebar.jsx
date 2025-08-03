@@ -31,7 +31,7 @@ const SidebarItem = ({ icon: Icon, label, to, active, onClick }) => {
   >
     <div className="flex items-center gap-[10px]">
       <Icon color={active ? "#003580" : "white"} />
-      <p className="text-[14px] leading-[20px] font-normal pt-[10px]">{label}</p>
+      <p className="text-[14px] leading-[20px] pt-[10px]">{label}</p>
     </div>
     <FaChevronRight className="pr-2" color={active ? "#003580" : "white"} />
   </Link>

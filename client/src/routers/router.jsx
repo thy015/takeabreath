@@ -27,6 +27,8 @@ import RegisterOwner from "@/pages/auth/RegisterOwner";
 import Test from "@/components/Test";
 import Register from "@/pages/auth/Register";
 import BookedRoom from "@/pages/admin/Rooms/BookedRoom";
+import InvoicesList from "@/pages/admin/invoiceAdmin";
+import CancelReqAdmin from "@/pages/admin/cancelReq/cancelReqAdmin";
 
 export const routers =  [
   {
@@ -47,9 +49,9 @@ export const routers =  [
       {path: "rooms/bookingRoom", element: <BookedRoom/>},
       {path: "rooms/bookingRoom/:id", element: <BookedRoom/>},
       {path: "customers", element: <Customer/>},
-      {path: "requests", element: <cancelReqAdmin/>},
+      {path: "requests", element: <CancelReqAdmin/>},
       {path: "vouchers", element: <AdminVoucher/>},
-      {path: "invoices", element: <invoiceAdmin/>},
+      {path: "invoices", element: <InvoicesList/>},
       {path: "comment/:id", element: <CommentsPage/>},
     ],
   },
@@ -90,13 +92,13 @@ export const routers =  [
     element: <OwnerLayout/>,
     children: [
       {index: true, element: <Revenue/>},
-      {path: "Vouchers", element: <Vouchers/>},
-      {path: "AddVoucher", element: <AddVoucher/>},
-      {path: "Hotel", element: <Hotel/>},
-      {path: "Room", element: <Room/>},
-      {path: "Revenue", element: <Revenue/>},
-      {path: "Card", element: <Card/>},
-      {path: "Profile", element: <UserInfoCard/>},
+      {path: "vouchers", element: <Vouchers/>},
+      {path: "new-voucher", element: <AddVoucher/>},
+      {path: "hotel", element: <Hotel/>},
+      {path: "room", element: <Room/>},
+      {path: "revenue", element: <Revenue/>},
+      {path: "card", element: <Card/>},
+      {path: "profile", element: <UserInfoCard/>},
     ],
   },
   {

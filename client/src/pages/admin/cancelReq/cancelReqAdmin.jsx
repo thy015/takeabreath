@@ -5,10 +5,10 @@ import {ModalDelete, ModalActivate} from "../Customers/CustomerList";
 import axios from 'axios'
 import moment from "moment";
 import {useSelector} from "react-redux";
-import {Info, ListFilter} from "lucide-react";
+import {ListFilter} from "lucide-react";
 import {formatMoney} from "@/utils/utils";
 // TODO: Makeover page cancel req
-const cancelReqAdmin = () => {
+const CancelReqAdmin = () => {
   axios.defaults.withCredentials = true
   const auth = useSelector (state => state.auth)
   const [cancelID, setCancelID] = useState ();
@@ -155,65 +155,41 @@ const cancelReqAdmin = () => {
   const rejectedDataFormatted = formatDataWithAcceptDate (rejectedData || []);
   const filteredProcessingData = filterByDate (processingDataFormatted, filterDate);
   const filteredAcceptedData = filterByDate (acceptedDataFormatted, filterDate);
-  const filteredRejectedData = filterByDate (rejectedDataFormatted, filterDate);
   return (
-    <div className="grid grid-cols-3 gap-4 bg-[#F8F9FC] h-full mt-0.5">
+    <div className="grid grid-cols-2 gap-4 bg-[#F8F9FC] h-full mt-0.5">
       {/* yeu cau process */}
-      <div className="p-4 flex flex-col overflow-y-auto">
-        <h3 className="font-semibold mb-2 text-yellow-600">ĐANG CHỜ: {filteredProcessingData.length}</h3>
+      <div className="p-4 flex flex-col overflow-y-auto col-span-1 font-roboto">
+        <h3 className="text-yellow-500">Đang chờ: {filteredProcessingData.length} đơn</h3>
         {filteredProcessingData.map ((item, index) => (
-          <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
+          <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC] cursor-pointer"
+               onClick={() => handleInfoClick (item._id)}>
             <div className="flex justify-between">
               <span>Ngày yêu cầu: {item.dayReq}</span>
-              <Info size={24} className="text-yellow-600" onClick={() => {
-                handleInfoClick (item._id), setIsProcess (true)
-              }}/>
             </div>
             <div className="flex items-center mt-2 justify-between">
               <span className="text-yellow-600">ID: {item._id.slice (-6)}</span>
               <div className="flex gap-2">
 
-                <button onClick={() => {
-                  setActivateModalVisible (true), setCancelID (item._id)
-                }} className="bg-green-500 text-white px-2 rounded hover:bg-green-400  ">
-                  Đồng ý
-                </button>
-
-                <button onClick={() => {
-                  setDeleteModalVisible (true), setCancelID (item._id)
-                }} className="bg-red-600 text-white px-2 py-1 hover:bg-red-400 rounded">Từ chối
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation (); // Prevent the parent onClick from being triggered
+                    setActivateModalVisible (true);
+                    setCancelID (item._id);
+                  }} className="bg-green-700 text-white px-2 rounded hover:bg-green-500 h-8 ">
+                  Xác nhận chuyển
                 </button>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* yeu cau reject */}
-      <div className="p-4 flex flex-col overflow-y-auto">
-        <h3 className="font-semibold mb-2 text-red-500">ĐÃ TỪ CHỐI: {filteredRejectedData.length}</h3>
-        {filteredRejectedData.map ((item, index) => (
-          <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
-            <div className="flex justify-between">
-              <span>Ngày yêu cầu: {item.dayReq}</span>
-            </div>
-            <div className="flex items-center mt-2 justify-between">
-              <div>
-                <span className="text-red-500">ID: {item._id.slice (-6)}</span>
-                <span
-                  className="ml-2 bg-[#be6785] text-white rounded-full px-2">{getName (item.adminID.adminName)}</span>
-              </div>
-              <Info size={24} className="text-red-700" onClick={() => handleInfoClick (item._id)}/>
             </div>
           </div>
         ))}
       </div>
 
       {/* yeu cau accept */}
-      <div className="p-4 flex flex-col overflow-y-auto">
-        <h3 className="font-semibold mb-2 text-green-500">ĐÃ ĐỒNG Ý: {filteredAcceptedData.length}</h3>
+      <div className="p-4 flex flex-col overflow-y-auto col-span-1 font-roboto">
+        <h3 className="text-green-700">Đã chuyển: {filteredAcceptedData.length} đơn</h3>
         {filteredAcceptedData.map ((item, index) => (
-          <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC]">
+          <div key={index} className="p-3 border rounded-lg mb-2 bg-[#F8F9FC] cursor-pointer"
+               onClick={() => handleInfoClick (item._id)}>
             <div className="flex justify-between">
               <span>Ngày yêu cầu: {item.dayReq}</span>
             </div>
@@ -223,7 +199,6 @@ const cancelReqAdmin = () => {
                 <span
                   className="ml-2 bg-[#663000] text-white rounded-full px-2">{getName (item.adminID.adminName)}</span>
               </div>
-              <Info size={24} className="text-green-700" onClick={() => handleInfoClick (item._id)}/>
             </div>
           </div>
         ))}
@@ -338,4 +313,4 @@ const cancelReqAdmin = () => {
   );
 };
 
-export default cancelReqAdmin;
+export default CancelReqAdmin;

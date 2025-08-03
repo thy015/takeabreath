@@ -81,9 +81,9 @@ const Main = () => {
     }).catch (error => console.error ('Error fetching invoices:', error));
   }, []);
   return (
-    <div className='px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]'>
+    <div className='px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] font-roboto'>
       <div className='flex items-center justify-between'>
-        <h1 className='text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer'>Trang Chủ</h1>
+        <h1 className='text-[28px] leading-[34px] text-[#5a5c69] cursor-pointer'>Trang Chủ</h1>
         <ExportToExcel apiData={monthlyData} fileName={fileName}/>
       </div>
       <div className='grid grid-cols-4 gap-[30px] mt-[25px] pb-[15px]'>

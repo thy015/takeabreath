@@ -7,6 +7,8 @@ import timezone from "dayjs/plugin/timezone";
 import {filterSort, setCancel} from "@/store/redux/cancelSlice";
 import PropTypes from "prop-types";
 import {useGet} from "@/hooks/hooks";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {BadgeInfo} from "lucide-react";
 // TODO: Change from accept base on admin to auto
 // TODO: Add card for user
 // cancel req state
@@ -84,8 +86,18 @@ const CancelRequest = () => {
   console.log (cancelTemps)
   return (
     <>
-      <div className='w-full text-start font-afacad text-2xl absolute'>
-        Your <span className='text-success'>Ongoing</span> Request
+      <div className='w-full text-start font-afacad text-2xl absolute flex items-center space-x-2'>
+        <div>Your <span className='text-success'>Ongoing</span> Request</div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <BadgeInfo className='text-yellow-500' size={24}></BadgeInfo>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add to library</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <div className='history-wrapper relative'>
         <div className='history-dropdown'>
@@ -130,7 +142,8 @@ const CancelRequest = () => {
                       </div>
                       <div className='col-5'>
                         <div className='flex items-end h-full italic flex-col text-right'>
-                          <div>Refund Amount: <span className='text-green-500 font-bold'> {formattedRefundAmount} VND </span></div>
+                          <div>Refund Amount: <span
+                            className='text-green-500 font-bold'> {formattedRefundAmount} VND </span></div>
                           <ChangeStateColor state={uppercaseState}></ChangeStateColor>
                         </div>
                       </div>

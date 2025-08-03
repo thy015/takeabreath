@@ -55,13 +55,6 @@ function Vouchers () {
   }, [editKey]);
 
   //Set each cell in the table to update
-  EditTableCell.propTypes = {
-    editing: PropTypes.bool,
-    dataIndex: PropTypes.string,
-    title: PropTypes.string,
-    inputType: PropTypes.string,
-    children: PropTypes.node,
-  };
   const EditTableCell = ({
     editing,
     dataIndex,
@@ -70,6 +63,13 @@ function Vouchers () {
     children,
     ...restProps
   }) => {
+    EditTableCell.propTypes = {
+      editing: PropTypes.bool,
+      dataIndex: PropTypes.string,
+      title: PropTypes.string,
+      inputType: PropTypes.string,
+      children: PropTypes.node,
+    };
     const inputNode = () => {
       switch (inputType) {
         case "number":
@@ -311,8 +311,8 @@ function Vouchers () {
   return (
     <div className="h-full ">
       <div className="max-w-[170px] text-left p-[20px]">
-        <Link to="/Owner/AddVoucher">
-          <Button type="primary" icon={<Plus size={32}/>}>
+        <Link to="/owner/new-voucher">
+          <Button type="primary" icon={<Plus size={24}/>} className='h-10'>
             Add voucher
           </Button>
         </Link>

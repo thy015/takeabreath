@@ -52,7 +52,7 @@ jobs:
           version: 8
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run tests (if available)
         run: pnpm test || echo "No tests found, skipping..."

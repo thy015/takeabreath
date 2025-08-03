@@ -57,7 +57,7 @@ const CommentsPage = () => {
 
   return (
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
-      <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69]">
+      <h1 className="text-[28px] text-left leading-[34px] text-[#5a5c69]">
         Bình luận cho phòng {comments[0]?.roomID?.roomName || roomID}
       </h1>
       <Table

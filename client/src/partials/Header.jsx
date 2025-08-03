@@ -29,12 +29,15 @@ const Header = ({children}) => {
     }
   }
   const setLogout = () => {
-    if (auth) {
-      items.push ({
-        label: "Log Out", key: "4", onClick: handleClickMenuItem, icon: (<LogOut size={16}/>),
-      })
+    if (auth && !items.some(item => item.key === "4")) {
+      items.push({
+        label: "Log Out",
+        key: "4",
+        onClick: handleClickMenuItem,
+        icon: <LogOut size={16} />,
+      });
     }
-  }
+  };
 
   const setText = () => {
     if (auth?.name) {
@@ -48,7 +51,7 @@ const Header = ({children}) => {
 
   const Logout = async () => {
     try {
-      const res=authApis.logOut()
+      const res= await authApis.logOut()
       if (res.logout) {
         toast.showSuccess ("Logout Successful");
         dispatch (clearAuthData ());
@@ -57,7 +60,7 @@ const Header = ({children}) => {
         toast.showError ("Logout failed");
       }
     } catch (err) {
-      console.error ("Error during logout:", err);
+      console.error ("Error during logout:", err.message);
       toast.showError ("An error occurred during logout");
     }
   };
@@ -173,15 +176,13 @@ const Header = ({children}) => {
                   </li>
                 </Link>
 
-
                 <li>
-
                   <div onClick={handleLogInNavigate}>
                     <Button>{setText ()}</Button>
                   </div>
                 </li>
                 <li>
-                  {auth.isAuthenticated ? <></> : <Link to="/register" className="no-underline">
+                  {auth.id !== '' ? <></> : <Link to="/register" className="no-underline">
                     <Button>{t ('register')}</Button>
                   </Link>}
 

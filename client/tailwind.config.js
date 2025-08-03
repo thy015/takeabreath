@@ -20,7 +20,10 @@ module.exports = {
   			],
   			oswald: [
   				'Oswald'
-  			]
+  			],
+				roboto:[
+					'Roboto','sans-serif'
+				]
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

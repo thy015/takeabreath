@@ -128,7 +128,7 @@ const BookedRoom = () => {
   return (
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
+        <h1 className="text-[28px] text-left leading-[34px] text-[#5a5c69] cursor-pointer">
         Các phòng đang được đặt {id?" của hotel "+roomsData[0]?.hotelID?.hotelName:""}
         </h1>
         <div className="flex space-x-4 items-center">

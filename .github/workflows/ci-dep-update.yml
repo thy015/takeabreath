@@ -2,14 +2,21 @@ name: Dependency Update
 
 on:
   schedule:
-    - cron: "0 0 1 * *" # This runs at midnight on the first day of every month
+    - cron: "0 0 1 * *" # Runs at midnight on the first day of every month
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   update-dependencies:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for committing changes
+      pull-requests: write # Required for creating PRs
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0 # Ensure full git history for branching
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -31,10 +38,16 @@ jobs:
           pnpm update
           pnpm install
 
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "auto: Update dependencies" || echo "No changes to commit"
-          git push
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "auto: Update dependencies"
+          branch: update-dependencies
+          delete-branch: true # Delete branch after PR is merged
+          title: "Auto: Update dependencies"
+          body: |
+            Automated dependency update for client and server.
+            - Updated dependencies in ./client
+            - Updated dependencies in ./server
+          labels: dependencies, automated

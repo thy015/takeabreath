@@ -75,9 +75,15 @@ const BookingPage = () => {
     }));
   };
 
-  const disableCancelFunc = (checkInDay) => {
+  const isDisableCancel = (invoiceID, checkInDay, cancelInfo) => {
     const now = dayjs ().tz ('Asia/Ho_Chi_Minh')
     const formattedCheckInDay = dayjs (checkInDay).tz ('Asia/Ho_Chi_Minh')
+
+    const isInCancelInfo = cancelInfo.some(info => info.invoiceID === invoiceID);
+    if (isInCancelInfo) {
+      return true; // Disable the button if the invoiceID is in cancelInfo
+    }
+
     if (formattedCheckInDay.isSame (now, 'day')) {
       // after 12pm => disable
       const todayNoon = now.startOf ('day').add (12)
@@ -179,7 +185,7 @@ const BookingPage = () => {
     return <Alert message="Notice" description="You haven't make any reservation." type="info" showIcon/>;
   }
   return (
-    <div className="w-full mx-auto p-4">
+    <div className="w-full mx-auto">
       {/*sort*/}
       <div className='history-wrapper'>
         <div className='history-dropdown'>
@@ -209,7 +215,6 @@ const BookingPage = () => {
           const formattedCheckOutDay = dayjs (item.invoiceInfo.guestInfo.checkOutDay).format ('DD/MM/YYYY')
           console.log ('invoice id', item.invoiceInfo._id)
           console.log ('checkinday', item.invoiceInfo.guestInfo.checkInDay)
-          const isDisabledCancel = disableCancelFunc (item.invoiceInfo.guestInfo.checkInDay);
           return (
             <div key={index} className='py-2'>
               <div className="relative bg-[#f5f5f5] rounded-lg shadow-md p-4 mt-2">
@@ -317,11 +322,10 @@ const BookingPage = () => {
                   </DecoratedIcon>
                   <div>
                     <div className='space-x-2 flex items-end justify-end relative'>
-                      <Button variant={isDisabledCancel ? 'muted' : 'danger'}
-                              onClick={() => {
-                                handleClickCancel (item.invoiceInfo._id)
-                              }}
-                              disabled={isDisabledCancel}
+                      <Button
+                        variant={isDisableCancel(item.invoiceInfo._id, item.invoiceInfo.guestInfo.checkInDay, item.cancelInfo) ? 'muted' : 'danger'}
+                        onClick={() => handleClickCancel(item.invoiceInfo._id)}
+                        disabled={isDisableCancel(item.invoiceInfo._id, item.invoiceInfo.guestInfo.checkInDay, item.cancelInfo)}
                       >
                         Cancel</Button>
                       <Button variant='success'>Book Again</Button>
@@ -383,10 +387,10 @@ const BookingPage = () => {
                             <span className='ml-2 px-2 cursor-pointer border-bottom'>Add here</span>
                           </div>
                           <div className='flex items-end justify-end mr-3 py-3'>
-                            {/*TODO: Add disable cancel button if there's cancel info from server*/}
-                            <Button variant='outline-danger'
-                                    onClick={() => handleConfirmCancel (item.invoiceInfo._id, item.invoiceInfo.guestInfo.checkInDay, auth.id)}
-                                    disabled={isClickedConfirmCancel[item.invoiceInfo._id]}
+                            <Button
+                              variant={isDisableCancel(item.invoiceInfo._id, item.invoiceInfo.guestInfo.checkInDay, item.cancelInfo) ? 'muted' : 'danger'}
+                              onClick={() => handleConfirmCancel(item.invoiceInfo.id,item.invoiceInfo.guestInfo.checkInDay,auth.id)}
+                              disabled={isDisableCancel(item.invoiceInfo._id, item.invoiceInfo.guestInfo.checkInDay, item.cancelInfo) || isClickedConfirmCancel[item.invoiceInfo._id]}
                             >
                               Accept Cancel
                             </Button>

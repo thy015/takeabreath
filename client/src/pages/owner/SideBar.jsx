@@ -1,42 +1,38 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import {Menu, ConfigProvider} from 'antd'
-import {useMediaQuery} from 'react-responsive';
-import axios from 'axios';
-import {AuthContext} from '@/hooks/auth.context';
 import PropTypes from "prop-types";
 import {X} from "lucide-react";
+import {authApis} from "@/apis/auth/auth";
+import {useToastNotifications} from "@/hooks/useToastNotification";
+import {useIsMobile} from "@/hooks/useIsMobile";
 
 const items = [
   {
-    key: "owner/Revenue",
+    key: "owner/revenue",
     label: (<p className='font-bold'>Thống kê doanh thu</p>),
   },
   {
-    key: "owner/Hotel",
+    key: "owner/hotel",
     label: (<p className='font-bold'>Khách sạn</p>),
   },
   {
-    key: "owner/Room",
+    key: "owner/room",
     label: (<p className='font-bold'>Phòng</p>),
   },
   {
-      key: "owner/Vouchers",
+      key: "owner/vouchers",
       label: (<p className='font-bold'>Phiếu giảm giá</p>),
   },
   {
-    key: "owner/OggyPartner",
-    label: (<p className='font-bold'>Oggy Partner</p>),
-  },
-  {
-    key: "owner/Card",
+    key: "owner/card",
     label: (<p className='font-bold'>Quản lý thẻ</p>),
   }
 
 ]
 const itemAccount = [
   {
-    key: "owner/Profile",
+    key: "owner/profile",
     label: (<p className='font-bold'>Tài khoản</p>),
   },
   {
@@ -52,32 +48,27 @@ function SideBar ({setIsMenuOpen}) {
   };
   const navigate = useNavigate ()
   const location = useLocation ();
-  const selectedKey = location.pathname.slice (1) || 'Revenue'
-  const isMobile = useMediaQuery ({query: '(max-width: 640px)'});
-  const {setAuth} = useContext (AuthContext)
-  const BE_PORT = import.meta.env.VITE_BE_PORT
-  const hanldeLogout = () => {
-    axios.get (`${BE_PORT}/api/auth/logout`).then (res => {
-      if (res.data.logout) {
-        setAuth ({
-          isAuthenticated: false,
-          user: {
-            id: "",
-            email: '',
-            name: '',
-          }
-        })
-        navigate ('/login')
+  const selectedKey = location.pathname.slice (1) || 'owner/revenue'
+  const isMobile = useIsMobile()
+  const toast=useToastNotifications()
 
+  const handleLogOut = () => {
+    try{
+      const res= authApis.logOut()
+      if (res.logout) {
+        toast.showSuccess('Log out successfully')
+        navigate ('/login')
       }
-    }).catch (err => {
-      console.log (err)
-    })
+      toast.showError('Failed to log out')
+    }catch (err) {
+      console.error (err)
+      toast.showError(err.message || 'Failed to log out')
+    }
   }
 
-  const hanldeClickItem = ({key}) => {
+  const handleClickItem = ({key}) => {
     if (key === "logout") {
-      hanldeLogout ()
+      handleLogOut ()
       return
     }
     navigate (`/${key}`)
@@ -115,7 +106,7 @@ function SideBar ({setIsMenuOpen}) {
         </p>
         <Menu
           items={items}
-          onClick={hanldeClickItem}
+          onClick={handleClickItem}
           selectedKeys={[selectedKey]}
         />
         <p
@@ -124,7 +115,7 @@ function SideBar ({setIsMenuOpen}) {
         </p>
         <Menu
           items={itemAccount}
-          onClick={hanldeClickItem}
+          onClick={handleClickItem}
           selectedKeys={[selectedKey]}
         />
       </div>

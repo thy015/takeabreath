@@ -115,7 +115,7 @@ const InvoicesList = () => {
   return (
     <div className="px-[25px] pt-[25px] h-full bg-[#F8F9FC] pb-[40px]">
       <div className="flex justify-between items-center">
-        <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
+        <h1 className="text-[28px] text-left leading-[34px] text-[#5a5c69] cursor-pointer">
           Tất cả hóa đơn
         </h1>
         <RangePicker
@@ -136,7 +136,7 @@ const InvoicesList = () => {
             <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3"/>
             <input
               type="text"
-              className="pl-10 bg-[#E7E7E7] h-[40px] text-black outline-none w-[300px] rounded-[5px] placeholder:text-[14px] leading-[20px] font-normal"
+              className="pl-10 bg-[#E7E7E7] h-[40px] text-black outline-none w-[300px] rounded-[5px] placeholder:text-[14px] leading-[20px]"
               placeholder="Tìm kiếm"
               value={searchText}
               onChange={(e) => setSearchText (e.target.value)}

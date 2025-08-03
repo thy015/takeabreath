@@ -101,7 +101,8 @@ function Card() {
           <Button
             onClick={() => setVisible(true)}
             type="primary"
-            icon={<Plus size={32}/>}
+            className='h-10'
+            icon={<Plus size={24}/>}
           >
             Thêm thẻ
           </Button>

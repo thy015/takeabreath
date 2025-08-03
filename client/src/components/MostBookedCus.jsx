@@ -69,7 +69,7 @@ const MostActiveCustomers = () => {
 
   return (
     <div className="max-w-xl mt-8">
-      <h2 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] text-center">
+      <h2 className="text-[28px] leading-[34px] text-[#5a5c69] text-center">
       Các khách hàng đặt phòng nhiều nhất
       </h2>
 

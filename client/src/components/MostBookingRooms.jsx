@@ -6,7 +6,7 @@ const MostBookedRooms = ({ rooms }) => {
 
   return (
     <div className="max-w-6xl mt-8"> 
-      <h2 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] text-center">5 phòng được đặt nhiều nhất</h2> 
+      <h2 className="text-[28px] leading-[34px] text-[#5a5c69] text-center">5 phòng được đặt nhiều nhất</h2>
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         <table className="min-w-full table-auto">
           <tbody>

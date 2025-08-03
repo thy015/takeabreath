@@ -264,13 +264,13 @@ function Room() {
   const [visible, setVisible] = useState(false);
   return (
     <div className="h-full ">
-      <div className="w-full text-left py-[20px] px-[40px] d-flex justify-between items-center">
+      <div className="w-full text-left py-[20px] px-[40px] d-flex justify-between items-end">
         <Link>
           <Button
-            className={!isMobile ? "" : "hidden"}
+            className='h-8'
             onClick={() => setVisible(true)}
             type="primary"
-            icon={<Plus size={32}/>}
+            icon={<Plus size={16}/>}
           >
             Thêm phòng
           </Button>
@@ -278,7 +278,7 @@ function Room() {
             className={isMobile ? "" : "hidden"}
             onClick={() => setVisible(true)}
             type="primary"
-            icon={<Plus size={32}/>}
+            icon={<Plus size={24}/>}
           ></Button>
         </Link>
         <div className="flex flex-col justify-center items-center">

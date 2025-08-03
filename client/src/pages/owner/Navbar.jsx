@@ -1,24 +1,44 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {  FaEnvelope, FaRegBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar } from "antd";
 import PropTypes from "prop-types";
-import {AuthContext} from "@/hooks/auth.context";
 import {setOwner} from "@/store/redux/ownerSlice";
 import {Logs} from 'lucide-react'
+import {authApis} from "@/apis/auth/auth";
+import {clearAuthData} from "@/store/redux/auth";
+import {useToastNotifications} from "@/hooks/useToastNotification";
 function Navbar({ setIsMenuOpen }) {
   Navbar.propTypes = {
     setIsMenuOpen: PropTypes.func.isRequired,
   }
-  const { auth, setAuth } = useContext(AuthContext)
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch()
+  const auth = useSelector(state => state.auth)
   const navigate = useNavigate()
   const owner = useSelector(state => state.owner.owner)
+  const toast=useToastNotifications()
   const BE_PORT = import.meta.env.VITE_BE_PORT
   axios.defaults.withCredentials = true
+
+  const handleLogOut = async () => {
+    try {
+      const res= await authApis.logOut()
+      if (res.logout) {
+        toast.showSuccess ("Logout Successful");
+        dispatch (clearAuthData ());
+        navigate ("/");
+      } else {
+        toast.showError ("Logout failed");
+      }
+    } catch (err) {
+      console.error ("Error during logout:", err);
+      toast.showError ("An error occurred during logout");
+    }
+  };
+
   useEffect(() => {
     axios.get(`${BE_PORT}/api/auth/get-owner`)
       .then(res => res.data)
@@ -33,25 +53,6 @@ function Navbar({ setIsMenuOpen }) {
   const showProfile = () => {
     setOpen(!open);
   };
-  const hanldeLogout = () => {
-    axios.get(`${BE_PORT}/api/auth/logout`)
-      .then(res => {
-        if (res.data.logout) {
-          setAuth({
-            isAuthenticated: false,
-            user: {
-              id: "",
-              email: '',
-              name: '',
-            }
-          })
-          navigate('/login')
-
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-  }
 
   return (
     <div>
@@ -66,22 +67,22 @@ function Navbar({ setIsMenuOpen }) {
               <FaRegBell />
               <FaEnvelope />
             </div>
+
             <div
               className="flex items-center gap-[15px] relative"
               onClick={showProfile}
             >
-              <p className="pt-[10px]">{auth.user.name.length > 0 ? auth.user.name : auth.user.email}</p>
+              <p className="pt-[10px]">{auth.name !== '' ? auth.name : auth.email}</p>
               <div className="h-[50px] w-[50px] cursor-pointer flex items-center justify-center relative z-40">
                 <Avatar className="w-full h-full" src={owner.avatarLink?.length>0  ? owner.avatarLink: "https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg"} alt="" />
 
               </div>
-
               {open && (
-                <div className="bg-white border h-[80px] w-[150px] absolute bottom-[-95px] z-20 right-0 pt-[10px]  space-y-[10px]">
-                  <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={() => { navigate("Profile") }}>
+                <div className="bg-white border h-auto w-[150px] absolute bottom-[-95px] z-20 right-0 pt-[10px] space-y-[10px] p-2">
+                  <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={() => { navigate("/owner/profile") }}>
                     Profile
                   </p>
-                  <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={hanldeLogout}>
+                  <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={handleLogOut}>
                     Log out
                   </p>
                 </div>

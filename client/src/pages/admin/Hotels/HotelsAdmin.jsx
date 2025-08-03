@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Spin, Alert, Table, Space } from "antd";
-import { useGet } from "../../../hooks/hooks";
+import { useGet } from "@/hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -8,14 +8,24 @@ const PropertyGrid = () => {
   const BE_PORT = import.meta.env.VITE_BE_PORT;
   const { data, error, loading } = useGet(`${BE_PORT}/api/hotelList/hotelad`);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   const displayData = searchTerm
     ? data.filter((property) =>
-        property.hotelName &&
-        property.hotelName.toLowerCase().includes(searchTerm.toLowerCase())||
-        property.hotelType.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      property.hotelName &&
+      property.hotelName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      property.hotelType.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     : data;
+
+  const handleTableChange = (pagination) => {
+    setCurrentPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, displayData.length);
 
   const columns = [
     {
@@ -25,7 +35,7 @@ const PropertyGrid = () => {
     },
     {
       title: "Thuộc Sở Hữu",
-      dataIndex: ["ownerID","ownerName"],
+      dataIndex: ["ownerID", "ownerName"],
       key: "ownerName",
     },
     {
@@ -95,14 +105,14 @@ const PropertyGrid = () => {
   return (
     <div className="px-[25px] pt-[25px] h-full bg-[#F8F9FC] pb-[40px]">
       <div className="flex justify-between items-center">
-        <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-          Hiển thị {displayData.length} trên tổng số {data.length} khách sạn
+        <h1 className="text-[28px] text-left leading-[34px] text-[#5a5c69] cursor-pointer">
+          Hiển thị {endIndex - startIndex} trên tổng số {displayData.length} khách sạn
         </h1>
         <div className="relative pb-2.5">
           <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3" />
           <input
             type="text"
-            className="pl-10 bg-[#E7E7E7] h-[40px] text-black outline-none w-[300px] rounded-[5px] placeholder:text-[14px] leading-[20px] font-normal"
+            className="pl-10 bg-[#E7E7E7] h-[40px] text-black outline-none w-[300px] rounded-[5px] placeholder:text-[14px] leading-[20px]"
             placeholder="Tìm kiếm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -116,7 +126,11 @@ const PropertyGrid = () => {
           key: hotel._id,
         }))}
         className="mt-4 border-2 rounded-s"
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          pageSize,
+          current: currentPage,
+          onChange: handleTableChange,
+        }}
         scroll={{
           x: 1500,
         }}

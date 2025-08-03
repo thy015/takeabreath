@@ -41,13 +41,13 @@ function Revenue () {
       console.log (err)
     })
   }, [])
-  const totalPrice = useMemo (() => {
-    const result = invoicesSearch?.reduce ((total, current) => {
-      return total + (current.guestInfo.totalPrice)
-    }, 0)
+  const totalPrice = useMemo(() => {
+    const result = invoicesSearch?.reduce((total, current) => {
+      return total + (current.guestInfo?.totalPrice || 0); // Safeguard for undefined guestInfo
+    }, 0);
 
-    return result
-  }, [invoicesSearch])
+    return result;
+  }, [invoicesSearch]);
 
   const columns = [
     {
@@ -61,7 +61,7 @@ function Revenue () {
       key: 'nameCus',
       render: (text, record) => {
         // Kiểm tra nếu cusID có nameCus, nếu có thì lấy giá trị đó
-        return record.cusID && record.cusID.cusName ? record.cusID.cusName : record.guestInfo.name;
+        return record.cusID?.cusName || record.guestInfo?.name || "N/A";
       }
     },
     {
@@ -215,7 +215,7 @@ function Revenue () {
     for (let item of invoices) {
       const data = {
         month: dayjs (item.createDay).month () + 1,
-        revenue: item.guestInfo.totalPrice
+        revenue: item.guestInfo?.totalPrice || 0
       }
 
       if (result.length <= 0) {

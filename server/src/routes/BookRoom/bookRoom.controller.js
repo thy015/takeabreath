@@ -167,12 +167,12 @@ const queryBookingHistory = async (req, res) => {
         paidRoomsInvoice.map (async (invoice) => {
           let roomInfo = await Room.findById (invoice.roomID)
           let hotelInfo = await Hotel.findById (invoice.hotelID)
-          let cancelInfo = await CancelRequest.find ({invoiceID: invoice._id})
+          let cancelInfo = await CancelRequest.find ({invoiceID: invoice.id})
           return {
             invoiceInfo: invoice,
             roomInfo: roomInfo,
             hotelInfo: hotelInfo,
-            cancelInfo: cancelInfo
+            cancelInfo: cancelInfo,
           }
         })
       )

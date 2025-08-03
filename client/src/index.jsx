@@ -11,6 +11,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import {AuthWrapper} from "@/hooks/auth.context";
 import {QueryClientProvider, QueryClient} from "@tanstack/react-query";
 import {PersistGate} from "redux-persist/integration/react";
+import {TooltipProvider} from "@/components/ui/tooltip";
 
 const root = ReactDOM.createRoot (document.getElementById ("root"));
 const queryClient = new QueryClient ()
@@ -23,8 +24,10 @@ root.render (
           <React.Suspense fallback={<Loading/>}>
             <Provider store={store}>
               <PersistGate persistor={persistor} loading={null}>
-                <Toaster position="top-right" richColors/>
+                <Toaster position="top-right" richColors closeButton={true} />
+                <TooltipProvider delayDuration={300} >
                 <App/>
+                </TooltipProvider>
               </PersistGate>
             </Provider>
           </React.Suspense>

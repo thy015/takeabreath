@@ -149,21 +149,21 @@ function Hotel() {
   return (
     <>
       <div className="h-full p-4">
-        <div className="flex flex-wrap  justify-between items-center py-4">
+        <div className="flex flex-wrap justify-between items-center my-4">
           <Link>
             <Button
-              className={isMobile ? "hidden" : ""}
+              className='h-10'
               onClick={() => setVisible(true)}
               type="primary"
-              icon={<Plus size={32}/>}
+              icon={<Plus size={24}/>}
             >
               Thêm khách sạn
             </Button>
             <Button
-              className={!isMobile ? "hidden" : ""}
+              className={!isMobile ? "hidden" : "p-4"}
               onClick={() => setVisible(true)}
               type="primary"
-              icon={<Plus size={32}/>}
+              icon={<Plus size={16}/>}
             ></Button>
           </Link>
           <Input.Search

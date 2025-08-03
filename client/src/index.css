@@ -82,18 +82,6 @@ ul{
   color: black !important;
 }
 
-.input-addvoucher::placeholder{
-  color:rgba(0, 0, 0, 0.45) !important
-}
-
-.input-addvoucher input{
-  padding: 0 10px ;
-}
-
-.input-addvoucher input::placeholder{
-  color:rgba(0, 0, 0, 0.45) !important
-
-}
 .gryphen{
   font-family: gryphen, serif;
 }

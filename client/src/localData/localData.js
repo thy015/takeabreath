@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import {useGet} from "../hooks/hooks";
 
 export const cardData = ()=>{
   const {t}=useTranslation()
@@ -100,7 +99,7 @@ export const pressReleasedData=()=>{
       describe:t('describe-topic-1-press-released')
     },
     {
-      imgLink:'https://elquarto.com/blog/wp-content/uploads/2020/12/Hotel-maldivas-1.jpg',
+      imgLink:'https://media.istockphoto.com/id/1428299005/photo/man-is-sitting-in-a-camping-chair-on-the-background-of-a-forest-lake-on-a-beautiful-summer.jpg?s=612x612&w=0&k=20&c=dQZLIQGXpyLxWvtdpsRkpRXEqM4vZCGefzPtV9h_9Uk=',
       imgAlt:'topic2',
       dateReleased:'JANUARY 26,2024',
       title:t('title-topic-2-press-released'),

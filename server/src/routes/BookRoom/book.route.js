@@ -1,11 +1,11 @@
 const express = require("express");
 const bookController = require("./bookRoom.controller");
-const {CancelRequest} = require("../../models/cancelReq.model");
 const {Invoice} = require("../../models/invoice.model");
 const { verifyAdmin } = require("../../middleware/verify");
 const { Room } = require("../../models/hotel.model");
-const { verify } = require("jsonwebtoken");
+const {SystemVoucher} = require ("../../models/voucher.model");
 const bookRouter = express.Router();
+
 bookRouter.post("/applyVoucher", async (req, res) => {
   const { voucherCode, totalPrice } = req.body;
 
@@ -59,8 +59,7 @@ bookRouter.get(
   "/bookingHistory",)
 bookRouter.post("/completedTran", bookController.completedTran);
 bookRouter.post("/deleteInvoiceWaiting", bookController.deleteInvoiceWaiting);
-// change invoice state
-bookRouter.post('/change-invoice-state',bookController.changeInvoiceState)
+
 bookRouter.post('/',bookController.bookRoom)
 // id cus
 bookRouter.get(

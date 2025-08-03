@@ -25,10 +25,10 @@ jobs:
         run: pnpm install
 
       - name: Run tests (if available)
-        run: pnpm test --passWithNoTests || echo "No tests found, skipping..."
+        run: pnpm test || echo "No tests found, skipping..."
         continue-on-error: true
 
-      - name: Build
+      - name: Build client
         run: pnpm run build
 
   server:
@@ -36,6 +36,8 @@ jobs:
     defaults:
       run:
         working-directory: ./server
+    env:
+      MONGO_DB: ${{ secrets.MONGO_DB }}
     steps:
       - uses: actions/checkout@v3
 
@@ -50,11 +52,11 @@ jobs:
           version: 8
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run tests (if available)
-        run: pnpm test --passWithNoTests || echo "No tests found, skipping..."
+        run: pnpm test || echo "No tests found, skipping..."
         continue-on-error: true
 
-      - name: Build
-        run: pnpm run build
+      - name: Healthcheck server
+        run: pnpm run healthcheck

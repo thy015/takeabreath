@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../../hooks/auth.context";
 import axios from "axios";
-
+import React from 'react'
+import {AuthContext} from "@/hooks/auth.context";
 const Settings = () => {
   const { auth,setAuth } = useContext(AuthContext);
   const [email, setEmail] = useState(null);
@@ -81,7 +81,7 @@ const Settings = () => {
                   </label>
                   <div className="relative">
                     <input
-                      className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      className="w-full rounded border border-stroke bg-gray p-2 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       type="email"
                       id="emailAddress"
                       placeholder="ehe@gmail.com"
@@ -99,7 +99,7 @@ const Settings = () => {
                     Tên Người Dùng
                   </label>
                   <input
-                    className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    className="w-full rounded border border-stroke bg-gray p-2 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     type="text"
                     id="Username"
                     placeholder="ehe"
@@ -117,7 +117,7 @@ const Settings = () => {
                   </label>
                   <input
                     type="url"
-                    className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    className="w-full rounded border border-stroke bg-gray p-2 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     id="profilePicture"
                     placeholder="Nhập link ảnh"
                     value={imgLink} 

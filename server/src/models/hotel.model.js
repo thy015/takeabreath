@@ -119,6 +119,7 @@ const hotelSchema = new mongoose.Schema({
   numberOfRates: { type: Number, required: false, default: 0 },
   numberOfRooms: { type: Number, required: false, default: 0 },
   revenue: { type: Number, required: false, default: 0 },
+  smallestPrice: { type: Number, required: false, default: 0 },
   ownerID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Owner",

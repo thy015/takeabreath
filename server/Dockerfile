@@ -1,19 +1,26 @@
-FROM ubuntu:latest
+# Use Node.js 18 as the base image
+FROM node:18
+
+# Set the author label
 LABEL authors="maithy"
+
+# Set the working directory
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g pnpm
+# Install pnpm globally
+RUN npm install -g pnpm
 
-COPY package.json .
+# Copy package.json and pnpm-lock.yaml to leverage Docker caching
+COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
+# Copy the rest of the application code
 COPY . .
 
+# Expose the application port
 EXPOSE 4000
 
-CMD ["pnpm", "run", "dev"]
+# Start the application
+CMD ["pnpm", "start"]

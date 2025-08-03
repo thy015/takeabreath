@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Table, Input, Alert, Spin } from "antd";
-import { useGet } from "../../../hooks/hooks";
+import { Table, Alert, Spin } from "antd";
+import { useGet } from "@/hooks/hooks";
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom"; 
 const RoomList = () => {
@@ -87,7 +87,7 @@ const RoomList = () => {
       render: (_, record) => (
         <button
           className="bg-green-700 text-white px-3 py-1 ml-2 rounded hover:bg-green-500"
-          onClick={() => navigate(`/admin/comments/${record._id}`)}
+          onClick={() => navigate(`/admin/comment/${record._id}`)}
         >
           Xem đánh giá
         </button>
@@ -99,7 +99,7 @@ const RoomList = () => {
   return (
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
+        <h1 className="text-[28px] text-left leading-[34px] text-[#5a5c69] cursor-pointer">
         Tất cả các phòng {id?" của "+roomsData[0]?.hotelID?.hotelName:""}
         </h1>
         <div className="flex space-x-4 items-center">

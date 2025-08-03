@@ -11,7 +11,6 @@ const morgan = require("morgan");
 const http = require("http");
 const swaggerUI=require('swagger-ui-express')
 const swaggerSpec=require('./docs/swagger')
-const {useSSOCallback} = require('@htilssu/wowo');
 
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 const RoomListRouter = require("./src/routes/RoomList/roomList.route");
@@ -28,7 +27,6 @@ const walletRouter = require("./src/routes/Wallet/wallet.route")
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("combined"));
-useSSOCallback(app)
 
 const allowedOrigins = ["http://localhost:3000",
     "https://takeabreath.io.vn",
@@ -43,22 +41,19 @@ const allowedOrigins = ["http://localhost:3000",
 ];
 
 app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (!origin) {
-                return callback(null, true);
-            }
-            if (allowedOrigins.some((allowedOrigin) => origin.startsWith(allowedOrigin))) {
-                return callback(null, true);
-            }
-            console.error("Blocked by CORS:", origin);
-            callback(new Error("Not allowed by CORS"));
-        },
-        credentials: true,
-    })
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
 );
 // swagger config
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
 console.log(`Swagger: https://takeabreath.vercel.app/api-docs`)
 app.use("/api/roomList", RoomListRouter);
 app.use("/api/hotelList", HotelListRouter);
@@ -94,3 +89,5 @@ const server = http.createServer(app);
 server.listen(PORT, () => {
   console.log(`Now streaming on ${PORT}`);
 });
+
+module.exports=app

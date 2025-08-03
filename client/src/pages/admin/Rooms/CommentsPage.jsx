@@ -17,7 +17,7 @@ const CommentsPage = () => {
         );
         setComments(response.data);
       } catch (err) {
-        setError("Error fetching comments");
+        setError("Error fetching comment");
       } finally {
         setLoading(false);
       }
@@ -53,23 +53,11 @@ const CommentsPage = () => {
       key: "createdDay",
       render: (text) => new Date(text).toLocaleString("vi-VN"), 
     },
-    // {
-    //   title: "Thao tác",
-    //   key: "actions",
-    //   render: (_, record) => (
-    //     <button
-    //       className="bg-red-600 hover:bg-red-400 text-white px-3 py-1 ml-2 rounded"
-    //       onClick={() => navigate(`/admin/comments/${record._id}`)} 
-    //     >
-    //       Cảnh Cáo
-    //     </button>
-    //   ),
-    // },
   ];
 
   return (
     <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px] h-full">
-      <h1 className="text-[28px] text-left leading-[34px] font-normal text-[#5a5c69]">
+      <h1 className="text-[28px] text-left leading-[34px] text-[#5a5c69]">
         Bình luận cho phòng {comments[0]?.roomID?.roomName || roomID}
       </h1>
       <Table

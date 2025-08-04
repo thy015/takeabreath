@@ -57,8 +57,7 @@ function Navbar({ setIsMenuOpen }) {
   return (
     <div>
       <div className="">
-        <div className="flex items-center justify-end h-[70px] shadow-lg px-[25px] ">
-
+        <div className="flex items-center justify-end h-[70px] shadow-lg px-[25px] border-none">
           <div className="flex items-center gap-[20px]">
             <button className="md:hidden absolute top-4 left-4 z-10" onClick={() => setIsMenuOpen(true)}>
               <Logs size={32} className="text-2xl text-[#003580]" />

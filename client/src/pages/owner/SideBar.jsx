@@ -90,7 +90,7 @@ function SideBar ({setIsMenuOpen}) {
         },
       }}
     >
-      <div className={`bg-[#003580] relative h-full px-[25px] rounded-r-[20px]  transition-transform duration-300`}>
+      <div className={`bg-[#003580] relative h-full px-[25px] rounded-r-[20px] border-none transition-transform duration-300`}>
 
         <div className="px-[15px] py-[30px] flex items-center justify-center border-b-[1px] border-[#EDEDED]/[0.3]">
           <h1 className="text-white text-[20px] leading-[24px] font-extrabold cursor-pointer">

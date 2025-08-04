@@ -197,9 +197,7 @@ const cancelBooking = async (req, res) => {
     let invoiceMatched = await Invoice.findById (invoiceID)
     let refundCusAmount = invoiceMatched.guestInfo.totalPrice * 0.7
     if (dayDifference === 0) {
-      let convertDayAcp = moment ().tz ('Asia/Ho_Chi_Minh').format ('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
       let createCancelRequest = await CancelRequest.create ({
-        dayAcp: convertDayAcp,
         invoiceID: invoiceID,
         ownerID: invoiceMatched.ownerID,
         dayDiffFromCheckIn: dayDifference,

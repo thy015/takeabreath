@@ -16,8 +16,8 @@ const signUpOwner = async (req, res) => {
   }
 
   try {
-    const existingOwner = await Owner.findOne({ email });
-    const existingAdmin = await Admin.findOne({ email });
+    const existingOwner = await Owner.findOne({ email:email });
+    const existingAdmin = await Admin.findOne({ email:email });
 
     if (existingOwner || existingAdmin) {
       return res.status(400).json({ message: "Email already exists" });

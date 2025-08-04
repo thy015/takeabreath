@@ -25,10 +25,10 @@ function OwnerLayout () {
 
   return (
     <div className='flex'>
-      <div className={`h-auto ${isMenu ? 'h-0 md:h-auto hidden' : 'basis-[20%] h-full'}`}>
+      <div className={`h-auto ${isMenu ? 'h-0 md:h-auto hidden' : 'border-none basis-[20%] h-full'}`}>
         <SideBar setIsMenuOpen={() => setIsMenu (true)}/>
       </div>
-      <div className="basis-[100%] border overflow-scroll h-[100vh] w-full">
+      <div className="basis-[100%] overflow-scroll h-[100vh] w-full">
         <Navbar isMenuOpen={isMenu} setIsMenuOpen={() => setIsMenu (false)}/>
         <Outlet/>
       </div>

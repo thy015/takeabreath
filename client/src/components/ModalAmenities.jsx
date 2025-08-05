@@ -60,20 +60,17 @@ function ModalAmenities({ visible, close }) {
     const currentSelectionCount = selectedItems.length;
     const newTotal =
       totalSelections - preSeclectionCount + currentSelectionCount;
-    if (newTotal > 10) {
-      toast.showError("10 amenities are maximum");
-      return;
-    } else {
       setTotalSelections(newTotal);
       setFormValues((pre) => ({
         ...pre,
         [amenity]: selectedItems,
         count: newTotal,
       }));
-    }
+
   };
   const onFinish = () => {
     dispatch(addAmenity(formValues));
+    toast.showSuccess('Successfully add amenities');
     close();
   };
   const handleInsertAmenities = () => {
@@ -114,8 +111,7 @@ function ModalAmenities({ visible, close }) {
                   key={option}
                   value={option}
                   disabled={
-                    totalSelections >= 10 &&
-                    !formValues[amenity]?.includes(option)
+                  formValues[amenity]?.includes(option)
                   }
                 >
                   {option}

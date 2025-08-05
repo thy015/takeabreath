@@ -33,7 +33,7 @@ const reqCancelSchema = new mongoose.Schema ({
     required: true,
   },
   refundAmount: {type: Number, default: 0, required: false},
-  refundDay: {type: Date, default: Date.now, required: true},
+  refundDay: {type: Date, default: Date.now, required: false},
   refundMethod: {type: String, required: false, enum: ['card', 'paypal'], default: 'card'},
 });
 

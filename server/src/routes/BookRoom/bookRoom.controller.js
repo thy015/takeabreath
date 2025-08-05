@@ -196,20 +196,21 @@ const cancelBooking = async (req, res) => {
     console.log (dayDifference)
     let invoiceMatched = await Invoice.findById (invoiceID)
     let refundCusAmount = invoiceMatched.guestInfo.totalPrice * 0.7
-    if (dayDifference === 0) {
-      let convertDayAcp = moment ().tz ('Asia/Ho_Chi_Minh').format ('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
-      let createCancelRequest = await CancelRequest.create ({
-        dayAcp: convertDayAcp,
-        invoiceID: invoiceID,
-        ownerID: invoiceMatched.ownerID,
-        dayDiffFromCheckIn: dayDifference,
-        cusID: id,
-        paymentMethod: invoiceMatched.guestInfo.paymentMethod,
-        refundAmount: refundCusAmount
-      })
-      console.log (createCancelRequest)
-      return res.status (200).json ({message: 'Successfully cancel, waiting money to transfer', data: createCancelRequest})
-    }
+
+    let createCancelRequest = await CancelRequest.create ({
+      invoiceID: invoiceID,
+      ownerID: invoiceMatched.ownerID,
+      dayDiffFromCheckIn: dayDifference,
+      cusID: id,
+      paymentMethod: invoiceMatched.guestInfo.paymentMethod,
+      refundAmount: refundCusAmount
+    })
+    console.log (createCancelRequest)
+    return res.status (200).json ({
+      message: 'Successfully cancel, waiting money to transfer',
+      data: createCancelRequest
+    })
+
   } catch (e) {
     return res.status (500).json ({message: 'I server in cancel Booking controller'})
   }

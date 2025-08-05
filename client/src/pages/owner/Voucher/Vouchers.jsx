@@ -234,7 +234,7 @@ function Vouchers () {
       edit: false,
     },
     {
-      title: "Name Voucher",
+      title: "Voucher Name",
       dataIndex: "voucherName",
       edit: true,
     },

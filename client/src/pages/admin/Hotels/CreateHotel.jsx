@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Form,
@@ -14,7 +14,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { useToastNotifications } from "@/hooks/useToastNotification";
-import {AuthContext} from "@/hooks/auth.context";
 import {addAmenity, addHotel, updateHotels} from "@/store/redux/hotelsSclice";
 import ModalAmenities from "@/components/ModalAmenities";
 import {useGet} from "@/hooks/hooks";
@@ -26,8 +25,8 @@ const CreateHotel = ({ visible, handleCancel }) => {
   };
 
   const toast = useToastNotifications();
-  const { auth } = useContext(AuthContext);
   const dispatch = useDispatch();
+  const auth=useSelector((state) => state.auth);
   const hotelSelected = useSelector((state) => state.hotel.selectedHotel);
   const [type, setType] = useState([]);
   const [nations, setnation] = useState([]);
@@ -199,7 +198,7 @@ const CreateHotel = ({ visible, handleCancel }) => {
     const form = {
       ...values,
       imgLink: images,
-      ownerID: auth.user.id,
+      ownerID: auth.id,
       hotelAmenities: amenity ?? [],
     };
     if (hotelSelected === undefined || !isEmpty(hotelSelected)) {

@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import PropTypes from "prop-types";
 import {setClickedHotel} from "@/store/redux/searchSlice";
+import {formatMoney} from "@/utils/utils";
 
 // hotel display page
 const AccommodationCard = ({hotel, onClick}) => {
@@ -158,11 +159,11 @@ const PropertyCard = ({
           variant="top"
           src={property.imgLink[0]}
         />
-        <Card.Body className="h-[200px] flex flex-col items-center flex-1">
-          <Card.Title>{property.hotelName}</Card.Title>
+        <Card.Body className="h-[240px] flex flex-col items-center flex-1">
+          <div className='text-[#114098] font-afacad text-2xl mb-2 font-semibold'>{property.hotelName}</div>
           <RateStar hotel={property}></RateStar>
-          <Card.Text className="text-wrap overflow-hidden text-ellipsis">
-            {property.address}
+          <Card.Text className="text-wrap pt-2 overflow-hidden text-ellipsis">
+            {property.city}
           </Card.Text>
           <div className="flex-center">
             <div className="card-rate">{property.rate}</div>
@@ -171,11 +172,8 @@ const PropertyCard = ({
             </div>
           </div>
           {!showButton && (
-            <div
-              className="mt-2"
-              style={{fontWeight: "bold", fontSize: "16px"}}
-            >
-              Start from {property.smallestPrice} vnd
+            <div className='text-green-700 text-right font-semibold items-end text-lg mt-2'>
+             {formatMoney(property.smallestPrice)} VND
             </div>
           )}
           {showButton && (

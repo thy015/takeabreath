@@ -108,8 +108,7 @@ const BookingPage = () => {
       disableCancelConfirmAfterClicked (invoiceID)
       const res = await axios.post (
           `${BE_PORT}/api/booking/bookingHistory/${invoiceID}/cancel`,
-          passingData,
-          {headers: {Authorization: `Bearer ${auth.token}`}}
+          passingData
         );
       if (res.status === 200) {
         toast.showSuccess(res.data.message)
@@ -389,7 +388,7 @@ const BookingPage = () => {
                           <div className='flex items-end justify-end mr-3 py-3'>
                             <Button
                               variant={isDisableCancel(item.invoiceInfo._id, item.invoiceInfo.guestInfo.checkInDay, item.cancelInfo) ? 'muted' : 'danger'}
-                              onClick={() => handleConfirmCancel(item.invoiceInfo.id,item.invoiceInfo.guestInfo.checkInDay,auth.id)}
+                              onClick={() => handleConfirmCancel(item.invoiceInfo._id,item.invoiceInfo.guestInfo.checkInDay,auth.id)}
                               disabled={isDisableCancel(item.invoiceInfo._id, item.invoiceInfo.guestInfo.checkInDay, item.cancelInfo) || isClickedConfirmCancel[item.invoiceInfo._id]}
                             >
                               Accept Cancel

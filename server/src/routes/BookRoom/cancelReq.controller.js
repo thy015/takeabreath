@@ -19,10 +19,9 @@ const handleCancelRoomAccept = async (req, res) => {
     }
     let refundCusMoney = (matchedInvoice.guestInfo.totalPrice) * 0.7
     let refundPartnerMoney = (matchedInvoice.guestInfo.totalPrice) * 0.1
-
         try {
           // hoan 70% cho cus
-          cancelReq.isAccept = 'accepted';
+          cancelReq.cancelState = 'transferred';
           cancelReq.adminID = adminID
           cancelReq.refundAmount = refundCusMoney;
           await cancelReq.save();
@@ -49,34 +48,11 @@ const handleCancelRoomAccept = async (req, res) => {
   }
 }
 
-const handleCancelRoomReject=async(req,res)=>{
-  const {cancelReqID}=req.params;
-  const {adminID,rejectedReason}=req.body
-  if(!adminID||!rejectedReason){
-    return res.status(403).json({message:'Thiếu dữ liệu'})
-  }
-  try {
-    let cancelReq = await CancelRequest.findById(cancelReqID);
-    if (!cancelReq) {
-      return res.status(404).json({message: 'Không tìm thấy yêu cầu hủy phòng'});
-    }
-    cancelReq.isAccept = 'rejected';
-    cancelReq.adminID = adminID
-    cancelReq.rejectedReason=rejectedReason
-    await cancelReq.save();
-      return res.status(200).json({success:true,message:'Từ chối yêu cầu hủy phòng thành công',
-      cancelReq:cancelReq,
-      })
-  }catch(e){
-    return res.status(500).json({message:'E in handleroomAcp',e})
-  }
-
-}
 
 //get info
 const getReqCancelRoomAccepted = async (req, res) => {
   try {
-    const reqCancelsAccepted = await CancelRequest.find({ isAccept: "accepted" }).populate({
+    const reqCancelsAccepted = await CancelRequest.find({ cancelState: "transferred" }).populate({
       path: 'invoiceID',
       select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay guestInfo.paymentMethod totalPrice totalRoom',
     }).populate({
@@ -92,28 +68,9 @@ const getReqCancelRoomAccepted = async (req, res) => {
   }
 };
 
-const getReqCancelRoomRejected = async (req, res) => {
-  try {
-    const reqCancelsRejected = await CancelRequest.find({ isAccept: "rejected" }).populate({
-      path: 'invoiceID',
-      select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay guestInfo.paymentMethod totalPrice totalRoom',
-    }).populate({
-      path:'adminID',
-      select:"adminName"
-    }).sort({dayReq:-1});
-  
-    return res.status(200).json(reqCancelsRejected);
-  } catch (e) {
-    console.error("Error in getReqCancelRoomRejected:", e);
-    return res.status(500).json({
-      message: "An error occurred while fetching the cancellation requests",
-    });
-  }
-};
-
 const getReqCancelRoomProcess = async (req, res) => {
   try {
-    const reqCancelsProcessing = await CancelRequest.find({ isAccept: "processing" }).populate({
+    const reqCancelsProcessing = await CancelRequest.find({ cancelState: "processing" }).populate({
       path: 'invoiceID',
       select: 'guestInfo.name guestInfo.idenCard guestInfo.email guestInfo.phone guestInfo.checkInDay guestInfo.checkOutDay totalPrice totalRoom',
     }).sort({dayReq:-1});
@@ -189,9 +146,7 @@ const activeCus = async (req, res) => {
 module.exports = {
   getReqCancelRoomProcess,
   getReqCancelRoomAccepted,
-  getReqCancelRoomRejected,
   handleCancelRoomAccept,
-  handleCancelRoomReject,
   inactiveCus,
   activeCus,
 };

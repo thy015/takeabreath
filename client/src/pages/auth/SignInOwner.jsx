@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Form, Input, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -8,13 +8,14 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useToastNotifications } from "@/hooks/useToastNotification";
-import {AuthContext} from "@/hooks/auth.context";
 import ChangeLangButton from "@/components/ChangeLangButton";
+import {setAuthData} from "@/store/redux/auth";
+import {useDispatch} from "react-redux";
 
 const LogInOwner = () => {
   const { t } = useTranslation();
   const toast = useToastNotifications();
-  const { setAuth } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSignInClicked, setIsSignInClicked] = useState(false);
   const BE_PORT = import.meta.env.VITE_BE_PORT;
@@ -53,16 +54,7 @@ const LogInOwner = () => {
       );
       if (response.status === 200) {
         toast.showSuccess("Success login");
-        setAuth({
-          isAuthenticated: true,
-          user: {
-            id: response?.data?.id ?? "",
-            email: response?.data?.email ?? "",
-            name: response?.data?.name ?? "",
-            role: response?.data?.role ?? "",
-          },
-        });
-        localStorage.setItem("activeItem", "Dashboard");
+        dispatch(setAuthData (response.data));
         navigate(response.data.redirect);
       }
     } catch (e) {

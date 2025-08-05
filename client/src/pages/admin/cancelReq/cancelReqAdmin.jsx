@@ -1,20 +1,20 @@
 import React, {useState} from "react";
-import {Spin, Alert, notification, Modal, DatePicker} from "antd";
+import {Spin, Alert, Modal, DatePicker} from "antd";
 import {useGet} from "@/hooks/hooks";
-import {ModalDelete, ModalActivate} from "../Customers/CustomerList";
+import {ModalActivate} from "../Customers/CustomerList";
 import axios from 'axios'
 import moment from "moment";
 import {useSelector} from "react-redux";
 import {ListFilter} from "lucide-react";
 import {formatMoney} from "@/utils/utils";
-// TODO: Makeover page cancel req
+import {useToastNotifications} from "@/hooks/useToastNotification";
+
 const CancelReqAdmin = () => {
   axios.defaults.withCredentials = true
   const auth = useSelector (state => state.auth)
+  const toast=useToastNotifications()
   const [cancelID, setCancelID] = useState ();
-  const [reason, setReason] = useState ("");
   const [isProcess, setIsProcess] = useState (false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState (false);
   const [activateModalVisible, setActivateModalVisible] = useState (false);
   const [cancelDetailModalVisible, setcancelDetailModalVisible] = useState (false);
   const [selectedCancel, setselectedCancel] = useState (null);
@@ -30,53 +30,17 @@ const CancelReqAdmin = () => {
     try {
       const response = await axios.post (`${BE_PORT}/api/cancelReq/accept/${cancelID}`, {adminID: auth.id}, {withCredentials: true})
       if (response.data.success) {
-        notification.success ({
-          message: 'Chấp Nhận Yêu Cầu Thành Công',
-          description: 'Yêu cầu của khách hàng đã được chấp nhận!',
-        });
+        toast.showSuccess ('Chuyển tiền thành công');
         setRefresh (prev => !prev);
         setActivateModalVisible (false);
       } else {
-        notification.error ({
-          message: 'Chấp Nhận Yêu Cầu Thất Bại',
-          description: 'Yêu cầu của khách hàng chưa được chấp nhận!',
-        });
+        toast.showError ('Có lỗi xảy ra, chuyển tiền thất bại');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
-      notification.error ({
-        message: 'Lỗi không xác định',
-        description: errorMessage,
-      });
+      toast.error (error.message || 'Có lỗi xảy ra, chuyển tiền thất bại');
     }
   }
-  const handleConfirm = async () => {
-    try {
-      const response = await axios.post (`${BE_PORT}/api/cancelReq/reject/${cancelID}`, {
-        adminID: auth.id,
-        rejectedReason: reason
-      }, {withCredentials: true})
-      if (response.data.success) {
-        notification.success ({
-          message: 'Từ Chối Yêu Cầu Thành Công',
-          description: 'Yêu cầu của khách hàng đã bị từ chối!',
-        });
-        handleDeleteCancel ();
-        setRefresh (prev => !prev);
-      } else {
-        notification.error ({
-          message: 'Từ Chối Yêu Cầu Thất Bại',
-          description: 'Yêu cầu của khách hàng chưa được từ chối!',
-        });
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "Xảy ra lỗi không xác định.";
-      notification.error ({
-        message: 'Lỗi không xác định',
-        description: errorMessage,
-      });
-    }
-  }
+
   const {
     data: processingData,
     error: processingError,
@@ -87,25 +51,15 @@ const CancelReqAdmin = () => {
     data: acceptedData,
     error: acceptedError,
     loading: acceptedLoading,
-  } = useGet (`${BE_PORT}/api/cancelReq/accepted`, refresh);
+  } = useGet (`${BE_PORT}/api/cancelReq/transferred`, refresh);
 
-  const handleDeleteCancel = () => {
-    setDeleteModalVisible (false);
-    setCancelID (null);
-    setReason ("");
-  };
   const handleFilterChange = (date, dateString) => {
     setFilterDate (dateString);
     setFilterModalVisible (false);
   };
-  const {
-    data: rejectedData,
-    error: rejectedError,
-    loading: rejectedLoading,
-  } = useGet (`${BE_PORT}/api/cancelReq/rejected`, refresh);
 
   const handleInfoClick = (orderID) => {
-    const cancelDetails = acceptedDataFormatted.find (item => item._id === orderID) || rejectedDataFormatted.find (item => item._id === orderID) || processingDataFormatted.find (item => item._id === orderID);
+    const cancelDetails = acceptedDataFormatted.find (item => item._id === orderID) || processingDataFormatted.find (item => item._id === orderID);
     setselectedCancel (cancelDetails);
     setcancelDetailModalVisible (true);
   };
@@ -123,11 +77,11 @@ const CancelReqAdmin = () => {
     });
   };
 
-  if (processingLoading || acceptedLoading || rejectedLoading) {
+  if (processingLoading || acceptedLoading ) {
     return <Spin size="large" style={{display: "block", margin: "auto"}}/>;
   }
 
-  if (processingError || acceptedError || rejectedError) {
+  if (processingError || acceptedError ) {
     return (
       <Alert
         message="Error"
@@ -137,7 +91,7 @@ const CancelReqAdmin = () => {
       />
     );
   }
-  // TODO: Get rid of cancel request by admin => Only show, cancel by user
+
   const formatDataWithAcceptDate = (data) =>
     data?.map ((customer) => ({
       ...customer,
@@ -152,7 +106,7 @@ const CancelReqAdmin = () => {
 
   const processingDataFormatted = formatDataWithAcceptDate (processingData || []);
   const acceptedDataFormatted = formatDataWithAcceptDate (acceptedData || []);
-  const rejectedDataFormatted = formatDataWithAcceptDate (rejectedData || []);
+
   const filteredProcessingData = filterByDate (processingDataFormatted, filterDate);
   const filteredAcceptedData = filterByDate (acceptedDataFormatted, filterDate);
   return (
@@ -203,14 +157,7 @@ const CancelReqAdmin = () => {
           </div>
         ))}
       </div>
-      <ModalDelete
-        open={deleteModalVisible}
-        onClose={handleDeleteCancel}
-        reason={reason}
-        onConfirm={handleConfirm}
-        setReason={setReason}
-        header={"từ chối yêu cầu"}
-      />
+
       <ModalActivate
         open={activateModalVisible}
         onClose={() => setActivateModalVisible (false)}
@@ -225,7 +172,7 @@ const CancelReqAdmin = () => {
         isProcess={isProcess}
       >
         {selectedCancel && (
-          <div className="p-5">
+          <div>
             <div className="mb-4">
               <p className="flex items-center mb-1">
                 <strong className="w-[100px]">Khách
@@ -272,10 +219,7 @@ const CancelReqAdmin = () => {
                       <strong className="w-[100px]">Admin xử
                         lý:</strong> {selectedCancel.adminID.adminName || 'Không có'}
                     </p>
-                    <p className="flex items-center mb-1">
-                      <strong className="w-[100px]">Lý do từ
-                        chối:</strong> {selectedCancel.rejectedReason || 'Không có'}
-                    </p>
+
                   </>
                 )}
               </div>

@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import {FaEnvelope, FaRegBell} from "react-icons/fa";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {authApis} from "@/apis/auth/auth";
 import {clearAuthData} from "@/store/redux/auth";
 import {useToastNotifications} from "@/hooks/useToastNotification";
+import { Mail, MessageCircleWarning} from "lucide-react";
 
 const DashboardView = () => {
   const [open, setOpen] = useState (false);
@@ -37,16 +37,16 @@ const DashboardView = () => {
         </div>
         <div className="flex items-center gap-[20px]">
           <div className="flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-            <FaRegBell/>
-            <FaEnvelope/>
+            <MessageCircleWarning/>
+            <Mail/>
           </div>
           <div
             className="flex items-center gap-[15px] relative"
           >
-            <p className="pt-[10px]">{auth?.name || "Admin"}</p>
+            <div className='text-xl font-afacad'>{auth?.name || "Admin"}</div>
             <div
               className="h-[50px] w-[50px] rounded-full cursor-pointer flex items-center justify-center relative z-40">
-              <img src={auth?.imgLink} className="h-full w-full object-cover rounded-full" onClick={()=>setOpen(!open)}/>
+              <img src='/icon/Avatar%20Cute/kitten.png' className="h-full w-full object-cover rounded-full" onClick={()=>setOpen(!open)}/>
             </div>
 
             {open && auth.id !== "" && (

@@ -84,7 +84,7 @@ export const routers =  [
     element: <HotelDisplay_HotelTab/>,
   },
   {
-    path: "booking/hotel/:id",
+    path: "booking/hotel/:hotelId",
     element: <HotelDisplay_HotelTab/>,
   },
   {

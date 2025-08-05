@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {Spin, Alert, Table, DatePicker} from "antd";
 import {useGet} from "@/hooks/hooks";
-import {FaSearch} from "react-icons/fa";
 import {ExportToExcel} from "@/components/ExportToExcel";
 import GeneratePDFButton from "@/components/ExportToPDF";
+import {Search} from "lucide-react";
 
 const InvoicesList = () => {
   const {RangePicker} = DatePicker;
@@ -133,7 +133,7 @@ const InvoicesList = () => {
             />
           </div>
           <div className="relative pb-2.5">
-            <FaSearch className="text-[#9c9c9c] absolute top-1/4 left-3"/>
+            <Search size={24} className="text-[#9c9c9c] absolute top-1/4 left-3"/>
             <input
               type="text"
               className="pl-10 bg-[#E7E7E7] h-[40px] text-black outline-none w-[300px] rounded-[5px] placeholder:text-[14px] leading-[20px]"

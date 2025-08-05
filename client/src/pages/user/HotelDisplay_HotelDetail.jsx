@@ -13,13 +13,13 @@ import {useHotelComments} from "@/hooks/useQuery";
 import {CommentList} from "@/components/CommentCard";
 
 const HotelDisplay_HotelDetail = () => {
-  const {id} = useParams ();
+  const hotelId= useSelector(state => state.searchResults.clickedHotel._id);
   const location = useLocation ()
   const {countRoom, clickedHotel, attachedRooms} = useSelector ((state) => state.searchResults)
   const {t} = useTranslation ();
   // query room data result, integrate countRoom
   const {roomData} = location.state || {roomData: []}
-  const specRoomData = roomData.filter (r => r.hotelID === id)
+  const specRoomData = roomData.filter (r => r.hotelID === hotelId)
   const specRoomIntegratedCount = specRoomData.map ((room) => {
     const countEach = countRoom.find ((cr) => cr.roomID === room._id)
     console.log ('each', countEach)
@@ -30,8 +30,10 @@ const HotelDisplay_HotelDetail = () => {
   })
   // get comments
 
-  console.log('Hotel ID:', id);
-  const {data,isLoading,isError,error}=useHotelComments(id);
+  console.log('Hotel ID:', hotelId);
+
+  const {data,isLoading,isError,error}=useHotelComments(hotelId);
+  console.log('Comments',data);
   return (
     <div>
       <Row gutter={18}>

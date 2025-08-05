@@ -108,8 +108,7 @@ const BookingPage = () => {
       disableCancelConfirmAfterClicked (invoiceID)
       const res = await axios.post (
           `${BE_PORT}/api/booking/bookingHistory/${invoiceID}/cancel`,
-          passingData,
-          {headers: {Authorization: `Bearer ${auth.token}`}}
+          passingData
         );
       if (res.status === 200) {
         toast.showSuccess(res.data.message)

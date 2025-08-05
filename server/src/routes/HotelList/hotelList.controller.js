@@ -6,12 +6,16 @@ const axios = require ('axios')
 const isBetween = require ("dayjs/plugin/isBetween");
 const isSameOrAfter = require ("dayjs/plugin/isSameOrAfter")
 const isSameOrBefore = require ("dayjs/plugin/isSameOrBefore")
+const {Types} = require ("mongoose");
 dayjs.extend (isBetween);
 dayjs.extend (isSameOrAfter)
 dayjs.extend (isSameOrBefore)
 
 const createRoom = async (req, res) => {
   const {numberOfBeds, numberOfRooms, typeOfRoom, money, hotelID, capacity, imgLink, roomName} = req.body;
+  if (!mongoose.Types.ObjectId.isValid (hotelID)) {
+    return res.status (400).json ({message: "Invalid hotelID format"});
+  }
   try {
     // Validate input
     if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity || !roomName) {
@@ -44,9 +48,10 @@ const createRoom = async (req, res) => {
         await hotel.save ();
       }
       const room = await createdRoom.populate ("hotelID")
-    // Respond with success
+      // Respond with success
       return res.status (201).json ({
         status: "OK",
+
         message: "Room created successfully",
         data: room,
       });
@@ -433,24 +438,24 @@ const getInvoicesOwner = async (req, res) => {
 }
 
 const commentRoom = async (req, res) => {
-  const {ratePoint, content, roomID, invoiceID} = req.body
-  const idCus = req.user.id
+  const {ratePoint, content, roomID, invoiceID, cusID} = req.body
+
   if (!ratePoint || !content || !roomID || !invoiceID)
     return res.status (403).json ({message: "Bị mất dữ liệu"})
-  if (!idCus)
-    return res.status (403).json ({message: "Mất thông tin khách hàng"})
 
   try {
-    const comment = new Comment ({
+    const comment = await Comment.create ({
       ratePoint: ratePoint,
       content: content,
       roomID: roomID,
-      cusID: idCus,
+      cusID: cusID,
       invoiceID: invoiceID
     })
 
-    await comment.save ()
-    return res.status (200).json ({message: "Đánh giá thành công, Cảm ơn bạn đã đánh giá", comment: comment})
+    return res.status (201).json ({
+      message: "Comment added successfully. Thank you for your feedback!",
+      comment,
+    });
 
   } catch (err) {
     return res.status (500).json ({message: "Lỗi hệ thống", err: err.message})
@@ -485,24 +490,28 @@ const getCommentRoom = async (req, res) => {
     return res.status (500).json ({message: "Lỗi hệ thống", err: err.message})
   }
 }
-const getHotelComment=async(req, res) => {
-  const hotelId=req.params.hotelId
-  if (!hotelId){
-    return res.status(403).json({message:"No hotelId found"})
+const getHotelComment = async (req, res) => {
+  const {hotelId} = req.params
+  console.log ("Received hotelId:", hotelId);
+  if (!hotelId) {
+    return res.status (403).json ({message: "No hotelId found"})
   }
-  try{
+  if (!Types.ObjectId.isValid (hotelId)) {
+    return res.status (400).json ({message: "Invalid hotelId format"});
+  }
+  try {
     // Find all rooms associated with the hotel
-    const allRooms = await Room.find({ hotelID: hotelId });
+    const allRooms = await Room.find ({hotelID: hotelId});
 
     // Extract room IDs
-    const roomIds = allRooms.map((room) => room._id);
+    const roomIds = allRooms.map ((room) => room._id);
 
     // Find comments for the rooms
-    const comments = await Comment.find({ roomID: { $in: roomIds } }).populate("cusID");
-    return res.status(200).json({comments:comments})
-  }catch(e){
-    console.error(e)
-    return res.status(500).json({message:"Unknown error",err: e.message})
+    const comments = await Comment.find ({roomID: {$in: roomIds}}).populate ("cusID");
+    return res.status (200).json ({comments: comments})
+  } catch (e) {
+    console.error (e)
+    return res.status (500).json ({message: "Unknown error", err: e.message})
   }
 }
 

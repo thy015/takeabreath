@@ -152,15 +152,17 @@ ListRouter.get("/list-room",
 ListRouter.get("/comment/room/:id",async(req,res)=>{
   try {
     const a =await Comment.find({roomID:req.params.id}).populate({path:"roomID",select:"roomName"}).populate({path:"cusID",select:"cusName"});
-    res.json(a)
+    res.status(200).json({a})
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 })
 ListRouter.post("/comment/:hotelId",hotelListController.getHotelComment)
-ListRouter.post("/commentRoom", verifyLogin, hotelListController.commentRoom)
+ListRouter.post("/comment/commentRoom", verifyLogin, hotelListController.commentRoom)
+
 ListRouter.get("/get-comment-cus", verifyLogin, hotelListController.getCommentCus)
 ListRouter.get("/get-comment-room/:id",verifyOwner,hotelListController.getCommentRoom)
+
 ListRouter.get("/comments",verifyAdmin,async (req, res) => {
   try{
     const comments = await Comment.find()

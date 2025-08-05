@@ -6,8 +6,7 @@ const {Invoice} = require ("../../models/invoice.model");
 const {verifyAdmin} = require ("../../middleware/verify");
 
 reqCancelRouter.get ('/processing', verifyAdmin, reqCancelController.getReqCancelRoomProcess)
-reqCancelRouter.get ('/accepted', verifyAdmin, reqCancelController.getReqCancelRoomAccepted)
-reqCancelRouter.get ('/rejected', verifyAdmin, reqCancelController.getReqCancelRoomRejected)
+reqCancelRouter.get ('/transferred', verifyAdmin, reqCancelController.getReqCancelRoomAccepted)
 
 //get cancel req theo id user( + invoice)
 reqCancelRouter.get ('/:id/cancelRequest', async (req, res) => {
@@ -41,7 +40,6 @@ reqCancelRouter.put ('/active/:id', verifyAdmin, reqCancelController.activeCus);
 reqCancelRouter.put ('/inactive/:id', verifyAdmin, reqCancelController.inactiveCus);
 reqCancelRouter.put ('/inactiveCus/:id', reqCancelController.inactiveCus);
 reqCancelRouter.post ('/accept/:cancelReqID', verifyAdmin, reqCancelController.handleCancelRoomAccept)
-reqCancelRouter.post ('/reject/:cancelReqID', verifyAdmin, reqCancelController.handleCancelRoomReject)
 // Get cancel req base on invoice id
 reqCancelRouter.post('/:invoiceId', verifyAdmin, async (req, res) => {
   const { invoiceId } = req.params;

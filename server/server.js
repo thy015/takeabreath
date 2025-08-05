@@ -28,9 +28,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("combined"));
 
-const allowedOrigins = ["http://localhost:3000",
+const allowedOrigins = [
+  "http://localhost:3000",
     "https://takeabreath.io.vn",
-    "https://wowo.htilssu.id.vn/assets/remoteEntry.js",
     "https://takeabreath-frontend.vercel.app",
     "https://www.sandbox.paypal.com",
     "https://takeabreath.vercel.app",
@@ -44,14 +44,17 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, origin);
+        callback(null, true); // Allow the origin
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
+app.use(express.json());
 // swagger config
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
 console.log(`Swagger: https://takeabreath.vercel.app/api-docs`)

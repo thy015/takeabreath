@@ -1,7 +1,7 @@
 import React from 'react';
 import {Onedoc} from '@onedoc/client';
 import {compile} from '@onedoc/react-print';
-import {notification, Button} from "antd";
+import {notification} from "antd";
 import {QRInvoice} from './InvoicePDF';
 import {Download} from 'lucide-react'
 import PropTypes from "prop-types";
@@ -40,10 +40,10 @@ const GeneratePDFButton = ({invoice}) => {
   };
 
   return (
-    <Button
+    <Download
+      size={32}
       onClick={handleGeneratePDF}
-      icon={<Download size={32}/>}
-      className='border-2 rounded-lg p-1.5 hover:bg-blue-500 text-blue-800'
+      className='border-2 rounded-lg p-1.5 cursor-pointer'
     />
   );
 };

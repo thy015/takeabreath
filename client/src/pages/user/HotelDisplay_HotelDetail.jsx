@@ -29,7 +29,6 @@ const HotelDisplay_HotelDetail = () => {
     }
   })
   // get comments
-
   console.log('Hotel ID:', hotelId);
 
   const {data,isLoading,isError,error}=useHotelComments(hotelId);

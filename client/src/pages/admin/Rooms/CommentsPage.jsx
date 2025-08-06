@@ -17,7 +17,7 @@ const CommentsPage = () => {
         );
         setComments(response.data);
       } catch (err) {
-        setError("Error fetching comment");
+        setError("Error fetching comment",err.message);
       } finally {
         setLoading(false);
       }

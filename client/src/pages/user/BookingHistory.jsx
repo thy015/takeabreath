@@ -134,8 +134,8 @@ const BookingPage = () => {
 
     // Check if the user has already commented
     const roomCommented = comment.find (item => item.invoiceID === invoiceID);
-    // Check if more than 7 days and at least 3 days have passed since the check-out day
-    if (dateDiff >= 7 || dateDiff < 3 || roomCommented) {
+    // Check if more than 7 days or at checkout day
+    if (dateDiff >= 7 || now.isBefore(checkOutDay) || roomCommented) {
       return true;
     }
     return false;

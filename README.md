@@ -6,8 +6,8 @@ Welcome to the Take A Breath app! This application is designed to help users fin
 ### Frontend:
 - **ReactJS**: Component-based UI development.
 - **Redux**: State management.
-- **TailwindCSS** and **SCSS**: Styling.
-- **Ant Design (Antd)**: UI components.
+- **TailwindCSS** and **CSS**: Styling.
+- **Ant Design (Antd) - ShadCN**: UI components.
 
 ### Backend:
 - **NodeJS**: JavaScript runtime.
@@ -16,6 +16,7 @@ Welcome to the Take A Breath app! This application is designed to help users fin
 - **JWT**: Authentication and Authorization.
 
 ### Deployment:
+- **Docker**: More practical to use
 - **Vercel**: For deploying the application.
 - **Link**: [TakeABreath](https://takeabreath.io.vn/)
 
@@ -35,7 +36,7 @@ Welcome to the Take A Breath app! This application is designed to help users fin
     ```
 2. Run the following command:
     ```bash
-    docker-compose up
+    docker-compose up --build
     ```
 3. Open your browser and visit `http://localhost:3000/`.
 
@@ -75,6 +76,7 @@ Welcome to the Take A Breath app! This application is designed to help users fin
     ```bash
     npm run dev
     ```
+    ### Don't forget to put .env by follow .env.example 
 📂 Project Structure
 ```
 takeabreath/
@@ -113,3 +115,4 @@ takeabreath/
     Ensure you have Docker installed if you want to run the project without manual installation.
     For any issues or inquiries, please create an issue.
 Reach me for any queries or suggestions. I am always open🌟
+

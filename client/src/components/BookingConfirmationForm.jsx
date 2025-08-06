@@ -446,13 +446,13 @@ function BookingConfirmationForm ({isShow, onCancel, hotel}) {
                 {/* Voucher selector */}
                 <div className="grid grid-cols-3 gap-4 items-center">
                   <Label className="text-right">Voucher</Label>
-                  <div className="col-span-2 relative">
+                  <div className="relative">
                     <Button variant="outline" onClick={() => setIsOpen (!isOpen)} className="w-48 justify-between">
-                      <span>{voucherCode || t ("voucher")}</span>
+                      <div>{voucherCode || t ("voucher")}</div>
                       <ChevronDown className="w-4 h-4"/>
                     </Button>
                     {isOpen && (
-                      <div className="absolute left-full ml-2 top-0 bg-white border rounded-md shadow-lg z-10">
+                      <div className="absolute ml-2 top-full left-0 bg-white border rounded-md mt-1 shadow-lg z-10">
                         <div className="max-w-md overflow-x-auto">
                           <div className="flex whitespace-nowrap">
                             {vouchers.map ((voucher) => (

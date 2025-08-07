@@ -22,10 +22,10 @@ Welcome to the Take A Breath app! This application is designed to help users fin
 
 ---
 
-## 🔗 Live Demo
-[TakeABreath - Live Demo](#)
+## 🔗 Demo Video
+Watch the demo of the TakeABreath Hotel E-Commerce Platform on YouTube:
 
----
+[Watch Demo on YouTube](https://youtu.be/SYiHAvapuv4?si=Y-speGReNWzgReW8)
 
 ## 🚀 How to Run the Project
 
@@ -115,4 +115,5 @@ takeabreath/
     Ensure you have Docker installed if you want to run the project without manual installation.
     For any issues or inquiries, please create an issue.
 Reach me for any queries or suggestions. I am always open🌟
+
 

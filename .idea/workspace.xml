@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="14f1eccb-1ea4-4b4f-a899-2f6e33e9ed06" name="Changes" comment="fix: backup code">
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/assets/ajax-loader-BcnMEykj.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/assets/emotion-server-create-instance.browser.esm-C9-UKvYb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/assets/index-8ktErRGD.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/assets/index-CjbsDmZ2.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/assets/slick-BlzDm7g2.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/Avatar Cute/bear.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/Avatar Cute/fox.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/Avatar Cute/kitten.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/Avatar Cute/panda.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/Avatar Cute/rabit.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/apple-touch-icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bathroom/Bathtub.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bathroom/Hair dryer.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bathroom/Hot water.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bathroom/Shower gel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bedroom/Crib.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bedroom/Essentials.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bedroom/Extra pillows and blankets.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bedroom/Free dryer.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bedroom/Hangers.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/bedroom/Iron.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Cooking basics.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Dining table.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Dishwasher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Freezer.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Hot water kettle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Kitchen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Microwave.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Refrigerator.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Rice maker.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Stove.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/dining/Toaster.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/discord.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/double-bed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/entertainment/Exercise equipment.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/entertainment/HDTV 50 inch.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/entertainment/Sound system.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/entertainment/Wifi.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/facebook.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/favicon-16x16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/favicon-32x32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/heatingAndCooling/Air conditioning.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/heatingAndCooling/Central air conditioning.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/heatingAndCooling/Central heating.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/heatingAndCooling/Heating.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/heatingAndCooling/Indoor fireplace.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/heatingAndCooling/Portable fans.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/instagram.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/Crowd.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/Downtown access.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/Historic district.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/In centre.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/Near centre.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/Near public transportation.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/Private entrance.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/location/Shopping district.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Elevator.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Free street parking.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Outdoor dining area.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Paid parking on premises.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Patio or balcony.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Private backyard.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Private patio or balcony.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Private pool.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Shared gym in building.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Shared hot tub.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Shared pool.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Shared sauna.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/outdoor/Sun loungers.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/punctuation.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/safety/Carbon monoxide alarm.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/safety/Exterior security cameras on property.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/safety/Fire extinguisher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/safety/First aid kit.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/safety/Smoke alarm.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Cleaning available during stay.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Keypad.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Long term stays allowed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Luggage dropoff allowed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Pets allowed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Self check-in.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Smart lock.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/service/Smoking allowed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/view/Beach View.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/view/City View.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/view/Forest View.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/view/Garden View.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/view/Moutain View.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/view/Pool View.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/icon/view/Skyline View.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/404.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/OpenerLoading.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/TAB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/WebsiteMaintenance.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/error.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/loading-2.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/logoTAB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/momo.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/profile.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/sign-in.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/sign-up.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/united-states.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/img/vietFlag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/video/beach-intro.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/dist/video/shortage-intro.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/client/.gitignore" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;thy015&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:thy015/takeabreath.git&quot;,
+    &quot;accountId&quot;: &quot;61ea7ebf-1df5-4fb0-a882-34e076e7b93f&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="30Ut6v5w23jrWEyMBm2UVVBJlOy" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;ToolWindow.GitHub Copilot Chat.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev/rearrange-code&quot;,
+    &quot;ignore_missing_gitignore&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/maithy/Workplace/js/REACT/takeabreath&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/snap/webstorm/497/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;ECMA Script Level 4&quot;,
+      &quot;Vue&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/public/icon" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-WS-252.25557.126" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="14f1eccb-1ea4-4b4f-a899-2f6e33e9ed06" name="Changes" comment="" />
+      <created>1753693811462</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753693811462</updated>
+      <workItem from="1753693814276" duration="3604000" />
+      <workItem from="1753707735252" duration="7142000" />
+      <workItem from="1753718385048" duration="6000" />
+      <workItem from="1753718400670" duration="1990000" />
+      <workItem from="1753785216417" duration="5930000" />
+      <workItem from="1753791177426" duration="4383000" />
+      <workItem from="1753799799094" duration="3955000" />
+      <workItem from="1753860432369" duration="2798000" />
+      <workItem from="1753863555467" duration="11244000" />
+      <workItem from="1753892148634" duration="3127000" />
+      <workItem from="1753950510232" duration="5791000" />
+      <workItem from="1753961764685" duration="13042000" />
+      <workItem from="1754124702375" duration="3461000" />
+      <workItem from="1754128496537" duration="13329000" />
+      <workItem from="1754152764099" duration="394000" />
+      <workItem from="1754215885299" duration="10210000" />
+      <workItem from="1754226121381" duration="4615000" />
+      <workItem from="1754298752224" duration="6047000" />
+      <workItem from="1754311875290" duration="3202000" />
+      <workItem from="1754320149668" duration="4726000" />
+      <workItem from="1754382571030" duration="8062000" />
+      <workItem from="1754397170083" duration="4338000" />
+      <workItem from="1754409382020" duration="763000" />
+      <workItem from="1754410269613" duration="974000" />
+      <workItem from="1754413286957" duration="94000" />
+      <workItem from="1754474029712" duration="4764000" />
+      <workItem from="1754497126512" duration="856000" />
+      <workItem from="1754504721494" duration="2678000" />
+      <workItem from="1754744012178" duration="128000" />
+      <workItem from="1755172242974" duration="17000" />
+      <workItem from="1757948528231" duration="1019000" />
+      <workItem from="1757949839488" duration="365000" />
+    </task>
+    <task id="LOCAL-00001" summary="feat: implement authentication state management with Redux, enhance booking flow, and update UI components for better user experience&#10;fix: reload losing state by adding redux persist">
+      <option name="closed" value="true" />
+      <created>1753806567112</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1753806567112</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat: add logout functionality, implement hotel comments API through react query, and enhance UI components for better user experience">
+      <option name="closed" value="true" />
+      <created>1753894136909</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1753894136909</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix: ci/cds check by add missing env">
+      <option name="closed" value="true" />
+      <created>1753894538714</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1753894538714</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: add booking validation schema, implement calendar component, and create comment card for hotel reviews">
+      <option name="closed" value="true" />
+      <created>1753980765953</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1753980765953</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: add reusable Button component with variant and size support">
+      <option name="closed" value="true" />
+      <created>1753981125870</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1753981125870</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: implement healthcheck script and update CI configuration">
+      <option name="closed" value="true" />
+      <created>1753982250630</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1753982250630</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat: add booking history functionality, implement money formatting utility, and enhance UI components">
+      <option name="closed" value="true" />
+      <created>1754152658262</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1754152658262</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat: enhance UI components, add tooltip functionality, and update dependency management">
+      <option name="closed" value="true" />
+      <created>1754229228498</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1754229228499</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix: enhance healthcheck script with server startup delay and improved error handling">
+      <option name="closed" value="true" />
+      <created>1754229632268</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1754229632268</updated>
+    </task>
+    <task id="LOCAL-00010" summary="chore: update package.json and vercel.json for build configuration and dependency cleanup">
+      <option name="closed" value="true" />
+      <created>1754230630484</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1754230630484</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat: update accommodation card to format price and enhance UI, fix booking history cancel button logic">
+      <option name="closed" value="true" />
+      <created>1754326244901</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1754326244901</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat: refactor AdminVoucher component for improved state management and UI consistency">
+      <option name="closed" value="true" />
+      <created>1754411238314</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1754411238314</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix: improve voucher selector layout, enhance comment error handling, and simplify hotel comments response">
+      <option name="closed" value="true" />
+      <created>1754477224975</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1754477224975</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: implement authentication state management with Redux, enhance booking flow, and update UI components for better user experience&#10;fix: reload losing state by adding redux persist" />
+    <MESSAGE value="feat: add logout functionality, implement hotel comments API through react query, and enhance UI components for better user experience" />
+    <MESSAGE value="fix: ci/cds check by add missing env" />
+    <MESSAGE value="feat: add booking validation schema, implement calendar component, and create comment card for hotel reviews" />
+    <MESSAGE value="feat: add reusable Button component with variant and size support" />
+    <MESSAGE value="feat: implement healthcheck script and update CI configuration" />
+    <MESSAGE value="feat: add booking history functionality, implement money formatting utility, and enhance UI components" />
+    <MESSAGE value="feat: enhance UI components, add tooltip functionality, and update dependency management" />
+    <MESSAGE value="fix: enhance healthcheck script with server startup delay and improved error handling" />
+    <MESSAGE value="chore: update package.json and vercel.json for build configuration and dependency cleanup" />
+    <MESSAGE value="feat: update accommodation card to format price and enhance UI, fix booking history cancel button logic" />
+    <MESSAGE value="feat: refactor AdminVoucher component for improved state management and UI consistency" />
+    <MESSAGE value="fix: improve voucher selector layout, enhance comment error handling, and simplify hotel comments response" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: improve voucher selector layout, enhance comment error handling, and simplify hotel comments response" />
+  </component>
+</project>
